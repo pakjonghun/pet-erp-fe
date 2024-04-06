@@ -13,6 +13,7 @@ interface Props {
 const MobileNav: React.FC<Props> = ({ open, children, onClose }) => {
   return (
     <Drawer
+      keepMounted
       component="nav"
       ModalProps={{
         keepMounted: true,

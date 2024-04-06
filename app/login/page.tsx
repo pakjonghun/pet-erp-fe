@@ -1,10 +1,16 @@
 'use client';
 
-import { Box, Button, Stack, TextField } from '@mui/material';
+import { Box, Button, CircularProgress, Stack, TextField } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { LoginForm, loginSchema } from './validate';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useLogin } from '@/api/rest/hooks/auth/useAuth';
+import { useCreateUser } from '@/api/graphql/hooks/useFindUsers';
+import { client } from '@/api/graphql/client';
+import { useGetMyInfo } from '@/api/graphql/hooks/useGetMyInfo';
+import { useEffect } from 'react';
+import { redirect } from 'next/navigation';
+import Loading from '@/components/ui/Loading';
 
 const LoginPage = () => {
   const { control, handleSubmit } = useForm<LoginForm>({
@@ -16,18 +22,30 @@ const LoginPage = () => {
     mode: 'onChange',
   });
 
-  const { mutate: login } = useLogin();
+  const { data: myInfo, loading } = useGetMyInfo();
+  const { mutate: login, isPending } = useLogin();
+
+  useEffect(() => {
+    if (myInfo) {
+      redirect('/');
+    }
+  }, [myInfo]);
 
   const submit = (values: LoginForm) => {
     login(values, {
-      onSuccess: (res) => {
-        //
+      onSuccess: async () => {
+        console.log('success');
+        await client.refetchQueries({ include: 'active' });
       },
       onError: (error) => {
-        //
+        console.log(error.message);
       },
     });
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <Box sx={{ bgcolor: (theme) => theme.palette.primary.light }}>
@@ -37,7 +55,6 @@ const LoginPage = () => {
             name="id"
             control={control}
             render={({ field, formState: { errors } }) => {
-              console.log(errors);
               return (
                 <TextField
                   {...field}
@@ -66,7 +83,15 @@ const LoginPage = () => {
             }}
           />
 
-          <Button size="large" sx={{ py: 1.2 }} variant="contained" type="submit">
+          <Button
+            startIcon={
+              isPending ? <CircularProgress sx={{ mr: 1 }} color="inherit" size={20} /> : ''
+            }
+            size="large"
+            sx={{ py: 1.2 }}
+            variant="contained"
+            type="submit"
+          >
             로그인
           </Button>
         </Stack>

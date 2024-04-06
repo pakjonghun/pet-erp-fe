@@ -15,3 +15,13 @@ export const useLogin = () => {
     mutationFn: login,
   });
 };
+
+const logout = () => {
+  return client.post('/auth/logout').then((res) => res.data);
+};
+
+export const useLogout = () => {
+  return useMutation<void, AxiosError<CommonError>, void>({
+    mutationFn: logout,
+  });
+};

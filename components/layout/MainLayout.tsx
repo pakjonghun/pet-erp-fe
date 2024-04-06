@@ -35,8 +35,6 @@ const MainLayout: FC<Props> = ({ children }) => {
         }}
       >
         <Header toggleOpen={toggleOpen} />
-        {/* <Box sx={{ height: '100%', bgcolor: (theme) => theme.palette.primary.light }}>content</Box>
-         */}
         {children}
       </Box>
     </Box>

@@ -5,7 +5,7 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import SpaceDashboardOutlinedIcon from '@mui/icons-material/SpaceDashboardOutlined';
 
 export const NAV_WIDTH = 240;
-export const NavMapper = {
+export const NavMenus = {
   '': {
     label: '대시보드',
     icon: <SpaceDashboardOutlinedIcon />,

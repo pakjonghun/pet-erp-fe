@@ -3,6 +3,8 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import MainLayout from '@/components/layout/MainLayout';
 import ThemeRegister from '@/context/ThemeRegister';
 import QueryProvider from '@/context/QueryProvider';
+import ApolloClientProvider from '@/context/ApolloClientProvider';
+import Guard from '@/components/auth/Guard';
 
 export const metadata: Metadata = {
   title: '펫 ERP',
@@ -17,13 +19,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <QueryProvider>
-          <AppRouterCacheProvider>
-            <ThemeRegister>
-              <MainLayout>{children}</MainLayout>
-            </ThemeRegister>
-          </AppRouterCacheProvider>
-        </QueryProvider>
+        <ApolloClientProvider>
+          <QueryProvider>
+            <AppRouterCacheProvider>
+              <ThemeRegister>
+                <MainLayout>
+                  <Guard>{children}</Guard>
+                </MainLayout>
+              </ThemeRegister>
+            </AppRouterCacheProvider>
+          </QueryProvider>
+        </ApolloClientProvider>
       </body>
     </html>
   );
