@@ -5,6 +5,7 @@ import ThemeRegister from '@/context/ThemeRegister';
 import QueryProvider from '@/context/QueryProvider';
 import ApolloClientProvider from '@/context/ApolloClientProvider';
 import Guard from '@/components/auth/Guard';
+import SnackProvider from '@/context/SnackProvider';
 
 export const metadata: Metadata = {
   title: '펫 ERP',
@@ -23,9 +24,11 @@ export default function RootLayout({
           <QueryProvider>
             <AppRouterCacheProvider>
               <ThemeRegister>
-                <MainLayout>
-                  <Guard>{children}</Guard>
-                </MainLayout>
+                <SnackProvider>
+                  <MainLayout>
+                    <Guard>{children}</Guard>
+                  </MainLayout>
+                </SnackProvider>
               </ThemeRegister>
             </AppRouterCacheProvider>
           </QueryProvider>

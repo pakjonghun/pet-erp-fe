@@ -8,10 +8,11 @@ import MobileNavTrigger from './MobileNavTrigger';
 import SettingMenuTrigger from './SettingMenuTrigger';
 
 interface Props {
+  isLogin: boolean;
   toggleOpen: () => void;
 }
 
-const Header: FC<Props> = ({ toggleOpen }) => {
+const Header: FC<Props> = ({ isLogin, toggleOpen }) => {
   return (
     <AppBar
       sx={{
@@ -25,10 +26,10 @@ const Header: FC<Props> = ({ toggleOpen }) => {
       elevation={1}
     >
       <Toolbar sx={{ display: 'flx', justifyContent: 'space-between' }}>
-        <Hero isMobile={false} />
-        <MobileNavTrigger toggleOpen={toggleOpen} />
-        <Hero isMobile />
-        <SettingMenuTrigger />
+        <Hero isLogin={isLogin} isMobile={false} />
+        {isLogin && <MobileNavTrigger toggleOpen={toggleOpen} />}
+        <Hero isLogin={isLogin} isMobile />
+        {isLogin && <SettingMenuTrigger />}
       </Toolbar>
     </AppBar>
   );

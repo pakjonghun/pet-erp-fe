@@ -1,5 +1,6 @@
 import { BASE_URL } from '@/api/constants';
 import { PUBLIC_PATH } from '@/constants';
+import { isLogin } from '@/store/isLogin';
 import { getFirstPath } from '@/util';
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
@@ -12,7 +13,8 @@ const logoutLink = onError(({ networkError, graphQLErrors }) => {
   const firstPath = getFirstPath(location.pathname);
   const isPrivatePath = !PUBLIC_PATH.includes(firstPath);
   if (isUnAuthorized && isPrivatePath) {
-    window.location.href = '/login';
+    // isLogin(false);
+    console.log('reset error : ');
   }
 });
 

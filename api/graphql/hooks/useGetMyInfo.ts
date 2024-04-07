@@ -11,5 +11,5 @@ const getMyInfoDocument = graphql(`
 `);
 
 export const useGetMyInfo = () => {
-  return useQuery(getMyInfoDocument);
+  return useQuery(getMyInfoDocument, { errorPolicy: 'ignore' });
 };

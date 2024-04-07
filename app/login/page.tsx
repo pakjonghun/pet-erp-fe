@@ -5,12 +5,12 @@ import { Controller, useForm } from 'react-hook-form';
 import { LoginForm, loginSchema } from './validate';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useLogin } from '@/api/rest/hooks/auth/useAuth';
-import { useCreateUser } from '@/api/graphql/hooks/useFindUsers';
-import { client } from '@/api/graphql/client';
 import { useGetMyInfo } from '@/api/graphql/hooks/useGetMyInfo';
 import { useEffect } from 'react';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Loading from '@/components/ui/Loading';
+import { snackMessage } from '@/store/snackMessage';
+import { client } from '@/api/graphql/client';
 
 const LoginPage = () => {
   const { control, handleSubmit } = useForm<LoginForm>({
@@ -22,35 +22,38 @@ const LoginPage = () => {
     mode: 'onChange',
   });
 
-  const { data: myInfo, loading } = useGetMyInfo();
+  const router = useRouter();
   const { mutate: login, isPending } = useLogin();
+  const { data: myInfo, loading } = useGetMyInfo();
 
   useEffect(() => {
-    if (myInfo) {
-      redirect('/');
+    if (!loading && myInfo) {
+      console.log('login to dash/');
+      router.replace('/');
     }
-  }, [myInfo]);
+  }, [loading, myInfo, router]);
 
   const submit = (values: LoginForm) => {
     login(values, {
       onSuccess: async () => {
-        console.log('success');
+        snackMessage({ message: '환영합니다.', severity: 'success' });
         await client.refetchQueries({ include: 'active' });
       },
       onError: (error) => {
+        snackMessage({ message: '로그인이 실패했습니다.', severity: 'error' });
         console.log(error.message);
       },
     });
   };
 
-  if (loading) {
-    return <Loading />;
-  }
+  if (loading) return <Loading />;
+
+  if (!loading && myInfo) return <></>;
 
   return (
     <Box sx={{ bgcolor: (theme) => theme.palette.primary.light }}>
       <form onSubmit={handleSubmit(submit)}>
-        <Stack sx={{ mx: 'auto', pt: '20%' }} maxWidth="sm" direction="column" gap={2}>
+        <Stack sx={{ mx: 'auto', pt: '20%', px: 3 }} maxWidth="sm" direction="column" gap={2}>
           <Controller
             name="id"
             control={control}
@@ -88,7 +91,12 @@ const LoginPage = () => {
               isPending ? <CircularProgress sx={{ mr: 1 }} color="inherit" size={20} /> : ''
             }
             size="large"
-            sx={{ py: 1.2 }}
+            sx={{
+              py: {
+                xs: 1,
+                md: 1.3,
+              },
+            }}
             variant="contained"
             type="submit"
           >

@@ -1,13 +1,14 @@
 import React, { FC } from 'react';
 import PetsIcon from '@mui/icons-material/Pets';
-import { Box, IconButton, Stack, SxProps, Typography } from '@mui/material';
+import { Stack, SxProps, Typography } from '@mui/material';
 import Link from 'next/link';
 
 interface Props {
+  isLogin: boolean;
   isMobile: boolean;
 }
 
-const Hero: FC<Props> = ({ isMobile }) => {
+const Hero: FC<Props> = ({ isLogin, isMobile }) => {
   const dynamicSx: SxProps = isMobile //
     ? { display: { xs: 'flex', md: 'none' }, alignItems: 'center' }
     : { display: { xs: 'none', md: 'flex' }, alignItems: 'center' };
@@ -15,7 +16,7 @@ const Hero: FC<Props> = ({ isMobile }) => {
   return (
     <Stack
       sx={{ ...dynamicSx, textDecoration: 'none', color: 'inherit' }}
-      href="#app-bar-with-responsive-menu"
+      href={isLogin ? '/' : '/login'}
       component={Link}
       direction="row"
     >

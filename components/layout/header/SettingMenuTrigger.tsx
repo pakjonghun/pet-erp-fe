@@ -11,6 +11,8 @@ import { UserRole } from '@/api/graphql/codegen/graphql';
 import { useLogout } from '@/api/rest/hooks/auth/useAuth';
 import { useRouter } from 'next/navigation';
 import { client } from '@/api/graphql/client';
+import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined';
+import { snackMessage } from '@/store/snackMessage';
 
 const SettingMenuTrigger = () => {
   const router = useRouter();
@@ -24,16 +26,16 @@ const SettingMenuTrigger = () => {
   };
 
   const { mutate: logout } = useLogout();
-
   const handleClickLogout = () => {
     logout(undefined, {
       onSuccess: async () => {
+        snackMessage({ message: '안녕히 가세요.', severity: 'success' });
         await client.resetStore();
-        router.replace('/login');
       },
       onError: (err) => {
+        snackMessage({ message: '로그아웃이 실패했습니다.', severity: 'error' });
         const message = err.response?.data.message ?? '로그아웃이 실패했습니다.';
-        console.log(message);
+        snackMessage({ message, severity: 'error' });
       },
     });
   };
@@ -59,7 +61,7 @@ const SettingMenuTrigger = () => {
       callback: () => router.push('/setting/account'),
       role: [UserRole.Admin],
       label: '계정 관리',
-      icon: <LocalShippingOutlinedIcon />,
+      icon: <PeopleOutlineOutlinedIcon />,
     },
   };
 

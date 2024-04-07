@@ -1,6 +1,6 @@
+import { FC } from 'react';
 import { MenuItem } from '@/components/layout/type';
 import { ListItemButton, ListItemIcon, ListItemText, Stack } from '@mui/material';
-import React, { FC } from 'react';
 
 interface Props {
   menu: MenuItem;
