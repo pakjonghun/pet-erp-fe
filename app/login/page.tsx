@@ -28,7 +28,6 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (!loading && myInfo) {
-      console.log('login to dash/');
       router.replace('/');
     }
   }, [loading, myInfo, router]);
@@ -41,7 +40,6 @@ const LoginPage = () => {
       },
       onError: (error) => {
         snackMessage({ message: '로그인이 실패했습니다.', severity: 'error' });
-        console.log(error.message);
       },
     });
   };

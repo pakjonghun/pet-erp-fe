@@ -1,12 +1,12 @@
 'use client';
 
+import { useGetMyInfo } from '@/api/graphql/hooks/useGetMyInfo';
 import { NAV_WIDTH } from '@/components/layout/constants';
 import Header from '@/components/layout/header/Header';
 import MobileNav from '@/components/layout/navigation/MobileNav';
 import NavContent from '@/components/layout/navigation/NavContent';
 import WebNav from '@/components/layout/navigation/WebNav';
-import { isLogin } from '@/store/isLogin';
-import { useReactiveVar } from '@apollo/client';
+import useGetIsPublicPath from '@/hooks/useGetIsPublicPath';
 import { Box } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { FC, ReactNode, useEffect, useState } from 'react';
@@ -20,17 +20,19 @@ const MainLayout: FC<Props> = ({ children }) => {
   const [open, setOpen] = useState(false);
   const onClose = () => setOpen(false);
   const toggleOpen = () => setOpen((prev) => !prev);
-  const isLoginStatus = useReactiveVar(isLogin);
-
+  const { loading, data: myInfo } = useGetMyInfo();
   useEffect(() => {
-    if (!isLoginStatus) {
+    if (!loading && !myInfo) {
       router.replace('/login');
     }
-  }, [isLoginStatus, router]);
+  }, [loading, myInfo, router]);
+
+  const isLogin = !!myInfo && !loading;
+  const isPublicPath = useGetIsPublicPath();
 
   return (
     <Box component="main">
-      {!!isLoginStatus && (
+      {!isPublicPath && (
         <>
           <MobileNav open={open} onClose={onClose}>
             <NavContent />
@@ -45,11 +47,11 @@ const MainLayout: FC<Props> = ({ children }) => {
           ml: 'auto',
           width: {
             sm: '100%',
-            md: isLoginStatus ? `calc(100% - ${NAV_WIDTH}px)` : '100%',
+            md: !isPublicPath ? `calc(100% - ${NAV_WIDTH}px)` : '100%',
           },
         }}
       >
-        <Header isLogin={isLoginStatus} toggleOpen={toggleOpen} />
+        <Header isLogin={isLogin} toggleOpen={toggleOpen} />
         {children}
       </Box>
     </Box>

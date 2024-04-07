@@ -21,12 +21,17 @@ const SnackProvider: FC<Props> = ({ children }) => {
     <>
       {!!snack && (
         <div>
-          <Snackbar open={!!snack} autoHideDuration={6000} onClose={handleClose}>
+          <Snackbar
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            open={!!snack}
+            autoHideDuration={6000}
+            onClose={handleClose}
+          >
             <Alert
               onClose={handleClose}
               severity={snack.severity}
               variant="filled"
-              sx={{ width: '100%' }}
+              sx={{ width: '100%', minWidth: 400 }}
             >
               {snack.message}
             </Alert>

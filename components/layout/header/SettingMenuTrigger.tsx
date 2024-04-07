@@ -7,11 +7,11 @@ import ListMenu from '@/components/ui/listItem/ListMenu';
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import LockResetOutlinedIcon from '@mui/icons-material/LockResetOutlined';
+import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined';
 import { UserRole } from '@/api/graphql/codegen/graphql';
 import { useLogout } from '@/api/rest/hooks/auth/useAuth';
 import { useRouter } from 'next/navigation';
 import { client } from '@/api/graphql/client';
-import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined';
 import { snackMessage } from '@/store/snackMessage';
 
 const SettingMenuTrigger = () => {
@@ -46,7 +46,7 @@ const SettingMenuTrigger = () => {
       label: '로그아웃',
       icon: <LogoutOutlinedIcon />,
     },
-    password: {
+    profile: {
       callback: () => router.push('/profile'),
       label: '내 프로필',
       icon: <LockResetOutlinedIcon />,
