@@ -6,9 +6,10 @@ interface Props {
   menu: MenuItem;
 }
 
-const ListMenu: FC<Props> = ({ menu: { icon, label } }) => {
+const ListMenu: FC<Props> = ({ menu: { icon, label, callback } }) => {
   return (
     <ListItemButton
+      onClick={callback}
       sx={{
         borderTopLeftRadius: 10,
         borderBottomLeftRadius: 10,

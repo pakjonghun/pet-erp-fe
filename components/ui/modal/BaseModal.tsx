@@ -21,7 +21,8 @@ const BaseModal: FC<Props> = ({ open, children, onClose }) => {
           transform: 'translate(-50%,-50%)',
           bgcolor: 'background.paper',
           boxShadow: 10,
-          p: 4,
+          px: 3,
+          py: 2,
           borderRadius: 2,
           minWidth: 300,
         }}

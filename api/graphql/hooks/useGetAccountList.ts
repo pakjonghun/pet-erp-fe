@@ -6,6 +6,7 @@ const usersDocument = graphql(`
     users {
       id
       role
+      createdAt
     }
   }
 `);

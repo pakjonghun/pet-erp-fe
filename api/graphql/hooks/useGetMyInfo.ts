@@ -1,11 +1,12 @@
 import { useQuery } from '@apollo/client';
 import { graphql } from '../codegen';
 
-const getMyInfoDocument = graphql(`
+export const getMyInfoDocument = graphql(`
   query myInfo {
     myInfo {
       id
       role
+      createdAt
     }
   }
 `);

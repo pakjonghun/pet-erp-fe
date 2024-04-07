@@ -1,5 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { graphql } from '../codegen';
+import { UserFragment } from '../fragments/userFragment';
+import { getMyInfoDocument } from './useGetMyInfo';
 
 const updateProfileDocument = graphql(`
   mutation UpdateProfile($updateProfileInput: UpdateProfileDTO!) {
@@ -11,5 +13,7 @@ const updateProfileDocument = graphql(`
 `);
 
 export const useUpdateProfile = () => {
-  return useMutation(updateProfileDocument);
+  return useMutation(updateProfileDocument, {
+    refetchQueries: [getMyInfoDocument, 'myInfo'],
+  });
 };

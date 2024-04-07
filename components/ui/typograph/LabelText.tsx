@@ -1,9 +1,9 @@
+import { FC, ReactNode } from 'react';
 import { Typography } from '@mui/material';
-import React, { FC } from 'react';
 
 interface Props {
   label: string;
-  text: string;
+  text: ReactNode;
 }
 
 const LabelText: FC<Props> = ({ label, text }) => {

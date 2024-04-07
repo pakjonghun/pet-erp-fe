@@ -13,6 +13,7 @@ import { useLogout } from '@/api/rest/hooks/auth/useAuth';
 import { useRouter } from 'next/navigation';
 import { client } from '@/api/graphql/client';
 import { snackMessage } from '@/store/snackMessage';
+import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 
 const SettingMenuTrigger = () => {
   const router = useRouter();
@@ -31,6 +32,7 @@ const SettingMenuTrigger = () => {
       onSuccess: async () => {
         snackMessage({ message: '안녕히 가세요.', severity: 'success' });
         await client.resetStore();
+        setSettingMenuAnchor(null);
       },
       onError: (err) => {
         snackMessage({ message: '로그아웃이 실패했습니다.', severity: 'error' });
@@ -47,18 +49,27 @@ const SettingMenuTrigger = () => {
       icon: <LogoutOutlinedIcon />,
     },
     profile: {
-      callback: () => router.push('/profile'),
+      callback: () => {
+        router.push('/setting');
+        setSettingMenuAnchor(null);
+      },
       label: '내 프로필',
-      icon: <LockResetOutlinedIcon />,
+      icon: <PeopleAltOutlinedIcon />,
     },
     delivery: {
-      callback: () => router.push('/setting/delivery'),
+      callback: () => {
+        router.push('/setting/delivery');
+        setSettingMenuAnchor(null);
+      },
       role: [UserRole.Admin, UserRole.Manager],
       label: '택배비용 관리',
       icon: <LocalShippingOutlinedIcon />,
     },
     account: {
-      callback: () => router.push('/setting/account'),
+      callback: () => {
+        router.push('/setting/account');
+        setSettingMenuAnchor(null);
+      },
       role: [UserRole.Admin],
       label: '계정 관리',
       icon: <PeopleOutlineOutlinedIcon />,
@@ -98,7 +109,7 @@ const SettingMenuTrigger = () => {
         {settingMenuKeys.map((item) => {
           const menu = SettingMenus[item];
           return (
-            <BaseListItem onClick={menu.callback} disablePadding key={menu.label}>
+            <BaseListItem disablePadding key={menu.label}>
               <ListMenu menu={menu} />
             </BaseListItem>
           );

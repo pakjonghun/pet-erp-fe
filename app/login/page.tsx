@@ -8,9 +8,10 @@ import { useLogin } from '@/api/rest/hooks/auth/useAuth';
 import { useGetMyInfo } from '@/api/graphql/hooks/useGetMyInfo';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Loading from '@/components/ui/Loading';
+import Loading from '@/components/ui/loading/PageLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { client } from '@/api/graphql/client';
+import CommonLoading from '@/components/ui/loading/CommonLoading';
 
 const LoginPage = () => {
   const { control, handleSubmit } = useForm<LoginForm>({
@@ -85,9 +86,7 @@ const LoginPage = () => {
           />
 
           <Button
-            startIcon={
-              isPending ? <CircularProgress sx={{ mr: 1 }} color="inherit" size={20} /> : ''
-            }
+            startIcon={isPending ? <CommonLoading /> : ''}
             size="large"
             sx={{
               py: {

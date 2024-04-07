@@ -5,4 +5,5 @@ export type MenuItem = {
   icon: ReactNode;
   label: ReactNode;
   role?: UserRole[];
+  callback?: () => void;
 };

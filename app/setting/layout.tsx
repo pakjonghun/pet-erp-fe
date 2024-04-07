@@ -1,6 +1,6 @@
 'use client';
 
-import { AppBar, Box, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { AppBar, Tab, Tabs, Typography } from '@mui/material';
 import React, { FC, ReactNode } from 'react';
 import { SettingTabs } from './constants';
 import Link from 'next/link';
@@ -37,7 +37,7 @@ const SettingLayout: FC<Props> = ({ children }) => {
                     fontWeight: 800,
                   },
                 }}
-                href={tab}
+                href={`/${tab}`}
                 component={Link}
                 label={tabItem.label}
                 key={tab}
