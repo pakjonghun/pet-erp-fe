@@ -1,7 +1,7 @@
 'use client';
 
 import { FC, ReactNode } from 'react';
-import { Box, IconButton, Modal, Typography } from '@mui/material';
+import { Box, IconButton, Modal } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 
 interface Props {
