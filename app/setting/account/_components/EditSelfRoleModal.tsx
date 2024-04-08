@@ -24,7 +24,7 @@ interface Props {
 }
 
 const EditSelfRoleModal: FC<Props> = ({ open, onClose }) => {
-  const { data: myInfo, loading: my } = useGetMyInfo();
+  const { data: myInfo } = useGetMyInfo();
   const [updateProfile, { loading }] = useUpdateProfile();
   const [role, setRole] = useState<UserRole>(myInfo!.myInfo.role);
   const onChangeRole = (event: SelectChangeEvent) => {

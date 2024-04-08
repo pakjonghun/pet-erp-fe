@@ -9,7 +9,7 @@ import EditSelfRoleModal from './account/_components/EditSelfRoleModal';
 import EditPasswordModal from './account/_components/EditPasswordModal';
 
 const ProfilePage = () => {
-  const { data: myInfo, loading } = useGetMyInfo();
+  const { data: myInfo } = useGetMyInfo();
 
   const [openEditRoleModal, setOpenEditRoleModal] = useState(false);
   const [openEditPasswordModal, setOpenEditPasswordModal] = useState(false);

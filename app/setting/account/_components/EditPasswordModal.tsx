@@ -59,7 +59,7 @@ const EditPasswordModal: FC<Props> = ({ selectedUser, open, onClose }) => {
       },
       onCompleted: () => {
         snackMessage({ message: '권한 변경이 완료되었습니다.', severity: 'success' });
-        onClose();
+        handleClose();
       },
       onError: (err) => {
         snackMessage({ message: err.message ?? '권한변경이 실패하였습니다.', severity: 'error' });

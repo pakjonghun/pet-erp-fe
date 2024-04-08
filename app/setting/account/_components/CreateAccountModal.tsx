@@ -32,6 +32,7 @@ const CreateAccountModal: FC<Props> = ({ open, onClose }) => {
   const [visible, setVisible] = useState(false);
 
   const {
+    reset,
     control,
     handleSubmit,
     formState: { errors },
@@ -53,6 +54,8 @@ const CreateAccountModal: FC<Props> = ({ open, onClose }) => {
       },
       onCompleted: () => {
         snackMessage({ message: '계정 생성이 성공했습니다.', severity: 'success' });
+        reset();
+        onClose();
       },
       onError: (err) => {
         const message = err.message;
