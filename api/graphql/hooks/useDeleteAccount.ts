@@ -1,6 +1,5 @@
 import { useMutation } from '@apollo/client';
 import { graphql } from '../codegen';
-import { UserFragment } from '../fragments/userFragment';
 
 const deleteAccount = graphql(`
   mutation RemoveUser($id: String!) {
@@ -13,11 +12,10 @@ const deleteAccount = graphql(`
 export const useDeleteAccount = () => {
   return useMutation(deleteAccount, {
     update: (cache, { data }) => {
-      const deleteId = data?.__typename ?? '' + data?.removeUser.id ?? '';
-      const r = cache.readFragment({ id: deleteId, fragment: UserFragment });
-      console.log('r', r);
-      console.log(data);
-      cache.evict({ id: deleteId });
+      if (!data) return data;
+      const userId = data.removeUser.id;
+      const type = data.removeUser.__typename!;
+      cache.evict({ id: `${type}:${userId}` });
       cache.gc();
     },
   });

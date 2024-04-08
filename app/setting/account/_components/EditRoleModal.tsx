@@ -13,10 +13,10 @@ import {
 import { FC, useState } from 'react';
 import BaseModal from '../../../../components/ui/modal/BaseModal';
 import { UserRole } from '@/api/graphql/codegen/graphql';
-import { useUpdateProfile } from '@/api/graphql/hooks/useUpdateProfile';
 import { snackMessage } from '@/store/snackMessage';
 import CommonLoading from '../../../../components/ui/loading/CommonLoading';
 import { SelectedUser } from '../type';
+import { useUpdateUser } from '@/api/graphql/hooks/updateUserProfile';
 
 interface Props {
   selectedUser: SelectedUser;
@@ -25,7 +25,8 @@ interface Props {
 }
 
 const EditRoleModal: FC<Props> = ({ selectedUser, open, onClose }) => {
-  const [updateProfile, { loading }] = useUpdateProfile();
+  const [updateUser, { loading }] = useUpdateUser();
+
   const [role, setRole] = useState<UserRole>(selectedUser.role);
 
   const onChangeRole = (event: SelectChangeEvent) => {
@@ -41,9 +42,10 @@ const EditRoleModal: FC<Props> = ({ selectedUser, open, onClose }) => {
   };
 
   const handleEditRole = () => {
-    updateProfile({
+    updateUser({
       variables: {
-        updateProfileInput: {
+        updateUserInput: {
+          id: selectedUser.id,
           role,
         },
       },

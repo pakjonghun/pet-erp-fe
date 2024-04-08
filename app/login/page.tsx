@@ -26,7 +26,6 @@ const LoginPage = () => {
   const router = useRouter();
   const { mutate: login, isPending } = useLogin();
   const { data: myInfo, loading } = useGetMyInfo();
-
   useEffect(() => {
     if (!loading && myInfo) {
       router.replace('/');
