@@ -21,7 +21,6 @@ const MainLayout: FC<Props> = ({ children }) => {
   const onClose = () => setOpen(false);
   const toggleOpen = () => setOpen((prev) => !prev);
   const { loading, data: myInfo } = useGetMyInfo();
-  console.log('layout', loading);
   useEffect(() => {
     if (!loading && !myInfo) {
       router.replace('/login');

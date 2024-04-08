@@ -27,7 +27,6 @@ const EditSelfRoleModal: FC<Props> = ({ open, onClose }) => {
   const { data: myInfo, loading: my } = useGetMyInfo();
   const [updateProfile, { loading }] = useUpdateProfile();
   const [role, setRole] = useState<UserRole>(myInfo!.myInfo.role);
-  console.log('editrole', my);
   const onChangeRole = (event: SelectChangeEvent) => {
     setRole(event.target.value as UserRole);
   };

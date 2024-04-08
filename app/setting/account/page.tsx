@@ -1,19 +1,21 @@
 'use client';
 
 import { useGetUserList } from '@/api/graphql/hooks/useGetAccountList';
-import { Box, Grid } from '@mui/material';
+import { Box, Button, Grid } from '@mui/material';
 import AccountCard from './_components/AccountCard';
 import { useState } from 'react';
-import { User } from '@/api/graphql/codegen/graphql';
+import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import { SelectedOption, SelectedUser } from './type';
 import EditRoleModal from './_components/EditRoleModal';
 import EditPasswordModal from './_components/EditPasswordModal';
 import DeleteAccountModal from './_components/DeleteAccountModal';
+import CreateAccountModal from './_components/CreateAccountModal';
 
 const AccountPage = () => {
   const { data } = useGetUserList();
   const [selectedUser, setSelectedUser] = useState<SelectedUser | null>(null);
   const [selectedOption, setSelectedOption] = useState<null | SelectedOption>(null);
+  const [openCreateAccount, setOpenCreateAccount] = useState(false);
 
   const handleSelectOption = (option: SelectedOption, user: SelectedUser) => {
     setSelectedUser(user);
@@ -27,6 +29,18 @@ const AccountPage = () => {
 
   return (
     <Box sx={{ p: 5 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Button
+          onClick={() => setOpenCreateAccount(true)}
+          endIcon={<PersonAddAltOutlinedIcon />}
+          variant="contained"
+          sx={{ ml: 'auto', mb: 2 }}
+        >
+          계정생성
+        </Button>
+      </Box>
+      <CreateAccountModal open={openCreateAccount} onClose={() => setOpenCreateAccount(false)} />
+
       {!!selectedUser && (
         <EditRoleModal
           selectedUser={selectedUser}
