@@ -17,8 +17,8 @@ const theme = createTheme({
       light: '#EAF8F9',
     },
     background: {
-      default: '#EAF8F9',
-      paper: '#EAF8F9',
+      // default: '#EAF8F9',
+      // paper: '#EAF8F9',
     },
   },
   typography: {

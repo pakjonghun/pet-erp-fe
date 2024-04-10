@@ -10,7 +10,7 @@ export const dateFilterOptions = [
     callback: getThisWeek,
   },
   {
-    title: '지난후',
+    title: '지난주',
     callback: getLastWeek,
   },
   {

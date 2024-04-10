@@ -50,6 +50,7 @@ export type FindLogsResponseDto = {
 export type Log = {
   __typename?: 'Log';
   _id: Scalars['ID']['output'];
+  createdAt: Scalars['Date']['output'];
   description: Scalars['String']['output'];
   logType: LogType;
   userId: Scalars['String']['output'];

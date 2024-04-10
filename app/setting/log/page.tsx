@@ -1,14 +1,16 @@
 'use client';
 
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { FindLogsDto, Order } from '@/api/graphql/codegen/graphql';
 import Search from './_components/Search';
-import { Box, Button, InputAdornment, TextField } from '@mui/material';
-
+import { Box, InputAdornment, TextField } from '@mui/material';
 import CommonDateFilter from '@/components/calendar/CommonDateFilter';
 import { NullableRange } from '@/components/calendar/type';
 import { getStringRange, getThisMonth } from '@/components/calendar/utils';
+import LogTable from './_components/LogTable';
+import CommonLoading from '@/components/ui/loading/CommonLoading';
+import { OFFSET } from '@/constants';
 
 const LogPage = () => {
   const { from, to } = getThisMonth();
@@ -16,7 +18,7 @@ const LogPage = () => {
   const defaultVariables: FindLogsDto = {
     keyword: '',
     keywordTarget: 'description',
-    offset: 10,
+    offset: OFFSET,
     skip: 0,
     order: Order.Desc,
     sort: 'createdAt',
@@ -42,7 +44,7 @@ const LogPage = () => {
       <Box
         sx={{
           px: 3,
-          mt: 3,
+          my: 5,
           display: 'flex',
           flexDirection: {
             xs: 'column',
@@ -62,6 +64,7 @@ const LogPage = () => {
               xs: 1,
               sm: 0,
             },
+            minWidth: 'fitContent',
           }}
           size="small"
           onClick={(event) => setFilterAnchor(event.currentTarget)}
@@ -88,6 +91,9 @@ const LogPage = () => {
           }}
         />
       </Box>
+      <Suspense fallback={<CommonLoading />}>
+        <LogTable findLogsQuery={findLogsQuery} />
+      </Suspense>
     </Box>
   );
 };

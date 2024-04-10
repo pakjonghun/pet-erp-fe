@@ -1,3 +1,4 @@
+import { FindLogsDto, QueryLogsArgs } from './codegen/graphql';
 import { BASE_URL } from '@/api/constants';
 import { PUBLIC_PATH } from '@/constants';
 import { isLogin } from '@/store/isLogin';
@@ -39,6 +40,22 @@ export const client = new ApolloClient({
         createdAt
       }
     `),
+    typePolicies: {
+      Query: {
+        fields: {
+          logs: {
+            keyArgs: [],
+            merge(existing = { totalCount: 0, data: [] }, incoming, args) {
+              const { args: _args } = args as unknown as { args: QueryLogsArgs };
+              const existingData = existing.data;
+              const incomingData = incoming.data;
+              const mergedData = [...existingData, ...incomingData];
+              return { totalCount: incoming.totalCount, data: mergedData };
+            },
+          },
+        },
+      },
+    },
   }),
   link: logoutLink.concat(link),
   connectToDevTools: true,
