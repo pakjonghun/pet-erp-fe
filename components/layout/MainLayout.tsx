@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetMyInfo } from '@/api/graphql/hooks/useGetMyInfo';
+import { useGetMyInfo } from '@/api/graphql/hooks/users/useGetMyInfo';
 import { NAV_WIDTH } from '@/components/layout/constants';
 import Header from '@/components/layout/header/Header';
 import MobileNav from '@/components/layout/navigation/MobileNav';

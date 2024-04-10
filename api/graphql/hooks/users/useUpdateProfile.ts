@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
-import { graphql } from '../codegen';
-import { UserFragment } from '../fragments/userFragment';
+import { graphql } from '../../codegen';
+import { UserFragmentFragmentDoc } from '../../codegen/graphql';
 
 const updateProfileDocument = graphql(`
   mutation UpdateProfile($updateProfileInput: UpdateProfileDTO!) {
@@ -19,7 +19,7 @@ export const useUpdateProfile = () => {
           myInfo() {
             const newMyInfo = cache.writeFragment({
               data: data?.updateProfile,
-              fragment: UserFragment,
+              fragment: UserFragmentFragmentDoc,
             });
             return newMyInfo!;
           },

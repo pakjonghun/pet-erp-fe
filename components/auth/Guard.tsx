@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetMyInfo } from '@/api/graphql/hooks/useGetMyInfo';
+import { useGetMyInfo } from '@/api/graphql/hooks/users/useGetMyInfo';
 import { isLogin } from '@/store/isLogin';
 import React, { FC, ReactNode, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';

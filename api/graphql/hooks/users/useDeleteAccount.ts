@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { graphql } from '../codegen';
+import { graphql } from '../../codegen';
 
 const deleteAccount = graphql(`
   mutation RemoveUser($id: String!) {

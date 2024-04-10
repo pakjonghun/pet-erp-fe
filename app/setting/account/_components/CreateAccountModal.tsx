@@ -17,7 +17,7 @@ import { FC, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { CreateAccountForm, createAccountSchema } from '../_validations/createAccountValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCreateAccount } from '@/api/graphql/hooks/useCreateAccount';
+import { useCreateAccount } from '@/api/graphql/hooks/users/useCreateAccount';
 import { UserRole } from '@/api/graphql/codegen/graphql';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';

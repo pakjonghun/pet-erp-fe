@@ -1,22 +1,14 @@
 'use client';
 
-import {
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Button, FormControl, SelectChangeEvent, Stack, Typography } from '@mui/material';
 import { FC, useState } from 'react';
 import BaseModal from '../../../../components/ui/modal/BaseModal';
 import { UserRole } from '@/api/graphql/codegen/graphql';
 import { snackMessage } from '@/store/snackMessage';
 import CommonLoading from '../../../../components/ui/loading/CommonLoading';
 import { SelectedUser } from '../type';
-import { useUpdateUser } from '@/api/graphql/hooks/updateUserProfile';
+import { useUpdateUser } from '@/api/graphql/hooks/users/updateUserProfile';
+import BaseSelect from '@/components/ui/select/BaseSelect';
 
 interface Props {
   selectedUser: SelectedUser;
@@ -71,21 +63,13 @@ const EditRoleModal: FC<Props> = ({ selectedUser, open, onClose }) => {
         권한 수정후 다시 로그인 해야 권한이 적용됩니다.
       </Typography>
       <FormControl sx={{ mt: 3 }} fullWidth>
-        <InputLabel id="role_change_select">권한</InputLabel>
-        <Select
-          size="small"
+        <BaseSelect
+          label="권한"
           defaultValue={role}
           value={role}
-          label="권한"
-          id="role_change_select"
-          onChange={onChangeRole}
-        >
-          {Object.values(UserRole).map((role) => (
-            <MenuItem value={role} key={role}>
-              {role}
-            </MenuItem>
-          ))}
-        </Select>
+          onChangeValue={onChangeRole}
+          optionItems={Object.values(UserRole)}
+        />
       </FormControl>
       <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
         <Button variant="outlined" onClick={handleClose}>

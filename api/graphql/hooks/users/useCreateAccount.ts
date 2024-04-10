@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
-import { graphql } from '../codegen';
-import { UserFragment } from '../fragments/userFragment';
+import { graphql } from '../../codegen';
+import { UserFragmentFragmentDoc } from '../../codegen/graphql';
 
 const createUserDocument = graphql(`
   mutation CreateUser($createUserInput: CreateUserDTO!) {
@@ -19,9 +19,10 @@ export const useCreateAccount = () => {
         fields: {
           users(existingUsers = []) {
             if (!data?.createUser) return existingUsers;
+
             const newUser = cache.writeFragment({
               data: data.createUser,
-              fragment: UserFragment,
+              fragment: UserFragmentFragmentDoc,
             });
 
             return [newUser, ...existingUsers];

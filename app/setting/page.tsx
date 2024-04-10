@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetMyInfo } from '@/api/graphql/hooks/useGetMyInfo';
+import { useGetMyInfo } from '@/api/graphql/hooks/users/useGetMyInfo';
 import LabelText from '@/components/ui/typograph/LabelText';
 import { Edit } from '@mui/icons-material';
 import { Box, Button, Stack, Typography } from '@mui/material';

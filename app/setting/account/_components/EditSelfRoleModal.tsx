@@ -12,11 +12,12 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 import BaseModal from '../../../../components/ui/modal/BaseModal';
-import { useGetMyInfo } from '@/api/graphql/hooks/useGetMyInfo';
+import { useGetMyInfo } from '@/api/graphql/hooks/users/useGetMyInfo';
 import { UserRole } from '@/api/graphql/codegen/graphql';
-import { useUpdateProfile } from '@/api/graphql/hooks/useUpdateProfile';
+import { useUpdateProfile } from '@/api/graphql/hooks/users/useUpdateProfile';
 import { snackMessage } from '@/store/snackMessage';
 import CommonLoading from '../../../../components/ui/loading/CommonLoading';
+import BaseSelect from '@/components/ui/select/BaseSelect';
 
 interface Props {
   open: boolean;
@@ -67,22 +68,14 @@ const EditSelfRoleModal: FC<Props> = ({ open, onClose }) => {
       <Typography sx={{ color: (theme) => theme.palette.warning.dark }}>
         다른권한으로 수정시 다시 권한수정이 불가능합니다.
       </Typography>
-      <FormControl sx={{ mt: 3 }} fullWidth>
-        <InputLabel id="role_change_select">권한</InputLabel>
-        <Select
-          size="small"
+      <FormControl fullWidth sx={{ mt: 3 }}>
+        <BaseSelect
+          label="권한"
           defaultValue={role}
           value={role}
-          label="권한"
-          id="role_change_select"
-          onChange={onChangeRole}
-        >
-          {Object.values(UserRole).map((role) => (
-            <MenuItem value={role} key={role}>
-              {role}
-            </MenuItem>
-          ))}
-        </Select>
+          onChangeValue={onChangeRole}
+          optionItems={Object.values(UserRole)}
+        />
       </FormControl>
       <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
         <Button variant="outlined" onClick={handleClose}>

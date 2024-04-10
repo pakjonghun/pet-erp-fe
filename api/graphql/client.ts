@@ -2,7 +2,8 @@ import { BASE_URL } from '@/api/constants';
 import { PUBLIC_PATH } from '@/constants';
 import { isLogin } from '@/store/isLogin';
 import { getFirstPath } from '@/util';
-import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
+import { ApolloClient, InMemoryCache, createHttpLink, gql } from '@apollo/client';
+import { createFragmentRegistry } from '@apollo/client/cache';
 import { onError } from '@apollo/client/link/error';
 
 const logoutLink = onError(({ networkError, graphQLErrors }) => {
@@ -23,7 +24,22 @@ const link = createHttpLink({
 });
 
 export const client = new ApolloClient({
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    fragments: createFragmentRegistry(gql`
+      fragment LogFragment on Log {
+        _id
+        userId
+        description
+        logType
+      }
+
+      fragment UserFragment on User {
+        id
+        role
+        createdAt
+      }
+    `),
+  }),
   link: logoutLink.concat(link),
   connectToDevTools: true,
 });

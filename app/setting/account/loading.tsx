@@ -1,7 +1,7 @@
 import PageLoading from '@/components/ui/loading/PageLoading';
 
-const AccountLoading = () => {
+const SettingLoading = () => {
   return <PageLoading />;
 };
 
-export default AccountLoading;
+export default SettingLoading;

@@ -13,7 +13,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  fragment UserFragment on User {\n    id\n    role\n    createdAt\n  }\n": types.UserFragmentFragmentDoc,
+    "\n      fragment LogFragment on Log {\n        _id\n        userId\n        description\n        logType\n      }\n\n      fragment UserFragment on User {\n        id\n        role\n        createdAt\n      }\n    ": types.LogFragmentFragmentDoc,
+    "\n  query logs($findLogsQuery: FindLogsDTO!) {\n    logs(findLogsQuery: $findLogsQuery) {\n      totalCount\n      data {\n        ...LogFragment\n      }\n    }\n  }\n": types.LogsDocument,
     "\n  mutation updateUser($updateUserInput: UpdateUserDTO!) {\n    updateUser(updateUserInput: $updateUserInput) {\n      id\n      role\n      createdAt\n    }\n  }\n": types.UpdateUserDocument,
     "\n  mutation CreateUser($createUserInput: CreateUserDTO!) {\n    createUser(createUserInput: $createUserInput) {\n      id\n      role\n      createdAt\n    }\n  }\n": types.CreateUserDocument,
     "\n  mutation RemoveUser($id: String!) {\n    removeUser(id: $id) {\n      id\n    }\n  }\n": types.RemoveUserDocument,
@@ -39,7 +40,11 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  fragment UserFragment on User {\n    id\n    role\n    createdAt\n  }\n"): (typeof documents)["\n  fragment UserFragment on User {\n    id\n    role\n    createdAt\n  }\n"];
+export function graphql(source: "\n      fragment LogFragment on Log {\n        _id\n        userId\n        description\n        logType\n      }\n\n      fragment UserFragment on User {\n        id\n        role\n        createdAt\n      }\n    "): (typeof documents)["\n      fragment LogFragment on Log {\n        _id\n        userId\n        description\n        logType\n      }\n\n      fragment UserFragment on User {\n        id\n        role\n        createdAt\n      }\n    "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query logs($findLogsQuery: FindLogsDTO!) {\n    logs(findLogsQuery: $findLogsQuery) {\n      totalCount\n      data {\n        ...LogFragment\n      }\n    }\n  }\n"): (typeof documents)["\n  query logs($findLogsQuery: FindLogsDTO!) {\n    logs(findLogsQuery: $findLogsQuery) {\n      totalCount\n      data {\n        ...LogFragment\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

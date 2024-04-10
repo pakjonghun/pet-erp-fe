@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { graphql } from '../codegen';
+import { graphql } from '../../codegen';
 
 export const getMyInfoDocument = graphql(`
   query myInfo {

@@ -5,7 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { LoginForm, loginSchema } from './validate';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useLogin } from '@/api/rest/hooks/auth/useAuth';
-import { useGetMyInfo } from '@/api/graphql/hooks/useGetMyInfo';
+import { useGetMyInfo } from '@/api/graphql/hooks/users/useGetMyInfo';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Loading from '@/components/ui/loading/PageLoading';
