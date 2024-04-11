@@ -34,7 +34,7 @@ export type FindLogsDto = {
   from?: InputMaybe<Scalars['Date']['input']>;
   keyword: Scalars['String']['input'];
   keywordTarget: Scalars['String']['input'];
-  offset: Scalars['Int']['input'];
+  limit: Scalars['Int']['input'];
   order?: InputMaybe<Order>;
   skip: Scalars['Int']['input'];
   sort?: InputMaybe<Scalars['String']['input']>;

@@ -1,4 +1,4 @@
-import { FindLogsDto, QueryLogsArgs } from './codegen/graphql';
+import { QueryLogsArgs } from './codegen/graphql';
 import { BASE_URL } from '@/api/constants';
 import { PUBLIC_PATH } from '@/constants';
 import { isLogin } from '@/store/isLogin';
@@ -6,6 +6,14 @@ import { getFirstPath } from '@/util';
 import { ApolloClient, InMemoryCache, createHttpLink, gql } from '@apollo/client';
 import { createFragmentRegistry } from '@apollo/client/cache';
 import { onError } from '@apollo/client/link/error';
+
+const merge = (existing = { totalCount: 0, data: [] }, incoming: any, { args }: any) => {
+  const { args: _args } = args as unknown as { args: QueryLogsArgs };
+  const existingData = existing.data;
+  const incomingData = incoming.data;
+  const mergedData = [...existingData, ...incomingData];
+  return { totalCount: incoming.totalCount, data: mergedData };
+};
 
 const logoutLink = onError(({ networkError, graphQLErrors }) => {
   const networkStatusCode = networkError && 'statusCode' in networkError && networkError.statusCode;
@@ -44,19 +52,14 @@ export const client = new ApolloClient({
       Query: {
         fields: {
           logs: {
-            keyArgs: [],
-            merge(existing = { totalCount: 0, data: [] }, incoming, args) {
-              const { args: _args } = args as unknown as { args: QueryLogsArgs };
-              const existingData = existing.data;
-              const incomingData = incoming.data;
-              const mergedData = [...existingData, ...incomingData];
-              return { totalCount: incoming.totalCount, data: mergedData };
-            },
+            keyArgs: false,
+            merge,
           },
         },
       },
     },
   }),
+
   link: logoutLink.concat(link),
   connectToDevTools: true,
 });

@@ -1,15 +1,6 @@
 'use client';
 
-import {
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Button, FormControl, SelectChangeEvent, Stack, Typography } from '@mui/material';
 import { FC, useState } from 'react';
 import BaseModal from '../../../../components/ui/modal/BaseModal';
 import { useGetMyInfo } from '@/api/graphql/hooks/users/useGetMyInfo';
@@ -33,7 +24,7 @@ const EditSelfRoleModal: FC<Props> = ({ open, onClose }) => {
   };
 
   const handleClose = () => {
-    const originRole = myInfo!.myInfo.role;
+    const originRole = myInfo?.myInfo.role;
     if (!originRole) return;
 
     setRole(originRole);

@@ -15,33 +15,30 @@ import useTextDebounce from '@/hooks/useTextDebounce';
 interface Props {
   findLogsQuery: FindLogsDto;
   setFindLogsQuery: (query: Partial<FindLogsDto>) => void;
-  toggleFilter: (element: HTMLElement) => void;
 }
 
 const hangleMapper = {
-  로그기록: 'description',
+  로그내용: 'description',
   로그타입: 'logType',
   대상유저: 'userId',
 };
 const valueMapper = {
-  description: '로그기록',
+  description: '로그내용',
   logType: '로그타입',
   userId: '대상유저',
 };
 
-const Search: FC<Props> = ({ findLogsQuery, setFindLogsQuery, toggleFilter }) => {
+const Search: FC<Props> = ({ findLogsQuery, setFindLogsQuery }) => {
   const [keyword, setKeyword] = useState('');
   const delayText = useTextDebounce(keyword);
 
   useEffect(() => {
-    if (!delayText) return;
-
     setFindLogsQuery({
       keyword: delayText,
     });
   }, [delayText]);
 
-  const optionItems: (keyof typeof hangleMapper)[] = ['로그기록', '로그타입', '대상유저'];
+  const optionItems: (keyof typeof hangleMapper)[] = ['로그내용', '로그타입', '대상유저'];
 
   const handleChangeSelect = (event: SelectChangeEvent) => {
     const selectedValue = event.target.value;

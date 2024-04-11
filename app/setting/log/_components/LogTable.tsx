@@ -1,7 +1,7 @@
-import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { FC, useEffect } from 'react';
 import {
-  IconButton,
+  CircularProgress,
+  Collapse,
   Paper,
   Table,
   TableBody,
@@ -11,17 +11,18 @@ import {
   TableRow,
   alpha,
 } from '@mui/material';
-import { FC } from 'react';
 import { FindLogsDto, Log } from '@/api/graphql/codegen/graphql';
 import { useFindLogs } from '@/api/graphql/hooks/log/useFindLogs';
 import dayjs from 'dayjs';
+import { client } from '@/api/graphql/client';
+import useInfinityScroll from '@/hooks/useInfinityScroll';
 
 interface Props {
   findLogsQuery: FindLogsDto;
 }
 
 const LogTable: FC<Props> = ({ findLogsQuery }) => {
-  const { data, fetchMore } = useFindLogs({ findLogsQuery });
+  const { data, loading, networkStatus, called, fetchMore } = useFindLogs({ findLogsQuery });
   const createRow = (log: Omit<Log, '__typename'>) => {
     const copyData = Object.assign({}, log);
     copyData.createdAt = dayjs(log.createdAt).format('YYYY. MM. DD.');
@@ -29,24 +30,33 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
   };
 
   const rows = data?.logs?.data?.map((row) => createRow(row as Log)) ?? [];
+  const callback: IntersectionObserverCallback = (entries) => {
+    if (entries[0].isIntersecting) {
+      const totalCount = data?.logs.totalCount;
+      if (totalCount && totalCount > rows.length) {
+        fetchMore({
+          variables: {
+            findLogsQuery: {
+              ...findLogsQuery,
+              skip: rows.length,
+            },
+          },
+        });
+      }
+    }
+  };
+
+  const scrollRef = useInfinityScroll({ callback });
+  useEffect(() => {
+    client.cache.evict({ fieldName: 'logs' });
+    client.cache.gc();
+  }, [findLogsQuery]);
+
+  const isLoading = networkStatus === 1 || networkStatus === 3;
 
   return (
     <Paper sx={{ px: 3 }}>
-      <button
-        onClick={() =>
-          fetchMore({
-            variables: {
-              findLogsQuery: {
-                ...findLogsQuery,
-                skip: rows.length,
-              },
-            },
-          })
-        }
-      >
-        add
-      </button>
-      <TableContainer sx={{ maxHeight: 800, width: '100%' }}>
+      <TableContainer sx={{ maxHeight: 200, width: '100%' }}>
         <Table sx={{ tableLayout: 'auto' }} stickyHeader>
           <TableHead>
             <TableRow hover>
@@ -57,7 +67,7 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
+            {rows.map((row, index) => (
               <TableRow
                 sx={{
                   '&:hover': {
@@ -65,6 +75,7 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
                   },
                 }}
                 key={row._id}
+                ref={index === rows.length - 1 ? scrollRef : null}
               >
                 <TableCell sx={{ px: 3, whiteSpace: 'nowrap' }}>{row.createdAt}</TableCell>
                 <TableCell sx={{ px: 3 }}>{row.userId}</TableCell>
@@ -72,6 +83,11 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
                 <TableCell sx={{ px: 3 }}>{row.logType}</TableCell>
               </TableRow>
             ))}
+            <TableRow>
+              <TableCell align="center" colSpan={4}>
+                <Collapse in={isLoading}>{<CircularProgress />}</Collapse>
+              </TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>

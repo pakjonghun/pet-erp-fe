@@ -1,2 +1,2 @@
 export const PUBLIC_PATH = ['login'];
-export const OFFSET = 3;
+export const LIMIT = 3;

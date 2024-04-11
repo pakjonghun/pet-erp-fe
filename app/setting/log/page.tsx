@@ -1,7 +1,7 @@
 'use client';
 
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { FindLogsDto, Order } from '@/api/graphql/codegen/graphql';
 import Search from './_components/Search';
 import { Box, InputAdornment, TextField } from '@mui/material';
@@ -9,8 +9,7 @@ import CommonDateFilter from '@/components/calendar/CommonDateFilter';
 import { NullableRange } from '@/components/calendar/type';
 import { getStringRange, getThisMonth } from '@/components/calendar/utils';
 import LogTable from './_components/LogTable';
-import CommonLoading from '@/components/ui/loading/CommonLoading';
-import { OFFSET } from '@/constants';
+import { LIMIT } from '@/constants';
 
 const LogPage = () => {
   const { from, to } = getThisMonth();
@@ -18,7 +17,7 @@ const LogPage = () => {
   const defaultVariables: FindLogsDto = {
     keyword: '',
     keywordTarget: 'description',
-    offset: OFFSET,
+    limit: LIMIT,
     skip: 0,
     order: Order.Desc,
     sort: 'createdAt',
@@ -53,11 +52,7 @@ const LogPage = () => {
           justifyContent: 'space-between',
         }}
       >
-        <Search
-          toggleFilter={setFilterAnchor}
-          findLogsQuery={findLogsQuery}
-          setFindLogsQuery={handleSetFindLogsQuery}
-        />
+        <Search findLogsQuery={findLogsQuery} setFindLogsQuery={handleSetFindLogsQuery} />
         <TextField
           sx={{
             mt: {
@@ -70,7 +65,7 @@ const LogPage = () => {
           onClick={(event) => setFilterAnchor(event.currentTarget)}
           InputProps={{
             endAdornment: (
-              <InputAdornment position="end">
+              <InputAdornment sx={{ cursor: 'pointer' }} position="end">
                 <CalendarTodayOutlinedIcon />
               </InputAdornment>
             ),
