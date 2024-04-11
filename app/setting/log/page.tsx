@@ -91,9 +91,9 @@ const LogPage = () => {
           }}
         />
       </Box>
-      <Suspense fallback={<CommonLoading />}>
-        <LogTable findLogsQuery={findLogsQuery} />
-      </Suspense>
+      {/* <Suspense fallback={<CommonLoading />}> */}
+      <LogTable findLogsQuery={findLogsQuery} />
+      {/* </Suspense> */}
     </Box>
   );
 };

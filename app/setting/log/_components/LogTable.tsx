@@ -22,14 +22,13 @@ interface Props {
 
 const LogTable: FC<Props> = ({ findLogsQuery }) => {
   const { data, fetchMore } = useFindLogs({ findLogsQuery });
-  console.log('data : ', data);
   const createRow = (log: Omit<Log, '__typename'>) => {
     const copyData = Object.assign({}, log);
     copyData.createdAt = dayjs(log.createdAt).format('YYYY. MM. DD.');
     return copyData;
   };
 
-  const rows = data.logs.data?.map((row) => createRow(row as Log));
+  const rows = data?.logs?.data?.map((row) => createRow(row as Log)) ?? [];
 
   return (
     <Paper sx={{ px: 3 }}>

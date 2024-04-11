@@ -1,5 +1,5 @@
 import { graphql } from '../../codegen';
-import { useSuspenseQuery } from '@apollo/client';
+import { useQuery, useSuspenseQuery } from '@apollo/client';
 import { QueryLogsArgs } from '../../codegen/graphql';
 
 const findLogDocument = graphql(`
@@ -14,5 +14,5 @@ const findLogDocument = graphql(`
 `);
 
 export const useFindLogs = (variables: QueryLogsArgs) => {
-  return useSuspenseQuery(findLogDocument, { variables, returnPartialData: true });
+  return useQuery(findLogDocument, { variables, returnPartialData: true });
 };
