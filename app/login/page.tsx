@@ -39,7 +39,8 @@ const LoginPage = () => {
         await client.refetchQueries({ include: 'active' });
       },
       onError: (error) => {
-        snackMessage({ message: '로그인이 실패했습니다.', severity: 'error' });
+        const message = error.response?.data.message;
+        snackMessage({ message: message ?? '로그인이 실패했습니다.', severity: 'error' });
       },
     });
   };
@@ -49,7 +50,7 @@ const LoginPage = () => {
   if (!loading && myInfo) return <></>;
 
   return (
-    <Box sx={{ bgcolor: (theme) => theme.palette.primary.light }}>
+    <Box>
       <form onSubmit={handleSubmit(submit)}>
         <Stack sx={{ mx: 'auto', pt: '20%', px: 3 }} maxWidth="sm" direction="column" gap={2}>
           <Controller
