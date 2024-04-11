@@ -16,13 +16,16 @@ import { useFindLogs } from '@/api/graphql/hooks/log/useFindLogs';
 import dayjs from 'dayjs';
 import { client } from '@/api/graphql/client';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
+import LoadingRow from '@/components/table/LoadingRow';
+import EmptyRow from '@/components/table/EmptyRow';
+import Cell from '@/components/table/Cell';
 
 interface Props {
   findLogsQuery: FindLogsDto;
 }
 
 const LogTable: FC<Props> = ({ findLogsQuery }) => {
-  const { data, loading, networkStatus, called, fetchMore } = useFindLogs({ findLogsQuery });
+  const { data, networkStatus, fetchMore } = useFindLogs({ findLogsQuery });
   const createRow = (log: Omit<Log, '__typename'>) => {
     const copyData = Object.assign({}, log);
     copyData.createdAt = dayjs(log.createdAt).format('YYYY. MM. DD.');
@@ -53,20 +56,22 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
   }, [findLogsQuery]);
 
   const isLoading = networkStatus === 1 || networkStatus === 3;
+  const isEmpty = rows.length === 0;
 
   return (
     <Paper sx={{ px: 3 }}>
-      <TableContainer sx={{ maxHeight: 200, width: '100%' }}>
+      <TableContainer sx={{ maxHeight: 1000, width: '100%' }}>
         <Table sx={{ tableLayout: 'auto' }} stickyHeader>
           <TableHead>
             <TableRow hover>
-              <TableCell sx={{ px: 3, width: 100 }}>날짜</TableCell>
-              <TableCell sx={{ px: 3, width: 100 }}>작성자</TableCell>
-              <TableCell sx={{ px: 3, width: '60%' }}>내용</TableCell>
-              <TableCell sx={{ px: 3, width: 100 }}>로그타입</TableCell>
+              <Cell>날짜</Cell>
+              <Cell>작성자</Cell>
+              <Cell width="60%">내용</Cell>
+              <Cell>로그타입</Cell>
             </TableRow>
           </TableHead>
           <TableBody>
+            <EmptyRow colSpan={4} isEmpty={isEmpty} />
             {rows.map((row, index) => (
               <TableRow
                 sx={{
@@ -77,17 +82,13 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
                 key={row._id}
                 ref={index === rows.length - 1 ? scrollRef : null}
               >
-                <TableCell sx={{ px: 3, whiteSpace: 'nowrap' }}>{row.createdAt}</TableCell>
-                <TableCell sx={{ px: 3 }}>{row.userId}</TableCell>
-                <TableCell sx={{ px: 3 }}>{row.description}</TableCell>
-                <TableCell sx={{ px: 3 }}>{row.logType}</TableCell>
+                <Cell sx={{ whiteSpace: 'nowrap' }}>{row.createdAt}</Cell>
+                <Cell>{row.userId}</Cell>
+                <Cell>{row.description}</Cell>
+                <Cell>{row.logType}</Cell>
               </TableRow>
             ))}
-            <TableRow>
-              <TableCell align="center" colSpan={4}>
-                <Collapse in={isLoading}>{<CircularProgress />}</Collapse>
-              </TableCell>
-            </TableRow>
+            <LoadingRow isLoading={isLoading} colSpan={4} />
           </TableBody>
         </Table>
       </TableContainer>
