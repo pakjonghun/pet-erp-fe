@@ -1,7 +1,7 @@
+import { FC } from 'react';
 import { MenuItem } from '@/components/layout/type';
 import { Button, Stack, Typography } from '@mui/material';
 import Link from 'next/link';
-import React, { FC } from 'react';
 
 interface Props {
   selected: boolean;
@@ -14,10 +14,16 @@ const HeaderMenu: FC<Props> = ({ selected, menuKey, menu: { icon, label, role } 
     <Button
       variant="contained"
       sx={{
+        py: 1,
+        px: 0,
+        width: 130,
         border: 'none',
         boxShadow: 'none',
         borderRadius: 1,
         bgcolor: (theme) => (selected ? theme.palette.action.active : ''),
+        '&:hover': {
+          boxShadow: 'none',
+        },
       }}
     >
       <Stack
@@ -25,6 +31,8 @@ const HeaderMenu: FC<Props> = ({ selected, menuKey, menu: { icon, label, role } 
         alignItems="center"
         component={Link}
         sx={{
+          display: 'flex',
+          justifyContent: 'center',
           gap: 1,
           px: 2,
           width: '100%',
@@ -33,6 +41,7 @@ const HeaderMenu: FC<Props> = ({ selected, menuKey, menu: { icon, label, role } 
         }}
         href={`/${menuKey}`}
       >
+        {icon}
         <Typography
           noWrap
           sx={{

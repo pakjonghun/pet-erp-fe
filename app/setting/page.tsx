@@ -3,7 +3,7 @@
 import { useGetMyInfo } from '@/api/graphql/hooks/users/useGetMyInfo';
 import LabelText from '@/components/ui/typograph/LabelText';
 import { Edit } from '@mui/icons-material';
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Box, Button, Stack } from '@mui/material';
 import { useState } from 'react';
 import EditSelfRoleModal from './account/_components/EditSelfRoleModal';
 import EditPasswordModal from './account/_components/EditPasswordModal';
