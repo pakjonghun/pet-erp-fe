@@ -18,10 +18,31 @@ export type Scalars = {
   Date: { input: any; output: any; }
 };
 
+export type Client = {
+  __typename?: 'Client';
+  /** Example field (placeholder) */
+  exampleField: Scalars['Int']['output'];
+};
+
+export type CreateClientInput = {
+  /** Example field (placeholder) */
+  exampleField: Scalars['Int']['input'];
+};
+
 export type CreateLogDto = {
   description: Scalars['String']['input'];
   logType: LogType;
   userId: Scalars['String']['input'];
+};
+
+export type CreateProductInput = {
+  category?: InputMaybe<Scalars['String']['input']>;
+  code: Scalars['String']['input'];
+  leadTime?: InputMaybe<Scalars['Int']['input']>;
+  maintainDate?: InputMaybe<Scalars['Int']['input']>;
+  name: Scalars['String']['input'];
+  salePrice: Scalars['Int']['input'];
+  wonPrice: Scalars['Int']['input'];
 };
 
 export type CreateUserDto = {
@@ -66,11 +87,22 @@ export enum LogType {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createClient: Client;
   createLog: Log;
+  createProduct: Product;
   createUser: User;
+  removeClient: Client;
+  removeProduct: Product;
   removeUser: User;
+  updateClient: Client;
+  updateProduct: Product;
   updateProfile: User;
   updateUser: User;
+};
+
+
+export type MutationCreateClientArgs = {
+  createClientInput: CreateClientInput;
 };
 
 
@@ -79,13 +111,38 @@ export type MutationCreateLogArgs = {
 };
 
 
+export type MutationCreateProductArgs = {
+  createProductInput: CreateProductInput;
+};
+
+
 export type MutationCreateUserArgs = {
   createUserInput: CreateUserDto;
 };
 
 
+export type MutationRemoveClientArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type MutationRemoveProductArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationRemoveUserArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateClientArgs = {
+  updateClientInput: UpdateClientInput;
+};
+
+
+export type MutationUpdateProductArgs = {
+  updateProductInput: UpdateProductInput;
 };
 
 
@@ -110,12 +167,31 @@ export enum Order {
   Desc = 'DESC'
 }
 
+export type Product = {
+  __typename?: 'Product';
+  _id: Scalars['ID']['output'];
+  category?: Maybe<Scalars['String']['output']>;
+  code: Scalars['String']['output'];
+  leadTime?: Maybe<Scalars['Int']['output']>;
+  maintainDate?: Maybe<Scalars['Int']['output']>;
+  name: Scalars['String']['output'];
+  salePrice: Scalars['Int']['output'];
+  wonPrice: Scalars['Int']['output'];
+};
+
 export type Query = {
   __typename?: 'Query';
+  client: Client;
   logs: FindLogsResponseDto;
   myInfo: MyInfo;
+  product: Product;
   user: User;
   users: Array<User>;
+};
+
+
+export type QueryClientArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -124,8 +200,30 @@ export type QueryLogsArgs = {
 };
 
 
+export type QueryProductArgs = {
+  _id: Scalars['String']['input'];
+};
+
+
 export type QueryUserArgs = {
   id: Scalars['String']['input'];
+};
+
+export type UpdateClientInput = {
+  /** Example field (placeholder) */
+  exampleField?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['Int']['input'];
+};
+
+export type UpdateProductInput = {
+  _id: Scalars['String']['input'];
+  category?: InputMaybe<Scalars['String']['input']>;
+  code?: InputMaybe<Scalars['String']['input']>;
+  leadTime?: InputMaybe<Scalars['Int']['input']>;
+  maintainDate?: InputMaybe<Scalars['Int']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  salePrice?: InputMaybe<Scalars['Int']['input']>;
+  wonPrice?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type UpdateProfileDto = {

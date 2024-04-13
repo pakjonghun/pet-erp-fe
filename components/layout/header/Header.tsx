@@ -6,6 +6,9 @@ import Hero from './Hero';
 import { FC } from 'react';
 import MobileNavTrigger from './MobileNavTrigger';
 import SettingMenuTrigger from './SettingMenuTrigger';
+import WebNav from '../navigation/WebNav';
+import NavContent from '../navigation/NavContent';
+import HeaderNav from '../navigation/\bHeaderNav';
 
 interface Props {
   isLogin: boolean;
@@ -25,10 +28,15 @@ const Header: FC<Props> = ({ isLogin, toggleOpen }) => {
       color="primary"
       elevation={1}
     >
-      <Toolbar sx={{ display: 'flx', justifyContent: 'space-between' }}>
-        <Hero isLogin={isLogin} isMobile={false} />
+      <Toolbar sx={{ display: 'flex', gap: 2 }}>
+        {/* <WebNav> */}
+        {/* <NavContent /> */}
+        {/* </WebNav> */}
+
         {isLogin && <MobileNavTrigger toggleOpen={toggleOpen} />}
-        <Hero isLogin={isLogin} isMobile />
+
+        <Hero isLogin={isLogin} />
+        <HeaderNav />
         {isLogin && <SettingMenuTrigger />}
       </Toolbar>
     </AppBar>

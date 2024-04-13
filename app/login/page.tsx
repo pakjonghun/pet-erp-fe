@@ -14,7 +14,11 @@ import { client } from '@/api/graphql/client';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 
 const LoginPage = () => {
-  const { control, handleSubmit } = useForm<LoginForm>({
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       id: '',
@@ -56,7 +60,7 @@ const LoginPage = () => {
           <Controller
             name="id"
             control={control}
-            render={({ field, formState: { errors } }) => {
+            render={({ field }) => {
               return (
                 <TextField
                   {...field}
@@ -71,7 +75,7 @@ const LoginPage = () => {
           <Controller
             name="password"
             control={control}
-            render={({ field, formState: { errors } }) => {
+            render={({ field }) => {
               return (
                 <TextField
                   {...field}

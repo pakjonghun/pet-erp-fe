@@ -33,22 +33,14 @@ const MainLayout: FC<Props> = ({ children }) => {
   return (
     <Box component="main">
       {!isPublicPath && (
-        <>
-          <MobileNav open={open} onClose={onClose}>
-            <NavContent />
-          </MobileNav>
-          <WebNav>
-            <NavContent />
-          </WebNav>
-        </>
+        <MobileNav open={open} onClose={onClose}>
+          <NavContent />
+        </MobileNav>
       )}
       <Box
         sx={{
           ml: 'auto',
-          width: {
-            sm: '100%',
-            md: !isPublicPath ? `calc(100% - ${NAV_WIDTH}px)` : '100%',
-          },
+          width: '100%',
         }}
       >
         <Header isLogin={isLogin} toggleOpen={toggleOpen} />

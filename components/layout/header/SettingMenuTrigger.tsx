@@ -79,7 +79,7 @@ const SettingMenuTrigger = () => {
   const settingMenuKeys = Object.keys(SettingMenus) as (keyof typeof SettingMenus)[];
 
   return (
-    <Box>
+    <Box sx={{ ml: 'auto' }}>
       <IconButton
         onClick={handleClickSetting}
         size="small"
