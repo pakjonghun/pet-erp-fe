@@ -47,6 +47,35 @@ export const client = new ApolloClient({
         role
         createdAt
       }
+
+      fragment ProductSaleFragment on ProductSaleData {
+        _id
+        barCode
+        code
+        leadTime
+        maintainDate
+        name
+        salePrice
+      }
+
+      fragment ClientInfo on ClientInfo {
+        _id {
+          productCode
+          mallId
+        }
+        averagePayCost
+        accPayCost
+        accCount
+        accProfit
+      }
+
+      fragment SaleInfo on SaleInfo {
+        accPayCost
+        accCount
+        name
+        accProfit
+        averagePayCost
+      }
     `),
     typePolicies: {
       Query: {

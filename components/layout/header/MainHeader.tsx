@@ -1,13 +1,11 @@
 'use client';
 
+import { FC } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Hero from './Hero';
-import { FC } from 'react';
 import MobileNavTrigger from './MobileNavTrigger';
 import SettingMenuTrigger from './SettingMenuTrigger';
-import WebNav from '../navigation/WebNav';
-import NavContent from '../navigation/NavContent';
 import HeaderNav from '../navigation/\bHeaderNav';
 
 interface Props {
@@ -15,7 +13,7 @@ interface Props {
   toggleOpen: () => void;
 }
 
-const Header: FC<Props> = ({ isLogin, toggleOpen }) => {
+const MainHeader: FC<Props> = ({ isLogin, toggleOpen }) => {
   return (
     <AppBar
       sx={{
@@ -29,12 +27,7 @@ const Header: FC<Props> = ({ isLogin, toggleOpen }) => {
       elevation={1}
     >
       <Toolbar sx={{ display: 'flex', gap: 2 }}>
-        {/* <WebNav> */}
-        {/* <NavContent /> */}
-        {/* </WebNav> */}
-
         {isLogin && <MobileNavTrigger toggleOpen={toggleOpen} />}
-
         <Hero isLogin={isLogin} />
         <HeaderNav />
         {isLogin && <SettingMenuTrigger />}
@@ -42,4 +35,4 @@ const Header: FC<Props> = ({ isLogin, toggleOpen }) => {
     </AppBar>
   );
 };
-export default Header;
+export default MainHeader;

@@ -1,11 +1,12 @@
 'use client';
 
-import { AppBar, Tab, Tabs, Typography } from '@mui/material';
+import { Tab, Tabs } from '@mui/material';
 import React, { FC, ReactNode } from 'react';
 import { SettingTabs } from './constants';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { getOriginPath } from '@/util';
+import SubHeader from '@/components/layout/header/SubHeader';
 
 interface Props {
   children: ReactNode;
@@ -18,10 +19,7 @@ const SettingLayout: FC<Props> = ({ children }) => {
 
   return (
     <>
-      <AppBar sx={{ color: 'black', bgcolor: 'background.paper', boxShadow: 1 }} position="static">
-        <Typography variant="h4" component="h4" sx={{ fontWeight: 600, p: 3 }}>
-          설정
-        </Typography>
+      <SubHeader title="설정">
         <Tabs value={currentTabIndex} indicatorColor="primary">
           {tabs.map((tab) => {
             const tabItem = SettingTabs[tab];
@@ -45,7 +43,7 @@ const SettingLayout: FC<Props> = ({ children }) => {
             );
           })}
         </Tabs>
-      </AppBar>
+      </SubHeader>
       {children}
     </>
   );

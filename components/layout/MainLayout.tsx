@@ -1,11 +1,9 @@
 'use client';
 
 import { useGetMyInfo } from '@/api/graphql/hooks/users/useGetMyInfo';
-import { NAV_WIDTH } from '@/components/layout/constants';
-import Header from '@/components/layout/header/Header';
+import Header from '@/components/layout/header/MainHeader';
 import MobileNav from '@/components/layout/navigation/MobileNav';
 import NavContent from '@/components/layout/navigation/NavContent';
-import WebNav from '@/components/layout/navigation/WebNav';
 import useGetIsPublicPath from '@/hooks/useGetIsPublicPath';
 import { Box } from '@mui/material';
 import { useRouter } from 'next/navigation';

@@ -1,7 +1,5 @@
-import React from 'react';
-
 const SalePage = () => {
-  return <>sale</>;
+  return <div>children</div>;
 };
 
 export default SalePage;
