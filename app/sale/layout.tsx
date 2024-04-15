@@ -21,7 +21,7 @@ const SaleLayout: FC<Props> = ({ productSales, topClients, children }) => {
       >
         {topClients}
         {productSales}
-        {children}
+        {/* {children} */}
       </Stack>
     </>
   );

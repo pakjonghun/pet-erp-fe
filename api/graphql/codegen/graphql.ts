@@ -217,10 +217,12 @@ export type ProductSaleData = {
   barCode?: Maybe<Scalars['String']['output']>;
   clients: Array<ClientInfo>;
   code: Scalars['String']['output'];
+  lastWeek?: Maybe<SaleInfo>;
   leadTime?: Maybe<Scalars['Int']['output']>;
   maintainDate?: Maybe<Scalars['Int']['output']>;
   name: Scalars['String']['output'];
   salePrice: Scalars['Int']['output'];
+  thisMonth?: Maybe<SaleInfo>;
   thisWeek?: Maybe<SaleInfo>;
   today?: Maybe<SaleInfo>;
 };
