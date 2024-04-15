@@ -88,6 +88,10 @@ export const client = new ApolloClient({
             keyArgs: false,
             merge,
           },
+          topClients: {
+            keyArgs: false,
+            merge,
+          },
         },
       },
     },

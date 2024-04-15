@@ -8,13 +8,38 @@ import { getKCWFormat, getNumberWithComma } from '@/util';
 import TableTitle from '@/components/ui/typograph/TableTitle';
 import HeadCell from '@/components/table/HeadCell';
 import TablePage from '@/components/table/TablePage';
-import { TABLE_MAX_HEIGHT } from '@/constants';
+import { LIMIT, TABLE_MAX_HEIGHT } from '@/constants';
 import ScrollTableContainer from '@/components/table/ScrollTableContainer';
+import useInfinityScroll from '@/hooks/useInfinityScroll';
 
 const TopClients = () => {
-  const { data } = useTopClients();
-  const rows = data?.topClients ?? [];
-  const isEmpty = data?.topClients.length === 0;
+  const { data, fetchMore, networkStatus } = useTopClients({
+    limit: LIMIT,
+    skip: 0,
+  });
+
+  const rows = data?.topClients.data ?? [];
+  const isEmpty = rows.length === 0;
+
+  const callback: IntersectionObserverCallback = (entries) => {
+    if (entries[0].isIntersecting) {
+      if (networkStatus != 1 && networkStatus != 3) {
+        const totalCount = data?.topClients.totalCount;
+        if (totalCount != null && totalCount > rows.length) {
+          fetchMore({
+            variables: {
+              topClientInput: {
+                skip: rows.length,
+                limit: LIMIT,
+              },
+            },
+          });
+        }
+      }
+    }
+  };
+  const scrollRef = useInfinityScroll({ callback });
+
   return (
     <TablePage>
       <TableTitle title={`BEST 거래처`} />
@@ -30,14 +55,17 @@ const TopClients = () => {
           </TableHead>
           <TableBody>
             <EmptyRow colSpan={4} isEmpty={isEmpty} />
-            {rows.map((row) => (
-              <TableRow hover key={row.name}>
-                <Cell>{row.name}</Cell>
-                <Cell>{getNumberWithComma(row.accCount)}</Cell>
-                <Cell>{getKCWFormat(row.accPayCost)}</Cell>
-                <Cell>{getKCWFormat(row.accProfit)}</Cell>
-              </TableRow>
-            ))}
+            {rows.map((row, index) => {
+              const isLast = index === rows.length - 1;
+              return (
+                <TableRow ref={isLast ? scrollRef : null} hover key={row.name}>
+                  <Cell>{row.name}</Cell>
+                  <Cell>{getNumberWithComma(row.accCount)}</Cell>
+                  <Cell>{getKCWFormat(row.accPayCost)}</Cell>
+                  <Cell>{getKCWFormat(row.accProfit)}</Cell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </ScrollTableContainer>
