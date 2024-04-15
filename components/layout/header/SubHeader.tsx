@@ -1,20 +1,22 @@
 'use client';
 
 import { FC, ReactNode } from 'react';
-import { AppBar, Typography } from '@mui/material';
+import { AppBar, SxProps, Typography } from '@mui/material';
 
 interface Props {
   title: string;
+  sx?: SxProps;
   children?: ReactNode;
 }
 
-const SubHeader: FC<Props> = ({ title, children }) => {
+const SubHeader: FC<Props> = ({ title, children, sx }) => {
   return (
     <AppBar
       sx={{
         color: 'black',
         bgcolor: 'primary.light',
         boxShadow: 1,
+        ...sx,
       }}
       position="static"
     >

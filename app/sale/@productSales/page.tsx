@@ -15,6 +15,8 @@ import {
   FormGroup,
   TextField,
   InputAdornment,
+  Chip,
+  Stack,
 } from '@mui/material';
 import { ProductSaleData } from '@/api/graphql/codegen/graphql';
 import { Search } from '@mui/icons-material';
@@ -24,6 +26,7 @@ import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { LIMIT } from '@/constants';
 import TablePage from '@/components/table/TablePage';
 import ScrollTableContainer from '@/components/table/ScrollTableContainer';
+import ProductSaleModal from './_components/ProductSaleModal';
 
 const ProductSales = () => {
   const [keyword, setKeyword] = useState('');
@@ -55,9 +58,17 @@ const ProductSales = () => {
     }
   };
   const scrollRef = useInfinityScroll({ callback });
+  const [selectedProductSale, setSelectedProductSale] = useState<null | ProductSaleData>(null);
 
   return (
     <TablePage sx={{ flex: 1 }}>
+      {!!selectedProductSale && (
+        <ProductSaleModal
+          selectedProductSale={selectedProductSale}
+          open={selectedProductSale != null}
+          onClose={() => setSelectedProductSale(null)}
+        />
+      )}
       <TableTitle title="판매 매출현황" />
       <FormGroup sx={{ ml: 2 }}>
         <FormControl>
@@ -94,13 +105,28 @@ const ProductSales = () => {
               const row = item as unknown as ProductSaleData;
               const isLast = index === rows.length - 1;
               return (
-                <TableRow hover ref={isLast ? scrollRef : null} key={index}>
-                  <Cell>{row.name}</Cell>
+                <TableRow
+                  onClick={() => setSelectedProductSale(row)}
+                  hover
+                  ref={isLast ? scrollRef : null}
+                  key={index}
+                >
+                  <Cell sx={{ minWidth: 200 }}>{row.name}</Cell>
                   <Cell>{getKCWFormat(row.today?.accPayCost ?? 0)}</Cell>
                   <Cell>{getKCWFormat(row.thisWeek?.accPayCost ?? 0)}</Cell>
                   <Cell>{getKCWFormat(row.lastWeek?.accPayCost ?? 0)}</Cell>
                   <Cell>{getKCWFormat(row.thisMonth?.accPayCost ?? 0)}</Cell>
-                  <Cell>{row.clients.slice(0, 5).map((client) => client._id.mallId)}</Cell>
+                  <Cell sx={{ width: '30%' }}>
+                    <Stack direction="row" flexWrap="wrap" gap={1}>
+                      {row.clients.slice(0, 5).map((client) => (
+                        <Chip
+                          key={`${client._id.mallId}_${client._id.productCode}`}
+                          label={client._id.mallId}
+                          variant="outlined"
+                        />
+                      ))}
+                    </Stack>
+                  </Cell>
                 </TableRow>
               );
             })}

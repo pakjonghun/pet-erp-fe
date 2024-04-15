@@ -9,12 +9,12 @@ interface Props {
 const SaleLayout: FC<Props> = ({ productSales, topClients }) => {
   return (
     <Box sx={{ height: '100%' }}>
-      <SubHeader title="판매" />
+      <SubHeader sx={{ boxShadow: 'none' }} title="판매" />
       <Stack
         sx={{
           flexDirection: {
             xs: 'column',
-            lg: 'row',
+            xl: 'row',
           },
         }}
       >
