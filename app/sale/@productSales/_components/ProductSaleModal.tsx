@@ -31,10 +31,11 @@ const ProductSaleModal: FC<Props> = ({
   onClose,
 }) => {
   const { data, loading } = useProductSaleChart(code);
-  const dates = data?.productSale?.map((item) => dayjs(item._id).format('DD')) ?? [];
-  const profits = data?.productSale?.map((item) => item.accProfit) ?? [];
+  const dates = data?.productSale?.map((item) => new Date(item._id).getTime()) ?? [];
+  const accProfits = data?.productSale?.map((item) => item.accProfit) ?? [];
   const accPayCosts = data?.productSale?.map((item) => item.accPayCost) ?? [];
-  console.log('data : ', data);
+
+  console.log('data : ', dates);
   return (
     <BaseModal open={open} onClose={onClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
@@ -66,30 +67,30 @@ const ProductSaleModal: FC<Props> = ({
           <LineChart
             xAxis={[
               {
-                id: 'Dates',
                 data: dates,
+                id: 'dates',
+                scaleType: 'time',
+                valueFormatter: (value) => dayjs(value).format('MM월DD일'),
               },
             ]}
             series={[
               {
-                id: 'accProfits',
-                label: '순이익',
-                data: profits as number[],
-                stack: 'accProfits',
-                area: true,
+                id: 'accPayCosts',
+                label: '매출',
+                data: accPayCosts as number[],
                 showMark: false,
               },
               {
-                id: '매출',
-                label: '매출',
-                data: accPayCosts as number[],
-                stack: 'accPayCosts',
-                area: true,
+                id: 'accProfits',
+                label: '순이익',
+                data: accProfits as number[],
                 showMark: false,
               },
             ]}
+            margin={{
+              left: 90,
+            }}
             height={300}
-            margin={{ left: 90 }}
           />
         )}
       </Box>

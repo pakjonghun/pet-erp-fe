@@ -44,7 +44,6 @@ const ProductSales = () => {
       if (networkStatus != 1 && networkStatus != 3) {
         const totalCount = data?.productSales.totalCount;
         if (totalCount != null && totalCount > rows.length) {
-          console.log('fetch more');
           fetchMore({
             variables: {
               keywordTarget: 'name',
