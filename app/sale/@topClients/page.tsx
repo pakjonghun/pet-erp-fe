@@ -1,27 +1,24 @@
 'use client';
 
 import { useTopClients } from '@/api/graphql/hooks/client/useTopClients';
-import { Paper, Table, TableBody, TableContainer, TableHead, TableRow, alpha } from '@mui/material';
+import { Table, TableBody, TableHead, TableRow } from '@mui/material';
 import Cell from '@/components/table/Cell';
 import EmptyRow from '@/components/table/EmptyRow';
 import { getKCWFormat, getNumberWithComma } from '@/util';
 import TableTitle from '@/components/ui/typograph/TableTitle';
 import HeadCell from '@/components/table/HeadCell';
+import TablePage from '@/components/table/TablePage';
+import { TABLE_MAX_HEIGHT } from '@/constants';
+import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 
 const TopClients = () => {
   const { data } = useTopClients();
   const rows = data?.topClients ?? [];
   const isEmpty = data?.topClients.length === 0;
   return (
-    <Paper sx={{ m: 2, pt: 2, pb: 5, mt: 3 }}>
+    <TablePage>
       <TableTitle title={`BEST 거래처`} />
-      <TableContainer
-        sx={{
-          width: '100%',
-          overflow: 'auto',
-          maxHeight: 1000,
-        }}
-      >
+      <ScrollTableContainer sx={{ maxHeight: `${TABLE_MAX_HEIGHT + 71.98}px` }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow hover>
@@ -34,14 +31,7 @@ const TopClients = () => {
           <TableBody>
             <EmptyRow colSpan={4} isEmpty={isEmpty} />
             {rows.map((row) => (
-              <TableRow
-                sx={{
-                  '&:hover': {
-                    bgcolor: (theme) => alpha(theme.palette.primary.light, 0.5),
-                  },
-                }}
-                key={row.name}
-              >
+              <TableRow hover key={row.name}>
                 <Cell>{row.name}</Cell>
                 <Cell>{getNumberWithComma(row.accCount)}</Cell>
                 <Cell>{getKCWFormat(row.accPayCost)}</Cell>
@@ -50,8 +40,8 @@ const TopClients = () => {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
-    </Paper>
+      </ScrollTableContainer>
+    </TablePage>
   );
 };
 

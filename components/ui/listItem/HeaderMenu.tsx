@@ -14,6 +14,7 @@ const HeaderMenu: FC<Props> = ({ selected, menuKey, menu: { icon, label, role } 
     <Button
       variant="contained"
       sx={{
+        mr:1,
         py: 1,
         px: 0,
         width: 130,

@@ -9,6 +9,8 @@ import LoadingRow from '@/components/table/LoadingRow';
 import EmptyRow from '@/components/table/EmptyRow';
 import Cell from '@/components/table/Cell';
 import HeadCell from '@/components/table/HeadCell';
+import { TABLE_MAX_HEIGHT } from '@/constants';
+import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 
 interface Props {
   findLogsQuery: FindLogsDto;
@@ -49,7 +51,7 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
   const isEmpty = rows.length === 0;
 
   return (
-    <TableContainer sx={{ maxHeight: 1000, width: '100%', mt: 3 }}>
+    <ScrollTableContainer sx={{ mt: 3 }}>
       <Table sx={{ tableLayout: 'auto' }} stickyHeader>
         <TableHead>
           <TableRow>
@@ -72,7 +74,7 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
           <LoadingRow isLoading={isLoading} colSpan={4} />
         </TableBody>
       </Table>
-    </TableContainer>
+    </ScrollTableContainer>
   );
 };
 
