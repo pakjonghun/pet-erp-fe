@@ -1,8 +1,13 @@
+'use client';
+
 import { FC } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import BaseModal from '../../../../components/ui/modal/BaseModal';
 import { ProductSaleData } from '@/api/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
+import { useProductSaleChart } from '@/api/graphql/hooks/product/useProductSaleChart';
+import { LineChart } from '@mui/x-charts/LineChart';
+import dayjs from 'dayjs';
 
 interface Props {
   selectedProductSale: ProductSaleData;
@@ -25,6 +30,11 @@ const ProductSaleModal: FC<Props> = ({
   open,
   onClose,
 }) => {
+  const { data, loading } = useProductSaleChart(code);
+  const dates = data?.productSale?.map((item) => dayjs(item._id).format('DD')) ?? [];
+  const profits = data?.productSale?.map((item) => item.accProfit) ?? [];
+  const accPayCosts = data?.productSale?.map((item) => item.accPayCost) ?? [];
+  console.log('data : ', data);
   return (
     <BaseModal open={open} onClose={onClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
@@ -51,8 +61,37 @@ const ProductSaleModal: FC<Props> = ({
           );
         })}
       </Stack>
-      <Box sx={{ bgcolor: 'grey', width: '100%', height: 200, color: 'white', mt: 2 }}>
-        매출 차트위치(꺽은선 그래프)
+      <Box sx={{ bgcolor: 'grey.200', width: '100%', height: 320, color: 'white', mt: 2, pt: 2 }}>
+        {!!data && (
+          <LineChart
+            xAxis={[
+              {
+                id: 'Dates',
+                data: dates,
+              },
+            ]}
+            series={[
+              {
+                id: 'accProfits',
+                label: '순이익',
+                data: profits as number[],
+                stack: 'accProfits',
+                area: true,
+                showMark: false,
+              },
+              {
+                id: '매출',
+                label: '매출',
+                data: accPayCosts as number[],
+                stack: 'accPayCosts',
+                area: true,
+                showMark: false,
+              },
+            ]}
+            height={300}
+            margin={{ left: 90 }}
+          />
+        )}
       </Box>
     </BaseModal>
   );
