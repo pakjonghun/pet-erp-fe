@@ -1,16 +1,5 @@
 import { FC, useEffect } from 'react';
-import {
-  CircularProgress,
-  Collapse,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  alpha,
-} from '@mui/material';
+import { Table, TableBody, TableContainer, TableHead, TableRow, alpha } from '@mui/material';
 import { FindLogsDto, Log } from '@/api/graphql/codegen/graphql';
 import { useFindLogs } from '@/api/graphql/hooks/log/useFindLogs';
 import dayjs from 'dayjs';
@@ -19,6 +8,7 @@ import useInfinityScroll from '@/hooks/useInfinityScroll';
 import LoadingRow from '@/components/table/LoadingRow';
 import EmptyRow from '@/components/table/EmptyRow';
 import Cell from '@/components/table/Cell';
+import HeadCell from '@/components/table/HeadCell';
 
 interface Props {
   findLogsQuery: FindLogsDto;
@@ -59,40 +49,30 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
   const isEmpty = rows.length === 0;
 
   return (
-    <Paper sx={{ px: 3 }}>
-      <TableContainer sx={{ maxHeight: 1000, width: '100%' }}>
-        <Table sx={{ tableLayout: 'auto' }} stickyHeader>
-          <TableHead>
-            <TableRow hover>
-              <Cell>날짜</Cell>
-              <Cell>작성자</Cell>
-              <Cell width="60%">내용</Cell>
-              <Cell>로그타입</Cell>
+    <TableContainer sx={{ maxHeight: 1000, width: '100%', mt: 3 }}>
+      <Table sx={{ tableLayout: 'auto' }} stickyHeader>
+        <TableHead>
+          <TableRow>
+            <HeadCell text="날짜" />
+            <HeadCell text="작성자" />
+            <HeadCell tableCellProp={{ width: '60%' }} text="내용" />
+            <HeadCell text="로그타입" />
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <EmptyRow colSpan={4} isEmpty={isEmpty} />
+          {rows.map((row, index) => (
+            <TableRow hover key={row._id} ref={index === rows.length - 1 ? scrollRef : null}>
+              <Cell sx={{ whiteSpace: 'nowrap' }}>{row.createdAt}</Cell>
+              <Cell>{row.userId}</Cell>
+              <Cell>{row.description}</Cell>
+              <Cell>{row.logType}</Cell>
             </TableRow>
-          </TableHead>
-          <TableBody>
-            <EmptyRow colSpan={4} isEmpty={isEmpty} />
-            {rows.map((row, index) => (
-              <TableRow
-                sx={{
-                  '&:hover': {
-                    bgcolor: (theme) => alpha(theme.palette.primary.light, 0.5),
-                  },
-                }}
-                key={row._id}
-                ref={index === rows.length - 1 ? scrollRef : null}
-              >
-                <Cell sx={{ whiteSpace: 'nowrap' }}>{row.createdAt}</Cell>
-                <Cell>{row.userId}</Cell>
-                <Cell>{row.description}</Cell>
-                <Cell>{row.logType}</Cell>
-              </TableRow>
-            ))}
-            <LoadingRow isLoading={isLoading} colSpan={4} />
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Paper>
+          ))}
+          <LoadingRow isLoading={isLoading} colSpan={4} />
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 

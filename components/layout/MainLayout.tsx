@@ -1,5 +1,6 @@
 'use client';
 
+import { FC, ReactNode, useEffect, useState } from 'react';
 import { useGetMyInfo } from '@/api/graphql/hooks/users/useGetMyInfo';
 import Header from '@/components/layout/header/MainHeader';
 import MobileNav from '@/components/layout/navigation/MobileNav';
@@ -7,7 +8,6 @@ import NavContent from '@/components/layout/navigation/NavContent';
 import useGetIsPublicPath from '@/hooks/useGetIsPublicPath';
 import { Box } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { FC, ReactNode, useEffect, useState } from 'react';
 
 interface Props {
   children: ReactNode;

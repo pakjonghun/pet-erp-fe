@@ -2,7 +2,6 @@
 
 import { useTopClients } from '@/api/graphql/hooks/client/useTopClients';
 import { Paper, Table, TableBody, TableContainer, TableHead, TableRow, alpha } from '@mui/material';
-import { TOP_LIMIT } from './constants';
 import Cell from '@/components/table/Cell';
 import EmptyRow from '@/components/table/EmptyRow';
 import { getKCWFormat, getNumberWithComma } from '@/util';
@@ -14,14 +13,16 @@ const TopClients = () => {
   const rows = data?.topClients ?? [];
   const isEmpty = data?.topClients.length === 0;
   return (
-    <Paper sx={{ m: 2, p: 3, mt: 3 }}>
-      <TableTitle title={`상위 ${TOP_LIMIT}거래처`} />
+    <Paper sx={{ m: 2, pt: 2, pb: 5, mt: 3 }}>
+      <TableTitle title={`BEST 거래처`} />
       <TableContainer
         sx={{
           width: '100%',
+          overflow: 'auto',
+          maxHeight: 1000,
         }}
       >
-        <Table>
+        <Table stickyHeader>
           <TableHead>
             <TableRow hover>
               <HeadCell text="이름" />

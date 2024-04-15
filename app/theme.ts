@@ -14,11 +14,7 @@ const theme = createTheme({
     mode: 'light',
     primary: {
       main: '#077177',
-      light: '#EAF8F9',
-    },
-    background: {
-      // default: '#EAF8F9',
-      // paper: '#EAF8F9',
+      light: '#f2f9fa',
     },
   },
   typography: {

@@ -21,22 +21,44 @@ import {
 } from '@mui/material';
 import { ProductSaleData } from '@/api/graphql/codegen/graphql';
 import { Search } from '@mui/icons-material';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import useTextDebounce from '@/hooks/useTextDebounce';
+import useInfinityScroll from '@/hooks/useInfinityScroll';
+import { LIMIT } from '@/constants';
 
 const ProductSales = () => {
   const [keyword, setKeyword] = useState('');
   const delayedKeyword = useTextDebounce(keyword);
-  const { data } = useProductSales({
+  const { data, networkStatus, fetchMore } = useProductSales({
     keywordTarget: 'name',
     keyword: delayedKeyword,
-    limit: 10,
+    limit: LIMIT,
     skip: 0,
   });
   const rows = data?.productSales.data ?? [];
   const isEmpty = rows.length === 0;
+  const callback: IntersectionObserverCallback = (entries) => {
+    if (entries[0].isIntersecting) {
+      if (networkStatus != 1 && networkStatus != 3) {
+        const totalCount = data?.productSales.totalCount;
+        if (totalCount != null && totalCount > rows.length) {
+          console.log('fetch more');
+          fetchMore({
+            variables: {
+              keywordTarget: 'name',
+              keyword: delayedKeyword,
+              limit: LIMIT,
+              skip: rows.length,
+            },
+          });
+        }
+      }
+    }
+  };
+  const scrollRef = useInfinityScroll({ callback });
+
   return (
-    <Paper sx={{ m: 2, p: 3, mt: 3, flex: 1 }}>
+    <Paper sx={{ m: 2, p: 3, mt: 3, flex: 1, display: 'flex', flexDirection: 'column' }}>
       <TableTitle title="제품 판매현황" />
       <FormGroup>
         <FormControl>
@@ -57,10 +79,13 @@ const ProductSales = () => {
       </FormGroup>
       <TableContainer
         sx={{
+          // flex: 1,
+          maxHeight: 'calc(100vh - 71.98px - 63.98px - 63.99px - 89.98px)',
+          overflow: 'auto',
           width: '100%',
         }}
       >
-        <Table>
+        <Table stickyHeader>
           <TableHead>
             <TableRow hover>
               <HeadCell
@@ -82,8 +107,10 @@ const ProductSales = () => {
             <EmptyRow colSpan={4} isEmpty={isEmpty} />
             {rows.map((item, index) => {
               const row = item as unknown as ProductSaleData;
+              const isLast = index === rows.length - 1;
               return (
                 <TableRow
+                  ref={isLast ? scrollRef : null}
                   sx={{
                     '&:hover': {
                       bgcolor: (theme) => alpha(theme.palette.primary.light, 0.5),

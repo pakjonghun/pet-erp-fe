@@ -84,6 +84,10 @@ export const client = new ApolloClient({
             keyArgs: false,
             merge,
           },
+          productSales: {
+            keyArgs: false,
+            merge,
+          },
         },
       },
     },

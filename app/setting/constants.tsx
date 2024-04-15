@@ -14,6 +14,6 @@ export const SettingTabs = {
   },
   'setting/log': {
     role: [UserRole.Admin],
-    label: '이력 관리',
+    label: '로그 관리',
   },
 };

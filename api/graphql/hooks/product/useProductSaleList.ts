@@ -32,5 +32,6 @@ export const useProductSales = (productSaleInput: ProductSaleInput) => {
     variables: {
       productSaleInput,
     },
+    notifyOnNetworkStatusChange: true,
   });
 };

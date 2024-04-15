@@ -10,6 +10,7 @@ import { NullableRange } from '@/components/calendar/type';
 import { getStringRange, getThisMonth } from '@/components/calendar/utils';
 import LogTable from './_components/LogTable';
 import { LIMIT } from '@/constants';
+import TableTitle from '@/components/ui/typograph/TableTitle';
 
 const LogPage = () => {
   const { from, to } = getThisMonth();
@@ -48,16 +49,16 @@ const LogPage = () => {
         overflow: 'hidden',
       }}
     >
+      <TableTitle title={`로그 관리`} />
       <Box
         sx={{
-          px: 3,
-          my: 5,
           display: 'flex',
           flexDirection: {
             xs: 'column',
             sm: 'row',
           },
           justifyContent: 'space-between',
+          px: 2,
         }}
       >
         <Search findLogsQuery={findLogsQuery} setFindLogsQuery={handleSetFindLogsQuery} />
@@ -94,9 +95,7 @@ const LogPage = () => {
           }}
         />
       </Box>
-      {/* <Suspense fallback={<CommonLoading />}> */}
       <LogTable findLogsQuery={findLogsQuery} />
-      {/* </Suspense> */}
     </Paper>
   );
 };

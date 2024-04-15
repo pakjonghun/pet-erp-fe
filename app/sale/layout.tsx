@@ -1,5 +1,5 @@
 import SubHeader from '@/components/layout/header/SubHeader';
-import { Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { FC, ReactNode } from 'react';
 interface Props {
   productSales: ReactNode;
@@ -8,7 +8,7 @@ interface Props {
 
 const SaleLayout: FC<Props> = ({ productSales, topClients }) => {
   return (
-    <>
+    <Box sx={{ height: '100%' }}>
       <SubHeader title="판매" />
       <Stack
         sx={{
@@ -21,7 +21,7 @@ const SaleLayout: FC<Props> = ({ productSales, topClients }) => {
         {topClients}
         {productSales}
       </Stack>
-    </>
+    </Box>
   );
 };
 
