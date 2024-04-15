@@ -8,7 +8,7 @@ interface Props {
 
 const SubHeader: FC<Props> = ({ title, children }) => {
   return (
-    <AppBar sx={{ color: 'black', bgcolor: 'background.paper', boxShadow: 1 }} position="static">
+    <AppBar sx={{ color: 'black', bgcolor: 'primary.light', boxShadow: 1 }} position="static">
       <Typography variant="h4" component="h4" sx={{ fontWeight: 600, p: 3 }}>
         {title}
       </Typography>

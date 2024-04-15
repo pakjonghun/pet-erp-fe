@@ -5,7 +5,7 @@ import Cell from '@/components/table/Cell';
 import EmptyRow from '@/components/table/EmptyRow';
 import HeadCell from '@/components/table/HeadCell';
 import TableTitle from '@/components/ui/typograph/TableTitle';
-import { getNumberWithComma, getKCWFormat } from '@/util';
+import { getKCWFormat } from '@/util';
 import {
   Paper,
   TableContainer,
@@ -14,18 +14,47 @@ import {
   TableRow,
   TableBody,
   alpha,
-  TableCell,
+  FormControl,
+  FormGroup,
+  TextField,
+  InputAdornment,
 } from '@mui/material';
-import { TOP_LIMIT } from '../@topClients/constants';
 import { ProductSaleData } from '@/api/graphql/codegen/graphql';
+import { Search } from '@mui/icons-material';
+import { useState } from 'react';
+import useTextDebounce from '@/hooks/useTextDebounce';
 
 const ProductSales = () => {
-  const { data } = useProductSales({ keywordTarget: 'code', keyword: '', limit: 10, skip: 0 });
+  const [keyword, setKeyword] = useState('');
+  const delayedKeyword = useTextDebounce(keyword);
+  const { data } = useProductSales({
+    keywordTarget: 'name',
+    keyword: delayedKeyword,
+    limit: 10,
+    skip: 0,
+  });
   const rows = data?.productSales.data ?? [];
   const isEmpty = rows.length === 0;
   return (
-    <Paper sx={{ m: 2 }}>
+    <Paper sx={{ m: 2, p: 3, mt: 3, flex: 1 }}>
       <TableTitle title="제품 판매현황" />
+      <FormGroup>
+        <FormControl>
+          <TextField
+            onChange={(event) => setKeyword(event.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Search />
+                </InputAdornment>
+              ),
+            }}
+            sx={{ width: 270, my: 2 }}
+            label="검색할 제품 이름을 입력하세요."
+            size="small"
+          />
+        </FormControl>
+      </FormGroup>
       <TableContainer
         sx={{
           width: '100%',
@@ -34,10 +63,14 @@ const ProductSales = () => {
         <Table>
           <TableHead>
             <TableRow hover>
-              <HeadCell tableCellProp={{ align: 'center', colSpan: 6 }} text="수익" />
+              <HeadCell
+                sx={{ bgcolor: 'grey.100' }}
+                tableCellProp={{ align: 'center', colSpan: 6 }}
+                text="수익"
+              />
             </TableRow>
             <TableRow hover>
-              <HeadCell sx={{ width: '100%' }} text="이름" />
+              <HeadCell text="이름" />
               <HeadCell text="오늘" />
               <HeadCell text="이번주" />
               <HeadCell text="지난주" />

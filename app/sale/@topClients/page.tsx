@@ -10,25 +10,22 @@ import TableTitle from '@/components/ui/typograph/TableTitle';
 import HeadCell from '@/components/table/HeadCell';
 
 const TopClients = () => {
-  const { data } = useTopClients({ limit: TOP_LIMIT });
+  const { data } = useTopClients();
   const rows = data?.topClients ?? [];
   const isEmpty = data?.topClients.length === 0;
   return (
-    <Paper sx={{ m: 2 }}>
+    <Paper sx={{ m: 2, p: 3, mt: 3 }}>
       <TableTitle title={`상위 ${TOP_LIMIT}거래처`} />
       <TableContainer
         sx={{
-          width: {
-            xs: '100%',
-            lg: 400,
-          },
+          width: '100%',
         }}
       >
         <Table>
           <TableHead>
             <TableRow hover>
               <HeadCell text="이름" />
-              <HeadCell text="판매수량" />
+              <HeadCell text="수량" />
               <HeadCell text="매출" />
               <HeadCell text="수익" />
             </TableRow>

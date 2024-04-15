@@ -4,10 +4,9 @@ import { FC, ReactNode } from 'react';
 interface Props {
   productSales: ReactNode;
   topClients: ReactNode;
-  children: ReactNode;
 }
 
-const SaleLayout: FC<Props> = ({ productSales, topClients, children }) => {
+const SaleLayout: FC<Props> = ({ productSales, topClients }) => {
   return (
     <>
       <SubHeader title="판매" />
@@ -21,7 +20,6 @@ const SaleLayout: FC<Props> = ({ productSales, topClients, children }) => {
       >
         {topClients}
         {productSales}
-        {/* {children} */}
       </Stack>
     </>
   );
