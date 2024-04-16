@@ -4,7 +4,7 @@ import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined
 import { useState } from 'react';
 import { FindLogsDto, Order } from '@/api/graphql/codegen/graphql';
 import Search from './_components/Search';
-import { Box, InputAdornment, Paper, TextField } from '@mui/material';
+import { Box, InputAdornment, TextField } from '@mui/material';
 import CommonDateFilter from '@/components/calendar/CommonDateFilter';
 import { NullableRange } from '@/components/calendar/type';
 import { getStringRange, getThisMonth } from '@/components/calendar/utils';

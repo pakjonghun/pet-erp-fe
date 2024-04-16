@@ -3,10 +3,10 @@ import { graphql } from '../../codegen';
 import { FindManyCategoryInput } from '../../codegen/graphql';
 
 const findManyCategory = graphql(`
-  query findManyCategory($findManyCategoryInput: FindManyCategoryInput!) {
-    findManyCategory(findManyCategoryInput:$findManyCategoryInput) {
+  query categories($findManyCategoryInput: FindManyCategoryInput!) {
+    categories(findManyCategoryInput: $findManyCategoryInput) {
       totalCount
-      data:{
+      data {
         _id
         name
       }

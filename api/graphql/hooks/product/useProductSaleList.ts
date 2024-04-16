@@ -3,11 +3,12 @@ import { graphql } from '../../codegen';
 import { ProductSaleInput } from '../../codegen/graphql';
 
 const productSales = graphql(`
-  query productSales($productSaleInput: ProductSaleInput!) {
-    productSales(productSaleInput: $productSaleInput) {
+  query productSales($productSalesInput: ProductSaleInput!) {
+    productSales(productSalesInput: $productSalesInput) {
       totalCount
       data {
-        ...ProductSaleFragment
+        code
+        name
         clients {
           ...ClientInfo
         }
@@ -27,10 +28,10 @@ const productSales = graphql(`
     }
   }
 `);
-export const useProductSales = (productSaleInput: ProductSaleInput) => {
+export const useProductSales = (productSalesInput: ProductSaleInput) => {
   return useQuery(productSales, {
     variables: {
-      productSaleInput,
+      productSalesInput,
     },
     notifyOnNetworkStatusChange: true,
   });

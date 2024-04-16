@@ -1,6 +1,6 @@
 import { graphql } from '../../codegen';
 import { useQuery } from '@apollo/client';
-import { QueryLogsArgs } from '../../codegen/graphql';
+import { FindLogsDto, QueryLogsArgs } from '../../codegen/graphql';
 
 const findLogDocument = graphql(`
   query logs($findLogsQuery: FindLogsDTO!) {
@@ -13,9 +13,11 @@ const findLogDocument = graphql(`
   }
 `);
 
-export const useFindLogs = (variables: QueryLogsArgs) => {
+export const useFindLogs = (findLogsQuery: FindLogsDto) => {
   return useQuery(findLogDocument, {
-    variables,
+    variables: {
+      findLogsQuery,
+    },
     notifyOnNetworkStatusChange: true,
   });
 };

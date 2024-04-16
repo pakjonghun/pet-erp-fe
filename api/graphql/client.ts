@@ -1,4 +1,3 @@
-import { QueryLogsArgs } from './codegen/graphql';
 import { BASE_URL } from '@/api/constants';
 import { PUBLIC_PATH } from '@/constants';
 import { isLogin } from '@/store/isLogin';
@@ -8,11 +7,15 @@ import { createFragmentRegistry } from '@apollo/client/cache';
 import { onError } from '@apollo/client/link/error';
 
 const merge = (existing = { totalCount: 0, data: [] }, incoming: any, { args }: any) => {
-  const { args: _args } = args as unknown as { args: QueryLogsArgs };
-  const existingData = existing.data;
-  const incomingData = incoming.data;
-  const mergedData = [...existingData, ...incomingData];
-  return { totalCount: incoming.totalCount, data: mergedData };
+  const existingData = existing.data as any[];
+  const incomingData = incoming.data as any[];
+
+  const merged = existingData ? existingData.slice(0) : [];
+  for (let i = 0; i < incomingData.length; ++i) {
+    merged[existingData.length + i] = incomingData[i];
+  }
+
+  return { totalCount: incoming.totalCount, data: merged };
 };
 
 const logoutLink = onError(({ networkError, graphQLErrors }) => {
@@ -50,22 +53,14 @@ export const client = new ApolloClient({
 
       fragment ProductFragment on Product {
         _id
-        barCode
         code
+        barCode
+        name
+        wonPrice
+        salePrice
         leadTime
         maintainDate
-        name
-        salePrice
-      }
-
-      fragment ProductSaleFragment on ProductSaleData {
-        _id
-        barCode
-        code
-        leadTime
-        maintainDate
-        name
-        salePrice
+        category
       }
 
       fragment ClientInfo on ClientInfo {
@@ -99,6 +94,10 @@ export const client = new ApolloClient({
             merge,
           },
           topClients: {
+            keyArgs: false,
+            merge,
+          },
+          products: {
             keyArgs: false,
             merge,
           },

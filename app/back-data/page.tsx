@@ -7,9 +7,8 @@ import HeadCell from '@/components/table/HeadCell';
 import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 import TablePage from '@/components/table/TablePage';
 import TableTitle from '@/components/ui/typograph/TableTitle';
-import { TABLE_MAX_HEIGHT } from '@/constants';
+import { LIMIT } from '@/constants';
 import {
-  Box,
   Button,
   FormControl,
   FormGroup,
@@ -21,28 +20,52 @@ import {
   TableRow,
   TextField,
 } from '@mui/material';
-import { PlusOne, PlusOneOutlined, Search } from '@mui/icons-material';
-import ProductSaleModal from '../sale/@productSales/_components/ProductSaleModal';
+import { PlusOneOutlined, Search } from '@mui/icons-material';
 import { useState } from 'react';
 import CreateProductModal from './_components/AddProductModal';
+import { useProducts } from '@/api/graphql/hooks/product/useProducts';
+import useInfinityScroll from '@/hooks/useInfinityScroll';
+import { Product } from '@/api/graphql/codegen/graphql';
+import { getKCWFormat } from '@/util';
+import useTextDebounce from '@/hooks/useTextDebounce';
 
 const BackData = () => {
   const [keyword, setKeyword] = useState('');
+  const delayKeyword = useTextDebounce(keyword);
+  console.log(delayKeyword);
+  const { data, networkStatus, fetchMore } = useProducts({
+    keyword: delayKeyword,
+    skip: 0,
+    limit: LIMIT,
+  });
+  const rows = data?.products.data ?? [];
 
-  const isEmpty = true;
+  const callback: IntersectionObserverCallback = (entries) => {
+    if (entries[0].isIntersecting) {
+      if (networkStatus != 3 && networkStatus != 1) {
+        const totalCount = data?.products.totalCount;
+        if (totalCount != null && totalCount > rows.length) {
+          fetchMore({
+            variables: {
+              productsInput: {
+                keyword,
+                skip: rows.length,
+                limit: LIMIT,
+              },
+            },
+          });
+        }
+      }
+    }
+  };
+
+  const scrollRef = useInfinityScroll({ callback });
+
+  const isEmpty = rows.length === 0;
   const [openCreateProduct, setOpenCreateProduct] = useState(false);
   return (
     <TablePage sx={{ flex: 1 }}>
-      {/* {!!selectedProductSale && (
-        <ProductSaleModal
-          selectedProductSale={selectedProductSale}
-          open={selectedProductSale != null}
-          onClose={() => setSelectedProductSale(null)}
-        />
-      )} */}
-
       <CreateProductModal open={openCreateProduct} onClose={() => setOpenCreateProduct(false)} />
-
       <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="제품 백데이터" />
         <Stack direction="row" alignItems="center" gap={2}>
@@ -89,35 +112,20 @@ const BackData = () => {
           </TableHead>
           <TableBody>
             <EmptyRow colSpan={6} isEmpty={isEmpty} />
-            {/* {rows.map((item, index) => {
-              const row = item as unknown as ProductSaleData;
+            {rows.map((item, index) => {
+              const row = item as unknown as Product;
               const isLast = index === rows.length - 1;
               return (
-                <TableRow
-                  onClick={() => setSelectedProductSale(row)}
-                  hover
-                  ref={isLast ? scrollRef : null}
-                  key={index}
-                >
+                <TableRow hover ref={isLast ? scrollRef : null} key={index}>
+                  <Cell sx={{ minWidth: 200 }}>{row.code}</Cell>
+                  <Cell sx={{ minWidth: 200 }}>{row.barCode ?? ''}</Cell>
                   <Cell sx={{ minWidth: 200 }}>{row.name}</Cell>
-                  <Cell>{getKCWFormat(row.today?.accPayCost ?? 0)}</Cell>
-                  <Cell>{getKCWFormat(row.thisWeek?.accPayCost ?? 0)}</Cell>
-                  <Cell>{getKCWFormat(row.lastWeek?.accPayCost ?? 0)}</Cell>
-                  <Cell>{getKCWFormat(row.thisMonth?.accPayCost ?? 0)}</Cell>
-                  <Cell sx={{ width: '30%' }}>
-                    <Stack direction="row" flexWrap="wrap" gap={1}>
-                      {row.clients.slice(0, 5).map((client) => (
-                        <Chip
-                          key={`${client._id.mallId}_${client._id.productCode}`}
-                          label={client._id.mallId}
-                          variant="outlined"
-                        />
-                      ))}
-                    </Stack>
-                  </Cell>
+                  <Cell sx={{ minWidth: 200 }}>{getKCWFormat(row.wonPrice)}</Cell>
+                  <Cell sx={{ minWidth: 200 }}>{getKCWFormat(row.salePrice)}</Cell>
+                  <Cell sx={{ minWidth: 200 }}>{row.leadTime ?? ''}</Cell>
                 </TableRow>
               );
-            })} */}
+            })}
           </TableBody>
         </Table>
       </ScrollTableContainer>

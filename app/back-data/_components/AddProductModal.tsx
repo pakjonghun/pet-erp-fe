@@ -1,24 +1,17 @@
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
   Button,
   FormControl,
   FormGroup,
   InputAdornment,
-  InputLabel,
-  MenuItem,
-  Select,
   Stack,
   TextField,
   Typography,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { CreateProductForm, createProductSchema } from '../_validations/createProductValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCreateAccount } from '@/api/graphql/hooks/users/useCreateAccount';
-import { CreateProductInput, UserRole } from '@/api/graphql/codegen/graphql';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { useCreateProduct } from '@/api/graphql/hooks/product/useCreateProduct';
@@ -35,14 +28,16 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
     reset,
     control,
     handleSubmit,
-    getValues,
     formState: { errors },
   } = useForm<CreateProductForm>({
     resolver: zodResolver(createProductSchema),
     defaultValues: {
-      category: '',
       code: '',
       name: '',
+      barCode: '',
+      category: '',
+      leadTime: 0,
+      maintainDate: 0,
       salePrice: 0,
       wonPrice: 0,
     },
@@ -54,8 +49,7 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
       },
       onCompleted: () => {
         snackMessage({ message: '제품등록이 완료되었습니다.', severity: 'success' });
-        reset();
-        onClose();
+        handleClose();
       },
       onError: (err) => {
         const message = err.message;
@@ -64,8 +58,13 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
     });
   };
 
+  const handleClose = () => {
+    reset();
+    onClose();
+  };
+
   return (
-    <BaseModal open={open} onClose={onClose}>
+    <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
         제품 입력
       </Typography>
@@ -78,8 +77,9 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
             render={({ field }) => (
               <FormControl required>
                 <TextField
-                  sx={{ minWidth: 400 }}
                   {...field}
+                  sx={{ minWidth: 400 }}
+                  size="small"
                   required
                   label="제품코드"
                   error={!!errors.code?.message}
@@ -97,6 +97,7 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
             render={({ field }) => (
               <FormControl required>
                 <TextField
+                  size="small"
                   {...field}
                   required
                   label="제품이름"
@@ -112,6 +113,7 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
             render={({ field }) => (
               <FormControl required>
                 <TextField
+                  size="small"
                   {...field}
                   required
                   onChange={(event) => field.onChange(Number(event.target.value))}
@@ -129,6 +131,7 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
             render={({ field }) => (
               <FormControl required>
                 <TextField
+                  size="small"
                   {...field}
                   onChange={(event) => field.onChange(Number(event.target.value))}
                   type="number"
@@ -146,6 +149,7 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
             render={({ field }) => (
               <FormControl>
                 <TextField
+                  size="small"
                   {...field}
                   type="number"
                   onChange={(event) => field.onChange(Number(event.target.value))}
@@ -162,6 +166,7 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
             render={({ field }) => (
               <FormControl>
                 <TextField
+                  size="small"
                   {...field}
                   type="number"
                   onChange={(event) => field.onChange(Number(event.target.value))}
@@ -178,6 +183,7 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
             render={({ field }) => (
               <FormControl>
                 <TextField
+                  size="small"
                   {...field}
                   label="바코드"
                   error={!!errors.barCode?.message}
@@ -192,6 +198,7 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
             render={({ field }) => (
               <FormControl>
                 <TextField
+                  size="small"
                   {...field}
                   label="분류"
                   error={!!errors.category?.message}
@@ -202,7 +209,7 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
           />
         </FormGroup>
         <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
-          <Button type="button" variant="outlined" onClick={onClose}>
+          <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
           <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
