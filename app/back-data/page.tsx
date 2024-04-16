@@ -24,11 +24,13 @@ import {
 import { PlusOne, PlusOneOutlined, Search } from '@mui/icons-material';
 import ProductSaleModal from '../sale/@productSales/_components/ProductSaleModal';
 import { useState } from 'react';
+import CreateProductModal from './_components/AddProductModal';
 
 const BackData = () => {
   const [keyword, setKeyword] = useState('');
 
   const isEmpty = true;
+  const [openCreateProduct, setOpenCreateProduct] = useState(false);
   return (
     <TablePage sx={{ flex: 1 }}>
       {/* {!!selectedProductSale && (
@@ -38,13 +40,20 @@ const BackData = () => {
           onClose={() => setSelectedProductSale(null)}
         />
       )} */}
+
+      <CreateProductModal open={openCreateProduct} onClose={() => setOpenCreateProduct(false)} />
+
       <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="제품 백데이터" />
         <Stack direction="row" alignItems="center" gap={2}>
           <Button variant="contained" startIcon={<PublishIcon />}>
             제품 업로드
           </Button>
-          <Button variant="contained" startIcon={<PlusOneOutlined />}>
+          <Button
+            onClick={() => setOpenCreateProduct((prev) => !prev)}
+            variant="contained"
+            startIcon={<PlusOneOutlined />}
+          >
             제품 입력
           </Button>
         </Stack>

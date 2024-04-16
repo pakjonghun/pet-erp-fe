@@ -48,6 +48,16 @@ export const client = new ApolloClient({
         createdAt
       }
 
+      fragment ProductFragment on Product {
+        _id
+        barCode
+        code
+        leadTime
+        maintainDate
+        name
+        salePrice
+      }
+
       fragment ProductSaleFragment on ProductSaleData {
         _id
         barCode
