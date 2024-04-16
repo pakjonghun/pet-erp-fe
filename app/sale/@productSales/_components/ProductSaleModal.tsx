@@ -32,7 +32,7 @@ const ProductSaleModal: FC<Props> = ({
   open,
   onClose,
 }) => {
-  const { data, loading } = useProductSaleChart(code);
+  const { data } = useProductSaleChart(code);
   const dates = data?.productSale?.map((item) => new Date(item._id).getTime()) ?? [];
   const accProfits = data?.productSale?.map((item) => item.accProfit) ?? [];
   const accPayCosts = data?.productSale?.map((item) => item.accPayCost) ?? [];
