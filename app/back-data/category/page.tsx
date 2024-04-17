@@ -1,7 +1,6 @@
 'use client';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import PublishIcon from '@mui/icons-material/Publish';
 import TablePage from '@/components/table/TablePage';
 import TableTitle from '@/components/ui/typograph/TableTitle';
 import {
@@ -15,12 +14,16 @@ import {
   Typography,
 } from '@mui/material';
 import { PlusOneOutlined, Search } from '@mui/icons-material';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import CreateCategoryModal from './_components/AddCategory';
 import { useFindManyCategory } from '@/api/graphql/hooks/category/useFindCategories';
 import { LIMIT, TABLE_MAX_HEIGHT } from '@/constants';
 import CategoryCard from './_components/CategoryCard';
+import UploadButton from '@/components/ui/button/UploadButtont';
+import { useUploadExcelFile } from '@/api/rest/hooks/upload/useUploadExcelFile';
+import { snackMessage } from '@/store/snackMessage';
+import { client } from '@/api/graphql/client';
 
 const CategoryPage = () => {
   const [keyword, setKeyword] = useState('');
@@ -54,15 +57,38 @@ const CategoryPage = () => {
   };
 
   const [openCreateCategory, setOpenCreateCategory] = useState(false);
+
+  const { mutate: uploadFile, isPending } = useUploadExcelFile();
+
+  const handleChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const formBody = new FormData();
+    formBody.append('file', file);
+
+    uploadFile(
+      { service: 'category', formBody },
+      {
+        onSuccess: () => {
+          snackMessage({ message: '파일 업로드가 완료되었습니다.', severity: 'success' });
+          refetch();
+        },
+        onError: (err) => {
+          const message = err.response?.data.message;
+          snackMessage({ message: message ?? '파일 업로드가 실패했습니다.', severity: 'error' });
+        },
+      }
+    );
+  };
+
   return (
     <TablePage sx={{ flex: 1 }}>
       <CreateCategoryModal open={openCreateCategory} onClose={() => setOpenCreateCategory(false)} />
       <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="제품분류 백데이터" />
         <Stack direction="row" alignItems="center" gap={2}>
-          <Button variant="contained" startIcon={<PublishIcon />}>
-            제품분류 업로드
-          </Button>
+          <UploadButton loading={isPending} text="제품분류 업로드" onChange={handleChangeFile} />
           <Button
             onClick={() => setOpenCreateCategory((prev) => !prev)}
             variant="contained"
