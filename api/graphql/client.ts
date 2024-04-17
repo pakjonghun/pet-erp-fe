@@ -81,6 +81,11 @@ export const client = new ApolloClient({
         accProfit
         averagePayCost
       }
+
+      fragment CategoryFragment on Category {
+        _id
+        name
+      }
     `),
     typePolicies: {
       Query: {
@@ -98,6 +103,10 @@ export const client = new ApolloClient({
             merge,
           },
           products: {
+            keyArgs: false,
+            merge,
+          },
+          categories: {
             keyArgs: false,
             merge,
           },

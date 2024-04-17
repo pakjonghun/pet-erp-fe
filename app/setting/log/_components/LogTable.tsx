@@ -16,7 +16,7 @@ interface Props {
 }
 
 const LogTable: FC<Props> = ({ findLogsQuery }) => {
-  const { data, networkStatus, fetchMore } = useFindLogs(findLogsQuery);
+  const { data, networkStatus, fetchMore, refetch } = useFindLogs(findLogsQuery);
   const createRow = (log: Omit<Log, '__typename'>) => {
     const copyData = Object.assign({}, log);
     copyData.createdAt = dayjs(log.createdAt).format('YYYY. MM. DD.');
@@ -42,9 +42,8 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
 
   const scrollRef = useInfinityScroll({ callback });
   useEffect(() => {
-    client.cache.evict({ fieldName: 'logs' });
-    client.cache.gc();
-  }, [findLogsQuery]);
+    refetch();
+  }, [findLogsQuery, refetch]);
 
   const isLoading = networkStatus === 1 || networkStatus === 3;
   const isEmpty = rows.length === 0;

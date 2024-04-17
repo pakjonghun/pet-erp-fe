@@ -5,22 +5,22 @@ import { getDateFormat } from '@/util';
 import { IconButton, Menu, Paper, Stack } from '@mui/material';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import { FC, useState } from 'react';
-import { BaseListItem } from '@/components/ui/listItem/menuStyles';
-import ListMenu from '@/components/ui/listItem/ListMenu';
 import PhonelinkLockOutlinedIcon from '@mui/icons-material/PhonelinkLockOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import SensorOccupiedOutlinedIcon from '@mui/icons-material/SensorOccupiedOutlined';
-import { SelectedOption, SelectedOptionItem, SelectedUser } from '../type';
+import { SelectedAccountOption, SelectedUser } from '../type';
+import { SelectedOptionItem } from '@/constants';
+import OptionMenu from '@/components/ui/listItem/OptionMenu';
 
 interface Props {
   user: SelectedUser;
-  onSelectUser: (option: SelectedOption, user: SelectedUser) => void;
+  onSelectUser: (option: SelectedAccountOption, user: SelectedUser) => void;
 }
 
 const AccountCard: FC<Props> = ({ user, onSelectUser }) => {
   const [optionAnchor, setOptionAnchor] = useState<null | HTMLElement>(null);
 
-  const accountOptionMenus: Record<SelectedOption, SelectedOptionItem> = {
+  const accountOptionMenus: Record<SelectedAccountOption, SelectedOptionItem> = {
     password: {
       callback: () => {
         onSelectUser('password', user);
@@ -68,16 +68,7 @@ const AccountCard: FC<Props> = ({ user, onSelectUser }) => {
       >
         {options.map((option) => {
           const menu = accountOptionMenus[option];
-
-          return (
-            <BaseListItem
-              variant={option === 'delete' ? 'error' : 'primary'}
-              disablePadding
-              key={option}
-            >
-              <ListMenu menu={menu} />
-            </BaseListItem>
-          );
+          return <OptionMenu key={option} menu={menu} option={option} />;
         })}
       </Menu>
       <Stack gap={2}>

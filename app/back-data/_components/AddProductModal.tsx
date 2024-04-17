@@ -8,13 +8,16 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { CreateProductForm, createProductSchema } from '../_validations/createProductValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { useCreateProduct } from '@/api/graphql/hooks/product/useCreateProduct';
+import { useFindManyCategory } from '@/api/graphql/hooks/category/useFindCategories';
+import useTextDebounce from '@/hooks/useTextDebounce';
+import { LIMIT } from '@/constants';
 
 interface Props {
   open: boolean;
@@ -42,6 +45,18 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
       wonPrice: 0,
     },
   });
+
+  const [categoryKeyword, setCategoryKeyword] = useState('');
+  const delayedCategoryKeyword = useTextDebounce(categoryKeyword);
+
+  const { data, networkStatus } = useFindManyCategory({
+    keyword: delayedCategoryKeyword,
+    limit: LIMIT,
+    skip: 0,
+  });
+
+  console.log('data : ', data, networkStatus);
+
   const onSubmit = (values: CreateProductForm) => {
     createProduct({
       variables: {

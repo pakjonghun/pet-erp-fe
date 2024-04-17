@@ -5,7 +5,7 @@ import { Box, Button, Grid } from '@mui/material';
 import AccountCard from './_components/AccountCard';
 import { useState } from 'react';
 import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
-import { SelectedOption, SelectedUser } from './type';
+import { SelectedAccountOption, SelectedUser } from './type';
 import EditRoleModal from './_components/EditRoleModal';
 import EditPasswordModal from './_components/EditPasswordModal';
 import DeleteAccountModal from './_components/DeleteAccountModal';
@@ -14,10 +14,10 @@ import CreateAccountModal from './_components/CreateAccountModal';
 const AccountPage = () => {
   const { data } = useGetUserList();
   const [selectedUser, setSelectedUser] = useState<SelectedUser | null>(null);
-  const [selectedOption, setSelectedOption] = useState<null | SelectedOption>(null);
+  const [selectedOption, setSelectedOption] = useState<null | SelectedAccountOption>(null);
   const [openCreateAccount, setOpenCreateAccount] = useState(false);
 
-  const handleSelectOption = (option: SelectedOption, user: SelectedUser) => {
+  const handleSelectOption = (option: SelectedAccountOption, user: SelectedUser) => {
     setSelectedUser(user);
     setSelectedOption(option);
   };

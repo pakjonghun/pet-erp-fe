@@ -26,6 +26,10 @@ const TableBodySection: FC<Props> = ({ keyword, setSelectedProductSale }) => {
   const rows = data?.productSales.data ?? [];
   const isEmpty = rows.length === 0;
 
+  useEffect(() => {
+    refetch();
+  }, [keyword, refetch]);
+
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
       if (networkStatus != 1 && networkStatus != 3) {

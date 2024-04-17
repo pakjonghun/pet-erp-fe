@@ -1,7 +1,7 @@
 import { Product } from './../../codegen/graphql';
 import { useMutation } from '@apollo/client';
 import { graphql } from '../../codegen';
-import { ProductFragmentFragmentDoc, ProductSaleFragmentFragmentDoc } from '../../codegen/graphql';
+import { ProductFragmentFragmentDoc } from '../../codegen/graphql';
 
 const createProduct = graphql(`
   mutation createProduct($createProductInput: CreateProductInput!) {
@@ -35,7 +35,6 @@ export const useCreateProduct = () => {
               totalCount: existingProducts.totalCount,
               data: [newProductRef, ...existingProducts.data],
             };
-            console.log(111, newProducts);
             return newProducts;
           },
         },
