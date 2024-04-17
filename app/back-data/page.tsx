@@ -16,15 +16,42 @@ import {
   TableRow,
   TextField,
 } from '@mui/material';
-import { PlusOneOutlined, Search } from '@mui/icons-material';
-import { useState } from 'react';
+import { Pending, PlusOneOutlined, Search } from '@mui/icons-material';
+import { ChangeEvent, useRef, useState } from 'react';
 import CreateProductModal from './_components/AddProductModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import ProductionTableBody from './_components/ProductionTableBody';
+import { useUploadExcelFile } from '@/api/rest/hooks/upload/useUploadExcelFile';
+import { snackMessage } from '@/store/snackMessage';
+import UploadButton from '@/components/ui/button/UploadButtont';
 
 const BackData = () => {
+  const { mutate: uploadProduct, isPending } = useUploadExcelFile();
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
+  const uploadRef = useRef<null | HTMLInputElement>(null);
+
+  const handleUploadExcelFile = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const formBody = new FormData();
+    formBody.append('file', file);
+    uploadProduct(
+      { service: 'product', formBody },
+      {
+        onSuccess: () => {
+          snackMessage({ message: '제품 업로드가 완료되었습니다.', severity: 'success' });
+          if (uploadRef.current) uploadRef.current.value = '';
+        },
+        onError: (error) => {
+          const message = error.response?.data.message;
+          snackMessage({ message: message ?? '제품 업로드가 실패하였습니다.', severity: 'error' });
+          if (uploadRef.current) uploadRef.current.value = '';
+        },
+      }
+    );
+  };
 
   const [openCreateProduct, setOpenCreateProduct] = useState(false);
   return (
@@ -33,9 +60,12 @@ const BackData = () => {
       <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="제품 백데이터" />
         <Stack direction="row" alignItems="center" gap={2}>
-          <Button variant="contained" startIcon={<PublishIcon />}>
-            제품 업로드
-          </Button>
+          <UploadButton
+            inputRef={uploadRef}
+            loading={isPending}
+            onChange={handleUploadExcelFile}
+            text="제품 업로드"
+          />
           <Button
             onClick={() => setOpenCreateProduct((prev) => !prev)}
             variant="contained"
