@@ -22,7 +22,6 @@ export const useCreateProduct = () => {
               data: [],
             }
           ) {
-            console.log('new data', data);
             if (!data) return existingProducts;
 
             const newProductRef = cache.writeFragment({

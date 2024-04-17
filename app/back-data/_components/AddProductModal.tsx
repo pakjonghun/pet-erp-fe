@@ -55,8 +55,6 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
     skip: 0,
   });
 
-  console.log('data : ', data, networkStatus);
-
   const onSubmit = (values: CreateProductForm) => {
     createProduct({
       variables: {
