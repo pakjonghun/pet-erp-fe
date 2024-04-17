@@ -7,7 +7,9 @@ import { createFragmentRegistry } from '@apollo/client/cache';
 import { onError } from '@apollo/client/link/error';
 
 const merge = (existing = { totalCount: 0, data: [] }, incoming: any, { args }: any) => {
+  console.log('existing : ', existing);
   const existingData = existing.data as any[];
+
   const incomingData = incoming.data as any[];
 
   const merged = existingData ? existingData.slice(0) : [];

@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import { PlusOneOutlined, Search } from '@mui/icons-material';
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import CreateCategoryModal from './_components/AddCategory';
 import { useFindManyCategory } from '@/api/graphql/hooks/category/useFindCategories';
@@ -23,7 +23,6 @@ import CategoryCard from './_components/CategoryCard';
 import UploadButton from '@/components/ui/button/UploadButtont';
 import { useUploadExcelFile } from '@/api/rest/hooks/upload/useUploadExcelFile';
 import { snackMessage } from '@/store/snackMessage';
-import { client } from '@/api/graphql/client';
 
 const CategoryPage = () => {
   const [keyword, setKeyword] = useState('');
@@ -59,6 +58,7 @@ const CategoryPage = () => {
   const [openCreateCategory, setOpenCreateCategory] = useState(false);
 
   const { mutate: uploadFile, isPending } = useUploadExcelFile();
+  const uploadInputRef = useRef<HTMLInputElement>(null);
 
   const handleChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -73,10 +73,16 @@ const CategoryPage = () => {
         onSuccess: () => {
           snackMessage({ message: '파일 업로드가 완료되었습니다.', severity: 'success' });
           refetch();
+          if (uploadInputRef.current) {
+            uploadInputRef.current.value = '';
+          }
         },
         onError: (err) => {
           const message = err.response?.data.message;
           snackMessage({ message: message ?? '파일 업로드가 실패했습니다.', severity: 'error' });
+          if (uploadInputRef.current) {
+            uploadInputRef.current.value = '';
+          }
         },
       }
     );
@@ -88,7 +94,12 @@ const CategoryPage = () => {
       <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="제품분류 백데이터" />
         <Stack direction="row" alignItems="center" gap={2}>
-          <UploadButton loading={isPending} text="제품분류 업로드" onChange={handleChangeFile} />
+          <UploadButton
+            inputRef={uploadInputRef}
+            loading={isPending}
+            text="제품분류 업로드"
+            onChange={handleChangeFile}
+          />
           <Button
             onClick={() => setOpenCreateCategory((prev) => !prev)}
             variant="contained"
@@ -122,7 +133,7 @@ const CategoryPage = () => {
       >
         {isEmpty && (
           <Typography sx={{ ml: 2 }} variant="body1">
-            검색결과가 없네요.
+            검색결과가 없습니다.
           </Typography>
         )}
         {rows.map((row) => (

@@ -17,6 +17,14 @@ export const useRemoveCategory = () => {
       const id = data?.removeCategory._id;
       cache.evict({ id: `${typeName}:${id}` });
       cache.gc();
+
+      cache.modify({
+        fields: {
+          categories(existingCategory = { totalCount: 0, data: [] }) {
+            return { totalCount: existingCategory.totalCount - 1, data: existingCategory.data };
+          },
+        },
+      });
     },
   });
 };

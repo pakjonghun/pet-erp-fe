@@ -32,7 +32,7 @@ export const useCreateProduct = () => {
             });
 
             const newProducts = {
-              totalCount: existingProducts.totalCount,
+              totalCount: existingProducts.totalCount + 1,
               data: [newProductRef, ...existingProducts.data],
             };
             return newProducts;

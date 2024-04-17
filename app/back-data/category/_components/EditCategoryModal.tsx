@@ -1,6 +1,6 @@
 import BaseModal from '@/components/ui/modal/BaseModal';
 import { Button, Stack, TextField, Typography } from '@mui/material';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
@@ -17,7 +17,6 @@ interface Props {
 
 const EditCategoryModal: FC<Props> = ({ open, item, onClose }) => {
   const [updateCategory, { loading }] = useUpdateCategory();
-
   const {
     reset,
     control,
@@ -30,6 +29,12 @@ const EditCategoryModal: FC<Props> = ({ open, item, onClose }) => {
     },
     mode: 'onSubmit',
   });
+
+  useEffect(() => {
+    reset({
+      name: item.name,
+    });
+  }, [item.name, reset]);
 
   const onSubmit = (values: CreateCategoryForm) => {
     updateCategory({

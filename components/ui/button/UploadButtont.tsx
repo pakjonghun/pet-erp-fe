@@ -1,16 +1,17 @@
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import PublishIcon from '@mui/icons-material/Publish';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, RefObject } from 'react';
 import CommonLoading from '../loading/CommonLoading';
 
 interface Props {
   text: string;
   loading: boolean;
+  inputRef: RefObject<HTMLInputElement>;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const UploadButton: React.FC<Props> = ({ text, loading, onChange }) => {
+const UploadButton: React.FC<Props> = ({ text, loading, inputRef, onChange }) => {
   return (
     <Button
       component="label"
@@ -19,7 +20,7 @@ const UploadButton: React.FC<Props> = ({ text, loading, onChange }) => {
       startIcon={loading ? <CommonLoading /> : <PublishIcon />}
     >
       {text}
-      <VisuallyHiddenInput onChange={onChange} type="file" />
+      <VisuallyHiddenInput ref={inputRef} onChange={onChange} type="file" />
     </Button>
   );
 };

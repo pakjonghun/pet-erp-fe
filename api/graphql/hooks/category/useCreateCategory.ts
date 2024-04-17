@@ -22,7 +22,7 @@ export const useCreateCategory = () => {
               fragment: CategoryFragmentFragmentDoc,
             });
             return {
-              totalCount: existingCategories.totalCount,
+              totalCount: existingCategories.totalCount + 1,
               data: [newCategoryRef, ...existingCategories.data],
             };
           },
