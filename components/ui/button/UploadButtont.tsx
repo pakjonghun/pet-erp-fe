@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import PublishIcon from '@mui/icons-material/Publish';
 import { ChangeEvent, RefObject } from 'react';
 import CommonLoading from '../loading/CommonLoading';
+import { IconButton } from '@mui/material';
 
 interface Props {
   text: string;
@@ -13,15 +14,34 @@ interface Props {
 
 const UploadButton: React.FC<Props> = ({ text, loading, inputRef, onChange }) => {
   return (
-    <Button
-      component="label"
-      variant="contained"
-      tabIndex={-1}
-      startIcon={loading ? <CommonLoading /> : <PublishIcon />}
-    >
-      {text}
-      <VisuallyHiddenInput ref={inputRef} onChange={onChange} type="file" />
-    </Button>
+    <>
+      <Button
+        sx={{
+          display: {
+            xs: 'none',
+          },
+        }}
+        component="label"
+        variant="contained"
+        tabIndex={-1}
+        startIcon={loading ? <CommonLoading /> : <PublishIcon />}
+      >
+        {text}
+        <VisuallyHiddenInput ref={inputRef} onChange={onChange} type="file" />
+      </Button>
+      <IconButton
+        sx={{
+          display: {
+            sm: 'none',
+          },
+        }}
+        component="label"
+        tabIndex={-1}
+      >
+        {loading ? <CommonLoading /> : <PublishIcon />}
+        <VisuallyHiddenInput ref={inputRef} onChange={onChange} type="file" />
+      </IconButton>
+    </>
   );
 };
 

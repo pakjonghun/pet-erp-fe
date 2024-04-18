@@ -70,11 +70,7 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
 
   const setCategory = (selectedCategory: SelectItem | null) => {
     if (!selectedCategory) return;
-
-    const allExist = Object.values(selectedCategory).every((item) => item);
-    if (!allExist) return;
-
-    setValue('category', selectedCategory.label!);
+    setValue('category', selectedCategory?.label ?? '');
   };
 
   const callback: IntersectionObserverCallback = (entries) => {
@@ -141,7 +137,7 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
               <FormControl required>
                 <TextField
                   {...field}
-                  sx={{ minWidth: 400 }}
+                  sx={{ minWidth: 300 }}
                   size="small"
                   required
                   label="제품코드"

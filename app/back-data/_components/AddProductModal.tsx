@@ -66,7 +66,8 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
   const categoryOption = category ? { _id: category!._id, label: category!.name } : null;
 
   const setCategory = (selectedCategory: SelectItem | null) => {
-    setValue('category', selectedCategory ? selectedCategory.label : '');
+    if (!selectedCategory) return;
+    setValue('category', selectedCategory?.label ?? '');
   };
 
   const callback: IntersectionObserverCallback = (entries) => {
@@ -132,7 +133,7 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
               <FormControl required>
                 <TextField
                   {...field}
-                  sx={{ minWidth: 400 }}
+                  sx={{ minWidth: 300 }}
                   size="small"
                   required
                   label="제품코드"

@@ -25,14 +25,14 @@ const EditCategoryModal: FC<Props> = ({ open, item, onClose }) => {
   } = useForm<CreateCategoryForm>({
     resolver: zodResolver(createCategorySchema),
     defaultValues: {
-      name: item.name,
+      name: item.name as string,
     },
     mode: 'onSubmit',
   });
 
   useEffect(() => {
     reset({
-      name: item.name,
+      name: item.name as string,
     });
   }, [item.name, reset]);
 
@@ -40,7 +40,7 @@ const EditCategoryModal: FC<Props> = ({ open, item, onClose }) => {
     updateCategory({
       variables: {
         updateCategoryInput: {
-          _id: item._id,
+          _id: item._id as string,
           name: values.name,
         },
       },
@@ -74,7 +74,7 @@ const EditCategoryModal: FC<Props> = ({ open, item, onClose }) => {
             <TextField
               {...field}
               required
-              sx={{ minWidth: 400 }}
+              sx={{ minWidth: 300 }}
               size="small"
               label="제품분류 이름"
               error={!!errors.name?.message}

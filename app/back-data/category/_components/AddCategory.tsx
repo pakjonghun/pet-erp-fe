@@ -66,7 +66,7 @@ const CreateCategoryModal: FC<Props> = ({ open, onClose }) => {
             <TextField
               {...field}
               required
-              sx={{ minWidth: 400 }}
+              sx={{ minWidth: 300 }}
               size="small"
               label="제품분류 이름"
               error={!!errors.name?.message}

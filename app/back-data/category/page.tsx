@@ -13,7 +13,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { PlusOneOutlined, Search } from '@mui/icons-material';
+import { Search } from '@mui/icons-material';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import CreateCategoryModal from './_components/AddCategory';
@@ -23,6 +23,7 @@ import CategoryCard from './_components/CategoryCard';
 import UploadButton from '@/components/ui/button/UploadButtont';
 import { useUploadExcelFile } from '@/api/rest/hooks/upload/useUploadExcelFile';
 import { snackMessage } from '@/store/snackMessage';
+import CreateButton from '@/components/ui/button/CreateButton';
 
 const CategoryPage = () => {
   const [keyword, setKeyword] = useState('');
@@ -102,13 +103,7 @@ const CategoryPage = () => {
             text="제품분류 업로드"
             onChange={handleChangeFile}
           />
-          <Button
-            onClick={() => setOpenCreateCategory((prev) => !prev)}
-            variant="contained"
-            startIcon={<PlusOneOutlined />}
-          >
-            제품분류 입력
-          </Button>
+          <CreateButton text="제품분류 입력" onClick={() => setOpenCreateCategory(true)} />
         </Stack>
       </Stack>
       <FormGroup sx={{ ml: 2 }}>

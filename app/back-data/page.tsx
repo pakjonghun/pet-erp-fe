@@ -25,6 +25,7 @@ import { snackMessage } from '@/store/snackMessage';
 import UploadButton from '@/components/ui/button/UploadButtont';
 import { useProducts } from '@/api/graphql/hooks/product/useProducts';
 import { LIMIT } from '@/constants';
+import CreateButton from '@/components/ui/button/CreateButton';
 
 const BackDataPage = () => {
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
@@ -76,13 +77,7 @@ const BackDataPage = () => {
             onChange={handleUploadExcelFile}
             text="제품 업로드"
           />
-          <Button
-            onClick={() => setOpenCreateProduct((prev) => !prev)}
-            variant="contained"
-            startIcon={<PlusOneOutlined />}
-          >
-            제품 입력
-          </Button>
+          <CreateButton text="제품 입력" onClick={() => setOpenCreateProduct(true)} />
         </Stack>
       </Stack>
       <FormGroup sx={{ ml: 2 }}>
