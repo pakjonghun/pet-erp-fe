@@ -23,12 +23,20 @@ import ProductionTableBody from './_components/ProductionTableBody';
 import { useUploadExcelFile } from '@/api/rest/hooks/upload/useUploadExcelFile';
 import { snackMessage } from '@/store/snackMessage';
 import UploadButton from '@/components/ui/button/UploadButtont';
+import { useProducts } from '@/api/graphql/hooks/product/useProducts';
+import { LIMIT } from '@/constants';
 
-const BackData = () => {
+const BackDataPage = () => {
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
   const uploadRef = useRef<null | HTMLInputElement>(null);
+
+  const { refetch } = useProducts({
+    keyword,
+    skip: 0,
+    limit: LIMIT,
+  });
 
   const handleUploadExcelFile = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -42,6 +50,7 @@ const BackData = () => {
         onSuccess: () => {
           snackMessage({ message: '제품 업로드가 완료되었습니다.', severity: 'success' });
           if (uploadRef.current) uploadRef.current.value = '';
+          refetch();
         },
         onError: (error) => {
           const message = error.response?.data.message;
@@ -114,4 +123,4 @@ const BackData = () => {
   );
 };
 
-export default BackData;
+export default BackDataPage;

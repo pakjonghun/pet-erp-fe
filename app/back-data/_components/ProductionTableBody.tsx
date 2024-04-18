@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { ProductOutput } from '@/api/graphql/codegen/graphql';
+import { Product } from '@/api/graphql/codegen/graphql';
 import { useProducts } from '@/api/graphql/hooks/product/useProducts';
 import { LIMIT } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
@@ -15,7 +15,7 @@ interface Props {
 }
 
 const ProductionTableBody: FC<Props> = ({ keyword }) => {
-  const [selectedProduct, setSelectedProduct] = useState<null | ProductOutput>(null);
+  const [selectedProduct, setSelectedProduct] = useState<null | Product>(null);
   const [optionType, setOptionType] = useState<null | SelectedProductOption>(null);
   const { data, networkStatus, fetchMore, refetch, client } = useProducts({
     keyword,
@@ -29,10 +29,7 @@ const ProductionTableBody: FC<Props> = ({ keyword }) => {
 
   const rows = data?.products.data ?? [];
 
-  const handleClickOption = (
-    option: SelectedProductOption | null,
-    product: ProductOutput | null
-  ) => {
+  const handleClickOption = (option: SelectedProductOption | null, product: Product | null) => {
     setSelectedProduct(product);
     setOptionType(option);
   };
@@ -79,7 +76,7 @@ const ProductionTableBody: FC<Props> = ({ keyword }) => {
 
       <EmptyRow colSpan={6} isEmpty={isEmpty} />
       {rows.map((item, index) => {
-        const product = item as unknown as ProductOutput;
+        const product = item as unknown as Product;
         const isLast = index === rows.length - 1;
         return (
           <ProductBodyRow
