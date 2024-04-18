@@ -29,9 +29,9 @@ const DeleteCategoryModal: FC<Props> = ({ item, open, onClose }) => {
         });
         onClose();
       },
-      onError: () => {
+      onError: (err) => {
         snackMessage({
-          message: `${name} 삭제가 실패했습니다.`,
+          message: err.message ?? `${name} 삭제가 실패했습니다.`,
           severity: 'error',
         });
         onClose();

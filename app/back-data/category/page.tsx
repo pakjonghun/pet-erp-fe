@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import { PlusOneOutlined, Search } from '@mui/icons-material';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, cache, useEffect, useRef, useState } from 'react';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import CreateCategoryModal from './_components/AddCategory';
 import { useFindManyCategory } from '@/api/graphql/hooks/category/useFindCategories';
@@ -28,15 +28,24 @@ const CategoryPage = () => {
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
 
-  const { data, networkStatus, refetch, fetchMore } = useFindManyCategory({
+  const { data, networkStatus, refetch, fetchMore, client } = useFindManyCategory({
     keyword: delayKeyword,
     limit: LIMIT,
     skip: 0,
   });
 
+  console.log(data);
   useEffect(() => {
+    const cache = client.cache.extract();
+    Object.keys(cache).forEach((key) => {
+      if (key.toLowerCase().includes('category')) {
+        client.cache.evict({ id: key });
+      }
+    });
+
+    client.cache.gc();
     refetch();
-  }, [delayKeyword, refetch]);
+  }, [delayKeyword, refetch, client]);
 
   const rows = data?.categories.data ?? [];
   const totalCount = data?.categories.totalCount;

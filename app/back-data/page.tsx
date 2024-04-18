@@ -97,6 +97,7 @@ const BackData = () => {
           <TableHead>
             <TableRow>
               <HeadCell text="코드" />
+              <HeadCell text="분류" />
               <HeadCell text="바코드" />
               <HeadCell text="이름" />
               <HeadCell text="원가" />

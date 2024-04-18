@@ -7,7 +7,7 @@ const products = graphql(`
     products(productsInput: $productsInput) {
       totalCount
       data {
-        ...ProductFragment
+        ...FullProductFragment
       }
     }
   }

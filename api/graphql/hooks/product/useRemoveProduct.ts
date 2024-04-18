@@ -17,11 +17,10 @@ export const useRemoveProduct = () => {
       const id = data?.removeProduct._id;
       cache.evict({ id: `${type}:${id}` });
       cache.gc();
-
       cache.modify({
         fields: {
           products(existingProduct = { totalCount: 0, data: [] }) {
-            return { totalCount: existingProduct.totalCount - 1, data: existingProduct };
+            return { totalCount: existingProduct.totalCount - 1, data: existingProduct.data };
           },
         },
       });

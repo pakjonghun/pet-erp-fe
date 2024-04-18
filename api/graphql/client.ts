@@ -1,3 +1,4 @@
+import { Product } from './codegen/graphql';
 import { BASE_URL } from '@/api/constants';
 import { PUBLIC_PATH } from '@/constants';
 import { isLogin } from '@/store/isLogin';
@@ -6,7 +7,7 @@ import { ApolloClient, InMemoryCache, createHttpLink, gql } from '@apollo/client
 import { createFragmentRegistry } from '@apollo/client/cache';
 import { onError } from '@apollo/client/link/error';
 
-const merge = (existing = { totalCount: 0, data: [] }, incoming: any, { args }: any) => {
+const merge = (existing = { totalCount: 0, data: [] }, incoming: any, args: any) => {
   const existingData = existing.data as any[];
 
   const incomingData = incoming.data as any[];
@@ -46,6 +47,11 @@ export const client = new ApolloClient({
         logType
       }
 
+      fragment CategoryFragment on Category {
+        _id
+        name
+      }
+
       fragment UserFragment on User {
         id
         role
@@ -61,7 +67,20 @@ export const client = new ApolloClient({
         salePrice
         leadTime
         maintainDate
-        category
+      }
+
+      fragment FullProductFragment on ProductOutput {
+        _id
+        code
+        barCode
+        name
+        wonPrice
+        salePrice
+        leadTime
+        maintainDate
+        category {
+          ...CategoryFragment
+        }
       }
 
       fragment ClientInfo on ClientInfo {
@@ -81,11 +100,6 @@ export const client = new ApolloClient({
         name
         accProfit
         averagePayCost
-      }
-
-      fragment CategoryFragment on Category {
-        _id
-        name
       }
     `),
     typePolicies: {

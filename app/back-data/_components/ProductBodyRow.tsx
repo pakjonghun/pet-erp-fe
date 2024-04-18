@@ -7,12 +7,12 @@ import { SelectedProductOption } from '../types';
 import { SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { Product } from '@/api/graphql/codegen/graphql';
+import { Product, ProductOutput } from '@/api/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 
 interface Props {
-  product: Product;
-  onClickOption: (option: SelectedProductOption | null, product: Product | null) => void;
+  product: ProductOutput;
+  onClickOption: (option: SelectedProductOption | null, product: ProductOutput | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
@@ -45,6 +45,7 @@ const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption }) => {
         ))}
       </Menu>
       <Cell sx={{ minWidth: 200 }}>{product.code}</Cell>
+      <Cell sx={{ minWidth: 200 }}>{product.category?.name ?? ''}</Cell>
       <Cell sx={{ minWidth: 200 }}>{product.barCode ?? ''}</Cell>
       <Cell sx={{ minWidth: 200 }}>{product.name}</Cell>
       <Cell sx={{ minWidth: 200 }}>{getKCWFormat(product.wonPrice)}</Cell>
