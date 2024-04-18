@@ -1,9 +1,8 @@
-import { FC } from 'react';
-import Box from '@mui/material/Box';
+import * as React from 'react';
 import Autocomplete, { AutocompleteRenderInputParams } from '@mui/material/Autocomplete';
+import { Box } from '@mui/material';
 
-export type SelectItem = { _id: string; label: string };
-
+export type SelectItem = { _id?: string | null; label?: string | null };
 interface Props {
   value: SelectItem | null;
   setValue: (item: SelectItem | null) => void;
@@ -12,7 +11,7 @@ interface Props {
   renderSearchInput: (params: AutocompleteRenderInputParams) => React.ReactNode;
 }
 
-const SearchAutoComplete: FC<Props> = ({
+const SearchAutoComplete: React.FC<Props> = ({
   value,
   options,
   setValue,
@@ -22,28 +21,23 @@ const SearchAutoComplete: FC<Props> = ({
   return (
     <Autocomplete
       value={value}
-      onChange={(_, value) => setValue(value)}
-      sx={{ width: '100%' }}
-      size="small"
-      id="country-select-demo"
-      options={options}
-      autoHighlight
-      getOptionLabel={(option) => option.label}
       noOptionsText="검색 결과가 없습니다."
-      renderOption={(props, option, state) => {
+      onChange={(_, value) => setValue(value)}
+      disablePortal
+      filterSelectedOptions
+      isOptionEqualToValue={(item, value) => item._id === value._id}
+      options={options}
+      renderInput={renderSearchInput}
+      getOptionLabel={(item) => item.label!}
+      renderOption={(props, item, state) => {
+        const { key, ...rest } = props as any;
         const isLast = state.index === options.length - 1;
         return (
-          <Box
-            {...props}
-            ref={isLast ? scrollRef : null}
-            component="li"
-            sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
-          >
-            {option.label}
+          <Box component="li" ref={isLast ? scrollRef : null} key={item._id} {...rest}>
+            {item.label}
           </Box>
         );
       }}
-      renderInput={(params) => renderSearchInput(params)}
     />
   );
 };

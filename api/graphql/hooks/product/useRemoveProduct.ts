@@ -15,6 +15,7 @@ export const useRemoveProduct = () => {
     update(cache, { data }) {
       const type = data?.removeProduct.__typename;
       const id = data?.removeProduct._id;
+
       cache.evict({ id: `${type}:${id}` });
       cache.gc();
       cache.modify({

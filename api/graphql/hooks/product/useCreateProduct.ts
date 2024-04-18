@@ -1,11 +1,11 @@
-import { FullProductFragmentFragmentDoc, ProductOutput } from './../../codegen/graphql';
+import { Product, ProductFragmentFragmentDoc } from './../../codegen/graphql';
 import { useMutation } from '@apollo/client';
 import { graphql } from '../../codegen';
 
 const createProduct = graphql(`
   mutation createProduct($createProductInput: CreateProductInput!) {
     createProduct(createProductInput: $createProductInput) {
-      ...FullProductFragment
+      ...ProductFragment
     }
   }
 `);
@@ -24,9 +24,9 @@ export const useCreateProduct = () => {
             if (!data) return existingProducts;
 
             const newProductRef = cache.writeFragment({
-              data: data.createProduct as ProductOutput,
-              fragment: FullProductFragmentFragmentDoc,
-              fragmentName: 'FullProductFragment',
+              data: data.createProduct as Product,
+              fragment: ProductFragmentFragmentDoc,
+              fragmentName: 'ProductFragment',
             });
 
             const newProducts = {

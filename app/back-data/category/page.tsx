@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import { PlusOneOutlined, Search } from '@mui/icons-material';
-import { ChangeEvent, cache, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import CreateCategoryModal from './_components/AddCategory';
 import { useFindManyCategory } from '@/api/graphql/hooks/category/useFindCategories';
@@ -34,16 +34,7 @@ const CategoryPage = () => {
     skip: 0,
   });
 
-  console.log(data);
   useEffect(() => {
-    const cache = client.cache.extract();
-    Object.keys(cache).forEach((key) => {
-      if (key.toLowerCase().includes('category')) {
-        client.cache.evict({ id: key });
-      }
-    });
-
-    client.cache.gc();
     refetch();
   }, [delayKeyword, refetch, client]);
 
@@ -56,9 +47,11 @@ const CategoryPage = () => {
     if (networkStatus != 1 && networkStatus != 3) {
       fetchMore({
         variables: {
-          keyword: delayKeyword,
-          limit: LIMIT,
-          skip: rows.length,
+          categoriesInput: {
+            keyword: delayKeyword,
+            limit: LIMIT,
+            skip: rows.length,
+          },
         },
       });
     }

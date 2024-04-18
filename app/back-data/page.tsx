@@ -1,6 +1,5 @@
 'use client';
 
-import PublishIcon from '@mui/icons-material/Publish';
 import HeadCell from '@/components/table/HeadCell';
 import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 import TablePage from '@/components/table/TablePage';
@@ -16,7 +15,7 @@ import {
   TableRow,
   TextField,
 } from '@mui/material';
-import { Pending, PlusOneOutlined, Search } from '@mui/icons-material';
+import { PlusOneOutlined, Search } from '@mui/icons-material';
 import { ChangeEvent, useRef, useState } from 'react';
 import CreateProductModal from './_components/AddProductModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
@@ -56,7 +55,9 @@ const BackData = () => {
   const [openCreateProduct, setOpenCreateProduct] = useState(false);
   return (
     <TablePage sx={{ flex: 1 }}>
-      <CreateProductModal open={openCreateProduct} onClose={() => setOpenCreateProduct(false)} />
+      {openCreateProduct && (
+        <CreateProductModal open={openCreateProduct} onClose={() => setOpenCreateProduct(false)} />
+      )}
       <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="제품 백데이터" />
         <Stack direction="row" alignItems="center" gap={2}>

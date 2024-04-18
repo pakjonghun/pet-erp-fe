@@ -1,4 +1,3 @@
-import { FC, useEffect, useState } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
   AutocompleteRenderInputParams,
@@ -10,7 +9,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-
+import { FC, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { CreateProductForm, createProductSchema } from '../_validations/createProductValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,32 +18,33 @@ import { snackMessage } from '@/store/snackMessage';
 import { useFindManyCategory } from '@/api/graphql/hooks/category/useFindCategories';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT } from '@/constants';
-import SearchAutoComplete, { SelectItem } from '@/components/ui/select/SearchAutoComplete';
+import { SelectItem } from '@/components/ui/select/SearchAutoComplete';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
+import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 import { useUpdateProduct } from '@/api/graphql/hooks/product/useUpdateProduct';
-import { ProductOutput } from '@/api/graphql/codegen/graphql';
+import { Product } from '@/api/graphql/codegen/graphql';
 
 interface Props {
-  selectedProduct: ProductOutput;
+  selectedProduct: Product;
   open: boolean;
   onClose: () => void;
 }
 
 const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
-  const [editProduct, { loading }] = useUpdateProduct();
+  const [updateProduct, { loading }] = useUpdateProduct();
 
   const {
     reset,
     control,
-    handleSubmit,
     watch,
+    handleSubmit,
     setValue,
     formState: { errors },
   } = useForm<CreateProductForm>({
     resolver: zodResolver(createProductSchema),
     defaultValues: {
       barCode: selectedProduct.barCode ?? '',
-      category: selectedProduct.category?.name ?? '',
+      category: selectedProduct.category?.name as string,
       code: selectedProduct.code,
       leadTime: selectedProduct.leadTime ?? 0,
       maintainDate: selectedProduct.maintainDate ?? 0,
@@ -66,10 +66,15 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
 
   const categoryName = watch('category');
   const category = rows.find((item) => item.name === categoryName);
-  const categoryOption = category ? { label: category.name, _id: category._id } : null;
+  const categoryOption = category ? { _id: category!._id, label: category!.name } : null;
 
   const setCategory = (selectedCategory: SelectItem | null) => {
-    setValue('category', selectedCategory ? selectedCategory.label : '');
+    if (!selectedCategory) return;
+
+    const allExist = Object.values(selectedCategory).every((item) => item);
+    if (!allExist) return;
+
+    setValue('category', selectedCategory.label!);
   };
 
   const callback: IntersectionObserverCallback = (entries) => {
@@ -96,13 +101,13 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
   useEffect(() => {
     refetch();
   }, [delayedCategoryKeyword, refetch]);
-
   const onSubmit = (values: CreateProductForm) => {
-    editProduct({
+    updateProduct({
       variables: {
         updateProductInput: {
-          _id: selectedProduct._id,
           ...values,
+          _id: selectedProduct._id,
+          category: category?._id,
         },
       },
       onCompleted: () => {
@@ -124,9 +129,9 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        제품 입력
+        제품 편집
       </Typography>
-      <Typography sx={{ mb: 3 }}>제품 정보를 편집합니다.</Typography>
+      <Typography sx={{ mb: 3 }}>제품을 편집합니다.</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={{ gap: 2 }}>
           <Controller
@@ -262,9 +267,8 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
                   render={({ field }) => (
                     <FormControl fullWidth>
                       <TextField
-                        {...params}
-                        size="small"
                         {...field}
+                        {...params}
                         onChange={(event) => {
                           field.onChange(event);
                           setCategoryKeyword(event.target.value);
@@ -272,6 +276,7 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
                         label="분류"
                         error={!!errors.category?.message}
                         helperText={errors.category?.message ?? ''}
+                        size="small"
                       />
                     </FormControl>
                   )}

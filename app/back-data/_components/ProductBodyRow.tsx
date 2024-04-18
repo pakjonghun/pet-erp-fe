@@ -7,12 +7,12 @@ import { SelectedProductOption } from '../types';
 import { SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { Product, ProductOutput } from '@/api/graphql/codegen/graphql';
+import { Product } from '@/api/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 
 interface Props {
-  product: ProductOutput;
-  onClickOption: (option: SelectedProductOption | null, product: ProductOutput | null) => void;
+  product: Product;
+  onClickOption: (option: SelectedProductOption | null, product: Product | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 

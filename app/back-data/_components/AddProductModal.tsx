@@ -19,8 +19,9 @@ import { useCreateProduct } from '@/api/graphql/hooks/product/useCreateProduct';
 import { useFindManyCategory } from '@/api/graphql/hooks/category/useFindCategories';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT } from '@/constants';
-import SearchAutoComplete, { SelectItem } from '@/components/ui/select/SearchAutoComplete';
+import { SelectItem } from '@/components/ui/select/SearchAutoComplete';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
+import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 
 interface Props {
   open: boolean;
@@ -43,7 +44,6 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
       code: '',
       name: '',
       barCode: '',
-      category: '',
       leadTime: 0,
       maintainDate: 0,
       salePrice: 0,
@@ -94,7 +94,6 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
     refetch();
   }, [delayedCategoryKeyword, refetch]);
   const onSubmit = (values: CreateProductForm) => {
-    console.log('category : ', category);
     createProduct({
       variables: {
         createProductInput: {
@@ -259,9 +258,8 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
                   render={({ field }) => (
                     <FormControl fullWidth>
                       <TextField
-                        {...params}
-                        size="small"
                         {...field}
+                        {...params}
                         onChange={(event) => {
                           field.onChange(event);
                           setCategoryKeyword(event.target.value);
@@ -269,6 +267,7 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
                         label="분류"
                         error={!!errors.category?.message}
                         helperText={errors.category?.message ?? ''}
+                        size="small"
                       />
                     </FormControl>
                   )}

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Product, ProductOutput } from '@/api/graphql/codegen/graphql';
+import { Product } from '@/api/graphql/codegen/graphql';
 import { useRemoveProduct } from '@/api/graphql/hooks/product/useRemoveProduct';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import BaseModal from '@/components/ui/modal/BaseModal';
@@ -8,7 +8,7 @@ import { Typography, Stack, Button } from '@mui/material';
 
 interface Props {
   open: boolean;
-  selectedProduct: ProductOutput;
+  selectedProduct: Product;
   onClose: () => void;
 }
 

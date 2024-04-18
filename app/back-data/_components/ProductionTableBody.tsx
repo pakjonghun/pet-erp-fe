@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { Product, ProductOutput } from '@/api/graphql/codegen/graphql';
+import { ProductOutput } from '@/api/graphql/codegen/graphql';
 import { useProducts } from '@/api/graphql/hooks/product/useProducts';
 import { LIMIT } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
@@ -17,7 +17,7 @@ interface Props {
 const ProductionTableBody: FC<Props> = ({ keyword }) => {
   const [selectedProduct, setSelectedProduct] = useState<null | ProductOutput>(null);
   const [optionType, setOptionType] = useState<null | SelectedProductOption>(null);
-  const { data, networkStatus, fetchMore, refetch } = useProducts({
+  const { data, networkStatus, fetchMore, refetch, client } = useProducts({
     keyword,
     skip: 0,
     limit: LIMIT,
@@ -25,7 +25,7 @@ const ProductionTableBody: FC<Props> = ({ keyword }) => {
 
   useEffect(() => {
     refetch();
-  }, [keyword, refetch]);
+  }, [keyword, client, refetch]);
 
   const rows = data?.products.data ?? [];
 

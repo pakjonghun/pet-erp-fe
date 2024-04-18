@@ -67,17 +67,6 @@ export const client = new ApolloClient({
         salePrice
         leadTime
         maintainDate
-      }
-
-      fragment FullProductFragment on ProductOutput {
-        _id
-        code
-        barCode
-        name
-        wonPrice
-        salePrice
-        leadTime
-        maintainDate
         category {
           ...CategoryFragment
         }
