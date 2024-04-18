@@ -1,5 +1,6 @@
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
+  AutocompleteRenderInputParams,
   Button,
   FormControl,
   FormGroup,
@@ -8,7 +9,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { CreateProductForm, createProductSchema } from '../_validations/createProductValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,6 +19,8 @@ import { useCreateProduct } from '@/api/graphql/hooks/product/useCreateProduct';
 import { useFindManyCategory } from '@/api/graphql/hooks/category/useFindCategories';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT } from '@/constants';
+import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
+import useInfinityScroll from '@/hooks/useInfinityScroll';
 
 interface Props {
   open: boolean;
@@ -49,11 +52,37 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
   const [categoryKeyword, setCategoryKeyword] = useState('');
   const delayedCategoryKeyword = useTextDebounce(categoryKeyword);
 
-  const { data, networkStatus } = useFindManyCategory({
+  const { data, networkStatus, refetch, fetchMore } = useFindManyCategory({
     keyword: delayedCategoryKeyword,
     limit: LIMIT,
     skip: 0,
   });
+  const rows = data?.categories.data ?? [];
+
+  const callback: IntersectionObserverCallback = (entries) => {
+    if (entries[0].isIntersecting) {
+      if (networkStatus != 1 && networkStatus != 3) {
+        const totalCount = data?.categories.totalCount;
+        if (totalCount != null && totalCount > rows.length) {
+          fetchMore({
+            variables: {
+              categoriesInput: {
+                keyword: delayedCategoryKeyword,
+                limit: LIMIT,
+                skip: rows.length,
+              },
+            },
+          });
+        }
+      }
+    }
+  };
+
+  const scrollRef = useInfinityScroll({ callback });
+
+  useEffect(() => {
+    refetch();
+  }, [delayedCategoryKeyword, refetch]);
 
   const onSubmit = (values: CreateProductForm) => {
     createProduct({
@@ -205,20 +234,33 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
               </FormControl>
             )}
           />
-          <Controller
-            control={control}
-            name="category"
-            render={({ field }) => (
-              <FormControl>
-                <TextField
-                  size="small"
-                  {...field}
-                  label="분류"
-                  error={!!errors.category?.message}
-                  helperText={errors.category?.message ?? ''}
+          <SearchAutoComplete
+            scrollRef={scrollRef}
+            renderSearchInput={(params: AutocompleteRenderInputParams) => {
+              return (
+                <Controller
+                  control={control}
+                  name="category"
+                  render={({ field }) => (
+                    <FormControl fullWidth>
+                      <TextField
+                        {...params}
+                        size="small"
+                        {...field}
+                        onChange={(event) => {
+                          field.onChange(event);
+                          setCategoryKeyword(event.target.value);
+                        }}
+                        label="분류"
+                        error={!!errors.category?.message}
+                        helperText={errors.category?.message ?? ''}
+                      />
+                    </FormControl>
+                  )}
                 />
-              </FormControl>
-            )}
+              );
+            }}
+            options={rows.map((row) => ({ _id: row._id, label: row.name }))}
           />
         </FormGroup>
         <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
