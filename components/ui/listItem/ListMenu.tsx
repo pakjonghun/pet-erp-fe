@@ -11,7 +11,9 @@ const ListMenu: FC<Props> = ({ direction = 'vertical', menu: { icon, label, call
   if (direction === 'vertical') {
     return (
       <ListItemButton
-        onClick={callback}
+        onClick={(event) => {
+          callback && callback();
+        }}
         sx={{
           borderTopLeftRadius: 10,
           borderBottomLeftRadius: 10,

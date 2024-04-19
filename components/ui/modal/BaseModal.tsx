@@ -3,6 +3,7 @@
 import { FC, ReactNode } from 'react';
 import { Box, IconButton, Modal } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
+import PopupContainer from './ModalContainer';
 
 interface Props {
   open: boolean;
@@ -13,25 +14,7 @@ interface Props {
 const BaseModal: FC<Props> = ({ open, children, onClose }) => {
   return (
     <Modal open={open} onClose={onClose}>
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%,-50%)',
-          bgcolor: 'background.paper',
-          boxShadow: 10,
-          px: 3,
-          py: 2,
-          borderRadius: 2,
-          minWidth: 300,
-        }}
-      >
-        <IconButton onClick={onClose} sx={{ position: 'absolute', right: 3, top: 3 }}>
-          <ClearIcon />
-        </IconButton>
-        {children}
-      </Box>
+      <PopupContainer onClose={onClose}>{children}</PopupContainer>
     </Modal>
   );
 };

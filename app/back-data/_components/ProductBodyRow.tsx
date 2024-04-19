@@ -1,6 +1,6 @@
 import Cell from '@/components/table/Cell';
 import { IconButton, Menu, TableRow } from '@mui/material';
-import React, { FC, useState } from 'react';
+import React, { FC, MouseEvent, useState } from 'react';
 import { getKCWFormat } from '@/util';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { SelectedProductOption } from '../types';
@@ -12,11 +12,12 @@ import OptionMenu from '@/components/ui/listItem/OptionMenu';
 
 interface Props {
   product: Product;
+  onClickRow: (event: MouseEvent<HTMLTableCellElement>, product: Product) => void;
   onClickOption: (option: SelectedProductOption | null, product: Product | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption }) => {
+const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow }) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<SelectedProductOption, SelectedOptionItem> = {
     edit: {
@@ -44,15 +45,33 @@ const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption }) => {
           <OptionMenu key={option} menu={menu} option={option} />
         ))}
       </Menu>
-      <Cell sx={{ minWidth: 200 }}>{product.code}</Cell>
-      <Cell sx={{ minWidth: 200 }}>{product.category?.name ?? ''}</Cell>
-      <Cell sx={{ minWidth: 200 }}>{product.barCode ?? ''}</Cell>
-      <Cell sx={{ minWidth: 200 }}>{product.name}</Cell>
-      <Cell sx={{ minWidth: 200 }}>{getKCWFormat(product.wonPrice)}</Cell>
-      <Cell sx={{ minWidth: 200 }}>{getKCWFormat(product.salePrice)}</Cell>
-      <Cell sx={{ minWidth: 200 }}>{product.leadTime ?? ''}</Cell>
+      <Cell onClick={(event) => onClickRow(event, product)} sx={{ minWidth: 200 }}>
+        {product.code}
+      </Cell>
+      <Cell onClick={(event) => onClickRow(event, product)} sx={{ minWidth: 200 }}>
+        {product.category?.name ?? ''}
+      </Cell>
+      <Cell onClick={(event) => onClickRow(event, product)} sx={{ minWidth: 200 }}>
+        {product.barCode ?? ''}
+      </Cell>
+      <Cell onClick={(event) => onClickRow(event, product)} sx={{ minWidth: 200 }}>
+        {product.name}
+      </Cell>
+      <Cell onClick={(event) => onClickRow(event, product)} sx={{ minWidth: 200 }}>
+        {getKCWFormat(product.wonPrice)}
+      </Cell>
+      <Cell onClick={(event) => onClickRow(event, product)} sx={{ minWidth: 200 }}>
+        {getKCWFormat(product.salePrice)}
+      </Cell>
+      <Cell onClick={(event) => onClickRow(event, product)} sx={{ minWidth: 200 }}>
+        {product.leadTime ?? ''}
+      </Cell>
       <Cell sx={{ minWidth: 50 }}>
-        <IconButton onClick={(event) => setMenuAnchor(event.currentTarget)}>
+        <IconButton
+          onClick={(event) => {
+            setMenuAnchor(event.currentTarget);
+          }}
+        >
           <MoreHorizIcon />
         </IconButton>
       </Cell>
