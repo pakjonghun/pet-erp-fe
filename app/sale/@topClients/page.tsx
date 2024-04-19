@@ -43,7 +43,7 @@ const TopClients = () => {
   return (
     <TablePage>
       <TableTitle title={`BEST 거래처`} />
-      <ScrollTableContainer sx={{ maxHeight: `${TABLE_MAX_HEIGHT + 71.98}px` }}>
+      <ScrollTableContainer sx={{ maxHeight: `calc(${TABLE_MAX_HEIGHT} + 71.98px)` }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow hover>
