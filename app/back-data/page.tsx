@@ -5,17 +5,18 @@ import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 import TablePage from '@/components/table/TablePage';
 import TableTitle from '@/components/ui/typograph/TableTitle';
 import {
-  Button,
   FormControl,
   FormGroup,
+  Grid,
   InputAdornment,
+  Paper,
   Stack,
   Table,
   TableHead,
   TableRow,
   TextField,
 } from '@mui/material';
-import { PlusOneOutlined, Search } from '@mui/icons-material';
+import { Search } from '@mui/icons-material';
 import { ChangeEvent, useRef, useState } from 'react';
 import CreateProductModal from './_components/AddProductModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
@@ -26,6 +27,7 @@ import UploadButton from '@/components/ui/button/UploadButtont';
 import { useProducts } from '@/api/graphql/hooks/product/useProducts';
 import { LIMIT } from '@/constants';
 import CreateButton from '@/components/ui/button/CreateButton';
+import ProductionCards from './_components/ProductionCards';
 
 const BackDataPage = () => {
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
@@ -97,7 +99,23 @@ const BackDataPage = () => {
           />
         </FormControl>
       </FormGroup>
-      <ScrollTableContainer>
+      <ProductionCards
+        sx={{
+          display: {
+            xs: 'block',
+            md: 'none',
+          },
+        }}
+        keyword={delayKeyword}
+      />
+      <ScrollTableContainer
+        sx={{
+          display: {
+            xs: 'none',
+            md: 'block',
+          },
+        }}
+      >
         <Table stickyHeader>
           <TableHead>
             <TableRow>

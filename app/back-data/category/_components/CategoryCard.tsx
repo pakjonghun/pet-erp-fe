@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Paper, Typography, Stack, Button } from '@mui/material';
+import { Paper, Typography, Stack, Button, Box } from '@mui/material';
 import { Category } from '@/api/graphql/codegen/graphql';
 import DeleteCategoryModal from './DeleteCategoryModal';
 import EditCategoryModal from './EditCategoryModal';
@@ -43,7 +43,7 @@ const CategoryCard: FC<Props> = ({ item: { _id, name } }) => {
           textOverflow: 'ellipsis',
           overflow: 'hidden',
         }}
-        title={name}
+        title={name ?? ''}
       >
         {name}
       </Typography>
