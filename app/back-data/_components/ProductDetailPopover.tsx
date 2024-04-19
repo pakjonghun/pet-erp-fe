@@ -39,10 +39,10 @@ const ProductDetailPopover: FC<Props> = ({
         <LabelText label="리드타임" text={selectedProduct.leadTime} />
       </Stack>
       <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
-        <Button color="error" variant="outlined" onClick={onClickEdit}>
+        <Button color="error" variant="outlined" onClick={onClickDelete}>
           삭제
         </Button>
-        <Button variant="contained" onClick={onClickDelete}>
+        <Button variant="contained" onClick={onClickEdit}>
           편집
         </Button>
       </Stack>
