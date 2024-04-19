@@ -3,16 +3,13 @@ import { Product } from '@/api/graphql/codegen/graphql';
 import { useProducts } from '@/api/graphql/hooks/product/useProducts';
 import { LIMIT } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { Box, Button, Popover, Stack, TableBody } from '@mui/material';
+import { TableBody } from '@mui/material';
 import EmptyRow from '@/components/table/EmptyRow';
 import ProductBodyRow from './ProductBodyRow';
 import { SelectedProductOption } from '../types';
 import RemoveProductModal from './RemoveProductModal';
 import EditProductModal from './EditProductModal';
-import PopupContainer from '@/components/ui/modal/ModalContainer';
-import ModalTitle from '@/components/ui/typograph/ModalTitle';
-import LabelText from '@/components/ui/typograph/LabelText';
-import { getKCWFormat } from '@/util';
+import ProductDetailPopover from './ProductDetailPopover';
 
 interface Props {
   keyword: string;
@@ -59,6 +56,16 @@ const ProductionTableBody: FC<Props> = ({ keyword }) => {
     }
   };
 
+  const handleClickEdit = () => {
+    handleClosePopover();
+    handleClickOption('edit', selectedProduct);
+  };
+
+  const handleClickDelete = () => {
+    handleClosePopover();
+    handleClickOption('delete', selectedProduct);
+  };
+
   const handleClosePopover = () => setPopoverAnchor(null);
 
   const scrollRef = useInfinityScroll({ callback });
@@ -81,51 +88,17 @@ const ProductionTableBody: FC<Props> = ({ keyword }) => {
           selectedProduct={selectedProduct}
         />
       )}
-      {!!selectedProduct && (
-        <Popover
-          anchorReference="anchorPosition"
+      {selectedProduct && (
+        <ProductDetailPopover
           onClose={handleClosePopover}
-          anchorPosition={popoverPosition}
+          position={popoverPosition}
           open={!!popoverAnchor}
           anchorEl={popoverAnchor}
-        >
-          <PopupContainer isModal={false} onClose={handleClosePopover}>
-            <ModalTitle text="제품 세부내용" />
-            <Stack>
-              <LabelText label="코드" text={selectedProduct.code} />
-              <LabelText label="이름" text={selectedProduct.name} />
-              <LabelText label="분류" text={selectedProduct.category?.name ?? ''} />
-              <LabelText label="바코드" text={selectedProduct.barCode ?? ''} />
-              <LabelText label="판매가" text={getKCWFormat(selectedProduct.salePrice)} />
-              <LabelText label="원가" text={getKCWFormat(selectedProduct.wonPrice)} />
-              <LabelText label="유지기간" text={selectedProduct.maintainDate ?? ''} />
-              <LabelText label="리드타임" text={selectedProduct.leadTime} />
-            </Stack>
-            <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
-              <Button
-                color="error"
-                variant="outlined"
-                onClick={() => {
-                  handleClosePopover();
-                  handleClickOption('delete', selectedProduct);
-                }}
-              >
-                삭제
-              </Button>
-              <Button
-                variant="contained"
-                onClick={() => {
-                  handleClosePopover();
-                  handleClickOption('edit', selectedProduct);
-                }}
-              >
-                편집
-              </Button>
-            </Stack>
-          </PopupContainer>
-        </Popover>
+          onClickDelete={handleClickDelete}
+          onClickEdit={handleClickEdit}
+          selectedProduct={selectedProduct}
+        />
       )}
-
       <EmptyRow colSpan={6} isEmpty={isEmpty} />
       {rows.map((item, index) => {
         const product = item as unknown as Product;
