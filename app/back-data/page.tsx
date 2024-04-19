@@ -1,5 +1,6 @@
 'use client';
 
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import HeadCell from '@/components/table/HeadCell';
 import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 import TablePage from '@/components/table/TablePage';
@@ -7,27 +8,27 @@ import TableTitle from '@/components/ui/typograph/TableTitle';
 import {
   FormControl,
   FormGroup,
-  Grid,
   InputAdornment,
-  Paper,
   Stack,
   Table,
   TableHead,
   TableRow,
   TextField,
 } from '@mui/material';
-import { Search } from '@mui/icons-material';
+import { PlusOneOutlined, Search } from '@mui/icons-material';
 import { ChangeEvent, useRef, useState } from 'react';
 import CreateProductModal from './_components/AddProductModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import ProductionTableBody from './_components/ProductionTableBody';
-import { useUploadExcelFile } from '@/api/rest/hooks/upload/useUploadExcelFile';
+import { useUploadExcelFile } from '@/api/rest/hooks/file/useUploadExcelFile';
 import { snackMessage } from '@/store/snackMessage';
 import UploadButton from '@/components/ui/button/UploadButtont';
 import { useProducts } from '@/api/graphql/hooks/product/useProducts';
 import { LIMIT } from '@/constants';
-import CreateButton from '@/components/ui/button/CreateButton';
 import ProductionCards from './_components/ProductionCards';
+import ActionButton from '@/components/ui/button/ActionButton';
+import { useDownloadExcelFile } from '@/api/rest/hooks/file/useDownloadExcelFile';
+import CommonLoading from '@/components/ui/loading/CommonLoading';
 
 const BackDataPage = () => {
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
@@ -64,6 +65,20 @@ const BackDataPage = () => {
     );
   };
 
+  const { mutate: download, isPending: isDownloading } = useDownloadExcelFile();
+
+  const handleDownload = () => {
+    download('product', {
+      onSuccess: () => {
+        snackMessage({ message: '제품 다운로드가 완료되었습니다.', severity: 'success' });
+      },
+      onError: (err) => {
+        const message = err.message;
+        snackMessage({ message: message ?? '제품 다운로드가 실패하였습니다.', severity: 'error' });
+      },
+    });
+  };
+
   const [openCreateProduct, setOpenCreateProduct] = useState(false);
   return (
     <TablePage sx={{ flex: 1 }}>
@@ -79,7 +94,17 @@ const BackDataPage = () => {
             onChange={handleUploadExcelFile}
             text="제품 업로드"
           />
-          <CreateButton text="제품 입력" onClick={() => setOpenCreateProduct(true)} />
+          <ActionButton
+            icon={isDownloading ? <CommonLoading /> : <FileDownloadIcon />}
+            text="제품 다운로드"
+            onClick={handleDownload}
+          />
+
+          <ActionButton
+            icon={<PlusOneOutlined />}
+            text="제품 입력"
+            onClick={() => setOpenCreateProduct(true)}
+          />
         </Stack>
       </Stack>
       <FormGroup sx={{ ml: 2 }}>

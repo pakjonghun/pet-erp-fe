@@ -1,13 +1,13 @@
-import { PlusOneOutlined } from '@mui/icons-material';
+import { FC, ReactNode } from 'react';
 import { Button, IconButton } from '@mui/material';
-import { FC } from 'react';
 
 interface Props {
   text: string;
+  icon: ReactNode;
   onClick: () => void;
 }
 
-const CreateButton: FC<Props> = ({ text, onClick }) => {
+const ActionButton: FC<Props> = ({ text, icon, onClick }) => {
   return (
     <>
       <Button
@@ -19,7 +19,7 @@ const CreateButton: FC<Props> = ({ text, onClick }) => {
         }}
         onClick={onClick}
         variant="contained"
-        startIcon={<PlusOneOutlined />}
+        startIcon={icon}
       >
         {text}
       </Button>
@@ -31,10 +31,10 @@ const CreateButton: FC<Props> = ({ text, onClick }) => {
         }}
         onClick={onClick}
       >
-        <PlusOneOutlined />
+        {icon}
       </IconButton>
     </>
   );
 };
 
-export default CreateButton;
+export default ActionButton;

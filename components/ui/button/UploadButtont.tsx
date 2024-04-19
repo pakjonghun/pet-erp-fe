@@ -19,6 +19,7 @@ const UploadButton: React.FC<Props> = ({ text, loading, inputRef, onChange }) =>
         sx={{
           display: {
             xs: 'none',
+            md: 'flex',
           },
         }}
         component="label"
@@ -32,7 +33,7 @@ const UploadButton: React.FC<Props> = ({ text, loading, inputRef, onChange }) =>
       <IconButton
         sx={{
           display: {
-            sm: 'none',
+            md: 'none',
           },
         }}
         component="label"

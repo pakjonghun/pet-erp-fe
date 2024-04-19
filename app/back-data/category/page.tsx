@@ -1,5 +1,7 @@
 'use client';
 
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import { PlusOneOutlined } from '@mui/icons-material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import TablePage from '@/components/table/TablePage';
 import TableTitle from '@/components/ui/typograph/TableTitle';
@@ -21,9 +23,11 @@ import { useFindManyCategory } from '@/api/graphql/hooks/category/useFindCategor
 import { LIMIT, TABLE_MAX_HEIGHT } from '@/constants';
 import CategoryCard from './_components/CategoryCard';
 import UploadButton from '@/components/ui/button/UploadButtont';
-import { useUploadExcelFile } from '@/api/rest/hooks/upload/useUploadExcelFile';
+import { useUploadExcelFile } from '@/api/rest/hooks/file/useUploadExcelFile';
 import { snackMessage } from '@/store/snackMessage';
-import CreateButton from '@/components/ui/button/CreateButton';
+import ActionButton from '@/components/ui/button/ActionButton';
+import CommonLoading from '@/components/ui/loading/CommonLoading';
+import { useDownloadExcelFile } from '@/api/rest/hooks/file/useDownloadExcelFile';
 
 const CategoryPage = () => {
   const [keyword, setKeyword] = useState('');
@@ -91,6 +95,20 @@ const CategoryPage = () => {
     );
   };
 
+  const { mutate: download, isPending: isDownloading } = useDownloadExcelFile();
+
+  const handleDownload = () => {
+    download('category', {
+      onSuccess: () => {
+        snackMessage({ message: '카테고리 다운로드가 완료되었습니다.', severity: 'success' });
+      },
+      onError: (err) => {
+        const message = err.message;
+        snackMessage({ message: message ?? '파일 다운로드가 실패했습니다.', severity: 'error' });
+      },
+    });
+  };
+
   return (
     <TablePage sx={{ flex: 1 }}>
       <CreateCategoryModal open={openCreateCategory} onClose={() => setOpenCreateCategory(false)} />
@@ -103,7 +121,16 @@ const CategoryPage = () => {
             text="제품분류 업로드"
             onChange={handleChangeFile}
           />
-          <CreateButton text="제품분류 입력" onClick={() => setOpenCreateCategory(true)} />
+          <ActionButton
+            icon={isDownloading ? <CommonLoading /> : <FileDownloadIcon />}
+            text="제품분류 다운로드"
+            onClick={handleDownload}
+          />
+          <ActionButton
+            icon={<PlusOneOutlined />}
+            text="제품분류 입력"
+            onClick={() => setOpenCreateCategory(true)}
+          />
         </Stack>
       </Stack>
       <FormGroup sx={{ ml: 2 }}>
