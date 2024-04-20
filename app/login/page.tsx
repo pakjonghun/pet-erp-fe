@@ -36,11 +36,12 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (loading) return;
+
     if (isLogin) {
       console.log('amai login', isLogin);
       router.replace('/');
     }
-  }, [isLogin, loading]);
+  }, [isLogin, loading, router]);
 
   const submit = (values: LoginForm) => {
     login(values, {

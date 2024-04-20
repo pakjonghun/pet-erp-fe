@@ -34,6 +34,7 @@ const SettingMenuTrigger = () => {
         snackMessage({ message: '안녕히 가세요.', severity: 'success' });
         await client.resetStore();
         authState({ loading: false, isLogin: false });
+        router.replace('/login');
         setSettingMenuAnchor(null);
       },
       onError: (err) => {

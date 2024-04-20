@@ -20,16 +20,16 @@ const MainLayout: FC<Props> = ({ children }) => {
   const onClose = () => setOpen(false);
   const toggleOpen = () => setOpen((prev) => !prev);
   const { loading, isLogin } = useReactiveVar(authState);
+  const isPublicPath = useGetIsPublicPath();
+
   useEffect(() => {
-    if (isLogin) return;
+    if (loading) return;
 
     if (!isLogin) {
       console.log('main layout', isLogin);
       router.replace('/login');
     }
-  }, [isLogin, loading]);
-
-  const isPublicPath = useGetIsPublicPath();
+  }, [isLogin, loading, router]);
 
   return (
     <Box component="main">
