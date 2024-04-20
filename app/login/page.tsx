@@ -12,6 +12,8 @@ import Loading from '@/components/ui/loading/PageLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { client } from '@/api/graphql/client';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
+import { useReactiveVar } from '@apollo/client';
+import { isLogin } from '@/store/isLogin';
 
 const LoginPage = () => {
   const {
@@ -29,13 +31,15 @@ const LoginPage = () => {
 
   const router = useRouter();
   const { mutate: login, isPending } = useLogin();
-  const { data: myInfo, loading } = useGetMyInfo();
+  // const { data: myInfo, loading } = useGetMyInfo();
+  const amILogin = useReactiveVar(isLogin);
+  console.log('amai login', amILogin);
   useEffect(() => {
-    if (!loading && myInfo) {
-      console.log('loginpage, ', myInfo);
+    if (amILogin) {
+      // console.log('loginpage, ', myInfo);
       router.replace('/');
     }
-  }, [loading, myInfo, router]);
+  }, [amILogin, router]);
 
   const submit = (values: LoginForm) => {
     login(values, {
@@ -50,9 +54,9 @@ const LoginPage = () => {
     });
   };
 
-  if (loading) return <Loading />;
+  // if (loading) return <Loading />;
 
-  if (!loading && myInfo) return <></>;
+  // if (!loading && myInfo) return <></>;
 
   return (
     <Box>
