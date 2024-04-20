@@ -49,7 +49,7 @@ const BackDataPage = () => {
     const formBody = new FormData();
     formBody.append('file', file);
     uploadProduct(
-      { service: 'product', formBody },
+      { service: 'client', formBody },
       {
         onSuccess: () => {
           snackMessage({ message: '거래처 업로드가 완료되었습니다.', severity: 'success' });
@@ -71,7 +71,7 @@ const BackDataPage = () => {
   const { mutate: download, isPending: isDownloading } = useDownloadExcelFile();
 
   const handleDownload = () => {
-    download('product', {
+    download('client', {
       onSuccess: () => {
         snackMessage({ message: '거래처 다운로드가 완료되었습니다.', severity: 'success' });
       },
@@ -85,11 +85,11 @@ const BackDataPage = () => {
     });
   };
 
-  const [openCreateProduct, setOpenCreateProduct] = useState(false);
+  const [openCreateClient, setOpenCreateClient] = useState(false);
   return (
     <TablePage sx={{ flex: 1 }}>
-      {openCreateProduct && (
-        <CreateClientModal open={openCreateProduct} onClose={() => setOpenCreateProduct(false)} />
+      {openCreateClient && (
+        <CreateClientModal open={openCreateClient} onClose={() => setOpenCreateClient(false)} />
       )}
       <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="거래처 백데이터" />
@@ -109,7 +109,7 @@ const BackDataPage = () => {
           <ActionButton
             icon={<PlusOneOutlined />}
             text="거래처 입력"
-            onClick={() => setOpenCreateProduct(true)}
+            onClick={() => setOpenCreateClient(true)}
           />
         </Stack>
       </Stack>
@@ -150,14 +150,15 @@ const BackDataPage = () => {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
+              <HeadCell text="쇼핑몰명" />
+              <HeadCell text="상호" />
               <HeadCell text="코드" />
+              <HeadCell text="수수료율" />
               <HeadCell text="분류" />
-              <HeadCell text="바코드" />
-              <HeadCell text="이름" />
-              <HeadCell text="원가" />
-              <HeadCell text="판매가" />
-              <HeadCell text="리드타임" />
-              <HeadCell text="" />
+              <HeadCell text="결제일" />
+              <HeadCell text="담당자" />
+              <HeadCell text="연락처" />
+              <HeadCell text="거래여부" />
             </TableRow>
           </TableHead>
           <ClientTableBody keyword={delayKeyword} />

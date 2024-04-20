@@ -72,6 +72,20 @@ export const client = new ApolloClient({
         }
       }
 
+      fragment ClientFragment on Client {
+        _id
+        code
+        name
+        feeRate
+        clientType
+        businessName
+        businessNumber
+        payDate
+        manager
+        managerTel
+        inActive
+      }
+
       fragment ClientInfo on ClientInfo {
         _id {
           productCode
@@ -103,6 +117,10 @@ export const client = new ApolloClient({
             merge,
           },
           topClients: {
+            keyArgs: false,
+            merge,
+          },
+          clients: {
             keyArgs: false,
             merge,
           },

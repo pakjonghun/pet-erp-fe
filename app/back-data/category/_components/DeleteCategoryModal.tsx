@@ -20,7 +20,7 @@ const DeleteCategoryModal: FC<Props> = ({ item, open, onClose }) => {
   const handleDelete = () => {
     deleteCategory({
       variables: {
-        _id: item._id,
+        _id: item._id as string,
       },
       onCompleted: (res) => {
         snackMessage({

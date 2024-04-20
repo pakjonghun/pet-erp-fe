@@ -3,15 +3,17 @@ import {
   AutocompleteRenderInputParams,
   Button,
   FormControl,
+  FormControlLabel,
   FormGroup,
   InputAdornment,
   Stack,
+  Switch,
   TextField,
   Typography,
 } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { CreateProductForm, createProductSchema } from '../_validations/createProductValidation';
+import { CreateClientForm, createClientSchema } from '../_validations/createClientValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
@@ -23,84 +25,65 @@ import { SelectItem } from '@/components/ui/select/SearchAutoComplete';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 import { modalSizeProps } from '@/components/commonStyles';
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
+import { useCreateClient } from '@/api/graphql/hooks/client/useCreateClient';
+import { ClientType, CreateClientDocument } from '@/api/graphql/codegen/graphql';
 
 interface Props {
   open: boolean;
   onClose: () => void;
 }
 
+const clientTypes: Record<ClientType, string> = {
+  [ClientType.Bender]: '밴더',
+  [ClientType.Cs]: 'CS',
+  [ClientType.Marketing]: '마케팅',
+  [ClientType.Offline]: '오프라인',
+  [ClientType.OpenMarket]: '오픈마켓',
+  [ClientType.Platform]: '플렛폼',
+  [ClientType.ProMall]: '전문몰',
+  [ClientType.Reward]: '리워드',
+  [ClientType.WholeSale]: '도매몰',
+};
+
 const CreateClientModal: FC<Props> = ({ open, onClose }) => {
-  const [createProduct, { loading }] = useCreateProduct();
+  const [createClient, { loading }] = useCreateClient();
 
   const {
     reset,
     control,
-    watch,
     handleSubmit,
-    setValue,
     formState: { errors },
-  } = useForm<CreateProductForm>({
-    resolver: zodResolver(createProductSchema),
+  } = useForm<CreateClientForm>({
+    resolver: zodResolver(createClientSchema),
     defaultValues: {
       code: '',
       name: '',
-      barCode: '',
-      leadTime: 0,
-      maintainDate: 0,
-      salePrice: 0,
-      wonPrice: 0,
+      feeRate: 0,
+      clientType: '',
+      businessName: '',
+      businessNumber: '',
+      payDate: 1,
+      manager: '',
+      managerTel: '',
+      inActive: true,
     },
   });
 
   const [categoryKeyword, setCategoryKeyword] = useState('');
   const delayedCategoryKeyword = useTextDebounce(categoryKeyword);
 
-  const { data, networkStatus, refetch, fetchMore } = useFindManyCategory({
-    keyword: delayedCategoryKeyword,
-    limit: LIMIT,
-    skip: 0,
-  });
-  const rows = data?.categories.data ?? [];
+  // const rows = data?.categories.data ?? [];
+  console.log(errors);
 
-  const categoryName = watch('category');
-  const category = rows.find((item) => item.name === categoryName);
-  const categoryOption = category ? { _id: category!._id, label: category!.name } : null;
-
-  const setCategory = (selectedCategory: SelectItem | null) => {
-    if (!selectedCategory) return;
-    setValue('category', selectedCategory?.label ?? '');
-  };
-
-  const callback: IntersectionObserverCallback = (entries) => {
-    if (entries[0].isIntersecting) {
-      if (networkStatus != 1 && networkStatus != 3) {
-        const totalCount = data?.categories.totalCount;
-        if (totalCount != null && totalCount > rows.length) {
-          fetchMore({
-            variables: {
-              categoriesInput: {
-                keyword: delayedCategoryKeyword,
-                limit: LIMIT,
-                skip: rows.length,
-              },
-            },
-          });
-        }
-      }
-    }
-  };
-
-  const scrollRef = useInfinityScroll({ callback });
-
-  useEffect(() => {
-    refetch();
-  }, [delayedCategoryKeyword, refetch]);
-  const onSubmit = (values: CreateProductForm) => {
-    createProduct({
+  const onSubmit = (values: CreateClientForm) => {
+    console.log(values);
+    createClient({
       variables: {
-        createProductInput: {
+        createClientInput: {
           ...values,
-          category: category?._id,
+          feeRate: (Number(values.feeRate) ?? 0) % 100,
         },
       },
       onCompleted: () => {
@@ -129,6 +112,19 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
         <FormGroup sx={modalSizeProps}>
           <Controller
             control={control}
+            name="inActive"
+            render={({ field }) => {
+              return (
+                <FormControlLabel
+                  sx={{ width: 'fit-content' }}
+                  control={<Switch defaultChecked {...field} />}
+                  label={field.value ? '거래중' : '거래종료'}
+                />
+              );
+            }}
+          />
+          <Controller
+            control={control}
             name="code"
             render={({ field }) => (
               <FormControl required>
@@ -140,7 +136,7 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
                   error={!!errors.code?.message}
                   helperText={errors.code?.message ?? ''}
                   InputProps={{
-                    startAdornment: <InputAdornment position="start">p - </InputAdornment>,
+                    startAdornment: <InputAdornment position="start">c - </InputAdornment>,
                   }}
                 />
               </FormControl>
@@ -164,93 +160,85 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
           />
           <Controller
             control={control}
-            name="salePrice"
-            render={({ field }) => (
-              <FormControl required>
-                <TextField
-                  size="small"
-                  {...field}
-                  required
-                  onChange={(event) => field.onChange(Number(event.target.value))}
-                  type="number"
-                  label="판매가"
-                  error={!!errors.salePrice?.message}
-                  helperText={errors.salePrice?.message ?? ''}
-                />
-              </FormControl>
-            )}
-          />
-          <Controller
-            control={control}
-            name="wonPrice"
-            render={({ field }) => (
-              <FormControl required>
-                <TextField
-                  size="small"
-                  {...field}
-                  onChange={(event) => field.onChange(Number(event.target.value))}
-                  type="number"
-                  required
-                  label="원가"
-                  error={!!errors.wonPrice?.message}
-                  helperText={errors.wonPrice?.message ?? ''}
-                />
-              </FormControl>
-            )}
-          />
-          <Controller
-            control={control}
-            name="leadTime"
+            name="feeRate"
             render={({ field }) => (
               <FormControl>
                 <TextField
                   size="small"
                   {...field}
-                  type="number"
                   onChange={(event) => field.onChange(Number(event.target.value))}
-                  label="리드타임"
-                  error={!!errors.leadTime?.message}
-                  helperText={errors.leadTime?.message ?? ''}
+                  type="number"
+                  label="수수료 비율"
+                  error={!!errors.feeRate?.message}
+                  helperText={errors.feeRate?.message ?? ''}
                 />
               </FormControl>
             )}
           />
           <Controller
             control={control}
-            name="maintainDate"
+            name="clientType"
             render={({ field }) => (
               <FormControl>
                 <TextField
                   size="small"
                   {...field}
-                  type="number"
-                  onChange={(event) => field.onChange(Number(event.target.value))}
-                  label="유지기간"
-                  error={!!errors.maintainDate?.message}
-                  helperText={errors.maintainDate?.message ?? ''}
+                  label="거래처 형태"
+                  error={!!errors.clientType?.message}
+                  helperText={errors.clientType?.message ?? ''}
                 />
               </FormControl>
             )}
           />
           <Controller
             control={control}
-            name="barCode"
+            name="businessName"
             render={({ field }) => (
               <FormControl>
                 <TextField
                   size="small"
                   {...field}
-                  label="바코드"
-                  error={!!errors.barCode?.message}
-                  helperText={errors.barCode?.message ?? ''}
+                  label="거래처 상호"
+                  error={!!errors.businessName?.message}
+                  helperText={errors.businessName?.message ?? ''}
                 />
               </FormControl>
             )}
           />
-          <SearchAutoComplete
+          <Controller
+            control={control}
+            name="payDate"
+            render={({ field }) => (
+              <TextField
+                type="number"
+                size="small"
+                {...field}
+                label="결제일(매달 결제할 날짜(1~31사이 값을 입력)"
+                error={!!errors.businessName?.message}
+                helperText={errors.businessName?.message ?? ''}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="manager"
+            render={({ field }) => (
+              <FormControl>
+                <TextField
+                  size="small"
+                  {...field}
+                  label="관리자"
+                  error={!!errors.manager?.message}
+                  helperText={errors.manager?.message ?? ''}
+                />
+              </FormControl>
+            )}
+          />
+
+          {/* <SearchAutoComplete
             setValue={setCategory}
             value={categoryOption}
-            scrollRef={scrollRef}
+            scrollRef={null}
             renderSearchInput={(params: AutocompleteRenderInputParams) => {
               return (
                 <Controller
@@ -276,14 +264,14 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
               );
             }}
             options={rows.map((row) => ({ _id: row._id, label: row.name }))}
-          />
+          /> */}
         </FormGroup>
         <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
           <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
-            생성
+            등록
           </Button>
         </Stack>
       </form>
