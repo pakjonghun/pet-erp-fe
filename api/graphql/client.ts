@@ -19,19 +19,19 @@ const merge = (existing = { totalCount: 0, data: [] }, incoming: any, args: any)
   return { totalCount: incoming.totalCount, data: merged };
 };
 
-const logoutLink = onError(({ networkError, graphQLErrors }) => {
-  const networkStatusCode = networkError && 'statusCode' in networkError && networkError.statusCode;
-  const graphqlStatusCodeError =
-    graphQLErrors && 'statusCode' in graphQLErrors?.[0] && graphQLErrors?.[0].statusCode;
-  const isUnAuthorized = networkStatusCode === 401 || graphqlStatusCodeError === 401;
-  const isForbidden = networkStatusCode === 403 || graphqlStatusCodeError === 403;
-  const firstPath = getFirstPath(location.pathname);
-  const isPrivatePath = !PUBLIC_PATH.includes(firstPath);
-  if ((isUnAuthorized && isPrivatePath) || (isForbidden && isPrivatePath)) {
-    console.log('error and set ', { loading: false, isLogin: false });
-    authState({ loading: false, isLogin: false });
-  }
-});
+// const logoutLink = onError(({ networkError, graphQLErrors }) => {
+//   const networkStatusCode = networkError && 'statusCode' in networkError && networkError.statusCode;
+//   const graphqlStatusCodeError =
+//     graphQLErrors && 'statusCode' in graphQLErrors?.[0] && graphQLErrors?.[0].statusCode;
+//   const isUnAuthorized = networkStatusCode === 401 || graphqlStatusCodeError === 401;
+//   const isForbidden = networkStatusCode === 403 || graphqlStatusCodeError === 403;
+//   const firstPath = getFirstPath(location.pathname);
+//   const isPrivatePath = !PUBLIC_PATH.includes(firstPath);
+//   if ((isUnAuthorized && isPrivatePath) || (isForbidden && isPrivatePath)) {
+//     console.log('error and set ', { loading: false, isLogin: false });
+//     authState({ loading: false, isLogin: false });
+//   }
+// });
 
 const link = createHttpLink({
   uri: `${BASE_URL}/graphql`,
@@ -138,6 +138,7 @@ export const client = new ApolloClient({
     },
   }),
 
-  link: logoutLink.concat(link),
+  // link: logoutLink.concat(link),
+  link,
   connectToDevTools: true,
 });
