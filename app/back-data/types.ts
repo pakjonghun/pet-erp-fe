@@ -1,3 +1,3 @@
-import { ProductOptions } from './constants';
+import { ContextOptions } from './constants';
 
-export type SelectedProductOption = (typeof ProductOptions)[number];
+export type SelectOption = (typeof ContextOptions)[number];

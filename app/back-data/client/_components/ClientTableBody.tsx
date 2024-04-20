@@ -1,25 +1,24 @@
 import { FC, useEffect, useState } from 'react';
 import { Product } from '@/api/graphql/codegen/graphql';
 import { useProducts } from '@/api/graphql/hooks/product/useProducts';
-import { LIMIT, TABLE_MAX_HEIGHT } from '@/constants';
+import { LIMIT } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { Grid, SxProps } from '@mui/material';
-import { SelectOption } from '../types';
-import RemoveProductModal from './RemoveProductModal';
-import EditProductModal from './EditProductModal';
-import ProductDetailPopover from './ProductDetailPopover';
-import EmptyItem from '@/components/ui/listItem/EmptyItem';
-import ProductCard from './ProductCard';
+import { TableBody } from '@mui/material';
+import EmptyRow from '@/components/table/EmptyRow';
+import ClientBodyRow from './ClientBodyRow';
+import RemoveClientModal from './RemoveClientModal';
+import EditClientModal from './EditClientModal';
+import ClientDetailPopover from './ClientDetailPopover';
+import { SelectOption } from '../../types';
 
 interface Props {
   keyword: string;
-  sx?: SxProps;
 }
 
-const ProductionCards: FC<Props> = ({ keyword, sx }) => {
+const ClientTableBody: FC<Props> = ({ keyword }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  const [selectedProduct, setSelectedProduct] = useState<null | Product>(null);
+  const [selectedClient, setSelectedClient] = useState<null | Product>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
   const { data, networkStatus, fetchMore, refetch, client } = useProducts({
     keyword,
@@ -34,7 +33,7 @@ const ProductionCards: FC<Props> = ({ keyword, sx }) => {
   const rows = data?.products.data ?? [];
 
   const handleClickOption = (option: SelectOption | null, product: Product | null) => {
-    setSelectedProduct(product);
+    setSelectedClient(product);
     setOptionType(option);
   };
 
@@ -59,12 +58,12 @@ const ProductionCards: FC<Props> = ({ keyword, sx }) => {
 
   const handleClickEdit = () => {
     handleClosePopover();
-    handleClickOption('edit', selectedProduct);
+    handleClickOption('edit', selectedClient);
   };
 
   const handleClickDelete = () => {
     handleClosePopover();
-    handleClickOption('delete', selectedProduct);
+    handleClickOption('delete', selectedClient);
   };
 
   const handleClosePopover = () => setPopoverAnchor(null);
@@ -73,63 +72,53 @@ const ProductionCards: FC<Props> = ({ keyword, sx }) => {
   const isEmpty = rows.length === 0;
 
   return (
-    <Grid
-      sx={{
-        ...sx,
-        p: 2,
-        maxHeight: TABLE_MAX_HEIGHT,
-        overflow: 'auto',
-      }}
-      container
-      spacing={2}
-    >
-      <EmptyItem isEmpty={isEmpty} />
-      {selectedProduct && (
-        <RemoveProductModal
+    <TableBody>
+      {selectedClient && (
+        <RemoveClientModal
           open={optionType === 'delete'}
           onClose={() => handleClickOption(null, null)}
-          selectedProduct={selectedProduct}
+          selectedClient={selectedClient}
         />
       )}
-      {selectedProduct && (
-        <EditProductModal
+
+      {selectedClient && (
+        <EditClientModal
           open={optionType === 'edit'}
           onClose={() => handleClickOption(null, null)}
-          selectedProduct={selectedProduct}
+          selectedClient={selectedClient}
         />
       )}
-      {selectedProduct && (
-        <ProductDetailPopover
+      {selectedClient && (
+        <ClientDetailPopover
           onClose={handleClosePopover}
           position={popoverPosition}
           open={!!popoverAnchor}
           anchorEl={popoverAnchor}
           onClickDelete={handleClickDelete}
           onClickEdit={handleClickEdit}
-          selectedProduct={selectedProduct}
+          selectedClient={selectedClient}
         />
       )}
-
+      <EmptyRow colSpan={6} isEmpty={isEmpty} />
       {rows.map((item, index) => {
         const product = item as unknown as Product;
         const isLast = index === rows.length - 1;
         return (
-          <Grid key={product._id} item xs={12} lg={6}>
-            <ProductCard
-              onClickRow={(event, product: Product) => {
-                setPopoverPosition({ left: event.clientX, top: event.clientY });
-                setPopoverAnchor(event.currentTarget);
-                setSelectedProduct(product);
-              }}
-              product={product}
-              scrollRef={isLast ? scrollRef : null}
-              onClickOption={handleClickOption}
-            />
-          </Grid>
+          <ClientBodyRow
+            onClickRow={(event, product: Product) => {
+              setPopoverPosition({ left: event.clientX, top: event.clientY });
+              setPopoverAnchor(event.currentTarget);
+              setSelectedClient(product);
+            }}
+            key={product._id}
+            product={product}
+            scrollRef={isLast ? scrollRef : null}
+            onClickOption={handleClickOption}
+          />
         );
       })}
-    </Grid>
+    </TableBody>
   );
 };
 
-export default ProductionCards;
+export default ClientTableBody;

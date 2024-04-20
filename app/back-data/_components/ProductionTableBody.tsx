@@ -6,7 +6,7 @@ import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { TableBody } from '@mui/material';
 import EmptyRow from '@/components/table/EmptyRow';
 import ProductBodyRow from './ProductBodyRow';
-import { SelectedProductOption } from '../types';
+import { SelectOption } from '../types';
 import RemoveProductModal from './RemoveProductModal';
 import EditProductModal from './EditProductModal';
 import ProductDetailPopover from './ProductDetailPopover';
@@ -19,7 +19,7 @@ const ProductionTableBody: FC<Props> = ({ keyword }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
   const [selectedProduct, setSelectedProduct] = useState<null | Product>(null);
-  const [optionType, setOptionType] = useState<null | SelectedProductOption>(null);
+  const [optionType, setOptionType] = useState<null | SelectOption>(null);
   const { data, networkStatus, fetchMore, refetch, client } = useProducts({
     keyword,
     skip: 0,
@@ -32,7 +32,7 @@ const ProductionTableBody: FC<Props> = ({ keyword }) => {
 
   const rows = data?.products.data ?? [];
 
-  const handleClickOption = (option: SelectedProductOption | null, product: Product | null) => {
+  const handleClickOption = (option: SelectOption | null, product: Product | null) => {
     setSelectedProduct(product);
     setOptionType(option);
   };

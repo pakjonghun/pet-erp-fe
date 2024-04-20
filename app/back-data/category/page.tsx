@@ -114,6 +114,7 @@ const CategoryPage = () => {
       <CreateCategoryModal open={openCreateCategory} onClose={() => setOpenCreateCategory(false)} />
       <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="제품분류 백데이터" />
+
         <Stack direction="row" alignItems="center" gap={2}>
           <UploadButton
             inputRef={uploadInputRef}

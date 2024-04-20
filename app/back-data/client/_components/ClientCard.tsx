@@ -1,13 +1,13 @@
 import { Box, IconButton, Menu, Paper, Stack } from '@mui/material';
 import React, { FC, MouseEvent, useState } from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { SelectOption } from '../types';
 import { SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { Product } from '@/api/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
+import { SelectOption } from '../../types';
 
 interface Props {
   product: Product;
@@ -16,7 +16,7 @@ interface Props {
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const ProductCard: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow }) => {
+const ClientCard: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow }) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<SelectOption, SelectedOptionItem> = {
     edit: {
@@ -92,4 +92,4 @@ const ProductCard: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow 
   );
 };
 
-export default ProductCard;
+export default ClientCard;

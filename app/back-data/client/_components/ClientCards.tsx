@@ -4,22 +4,22 @@ import { useProducts } from '@/api/graphql/hooks/product/useProducts';
 import { LIMIT, TABLE_MAX_HEIGHT } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Grid, SxProps } from '@mui/material';
-import { SelectOption } from '../types';
-import RemoveProductModal from './RemoveProductModal';
-import EditProductModal from './EditProductModal';
-import ProductDetailPopover from './ProductDetailPopover';
+import RemoveClientModal from './RemoveClientModal';
+import EditClientModal from './EditClientModal';
+import ClientDetailPopover from './ClientDetailPopover';
 import EmptyItem from '@/components/ui/listItem/EmptyItem';
-import ProductCard from './ProductCard';
+import ClientCard from './ClientCard';
+import { SelectOption } from '../../types';
 
 interface Props {
   keyword: string;
   sx?: SxProps;
 }
 
-const ProductionCards: FC<Props> = ({ keyword, sx }) => {
+const ClientCards: FC<Props> = ({ keyword, sx }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  const [selectedProduct, setSelectedProduct] = useState<null | Product>(null);
+  const [selectedClient, setSelectedClient] = useState<null | Product>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
   const { data, networkStatus, fetchMore, refetch, client } = useProducts({
     keyword,
@@ -34,7 +34,7 @@ const ProductionCards: FC<Props> = ({ keyword, sx }) => {
   const rows = data?.products.data ?? [];
 
   const handleClickOption = (option: SelectOption | null, product: Product | null) => {
-    setSelectedProduct(product);
+    setSelectedClient(product);
     setOptionType(option);
   };
 
@@ -59,12 +59,12 @@ const ProductionCards: FC<Props> = ({ keyword, sx }) => {
 
   const handleClickEdit = () => {
     handleClosePopover();
-    handleClickOption('edit', selectedProduct);
+    handleClickOption('edit', selectedClient);
   };
 
   const handleClickDelete = () => {
     handleClosePopover();
-    handleClickOption('delete', selectedProduct);
+    handleClickOption('delete', selectedClient);
   };
 
   const handleClosePopover = () => setPopoverAnchor(null);
@@ -84,29 +84,29 @@ const ProductionCards: FC<Props> = ({ keyword, sx }) => {
       spacing={2}
     >
       <EmptyItem isEmpty={isEmpty} />
-      {selectedProduct && (
-        <RemoveProductModal
+      {selectedClient && (
+        <RemoveClientModal
           open={optionType === 'delete'}
           onClose={() => handleClickOption(null, null)}
-          selectedProduct={selectedProduct}
+          selectedClient={selectedClient}
         />
       )}
-      {selectedProduct && (
-        <EditProductModal
+      {selectedClient && (
+        <EditClientModal
           open={optionType === 'edit'}
           onClose={() => handleClickOption(null, null)}
-          selectedProduct={selectedProduct}
+          selectedClient={selectedClient}
         />
       )}
-      {selectedProduct && (
-        <ProductDetailPopover
+      {selectedClient && (
+        <ClientDetailPopover
           onClose={handleClosePopover}
           position={popoverPosition}
           open={!!popoverAnchor}
           anchorEl={popoverAnchor}
           onClickDelete={handleClickDelete}
           onClickEdit={handleClickEdit}
-          selectedProduct={selectedProduct}
+          selectedClient={selectedClient}
         />
       )}
 
@@ -115,11 +115,11 @@ const ProductionCards: FC<Props> = ({ keyword, sx }) => {
         const isLast = index === rows.length - 1;
         return (
           <Grid key={product._id} item xs={12} lg={6}>
-            <ProductCard
+            <ClientCard
               onClickRow={(event, product: Product) => {
                 setPopoverPosition({ left: event.clientX, top: event.clientY });
                 setPopoverAnchor(event.currentTarget);
-                setSelectedProduct(product);
+                setSelectedClient(product);
               }}
               product={product}
               scrollRef={isLast ? scrollRef : null}
@@ -132,4 +132,4 @@ const ProductionCards: FC<Props> = ({ keyword, sx }) => {
   );
 };
 
-export default ProductionCards;
+export default ClientCards;

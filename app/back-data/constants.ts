@@ -13,4 +13,4 @@ export const BackDataTabs = {
   },
 };
 
-export const ProductOptions = ['edit', 'delete'] as const;
+export const ContextOptions = ['edit', 'delete'] as const;

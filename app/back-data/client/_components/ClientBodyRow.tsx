@@ -3,12 +3,12 @@ import { IconButton, Menu, TableRow } from '@mui/material';
 import React, { FC, MouseEvent, useState } from 'react';
 import { getKCWFormat } from '@/util';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { SelectOption } from '../types';
 import { SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { Product } from '@/api/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
+import { SelectOption } from '../../types';
 
 interface Props {
   product: Product;
@@ -17,7 +17,7 @@ interface Props {
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow }) => {
+const ClientBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow }) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<SelectOption, SelectedOptionItem> = {
     edit: {
@@ -79,4 +79,4 @@ const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickR
   );
 };
 
-export default ProductBodyRow;
+export default ClientBodyRow;
