@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { client } from '@/api/graphql/client';
 import { snackMessage } from '@/store/snackMessage';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
+import { authState } from '@/store/isLogin';
 
 const SettingMenuTrigger = () => {
   const router = useRouter();
@@ -32,6 +33,7 @@ const SettingMenuTrigger = () => {
       onSuccess: async () => {
         snackMessage({ message: '안녕히 가세요.', severity: 'success' });
         await client.resetStore();
+        authState({ loading: false, isLogin: false });
         setSettingMenuAnchor(null);
       },
       onError: (err) => {

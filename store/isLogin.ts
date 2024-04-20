@@ -1,3 +1,3 @@
 import { makeVar } from '@apollo/client';
 
-export const isLogin = makeVar(false);
+export const authState = makeVar({ loading: true, isLogin: false });

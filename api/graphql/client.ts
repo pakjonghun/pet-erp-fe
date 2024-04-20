@@ -1,7 +1,7 @@
 import { Product } from './codegen/graphql';
 import { BASE_URL } from '@/api/constants';
 import { PUBLIC_PATH } from '@/constants';
-import { isLogin } from '@/store/isLogin';
+import { authState } from '@/store/isLogin';
 import { getFirstPath } from '@/util';
 import { ApolloClient, InMemoryCache, createHttpLink, gql } from '@apollo/client';
 import { createFragmentRegistry } from '@apollo/client/cache';
@@ -28,7 +28,7 @@ const logoutLink = onError(({ networkError, graphQLErrors }) => {
   const firstPath = getFirstPath(location.pathname);
   const isPrivatePath = !PUBLIC_PATH.includes(firstPath);
   if (isUnAuthorized && isPrivatePath) {
-    isLogin(false);
+    authState({ loading: true, isLogin: false });
   }
 });
 
