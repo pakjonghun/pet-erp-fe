@@ -40,7 +40,7 @@ const LoginPage = () => {
       console.log('amai login', isLogin);
       router.replace('/');
     }
-  }, [isLogin, loading, router]);
+  }, [isLogin, loading]);
 
   const submit = (values: LoginForm) => {
     login(values, {

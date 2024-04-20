@@ -27,7 +27,7 @@ const MainLayout: FC<Props> = ({ children }) => {
       console.log('main layout', isLogin);
       router.replace('/login');
     }
-  }, [isLogin, loading, router]);
+  }, [isLogin, loading]);
 
   const isPublicPath = useGetIsPublicPath();
 
