@@ -27,9 +27,9 @@ const MainLayout: FC<Props> = ({ children }) => {
 
     if (!isLogin) {
       console.log('main layout', isLogin);
-      router.replace('/login');
+      if (!isPublicPath) router.replace('/login');
     }
-  }, [isLogin, loading, router]);
+  }, [isLogin, loading, isPublicPath, router]);
 
   return (
     <Box component="main">
