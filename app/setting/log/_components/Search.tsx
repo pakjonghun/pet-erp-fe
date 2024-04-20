@@ -47,7 +47,7 @@ const Search: FC<Props> = ({ findLogsQuery, setFindLogsQuery }) => {
   };
 
   return (
-    <FormGroup row sx={{ gap: 1 }}>
+    <FormGroup row sx={{ gap: 2 }}>
       <FormControl sx={{ flexGrow: 1 }} required>
         <TextField
           size="small"
@@ -64,7 +64,14 @@ const Search: FC<Props> = ({ findLogsQuery, setFindLogsQuery }) => {
           }}
         />
       </FormControl>
-      <FormControl>
+      <FormControl
+        sx={{
+          minWidth: {
+            xs: '100%',
+            sm: 'auto',
+          },
+        }}
+      >
         <BaseSelect
           label="검색대상"
           defaultValue={optionItems[0]}

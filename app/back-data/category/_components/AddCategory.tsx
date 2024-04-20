@@ -1,5 +1,5 @@
 import BaseModal from '@/components/ui/modal/BaseModal';
-import { Button, Stack, TextField, Typography } from '@mui/material';
+import { Button, FormGroup, Stack, TextField, Typography } from '@mui/material';
 import { FC } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,6 +7,7 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { useCreateCategory } from '@/api/graphql/hooks/category/useCreateCategory';
 import { CreateCategoryForm, createCategorySchema } from '../_validations/createCategoryValidation';
+import { modalSizeProps } from '@/components/commonStyles';
 
 interface Props {
   open: boolean;
@@ -59,29 +60,30 @@ const CreateCategoryModal: FC<Props> = ({ open, onClose }) => {
       </Typography>
       <Typography sx={{ mb: 3 }}>새로운 제품분류를 등록합니다.</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Controller
-          control={control}
-          name="name"
-          render={({ field }) => (
-            <TextField
-              {...field}
-              required
-              sx={{ minWidth: 300 }}
-              size="small"
-              label="제품분류 이름"
-              error={!!errors.name?.message}
-              helperText={errors.name?.message ?? ''}
-            />
-          )}
-        />
-        <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
-          <Button type="button" variant="outlined" onClick={handleClose}>
-            취소
-          </Button>
-          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
-            등록
-          </Button>
-        </Stack>
+        <FormGroup sx={modalSizeProps}>
+          <Controller
+            control={control}
+            name="name"
+            render={({ field }) => (
+              <TextField
+                {...field}
+                required
+                size="small"
+                label="제품분류 이름"
+                error={!!errors.name?.message}
+                helperText={errors.name?.message ?? ''}
+              />
+            )}
+          />
+          <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
+            <Button type="button" variant="outlined" onClick={handleClose}>
+              취소
+            </Button>
+            <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
+              등록
+            </Button>
+          </Stack>
+        </FormGroup>
       </form>
     </BaseModal>
   );

@@ -21,6 +21,7 @@ import { useCreateAccount } from '@/api/graphql/hooks/users/useCreateAccount';
 import { UserRole } from '@/api/graphql/codegen/graphql';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
+import { modalSizeProps } from '@/components/commonStyles';
 
 interface Props {
   open: boolean;
@@ -71,14 +72,13 @@ const CreateAccountModal: FC<Props> = ({ open, onClose }) => {
       </Typography>
       <Typography sx={{ mb: 3 }}>새로운 계정을 생성합니다.</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FormGroup sx={{ gap: 2 }}>
+        <FormGroup sx={modalSizeProps}>
           <Controller
             control={control}
             name="id"
             render={({ field }) => (
               <FormControl required>
                 <TextField
-                  sx={{ minWidth: 400 }}
                   {...field}
                   required
                   label="아이디"

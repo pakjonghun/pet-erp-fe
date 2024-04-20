@@ -22,6 +22,7 @@ import { LIMIT } from '@/constants';
 import { SelectItem } from '@/components/ui/select/SearchAutoComplete';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
+import { modalSizeProps } from '@/components/commonStyles';
 
 interface Props {
   open: boolean;
@@ -125,7 +126,7 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
       </Typography>
       <Typography sx={{ mb: 3 }}>새로운 제품을 입력합니다.</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FormGroup sx={{ gap: 2 }}>
+        <FormGroup sx={modalSizeProps}>
           <Controller
             control={control}
             name="code"
@@ -133,7 +134,6 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
               <FormControl required>
                 <TextField
                   {...field}
-                  sx={{ minWidth: 300 }}
                   size="small"
                   required
                   label="제품코드"

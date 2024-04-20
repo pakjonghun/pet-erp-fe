@@ -23,6 +23,7 @@ import useInfinityScroll from '@/hooks/useInfinityScroll';
 import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 import { useUpdateProduct } from '@/api/graphql/hooks/product/useUpdateProduct';
 import { Product } from '@/api/graphql/codegen/graphql';
+import { modalSizeProps } from '@/components/commonStyles';
 
 interface Props {
   selectedProduct: Product;
@@ -129,7 +130,7 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
       </Typography>
       <Typography sx={{ mb: 3 }}>제품을 편집합니다.</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FormGroup sx={{ gap: 2 }}>
+        <FormGroup sx={modalSizeProps}>
           <Controller
             control={control}
             name="code"
@@ -137,7 +138,6 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
               <FormControl required>
                 <TextField
                   {...field}
-                  sx={{ minWidth: 300 }}
                   size="small"
                   required
                   label="제품코드"

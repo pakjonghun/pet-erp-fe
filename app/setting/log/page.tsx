@@ -48,10 +48,11 @@ const LogPage = () => {
           display: 'flex',
           flexDirection: {
             xs: 'column',
-            sm: 'row',
+            md: 'row',
           },
           justifyContent: 'space-between',
           px: 2,
+          gap: 2,
         }}
       >
         <Search findLogsQuery={findLogsQuery} setFindLogsQuery={handleSetFindLogsQuery} />

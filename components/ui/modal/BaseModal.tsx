@@ -1,8 +1,7 @@
 'use client';
 
 import { FC, ReactNode } from 'react';
-import { Box, IconButton, Modal } from '@mui/material';
-import ClearIcon from '@mui/icons-material/Clear';
+import { Modal } from '@mui/material';
 import PopupContainer from './ModalContainer';
 
 interface Props {
