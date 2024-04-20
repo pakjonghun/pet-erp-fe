@@ -16,6 +16,7 @@ const Guard: FC<Props> = ({ children }) => {
   const firstPath = getFirstPath(pathname);
   const isPublic = PUBLIC_PATH.includes(firstPath);
   const { data: myInfo, loading, networkStatus } = useGetMyInfo();
+  console.log('get my info status', networkStatus);
   useEffect(() => {
     authState({ loading, isLogin: !!myInfo });
   }, [myInfo, loading]);
