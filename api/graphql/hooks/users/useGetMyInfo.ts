@@ -12,5 +12,9 @@ export const getMyInfoDocument = graphql(`
 `);
 
 export const useGetMyInfo = () => {
-  return useQuery(getMyInfoDocument, { errorPolicy: 'ignore' });
+  return useQuery(getMyInfoDocument, {
+    errorPolicy: 'ignore',
+    fetchPolicy: 'cache-first',
+    nextFetchPolicy: 'cache-first',
+  });
 };

@@ -1,7 +1,7 @@
 'use client';
 
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { PlusOneOutlined } from '@mui/icons-material';
+import { ConnectingAirportsOutlined, PlusOneOutlined } from '@mui/icons-material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import TablePage from '@/components/table/TablePage';
 import TableTitle from '@/components/ui/typograph/TableTitle';
@@ -28,20 +28,17 @@ import { snackMessage } from '@/store/snackMessage';
 import ActionButton from '@/components/ui/button/ActionButton';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { useDownloadExcelFile } from '@/api/rest/hooks/file/useDownloadExcelFile';
+import { client } from '@/api/graphql/client';
 
 const CategoryPage = () => {
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
 
-  const { data, networkStatus, refetch, fetchMore, client } = useFindManyCategory({
+  const { data, networkStatus, refetch, fetchMore } = useFindManyCategory({
     keyword: delayKeyword,
     limit: LIMIT,
     skip: 0,
   });
-
-  useEffect(() => {
-    refetch();
-  }, [delayKeyword, refetch, client]);
 
   const rows = data?.categories.data ?? [];
   const totalCount = data?.categories.totalCount;
@@ -61,7 +58,8 @@ const CategoryPage = () => {
       });
     }
   };
-
+  const all = client.cache.extract();
+  console.log('??????', Object.keys(all));
   const [openCreateCategory, setOpenCreateCategory] = useState(false);
 
   const { mutate: uploadFile, isPending } = useUploadExcelFile();
@@ -137,6 +135,7 @@ const CategoryPage = () => {
       <FormGroup sx={{ ml: 2 }}>
         <FormControl>
           <TextField
+            value={keyword}
             onChange={(event) => setKeyword(event.target.value)}
             InputProps={{
               endAdornment: (

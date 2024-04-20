@@ -10,7 +10,8 @@ const merge = (existing = { totalCount: 0, data: [] }, incoming: any, args: any)
   const existingData = existing.data as any[];
 
   const incomingData = incoming.data as any[];
-
+  console.log('existingData : ', existingData);
+  console.log('incomingData : ', incomingData);
   const merged = existingData ? existingData.slice(0) : [];
   for (let i = 0; i < incomingData.length; ++i) {
     merged[existingData.length + i] = incomingData[i];
@@ -110,11 +111,11 @@ export const client = new ApolloClient({
       Query: {
         fields: {
           logs: {
-            keyArgs: false,
+            keyArgs: ['findLogsQuery', ['keyword']],
             merge,
           },
           productSales: {
-            keyArgs: false,
+            keyArgs: ['productSalesInput', ['keyword']],
             merge,
           },
           topClients: {
@@ -122,15 +123,15 @@ export const client = new ApolloClient({
             merge,
           },
           clients: {
-            keyArgs: false,
+            keyArgs: ['clientsInput', ['keyword']],
             merge,
           },
           products: {
-            keyArgs: false,
+            keyArgs: ['productsInput', ['keyword']],
             merge,
           },
           categories: {
-            keyArgs: false,
+            keyArgs: ['categoriesInput', ['keyword']],
             merge,
           },
         },

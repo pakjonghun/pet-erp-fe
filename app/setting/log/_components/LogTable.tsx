@@ -1,9 +1,8 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { Table, TableBody, TableHead, TableRow } from '@mui/material';
 import { FindLogsDto, Log } from '@/api/graphql/codegen/graphql';
 import { useFindLogs } from '@/api/graphql/hooks/log/useFindLogs';
 import dayjs from 'dayjs';
-import { client } from '@/api/graphql/client';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import LoadingRow from '@/components/table/LoadingRow';
 import EmptyRow from '@/components/table/EmptyRow';
@@ -16,7 +15,7 @@ interface Props {
 }
 
 const LogTable: FC<Props> = ({ findLogsQuery }) => {
-  const { data, networkStatus, fetchMore, refetch } = useFindLogs(findLogsQuery);
+  const { data, networkStatus, fetchMore } = useFindLogs(findLogsQuery);
   const createRow = (log: Omit<Log, '__typename'>) => {
     const copyData = Object.assign({}, log);
     copyData.createdAt = dayjs(log.createdAt).format('YYYY. MM. DD.');
@@ -41,9 +40,6 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
   };
 
   const scrollRef = useInfinityScroll({ callback });
-  useEffect(() => {
-    refetch();
-  }, [findLogsQuery, refetch]);
 
   const isLoading = networkStatus === 1 || networkStatus === 3;
   const isEmpty = rows.length === 0;

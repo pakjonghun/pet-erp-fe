@@ -26,10 +26,6 @@ const ProductionTableBody: FC<Props> = ({ keyword }) => {
     limit: LIMIT,
   });
 
-  useEffect(() => {
-    refetch();
-  }, [keyword, client, refetch]);
-
   const rows = data?.products.data ?? [];
 
   const handleClickOption = (option: SelectOption | null, product: Product | null) => {

@@ -26,10 +26,6 @@ const ClientTableBody: FC<Props> = ({ keyword }) => {
     limit: LIMIT,
   });
 
-  useEffect(() => {
-    refetch();
-  }, [keyword, refetch]);
-
   const rows = data?.clients.data ?? [];
 
   const handleClickOption = (option: SelectOption | null, client: Client | null) => {
