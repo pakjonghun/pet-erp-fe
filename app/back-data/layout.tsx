@@ -16,7 +16,6 @@ const BackDataLayout: FC<Props> = ({ children }) => {
   const pathname = usePathname();
   const tabs = Object.keys(BackDataTabs) as (keyof typeof BackDataTabs)[];
   const currentTabIndex = tabs.findIndex((item) => {
-    console.log(item, getOriginPath(pathname));
     return item === getOriginPath(pathname);
   });
 
