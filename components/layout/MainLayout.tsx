@@ -8,6 +8,8 @@ import NavContent from '@/components/layout/navigation/NavContent';
 import useGetIsPublicPath from '@/hooks/useGetIsPublicPath';
 import { Box } from '@mui/material';
 import { useRouter } from 'next/navigation';
+import { useReactiveVar } from '@apollo/client';
+import { isLogin } from '@/store/isLogin';
 
 interface Props {
   children: ReactNode;
@@ -18,15 +20,15 @@ const MainLayout: FC<Props> = ({ children }) => {
   const [open, setOpen] = useState(false);
   const onClose = () => setOpen(false);
   const toggleOpen = () => setOpen((prev) => !prev);
-  const { loading, data: myInfo } = useGetMyInfo();
+  const amILogin = useReactiveVar(isLogin);
+  // const { loading, data: myInfo } = useGetMyInfo();
   useEffect(() => {
-    if (!loading && !myInfo) {
-      console.log('root', myInfo);
+    if (!amILogin) {
+      console.log('root', amILogin);
       router.replace('/login');
     }
-  }, [loading, myInfo, router]);
+  }, [amILogin, router]);
 
-  const isLogin = !!myInfo && !loading;
   const isPublicPath = useGetIsPublicPath();
 
   return (
@@ -46,7 +48,7 @@ const MainLayout: FC<Props> = ({ children }) => {
           flexDirection: 'column',
         }}
       >
-        <Header isLogin={isLogin} toggleOpen={toggleOpen} />
+        <Header isLogin={amILogin} toggleOpen={toggleOpen} />
         <Box sx={{ flex: 1, overflow: 'auto' }}>{children}</Box>
       </Box>
     </Box>
