@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { ProductSaleData } from '@/api/graphql/codegen/graphql';
 import { useProductSales } from '@/api/graphql/hooks/product/useProductSaleList';
 import Cell from '@/components/table/Cell';
@@ -25,10 +25,6 @@ const TableBodySection: FC<Props> = ({ keyword, setSelectedProductSale }) => {
 
   const rows = data?.productSales.data ?? [];
   const isEmpty = rows.length === 0;
-
-  useEffect(() => {
-    refetch();
-  }, [keyword, refetch]);
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {

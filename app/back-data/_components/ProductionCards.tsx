@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import { Product } from '@/api/graphql/codegen/graphql';
 import { useProducts } from '@/api/graphql/hooks/product/useProducts';
 import { LIMIT, TABLE_MAX_HEIGHT } from '@/constants';
@@ -26,10 +26,6 @@ const ProductionCards: FC<Props> = ({ keyword, sx }) => {
     skip: 0,
     limit: LIMIT,
   });
-
-  useEffect(() => {
-    refetch();
-  }, [keyword, client, refetch]);
 
   const rows = data?.products.data ?? [];
 

@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import { Client } from '@/api/graphql/codegen/graphql';
 import { LIMIT, TABLE_MAX_HEIGHT } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
@@ -25,10 +25,6 @@ const ClientCards: FC<Props> = ({ keyword, sx }) => {
     skip: 0,
     limit: LIMIT,
   });
-
-  useEffect(() => {
-    refetch();
-  }, [keyword, refetch]);
 
   const rows = data?.clients.data ?? [];
 

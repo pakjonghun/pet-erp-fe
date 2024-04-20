@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import { Product } from '@/api/graphql/codegen/graphql';
 import { useProducts } from '@/api/graphql/hooks/product/useProducts';
 import { LIMIT } from '@/constants';
