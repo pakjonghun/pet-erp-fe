@@ -21,6 +21,7 @@ const MainLayout: FC<Props> = ({ children }) => {
   const { loading, data: myInfo } = useGetMyInfo();
   useEffect(() => {
     if (!loading && !myInfo) {
+      console.log('root', myInfo);
       router.replace('/login');
     }
   }, [loading, myInfo, router]);

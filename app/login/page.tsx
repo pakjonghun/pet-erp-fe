@@ -32,6 +32,7 @@ const LoginPage = () => {
   const { data: myInfo, loading } = useGetMyInfo();
   useEffect(() => {
     if (!loading && myInfo) {
+      console.log('loginpage, ', myInfo);
       router.replace('/');
     }
   }, [loading, myInfo, router]);

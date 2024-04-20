@@ -1,8 +1,8 @@
 'use client';
 
+import { FC, ReactNode, useEffect } from 'react';
 import { useGetMyInfo } from '@/api/graphql/hooks/users/useGetMyInfo';
 import { isLogin } from '@/store/isLogin';
-import React, { FC, ReactNode, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { PUBLIC_PATH } from '@/constants';
 import { getFirstPath } from '@/util';
@@ -16,7 +16,7 @@ const Guard: FC<Props> = ({ children }) => {
   const pathname = usePathname();
   const firstPath = getFirstPath(pathname);
   const isPublic = PUBLIC_PATH.includes(firstPath);
-  const { data: myInfo, loading } = useGetMyInfo();
+  const { data: myInfo } = useGetMyInfo();
   useEffect(() => {
     isLogin(!!myInfo);
   }, [myInfo, router]);
