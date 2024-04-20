@@ -14,7 +14,6 @@ interface Props {
 }
 
 const MainHeader: FC<Props> = ({ isLogin, toggleOpen }) => {
-  console.log('header', isLogin);
   return (
     <AppBar
       sx={{

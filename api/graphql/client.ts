@@ -28,7 +28,8 @@ const logoutLink = onError(({ networkError, graphQLErrors }) => {
   const firstPath = getFirstPath(location.pathname);
   const isPrivatePath = !PUBLIC_PATH.includes(firstPath);
   if (isUnAuthorized && isPrivatePath) {
-    authState({ loading: true, isLogin: false });
+    console.log('error and set ', { loading: false, isLogin: false });
+    authState({ loading: false, isLogin: false });
   }
 });
 
