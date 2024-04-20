@@ -6,7 +6,8 @@ export const getFirstPath = (pathname: string) => {
 };
 
 export const getOriginPath = (pathname: string) => {
-  return pathname.replace(/^\/|$\/g/, '');
+  console.log(pathname, 'ppppp');
+  return pathname.replace(/^\/|\/$/g, '');
 };
 
 export const getDateFormat = (date: Date) => {

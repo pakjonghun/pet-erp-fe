@@ -1,4 +1,3 @@
-import { Product } from './codegen/graphql';
 import { BASE_URL } from '@/api/constants';
 import { PUBLIC_PATH } from '@/constants';
 import { authState } from '@/store/isLogin';
@@ -25,9 +24,10 @@ const logoutLink = onError(({ networkError, graphQLErrors }) => {
   const graphqlStatusCodeError =
     graphQLErrors && 'statusCode' in graphQLErrors?.[0] && graphQLErrors?.[0].statusCode;
   const isUnAuthorized = networkStatusCode === 401 || graphqlStatusCodeError === 401;
+  const isForbidden = networkStatusCode === 403 || graphqlStatusCodeError === 403;
   const firstPath = getFirstPath(location.pathname);
   const isPrivatePath = !PUBLIC_PATH.includes(firstPath);
-  if (isUnAuthorized && isPrivatePath) {
+  if ((isUnAuthorized && isPrivatePath) || (isForbidden && isPrivatePath)) {
     console.log('error and set ', { loading: false, isLogin: false });
     authState({ loading: false, isLogin: false });
   }
