@@ -6,7 +6,6 @@ export const getFirstPath = (pathname: string) => {
 };
 
 export const getOriginPath = (pathname: string) => {
-  console.log(pathname, 'ppppp');
   return pathname.replace(/^\/|\/$/g, '');
 };
 

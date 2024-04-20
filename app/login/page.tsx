@@ -5,15 +5,14 @@ import { Controller, useForm } from 'react-hook-form';
 import { LoginForm, loginSchema } from './validate';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useLogin } from '@/api/rest/hooks/auth/useAuth';
-import { useGetMyInfo } from '@/api/graphql/hooks/users/useGetMyInfo';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Loading from '@/components/ui/loading/PageLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { client } from '@/api/graphql/client';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { useReactiveVar } from '@apollo/client';
 import { authState } from '@/store/isLogin';
+import { getMyInfoDocument } from '@/api/graphql/hooks/users/useGetMyInfo';
 
 const LoginPage = () => {
   const {
@@ -31,14 +30,12 @@ const LoginPage = () => {
 
   const router = useRouter();
   const { mutate: login, isPending } = useLogin();
-  // const { data: myInfo, loading } = useGetMyInfo();
   const { isLogin, loading } = useReactiveVar(authState);
 
   useEffect(() => {
     if (loading) return;
 
     if (isLogin) {
-      console.log('amai login', isLogin);
       router.replace('/');
     }
   }, [isLogin, loading, router]);
@@ -55,7 +52,6 @@ const LoginPage = () => {
       },
     });
   };
-  console.log('login', loading, isLogin);
   if (loading || isLogin) return <></>;
 
   return (

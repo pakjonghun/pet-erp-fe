@@ -16,7 +16,13 @@ const ProfilePage = () => {
 
   return (
     <Box sx={{ p: 5, display: 'flex', flexDirection: 'column', gap: 4 }}>
-      <EditSelfRoleModal open={openEditRoleModal} onClose={() => setOpenEditRoleModal(false)} />
+      {myInfo && (
+        <EditSelfRoleModal
+          myInfo={myInfo.myInfo}
+          open={openEditRoleModal}
+          onClose={() => setOpenEditRoleModal(false)}
+        />
+      )}
       {myInfo && (
         <EditPasswordModal
           selectedUser={myInfo.myInfo}

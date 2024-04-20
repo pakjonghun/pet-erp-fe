@@ -10,8 +10,6 @@ const merge = (existing = { totalCount: 0, data: [] }, incoming: any, args: any)
   const existingData = existing.data as any[];
 
   const incomingData = incoming.data as any[];
-  console.log('existingData : ', existingData);
-  console.log('incomingData : ', incomingData);
   const merged = existingData ? existingData.slice(0) : [];
   for (let i = 0; i < incomingData.length; ++i) {
     merged[existingData.length + i] = incomingData[i];

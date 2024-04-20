@@ -75,10 +75,8 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
   const delayedCategoryKeyword = useTextDebounce(categoryKeyword);
 
   // const rows = data?.categories.data ?? [];
-  console.log(errors);
 
   const onSubmit = (values: CreateClientForm) => {
-    console.log(values);
     createClient({
       variables: {
         createClientInput: {

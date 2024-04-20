@@ -1,3 +1,5 @@
+'use client';
+
 import { MouseEvent, useState } from 'react';
 import { Box, IconButton } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -6,7 +8,6 @@ import { BaseListItem } from '@/components/ui/listItem/menuStyles';
 import ListMenu from '@/components/ui/listItem/ListMenu';
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import LockResetOutlinedIcon from '@mui/icons-material/LockResetOutlined';
 import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined';
 import { UserRole } from '@/api/graphql/codegen/graphql';
 import { useLogout } from '@/api/rest/hooks/auth/useAuth';
@@ -14,7 +15,6 @@ import { useRouter } from 'next/navigation';
 import { client } from '@/api/graphql/client';
 import { snackMessage } from '@/store/snackMessage';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
-import { authState } from '@/store/isLogin';
 
 const SettingMenuTrigger = () => {
   const router = useRouter();
@@ -33,8 +33,6 @@ const SettingMenuTrigger = () => {
       onSuccess: async () => {
         snackMessage({ message: '안녕히 가세요.', severity: 'success' });
         await client.resetStore();
-        authState({ loading: false, isLogin: false });
-        router.replace('/login');
         setSettingMenuAnchor(null);
       },
       onError: (err) => {

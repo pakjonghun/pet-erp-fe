@@ -3,28 +3,26 @@
 import { Button, FormControl, SelectChangeEvent, Stack, Typography } from '@mui/material';
 import { FC, useState } from 'react';
 import BaseModal from '../../../../components/ui/modal/BaseModal';
-import { useGetMyInfo } from '@/api/graphql/hooks/users/useGetMyInfo';
-import { UserRole } from '@/api/graphql/codegen/graphql';
+import { MyInfo, UserRole } from '@/api/graphql/codegen/graphql';
 import { useUpdateProfile } from '@/api/graphql/hooks/users/useUpdateProfile';
 import { snackMessage } from '@/store/snackMessage';
 import CommonLoading from '../../../../components/ui/loading/CommonLoading';
 import BaseSelect from '@/components/ui/select/BaseSelect';
 
 interface Props {
+  myInfo: MyInfo;
   open: boolean;
   onClose: () => void;
 }
 
-const EditSelfRoleModal: FC<Props> = ({ open, onClose }) => {
-  const { data: myInfo } = useGetMyInfo();
+const EditSelfRoleModal: FC<Props> = ({ myInfo, open, onClose }) => {
   const [updateProfile, { loading }] = useUpdateProfile();
-  const [role, setRole] = useState<UserRole>(myInfo!.myInfo.role);
+  const [role, setRole] = useState<UserRole>(myInfo.role);
   const onChangeRole = (event: SelectChangeEvent) => {
     setRole(event.target.value as UserRole);
   };
-
   const handleClose = () => {
-    const originRole = myInfo?.myInfo.role;
+    const originRole = myInfo.role;
     if (!originRole) return;
 
     setRole(originRole);

@@ -59,7 +59,6 @@ const CategoryPage = () => {
     }
   };
   const all = client.cache.extract();
-  console.log('??????', Object.keys(all));
   const [openCreateCategory, setOpenCreateCategory] = useState(false);
 
   const { mutate: uploadFile, isPending } = useUploadExcelFile();
