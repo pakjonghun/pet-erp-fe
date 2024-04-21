@@ -1,4 +1,4 @@
-version: 0.1
+version: 1.0
 frontend:
   phases:
     install:
@@ -7,7 +7,7 @@ frontend:
     preBuild:
       commands:
         - echo --------Pre build Start----------
-        - npm ci
+        - yarn install
     build:
       commands:
         - yarn build
