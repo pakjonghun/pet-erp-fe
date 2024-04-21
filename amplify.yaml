@@ -1,17 +1,26 @@
-version: 1
+version: 0.1
 frontend:
   phases:
+    install:
+      runtime-versions:
+        nodejs: 18
     preBuild:
       commands:
-        - yarn install
+        - echo --------Pre build Start----------
+        - npm ci
     build:
       commands:
         - yarn build
+    postBuild:
+      commands:
+        - echo --------Build End----------
+  # 빌드 결과물로 나온 아티팩트에 대한 정보를 제공합니다.
   artifacts:
-    baseDirectory: .next
+    # 빌드 환경에서 빌드 출력 결과물이 생성되는 위치를 나타냅니다.
+    # '**/*'는 모든 파일을 재귀적으로 나타냅니다.
+    baseDirectory: out
     files:
       - '**/*'
   cache:
     paths:
-      - .next/cache/**/*
       - node_modules/**/*
