@@ -1,16 +1,14 @@
-version: 1.0
+version: 1
 frontend:
   phases:
-    install:
-      runtime-versions:
-        nodejs: 18
     preBuild:
       commands:
         - echo --------Pre build Start----------
         - yarn install
     build:
       commands:
-        - yarn build
+        - echo --------Pre build Start----------
+        - yarn run build
     postBuild:
       commands:
         - echo --------Build End----------
@@ -20,4 +18,6 @@ frontend:
       - '**/*'
   cache:
     paths:
+      - out/**/*
+      - .next/cache/**/*
       - node_modules/**/*
