@@ -14,10 +14,7 @@ frontend:
     postBuild:
       commands:
         - echo --------Build End----------
-  # 빌드 결과물로 나온 아티팩트에 대한 정보를 제공합니다.
   artifacts:
-    # 빌드 환경에서 빌드 출력 결과물이 생성되는 위치를 나타냅니다.
-    # '**/*'는 모든 파일을 재귀적으로 나타냅니다.
     baseDirectory: out
     files:
       - '**/*'
