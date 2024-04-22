@@ -12,13 +12,13 @@ interface Props {
 }
 
 const Guard: FC<Props> = ({ children }) => {
-  const pathname = usePathname();
-  const firstPath = getFirstPath(pathname);
-  const isPublic = PUBLIC_PATH.includes(firstPath);
-  const { data: myInfo, loading } = useGetMyInfo();
-  useEffect(() => {
-    authState({ loading, isLogin: !!myInfo });
-  }, [myInfo, loading]);
+  // const pathname = usePathname();
+  // const firstPath = getFirstPath(pathname);
+  // const isPublic = PUBLIC_PATH.includes(firstPath);
+  // const { data: myInfo, loading } = useGetMyInfo();
+  // useEffect(() => {
+  //   authState({ loading, isLogin: !!myInfo });
+  // }, [myInfo, loading]);
 
   return children;
 
