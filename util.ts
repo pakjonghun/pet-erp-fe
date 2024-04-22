@@ -44,7 +44,6 @@ export const merge = (existing = { totalCount: 0, data: [] }, incoming: any, { a
   const incomingData = incoming.data as any[];
   const merged = existingData ? existingData.slice(0) : [];
   const skip = findSkip(args);
-  console.log(skip);
   if (skip == null) {
     return existing;
   }
