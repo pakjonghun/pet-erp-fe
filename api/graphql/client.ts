@@ -1,36 +1,7 @@
 import { BASE_URL } from '@/api/constants';
-import { PUBLIC_PATH } from '@/constants';
-import { authState } from '@/store/isLogin';
-import { getFirstPath } from '@/util';
 import { ApolloClient, InMemoryCache, createHttpLink, gql } from '@apollo/client';
 import { createFragmentRegistry } from '@apollo/client/cache';
-import { onError } from '@apollo/client/link/error';
-
-const merge = (existing = { totalCount: 0, data: [] }, incoming: any, args: any) => {
-  const existingData = existing.data as any[];
-
-  const incomingData = incoming.data as any[];
-  const merged = existingData ? existingData.slice(0) : [];
-  for (let i = 0; i < incomingData.length; ++i) {
-    merged[existingData.length + i] = incomingData[i];
-  }
-
-  return { totalCount: incoming.totalCount, data: merged };
-};
-
-// const logoutLink = onError(({ networkError, graphQLErrors }) => {
-//   const networkStatusCode = networkError && 'statusCode' in networkError && networkError.statusCode;
-//   const graphqlStatusCodeError =
-//     graphQLErrors && 'statusCode' in graphQLErrors?.[0] && graphQLErrors?.[0].statusCode;
-//   const isUnAuthorized = networkStatusCode === 401 || graphqlStatusCodeError === 401;
-//   const isForbidden = networkStatusCode === 403 || graphqlStatusCodeError === 403;
-//   const firstPath = getFirstPath(location.pathname);
-//   const isPrivatePath = !PUBLIC_PATH.includes(firstPath);
-//   if ((isUnAuthorized && isPrivatePath) || (isForbidden && isPrivatePath)) {
-//     console.log('error and set ', { loading: false, isLogin: false });
-//     authState({ loading: false, isLogin: false });
-//   }
-// });
+import { merge } from '@/util';
 
 const link = createHttpLink({
   uri: `${BASE_URL}/graphql`,

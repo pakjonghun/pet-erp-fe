@@ -23,3 +23,37 @@ export const getKCWFormat = (number: number) => {
 export const getNumberWithComma = (number: number) => {
   return Intl.NumberFormat('ko-KR').format(number);
 };
+
+const findSkip = (obj: any) => {
+  for (const k in obj) {
+    if (k === 'skip') {
+      return obj[k] as number;
+    }
+    if (typeof obj[k] === 'object') {
+      const result = findSkip(obj[k]) as number | null;
+      if (result != null) return result;
+    }
+  }
+
+  return null;
+};
+
+export const merge = (existing = { totalCount: 0, data: [] }, incoming: any, { args }: any) => {
+  const existingData = existing.data as any[];
+
+  const incomingData = incoming.data as any[];
+  const merged = existingData ? existingData.slice(0) : [];
+  const skip = findSkip(args);
+  console.log(skip);
+  if (skip == null) {
+    return existing;
+  }
+
+  for (let i = 0; i < incomingData.length; ++i) {
+    merged[skip + i] = incomingData[i];
+  }
+
+  const result = { totalCount: incoming.totalCount, data: merged };
+
+  return result;
+};

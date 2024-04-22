@@ -20,11 +20,9 @@ const Guard: FC<Props> = ({ children }) => {
     authState({ loading, isLogin: !!myInfo });
   }, [myInfo, loading]);
 
-  if (isPublic) {
-    return children;
-  }
+  return children;
 
-  return !!myInfo ? children : <>로그인 정보가 없습니다.</>;
+  // return !!myInfo ? children : <>로그인 정보가 없습니다.</>;
 };
 
 export default Guard;

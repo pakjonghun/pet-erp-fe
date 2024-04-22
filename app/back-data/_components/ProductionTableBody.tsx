@@ -20,7 +20,7 @@ const ProductionTableBody: FC<Props> = ({ keyword }) => {
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
   const [selectedProduct, setSelectedProduct] = useState<null | Product>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
-  const { data, networkStatus, fetchMore, refetch, client } = useProducts({
+  const { data, networkStatus, fetchMore } = useProducts({
     keyword,
     skip: 0,
     limit: LIMIT,
