@@ -115,5 +115,5 @@ export const client = new ApolloClient({
   },
   // link: logoutLink.concat(link),
   link,
-  connectToDevTools: true,
+  // connectToDevTools:  true,
 });

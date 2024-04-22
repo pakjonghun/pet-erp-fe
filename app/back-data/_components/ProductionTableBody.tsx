@@ -10,12 +10,17 @@ import { SelectOption } from '../types';
 import RemoveProductModal from './RemoveProductModal';
 import EditProductModal from './EditProductModal';
 import ProductDetailPopover from './ProductDetailPopover';
+import { client } from '@/api/graphql/client';
 
 interface Props {
   keyword: string;
 }
 
 const ProductionTableBody: FC<Props> = ({ keyword }) => {
+  const all = client.cache.extract();
+  Object.keys(all).forEach((k) => {
+    console.log('cache key', k);
+  });
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
   const [selectedProduct, setSelectedProduct] = useState<null | Product>(null);
