@@ -107,13 +107,5 @@ export const client = new ApolloClient({
       },
     },
   }),
-
-  defaultOptions: {
-    query: {
-      fetchPolicy: 'cache-first',
-    },
-  },
-  // link: logoutLink.concat(link),
   link,
-  // connectToDevTools:  true,
 });

@@ -17,8 +17,6 @@ interface Props {
 }
 
 const ProductionTableBody: FC<Props> = ({ keyword }) => {
-  const all = client.cache.extract();
-  console.log('cache key len', Object.keys(all).length);
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
   const [selectedProduct, setSelectedProduct] = useState<null | Product>(null);
