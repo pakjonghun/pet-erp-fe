@@ -15,16 +15,17 @@ const Guard: FC<Props> = ({ children }) => {
   const pathname = usePathname();
   const firstPath = getFirstPath(pathname);
   const isPublic = PUBLIC_PATH.includes(firstPath);
-  const { data: myInfo, loading } = useGetMyInfo();
-  useEffect(() => {
-    authState({ loading, isLogin: !!myInfo });
-  }, [myInfo, loading]);
+  // const { data: myInfo, loading } = useGetMyInfo();
+  // useEffect(() => {
+  //   authState({ loading, isLogin: !!myInfo });
+  // }, [myInfo, loading]);
 
-  if (isPublic) {
-    return children;
-  }
+  // if (isPublic) {
+  //   return children;
+  // }
 
-  return !!myInfo ? children : <>로그인 정보가 없습니다.</>;
+  // return !!myInfo ? children : <>로그인 정보가 없습니다.</>;
+  return children;
 };
 
 export default Guard;
