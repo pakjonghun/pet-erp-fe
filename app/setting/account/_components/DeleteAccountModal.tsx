@@ -6,7 +6,7 @@ import BaseModal from '../../../../components/ui/modal/BaseModal';
 import { snackMessage } from '@/store/snackMessage';
 import CommonLoading from '../../../../components/ui/loading/CommonLoading';
 import { SelectedUser } from '../type';
-import { useDeleteAccount } from '@/api/graphql/hooks/users/useDeleteAccount';
+import { useDeleteAccount } from '@/http/graphql/hooks/users/useDeleteAccount';
 
 interface Props {
   selectedUser: SelectedUser;

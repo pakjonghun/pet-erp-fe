@@ -3,11 +3,11 @@
 import { Button, FormControl, SelectChangeEvent, Stack, Typography } from '@mui/material';
 import { FC, useState } from 'react';
 import BaseModal from '../../../../components/ui/modal/BaseModal';
-import { UserRole } from '@/api/graphql/codegen/graphql';
+import { UserRole } from '@/http/graphql/codegen/graphql';
 import { snackMessage } from '@/store/snackMessage';
 import CommonLoading from '../../../../components/ui/loading/CommonLoading';
 import { SelectedUser } from '../type';
-import { useUpdateUser } from '@/api/graphql/hooks/users/updateUserProfile';
+import { useUpdateUser } from '@/http/graphql/hooks/users/updateUserProfile';
 import BaseSelect from '@/components/ui/select/BaseSelect';
 
 interface Props {

@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
-import { Product } from '@/api/graphql/codegen/graphql';
-import { useProducts } from '@/api/graphql/hooks/product/useProducts';
+import { Product } from '@/http/graphql/codegen/graphql';
+import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import { LIMIT, TABLE_MAX_HEIGHT } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Grid, SxProps } from '@mui/material';

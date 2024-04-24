@@ -3,9 +3,9 @@
 import { FC } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import BaseModal from '../../../../components/ui/modal/BaseModal';
-import { ProductSaleData } from '@/api/graphql/codegen/graphql';
+import { ProductSaleData } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
-import { useProductSaleChart } from '@/api/graphql/hooks/product/useProductSaleChart';
+import { useProductSaleChart } from '@/http/graphql/hooks/product/useProductSaleChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 import dayjs from 'dayjs';
 import CommonLoading from '@/components/ui/loading/CommonLoading';

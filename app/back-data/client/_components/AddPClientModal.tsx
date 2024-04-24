@@ -17,8 +17,8 @@ import { CreateClientForm, createClientSchema } from '../_validations/createClie
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
-import { useCreateProduct } from '@/api/graphql/hooks/product/useCreateProduct';
-import { useFindManyCategory } from '@/api/graphql/hooks/category/useFindCategories';
+import { useCreateProduct } from '@/http/graphql/hooks/product/useCreateProduct';
+import { useFindManyCategory } from '@/http/graphql/hooks/category/useFindCategories';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT } from '@/constants';
 import { SelectItem } from '@/components/ui/select/SearchAutoComplete';
@@ -27,8 +27,8 @@ import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 import { modalSizeProps } from '@/components/commonStyles';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import { useCreateClient } from '@/api/graphql/hooks/client/useCreateClient';
-import { ClientType, CreateClientDocument } from '@/api/graphql/codegen/graphql';
+import { useCreateClient } from '@/http/graphql/hooks/client/useCreateClient';
+import { ClientType, CreateClientDocument } from '@/http/graphql/codegen/graphql';
 
 interface Props {
   open: boolean;

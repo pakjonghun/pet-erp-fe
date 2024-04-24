@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Client, Product } from '@/api/graphql/codegen/graphql';
+import { Client, Product } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
 import ModalTitle from '@/components/ui/typograph/ModalTitle';
 import { Stack, Button } from '@mui/material';

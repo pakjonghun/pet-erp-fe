@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Client } from '@/api/graphql/codegen/graphql';
+import { Client } from '@/http/graphql/codegen/graphql';
 import { LIMIT, TABLE_MAX_HEIGHT } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Grid, SxProps } from '@mui/material';
@@ -8,7 +8,7 @@ import ClientDetailPopover from './ClientDetailPopover';
 import EmptyItem from '@/components/ui/listItem/EmptyItem';
 import ClientCard from './ClientCard';
 import { SelectOption } from '../../types';
-import { useClients } from '@/api/graphql/hooks/client/useClients';
+import { useClients } from '@/http/graphql/hooks/client/useClients';
 
 interface Props {
   keyword: string;

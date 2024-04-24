@@ -4,15 +4,15 @@ import { Box, Button, Stack, TextField } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { LoginForm, loginSchema } from './validate';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useLogin } from '@/api/rest/hooks/auth/useAuth';
+import { useLogin } from '@/http/rest/hooks/auth/useAuth';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { snackMessage } from '@/store/snackMessage';
-import { client } from '@/api/graphql/client';
+import { client } from '@/http/graphql/client';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { useReactiveVar } from '@apollo/client';
 import { authState } from '@/store/isLogin';
-import { getMyInfoDocument } from '@/api/graphql/hooks/users/useGetMyInfo';
+import { getMyInfoDocument } from '@/http/graphql/hooks/users/useGetMyInfo';
 
 const LoginPage = () => {
   const {

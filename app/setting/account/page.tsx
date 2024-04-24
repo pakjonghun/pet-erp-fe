@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetUserList } from '@/api/graphql/hooks/users/useGetAccountList';
+import { useGetUserList } from '@/http/graphql/hooks/users/useGetAccountList';
 import { Box, Button, Grid } from '@mui/material';
 import AccountCard from './_components/AccountCard';
 import { useState } from 'react';

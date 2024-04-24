@@ -1,8 +1,8 @@
 'use client';
 
 import { FC } from 'react';
-import { ProductSaleData } from '@/api/graphql/codegen/graphql';
-import { useProductSales } from '@/api/graphql/hooks/product/useProductSaleList';
+import { ProductSaleData } from '@/http/graphql/codegen/graphql';
+import { useProductSales } from '@/http/graphql/hooks/product/useProductSaleList';
 import Cell from '@/components/table/Cell';
 import EmptyRow from '@/components/table/EmptyRow';
 import { LIMIT } from '@/constants';

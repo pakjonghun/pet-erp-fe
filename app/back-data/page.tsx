@@ -20,14 +20,14 @@ import { ChangeEvent, useRef, useState } from 'react';
 import CreateProductModal from './_components/AddProductModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import ProductionTableBody from './_components/ProductionTableBody';
-import { useUploadExcelFile } from '@/api/rest/hooks/file/useUploadExcelFile';
+import { useUploadExcelFile } from '@/http/rest/hooks/file/useUploadExcelFile';
 import { snackMessage } from '@/store/snackMessage';
 import UploadButton from '@/components/ui/button/UploadButtont';
-import { useProducts } from '@/api/graphql/hooks/product/useProducts';
+import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import { LIMIT } from '@/constants';
 import ProductionCards from './_components/ProductionCards';
 import ActionButton from '@/components/ui/button/ActionButton';
-import { useDownloadExcelFile } from '@/api/rest/hooks/file/useDownloadExcelFile';
+import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFile';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 
 const BackDataPage = () => {

@@ -11,7 +11,7 @@ import {
   TextField,
   InputAdornment,
 } from '@mui/material';
-import { ProductSaleData } from '@/api/graphql/codegen/graphql';
+import { ProductSaleData } from '@/http/graphql/codegen/graphql';
 import { Search } from '@mui/icons-material';
 import { useState } from 'react';
 import useTextDebounce from '@/hooks/useTextDebounce';

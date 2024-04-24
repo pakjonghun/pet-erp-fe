@@ -4,7 +4,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { Client, Product } from '@/api/graphql/codegen/graphql';
+import { Client, Product } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
 import { SelectOption } from '../../types';

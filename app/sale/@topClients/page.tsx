@@ -1,6 +1,6 @@
 'use client';
 
-import { useTopClients } from '@/api/graphql/hooks/client/useTopClients';
+import { useTopClients } from '@/http/graphql/hooks/client/useTopClients';
 import { Table, TableBody, TableHead, TableRow } from '@mui/material';
 import Cell from '@/components/table/Cell';
 import EmptyRow from '@/components/table/EmptyRow';

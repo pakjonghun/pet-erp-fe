@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { Paper, Typography, Stack, Button, Box } from '@mui/material';
-import { Category } from '@/api/graphql/codegen/graphql';
+import { Category } from '@/http/graphql/codegen/graphql';
 import DeleteCategoryModal from './DeleteCategoryModal';
 import EditCategoryModal from './EditCategoryModal';
 

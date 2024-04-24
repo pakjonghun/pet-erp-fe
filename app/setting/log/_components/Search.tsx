@@ -1,4 +1,4 @@
-import { FindLogsDto } from '@/api/graphql/codegen/graphql';
+import { FindLogsDto } from '@/http/graphql/codegen/graphql';
 import BaseSelect from '@/components/ui/select/BaseSelect';
 import { SearchOutlined } from '@mui/icons-material';
 import {

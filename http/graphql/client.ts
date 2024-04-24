@@ -1,4 +1,4 @@
-import { BASE_URL } from '@/api/constants';
+import { BASE_URL } from '@/http/constants';
 import { ApolloClient, InMemoryCache, createHttpLink, gql } from '@apollo/client';
 import { createFragmentRegistry } from '@apollo/client/cache';
 import { merge } from '@/util';

@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
-import { Product } from '@/api/graphql/codegen/graphql';
-import { useProducts } from '@/api/graphql/hooks/product/useProducts';
+import { Product } from '@/http/graphql/codegen/graphql';
+import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import { LIMIT } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { TableBody } from '@mui/material';
@@ -10,7 +10,7 @@ import { SelectOption } from '../types';
 import RemoveProductModal from './RemoveProductModal';
 import EditProductModal from './EditProductModal';
 import ProductDetailPopover from './ProductDetailPopover';
-import { client } from '@/api/graphql/client';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   keyword: string;

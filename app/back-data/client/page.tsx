@@ -20,14 +20,14 @@ import { ChangeEvent, useRef, useState } from 'react';
 import CreateClientModal from './_components/AddPClientModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import ClientTableBody from './_components/ClientTableBody';
-import { useUploadExcelFile } from '@/api/rest/hooks/file/useUploadExcelFile';
+import { useUploadExcelFile } from '@/http/rest/hooks/file/useUploadExcelFile';
 import { snackMessage } from '@/store/snackMessage';
 import UploadButton from '@/components/ui/button/UploadButtont';
-import { useProducts } from '@/api/graphql/hooks/product/useProducts';
+import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import { LIMIT } from '@/constants';
 import ClientCards from './_components/ClientCards';
 import ActionButton from '@/components/ui/button/ActionButton';
-import { useDownloadExcelFile } from '@/api/rest/hooks/file/useDownloadExcelFile';
+import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFile';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 
 const BackDataPage = () => {

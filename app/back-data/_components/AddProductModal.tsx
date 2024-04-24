@@ -15,8 +15,8 @@ import { CreateProductForm, createProductSchema } from '../_validations/createPr
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
-import { useCreateProduct } from '@/api/graphql/hooks/product/useCreateProduct';
-import { useFindManyCategory } from '@/api/graphql/hooks/category/useFindCategories';
+import { useCreateProduct } from '@/http/graphql/hooks/product/useCreateProduct';
+import { useFindManyCategory } from '@/http/graphql/hooks/category/useFindCategories';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT } from '@/constants';
 import { SelectItem } from '@/components/ui/select/SearchAutoComplete';

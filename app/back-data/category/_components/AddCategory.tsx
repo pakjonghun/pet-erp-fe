@@ -5,7 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
-import { useCreateCategory } from '@/api/graphql/hooks/category/useCreateCategory';
+import { useCreateCategory } from '@/http/graphql/hooks/category/useCreateCategory';
 import { CreateCategoryForm, createCategorySchema } from '../_validations/createCategoryValidation';
 import { modalSizeProps } from '@/components/commonStyles';
 

@@ -9,10 +9,10 @@ import ListMenu from '@/components/ui/listItem/ListMenu';
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined';
-import { UserRole } from '@/api/graphql/codegen/graphql';
-import { useLogout } from '@/api/rest/hooks/auth/useAuth';
+import { UserRole } from '@/http/graphql/codegen/graphql';
+import { useLogout } from '@/http/rest/hooks/auth/useAuth';
 import { useRouter } from 'next/navigation';
-import { client } from '@/api/graphql/client';
+import { client } from '@/http/graphql/client';
 import { snackMessage } from '@/store/snackMessage';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 

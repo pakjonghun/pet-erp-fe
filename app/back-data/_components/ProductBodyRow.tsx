@@ -7,7 +7,7 @@ import { SelectOption } from '../types';
 import { SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { Product } from '@/api/graphql/codegen/graphql';
+import { Product } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 
 interface Props {

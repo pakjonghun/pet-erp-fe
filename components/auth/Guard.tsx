@@ -1,7 +1,7 @@
 'use client';
 
 import { FC, ReactNode, useEffect } from 'react';
-import { useGetMyInfo } from '@/api/graphql/hooks/users/useGetMyInfo';
+import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 import { authState } from '@/store/isLogin';
 import { usePathname } from 'next/navigation';
 import { PUBLIC_PATH } from '@/constants';

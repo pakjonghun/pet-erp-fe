@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { Product } from '@/api/graphql/codegen/graphql';
-import { useRemoveProduct } from '@/api/graphql/hooks/product/useRemoveProduct';
+import { Product } from '@/http/graphql/codegen/graphql';
+import { useRemoveProduct } from '@/http/graphql/hooks/product/useRemoveProduct';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import { snackMessage } from '@/store/snackMessage';

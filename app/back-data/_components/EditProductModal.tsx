@@ -15,14 +15,14 @@ import { CreateProductForm, createProductSchema } from '../_validations/createPr
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
-import { useFindManyCategory } from '@/api/graphql/hooks/category/useFindCategories';
+import { useFindManyCategory } from '@/http/graphql/hooks/category/useFindCategories';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT } from '@/constants';
 import { SelectItem } from '@/components/ui/select/SearchAutoComplete';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
-import { useUpdateProduct } from '@/api/graphql/hooks/product/useUpdateProduct';
-import { Product } from '@/api/graphql/codegen/graphql';
+import { useUpdateProduct } from '@/http/graphql/hooks/product/useUpdateProduct';
+import { Product } from '@/http/graphql/codegen/graphql';
 import { modalSizeProps } from '@/components/commonStyles';
 
 interface Props {

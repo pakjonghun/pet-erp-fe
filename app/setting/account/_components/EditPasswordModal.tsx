@@ -16,7 +16,7 @@ import BaseModal from '../../../../components/ui/modal/BaseModal';
 import { snackMessage } from '@/store/snackMessage';
 import CommonLoading from '../../../../components/ui/loading/CommonLoading';
 import { SelectedUser } from '../type';
-import { useUpdateUser } from '@/api/graphql/hooks/users/updateUserProfile';
+import { useUpdateUser } from '@/http/graphql/hooks/users/updateUserProfile';
 import { editPasswordSchema, EditPasswordForm } from '../_validations/editPasswordValidation';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

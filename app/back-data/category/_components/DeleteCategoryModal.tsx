@@ -5,8 +5,8 @@ import { FC } from 'react';
 import BaseModal from '../../../../components/ui/modal/BaseModal';
 import { snackMessage } from '@/store/snackMessage';
 import CommonLoading from '../../../../components/ui/loading/CommonLoading';
-import { useRemoveCategory } from '@/api/graphql/hooks/category/useRemoveCategory';
-import { Category } from '@/api/graphql/codegen/graphql';
+import { useRemoveCategory } from '@/http/graphql/hooks/category/useRemoveCategory';
+import { Category } from '@/http/graphql/codegen/graphql';
 
 interface Props {
   item: Category;

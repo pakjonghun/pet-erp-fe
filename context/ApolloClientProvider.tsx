@@ -1,6 +1,6 @@
 'use client';
 
-import { client } from '@/api/graphql/client';
+import { client } from '@/http/graphql/client';
 import { ApolloProvider } from '@apollo/client';
 import React, { FC, ReactNode } from 'react';
 

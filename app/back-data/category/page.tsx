@@ -19,16 +19,16 @@ import { Search } from '@mui/icons-material';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import CreateCategoryModal from './_components/AddCategory';
-import { useFindManyCategory } from '@/api/graphql/hooks/category/useFindCategories';
+import { useFindManyCategory } from '@/http/graphql/hooks/category/useFindCategories';
 import { LIMIT, TABLE_MAX_HEIGHT } from '@/constants';
 import CategoryCard from './_components/CategoryCard';
 import UploadButton from '@/components/ui/button/UploadButtont';
-import { useUploadExcelFile } from '@/api/rest/hooks/file/useUploadExcelFile';
+import { useUploadExcelFile } from '@/http/rest/hooks/file/useUploadExcelFile';
 import { snackMessage } from '@/store/snackMessage';
 import ActionButton from '@/components/ui/button/ActionButton';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
-import { useDownloadExcelFile } from '@/api/rest/hooks/file/useDownloadExcelFile';
-import { client } from '@/api/graphql/client';
+import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFile';
+import { client } from '@/http/graphql/client';
 
 const CategoryPage = () => {
   const [keyword, setKeyword] = useState('');

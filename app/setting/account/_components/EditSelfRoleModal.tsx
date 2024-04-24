@@ -3,8 +3,8 @@
 import { Button, FormControl, SelectChangeEvent, Stack, Typography } from '@mui/material';
 import { FC, useState } from 'react';
 import BaseModal from '../../../../components/ui/modal/BaseModal';
-import { MyInfo, UserRole } from '@/api/graphql/codegen/graphql';
-import { useUpdateProfile } from '@/api/graphql/hooks/users/useUpdateProfile';
+import { MyInfo, UserRole } from '@/http/graphql/codegen/graphql';
+import { useUpdateProfile } from '@/http/graphql/hooks/users/useUpdateProfile';
 import { snackMessage } from '@/store/snackMessage';
 import CommonLoading from '../../../../components/ui/loading/CommonLoading';
 import BaseSelect from '@/components/ui/select/BaseSelect';

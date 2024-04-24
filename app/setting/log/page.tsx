@@ -2,7 +2,7 @@
 
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
 import { useState } from 'react';
-import { FindLogsDto, Order } from '@/api/graphql/codegen/graphql';
+import { FindLogsDto, Order } from '@/http/graphql/codegen/graphql';
 import Search from './_components/Search';
 import { Box, InputAdornment, TextField } from '@mui/material';
 import CommonDateFilter from '@/components/calendar/CommonDateFilter';
@@ -12,7 +12,7 @@ import LogTable from './_components/LogTable';
 import { LIMIT } from '@/constants';
 import TableTitle from '@/components/ui/typograph/TableTitle';
 import TablePage from '@/components/table/TablePage';
-import { client } from '@/api/graphql/client';
+import { client } from '@/http/graphql/client';
 
 const LogPage = () => {
   const { from, to } = getThisMonth();

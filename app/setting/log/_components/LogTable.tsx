@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Table, TableBody, TableHead, TableRow } from '@mui/material';
-import { FindLogsDto, Log } from '@/api/graphql/codegen/graphql';
-import { useFindLogs } from '@/api/graphql/hooks/log/useFindLogs';
+import { FindLogsDto, Log } from '@/http/graphql/codegen/graphql';
+import { useFindLogs } from '@/http/graphql/hooks/log/useFindLogs';
 import dayjs from 'dayjs';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import LoadingRow from '@/components/table/LoadingRow';

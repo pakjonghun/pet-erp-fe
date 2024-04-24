@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Product } from '@/api/graphql/codegen/graphql';
+import { Product } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
 import ModalTitle from '@/components/ui/typograph/ModalTitle';
 import { getKCWFormat } from '@/util';

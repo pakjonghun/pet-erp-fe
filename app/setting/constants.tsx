@@ -1,4 +1,4 @@
-import { UserRole } from '@/api/graphql/codegen/graphql';
+import { UserRole } from '@/http/graphql/codegen/graphql';
 
 export const SettingTabs = {
   setting: {
