@@ -1,8 +1,8 @@
+import { FC, MouseEvent, useState } from 'react';
 import { Box, IconButton, Menu, Paper, Stack } from '@mui/material';
-import React, { FC, MouseEvent, useState } from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { SelectOption } from '../types';
-import { SelectedOptionItem } from '@/constants';
+import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { Product } from '@/http/graphql/codegen/graphql';
@@ -58,7 +58,7 @@ const ProductCard: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow 
             <LabelText label="이름" text={product.name} />
           </Box>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="분류" text={product.category?.name ?? '미입력'} />
+            <LabelText label="분류" text={product.category?.name ?? EMPTY} />
           </Box>
         </Stack>
 
@@ -67,24 +67,24 @@ const ProductCard: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow 
             <LabelText label="코드" text={product.code} />
           </Box>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="바코드" text={product.barCode} />
+            <LabelText label="바코드" text={product.barCode ?? EMPTY} />
           </Box>
         </Stack>
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="원가" text={product.wonPrice} />
+            <LabelText label="원가" text={product.wonPrice ?? EMPTY} />
           </Box>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="판매가" text={product.salePrice} />
+            <LabelText label="판매가" text={product.salePrice ?? EMPTY} />
           </Box>
         </Stack>
 
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="리드타임" text={product.leadTime ?? '미입력'} />
+            <LabelText label="리드타임" text={product.leadTime ?? EMPTY} />
           </Box>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="판매가" text={product.maintainDate} />
+            <LabelText label="최소 유지기간" text={product.maintainDate ?? EMPTY} />
           </Box>
         </Stack>
       </Box>

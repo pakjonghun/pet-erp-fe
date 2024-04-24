@@ -56,3 +56,12 @@ export const merge = (existing = { totalCount: 0, data: [] }, incoming: any, { a
 
   return result;
 };
+
+export const filterEmptyValues = (values: object) => {
+  const parsedValues = Object.entries(values).filter(([_, v]) =>
+    typeof v == 'string' ? !!v.trim() : v != null
+  );
+
+  const newValues = Object.fromEntries(parsedValues);
+  return newValues;
+};

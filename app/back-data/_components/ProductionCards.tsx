@@ -10,6 +10,7 @@ import EditProductModal from './EditProductModal';
 import ProductDetailPopover from './ProductDetailPopover';
 import EmptyItem from '@/components/ui/listItem/EmptyItem';
 import ProductCard from './ProductCard';
+import LoadingCard from './LoadingCard';
 
 interface Props {
   keyword: string;
@@ -21,7 +22,7 @@ const ProductionCards: FC<Props> = ({ keyword, sx }) => {
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
   const [selectedProduct, setSelectedProduct] = useState<null | Product>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
-  const { data, networkStatus, fetchMore, refetch, client } = useProducts({
+  const { data, networkStatus, fetchMore } = useProducts({
     keyword,
     skip: 0,
     limit: LIMIT,
@@ -34,21 +35,22 @@ const ProductionCards: FC<Props> = ({ keyword, sx }) => {
     setOptionType(option);
   };
 
+  const isLoading = networkStatus == 3 || networkStatus == 1;
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
-      if (networkStatus != 3 && networkStatus != 1) {
-        const totalCount = data?.products.totalCount;
-        if (totalCount != null && totalCount > rows.length) {
-          fetchMore({
-            variables: {
-              productsInput: {
-                keyword,
-                skip: rows.length,
-                limit: LIMIT,
-              },
+      if (isLoading) return;
+
+      const totalCount = data?.products.totalCount;
+      if (totalCount != null && totalCount > rows.length) {
+        fetchMore({
+          variables: {
+            productsInput: {
+              keyword,
+              skip: rows.length,
+              limit: LIMIT,
             },
-          });
-        }
+          },
+        });
       }
     }
   };
@@ -66,7 +68,7 @@ const ProductionCards: FC<Props> = ({ keyword, sx }) => {
   const handleClosePopover = () => setPopoverAnchor(null);
 
   const scrollRef = useInfinityScroll({ callback });
-  const isEmpty = rows.length === 0;
+  const isEmpty = !isLoading && rows.length === 0;
 
   return (
     <Grid
@@ -124,6 +126,7 @@ const ProductionCards: FC<Props> = ({ keyword, sx }) => {
           </Grid>
         );
       })}
+      <LoadingCard isLoading={isLoading} />
     </Grid>
   );
 };

@@ -10,7 +10,8 @@ import { SelectOption } from '../types';
 import RemoveProductModal from './RemoveProductModal';
 import EditProductModal from './EditProductModal';
 import ProductDetailPopover from './ProductDetailPopover';
-import { client } from '@/http/graphql/client';
+import LoadingRow from '@/components/table/LoadingRow';
+import { ProductHeaderList } from '../constants';
 
 interface Props {
   keyword: string;
@@ -34,21 +35,23 @@ const ProductionTableBody: FC<Props> = ({ keyword }) => {
     setOptionType(option);
   };
 
+  const isLoading = networkStatus == 3 || networkStatus == 1;
+
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
-      if (networkStatus != 3 && networkStatus != 1) {
-        const totalCount = data?.products.totalCount;
-        if (totalCount != null && totalCount > rows.length) {
-          fetchMore({
-            variables: {
-              productsInput: {
-                keyword,
-                skip: rows.length,
-                limit: LIMIT,
-              },
+      if (isLoading) return;
+
+      const totalCount = data?.products.totalCount;
+      if (totalCount != null && totalCount > rows.length) {
+        fetchMore({
+          variables: {
+            productsInput: {
+              keyword,
+              skip: rows.length,
+              limit: LIMIT,
             },
-          });
-        }
+          },
+        });
       }
     }
   };
@@ -66,7 +69,7 @@ const ProductionTableBody: FC<Props> = ({ keyword }) => {
   const handleClosePopover = () => setPopoverAnchor(null);
 
   const scrollRef = useInfinityScroll({ callback });
-  const isEmpty = rows.length === 0;
+  const isEmpty = !isLoading && rows.length === 0;
 
   return (
     <TableBody>
@@ -96,7 +99,7 @@ const ProductionTableBody: FC<Props> = ({ keyword }) => {
           selectedProduct={selectedProduct}
         />
       )}
-      <EmptyRow colSpan={6} isEmpty={isEmpty} />
+      <EmptyRow colSpan={ProductHeaderList.length} isEmpty={isEmpty} />
       {rows.map((item, index) => {
         const product = item as unknown as Product;
         const isLast = index === rows.length - 1;
@@ -114,6 +117,7 @@ const ProductionTableBody: FC<Props> = ({ keyword }) => {
           />
         );
       })}
+      <LoadingRow isLoading={isLoading} colSpan={ProductHeaderList.length} />
     </TableBody>
   );
 };

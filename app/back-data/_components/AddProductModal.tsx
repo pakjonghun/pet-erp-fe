@@ -1,3 +1,4 @@
+import { FC, useEffect, useState } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
   AutocompleteRenderInputParams,
@@ -9,7 +10,6 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { CreateProductForm, createProductSchema } from '../_validations/createProductValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -23,6 +23,8 @@ import { SelectItem } from '@/components/ui/select/SearchAutoComplete';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 import { modalSizeProps } from '@/components/commonStyles';
+import { parseValue } from 'graphql';
+import { filterEmptyValues } from '@/util';
 
 interface Props {
   open: boolean;
@@ -96,10 +98,11 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
     refetch();
   }, [delayedCategoryKeyword, refetch]);
   const onSubmit = (values: CreateProductForm) => {
+    const newValues = filterEmptyValues(values) as CreateProductForm;
     createProduct({
       variables: {
         createProductInput: {
-          ...values,
+          ...newValues,
           category: category?._id,
         },
       },

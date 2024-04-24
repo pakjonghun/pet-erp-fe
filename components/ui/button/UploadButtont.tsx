@@ -1,18 +1,18 @@
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import PublishIcon from '@mui/icons-material/Publish';
-import { ChangeEvent, RefObject } from 'react';
+import { ChangeEvent } from 'react';
 import CommonLoading from '../loading/CommonLoading';
 import { IconButton } from '@mui/material';
 
 interface Props {
   text: string;
   loading: boolean;
-  inputRef: RefObject<HTMLInputElement>;
+  fileKey: Date;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const UploadButton: React.FC<Props> = ({ text, loading, inputRef, onChange }) => {
+const UploadButton: React.FC<Props> = ({ text, loading, fileKey, onChange }) => {
   return (
     <>
       <Button
@@ -28,7 +28,7 @@ const UploadButton: React.FC<Props> = ({ text, loading, inputRef, onChange }) =>
         startIcon={loading ? <CommonLoading /> : <PublishIcon />}
       >
         {text}
-        <VisuallyHiddenInput ref={inputRef} onChange={onChange} type="file" />
+        <VisuallyHiddenInput key={fileKey.toISOString()} onChange={onChange} type="file" />
       </Button>
       <IconButton
         sx={{
@@ -40,7 +40,7 @@ const UploadButton: React.FC<Props> = ({ text, loading, inputRef, onChange }) =>
         tabIndex={-1}
       >
         {loading ? <CommonLoading /> : <PublishIcon />}
-        <VisuallyHiddenInput ref={inputRef} onChange={onChange} type="file" />
+        <VisuallyHiddenInput key={fileKey.toISOString()} onChange={onChange} type="file" />
       </IconButton>
     </>
   );

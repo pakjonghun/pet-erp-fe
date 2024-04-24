@@ -24,6 +24,7 @@ import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 import { useUpdateProduct } from '@/http/graphql/hooks/product/useUpdateProduct';
 import { Product } from '@/http/graphql/codegen/graphql';
 import { modalSizeProps } from '@/components/commonStyles';
+import { filterEmptyValues } from '@/util';
 
 interface Props {
   selectedProduct: Product;
@@ -99,10 +100,11 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
     refetch();
   }, [delayedCategoryKeyword, refetch]);
   const onSubmit = (values: CreateProductForm) => {
+    const { code, ...newValues } = filterEmptyValues(values) as CreateProductForm;
     updateProduct({
       variables: {
         updateProductInput: {
-          ...values,
+          ...newValues,
           _id: selectedProduct._id,
           category: category?._id,
         },
@@ -135,12 +137,12 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
             control={control}
             name="code"
             render={({ field }) => (
-              <FormControl required>
+              <FormControl>
                 <TextField
                   {...field}
+                  disabled
                   size="small"
-                  required
-                  label="제품코드"
+                  label="제품코드(수정불가)"
                   error={!!errors.code?.message}
                   helperText={errors.code?.message ?? ''}
                   InputProps={{

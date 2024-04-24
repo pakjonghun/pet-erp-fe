@@ -1,7 +1,7 @@
 'use client';
 
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { ConnectingAirportsOutlined, PlusOneOutlined } from '@mui/icons-material';
+import { PlusOneOutlined } from '@mui/icons-material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import TablePage from '@/components/table/TablePage';
 import TableTitle from '@/components/ui/typograph/TableTitle';
@@ -28,7 +28,6 @@ import { snackMessage } from '@/store/snackMessage';
 import ActionButton from '@/components/ui/button/ActionButton';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFile';
-import { client } from '@/http/graphql/client';
 
 const CategoryPage = () => {
   const [keyword, setKeyword] = useState('');
@@ -43,26 +42,27 @@ const CategoryPage = () => {
   const rows = data?.categories.data ?? [];
   const totalCount = data?.categories.totalCount;
   const hasNext = totalCount != null && totalCount > rows.length;
-  const isEmpty = rows.length === 0;
+  const isLoading = networkStatus == 1 || networkStatus == 3;
+  const isEmpty = !isLoading && rows.length === 0;
 
   const getMoreCategory = () => {
-    if (networkStatus != 1 && networkStatus != 3) {
-      fetchMore({
-        variables: {
-          categoriesInput: {
-            keyword: delayKeyword,
-            limit: LIMIT,
-            skip: rows.length,
-          },
+    if (isLoading) return;
+
+    fetchMore({
+      variables: {
+        categoriesInput: {
+          keyword: delayKeyword,
+          limit: LIMIT,
+          skip: rows.length,
         },
-      });
-    }
+      },
+    });
   };
-  const all = client.cache.extract();
+
   const [openCreateCategory, setOpenCreateCategory] = useState(false);
 
   const { mutate: uploadFile, isPending } = useUploadExcelFile();
-  const uploadInputRef = useRef<HTMLInputElement>(null);
+  const [fileKey, setFileKey] = useState(new Date());
 
   const handleChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -77,16 +77,13 @@ const CategoryPage = () => {
         onSuccess: () => {
           snackMessage({ message: '파일 업로드가 완료되었습니다.', severity: 'success' });
           refetch();
-          if (uploadInputRef.current) {
-            uploadInputRef.current.value = '';
-          }
         },
         onError: (err) => {
           const message = err.response?.data.message;
           snackMessage({ message: message ?? '파일 업로드가 실패했습니다.', severity: 'error' });
-          if (uploadInputRef.current) {
-            uploadInputRef.current.value = '';
-          }
+        },
+        onSettled: () => {
+          setFileKey(new Date());
         },
       }
     );
@@ -114,7 +111,7 @@ const CategoryPage = () => {
 
         <Stack direction="row" alignItems="center" gap={2}>
           <UploadButton
-            inputRef={uploadInputRef}
+            fileKey={fileKey}
             loading={isPending}
             text="제품분류 업로드"
             onChange={handleChangeFile}
@@ -170,7 +167,7 @@ const CategoryPage = () => {
               onClick={getMoreCategory}
               variant="outlined"
               sx={{ fontSize: 18, width: '100%', height: '100%' }}
-              endIcon={<ExpandMoreIcon />}
+              endIcon={isLoading ? <CommonLoading /> : <ExpandMoreIcon />}
               size="large"
             >
               더 보기

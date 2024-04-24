@@ -29,12 +29,13 @@ import ProductionCards from './_components/ProductionCards';
 import ActionButton from '@/components/ui/button/ActionButton';
 import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFile';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
+import { ProductHeaderList } from './constants';
 
 const BackDataPage = () => {
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
-  const uploadRef = useRef<null | HTMLInputElement>(null);
+  const [fileKey, setFileKey] = useState(new Date());
 
   const { refetch } = useProducts({
     keyword,
@@ -53,13 +54,14 @@ const BackDataPage = () => {
       {
         onSuccess: () => {
           snackMessage({ message: '제품 업로드가 완료되었습니다.', severity: 'success' });
-          if (uploadRef.current) uploadRef.current.value = '';
           refetch();
         },
         onError: (error) => {
           const message = error.response?.data.message;
           snackMessage({ message: message ?? '제품 업로드가 실패하였습니다.', severity: 'error' });
-          if (uploadRef.current) uploadRef.current.value = '';
+        },
+        onSettled: () => {
+          setFileKey(new Date());
         },
       }
     );
@@ -89,7 +91,7 @@ const BackDataPage = () => {
         <TableTitle title="제품 백데이터" />
         <Stack direction="row" alignItems="center" gap={2}>
           <UploadButton
-            inputRef={uploadRef}
+            fileKey={fileKey}
             loading={isPending}
             onChange={handleUploadExcelFile}
             text="제품 업로드"
@@ -144,14 +146,9 @@ const BackDataPage = () => {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <HeadCell text="코드" />
-              <HeadCell text="분류" />
-              <HeadCell text="바코드" />
-              <HeadCell text="이름" />
-              <HeadCell text="원가" />
-              <HeadCell text="판매가" />
-              <HeadCell text="리드타임" />
-              <HeadCell text="" />
+              {ProductHeaderList.map((item, index) => (
+                <HeadCell key={`${index}_${item}`} text={item} />
+              ))}
             </TableRow>
           </TableHead>
           <ProductionTableBody keyword={delayKeyword} />

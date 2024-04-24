@@ -5,6 +5,7 @@ import ModalTitle from '@/components/ui/typograph/ModalTitle';
 import { getKCWFormat } from '@/util';
 import { Stack, Button } from '@mui/material';
 import BasePopover from '@/components/ui/modal/BasePopover';
+import { EMPTY } from '@/constants';
 
 interface Props {
   open: boolean;
@@ -31,12 +32,12 @@ const ProductDetailPopover: FC<Props> = ({
       <Stack>
         <LabelText label="코드" text={selectedProduct.code} />
         <LabelText label="이름" text={selectedProduct.name} />
-        <LabelText label="분류" text={selectedProduct.category?.name ?? ''} />
-        <LabelText label="바코드" text={selectedProduct.barCode ?? ''} />
-        <LabelText label="판매가" text={getKCWFormat(selectedProduct.salePrice)} />
-        <LabelText label="원가" text={getKCWFormat(selectedProduct.wonPrice)} />
-        <LabelText label="유지기간" text={selectedProduct.maintainDate ?? ''} />
-        <LabelText label="리드타임" text={selectedProduct.leadTime} />
+        <LabelText label="분류" text={selectedProduct.category?.name ?? EMPTY} />
+        <LabelText label="바코드" text={selectedProduct.barCode ?? EMPTY} />
+        <LabelText label="판매가" text={getKCWFormat(selectedProduct.salePrice) ?? EMPTY} />
+        <LabelText label="원가" text={getKCWFormat(selectedProduct.wonPrice) ?? EMPTY} />
+        <LabelText label="유지기간" text={selectedProduct.maintainDate ?? EMPTY} />
+        <LabelText label="리드타임" text={selectedProduct.leadTime ?? EMPTY} />
       </Stack>
       <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
         <Button color="error" variant="outlined" onClick={onClickDelete}>
