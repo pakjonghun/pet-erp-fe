@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Paper, Typography, Stack, Button, Box } from '@mui/material';
+import { Paper, Typography, Stack, Button } from '@mui/material';
 import { Category } from '@/http/graphql/codegen/graphql';
 import DeleteCategoryModal from './DeleteCategoryModal';
 import EditCategoryModal from './EditCategoryModal';
@@ -36,12 +36,15 @@ const CategoryCard: FC<Props> = ({ item: { _id, name } }) => {
       <DeleteCategoryModal open={openDelete} onClose={handleCloseDelete} item={{ _id, name }} />
       <EditCategoryModal open={openEdit} onClose={handleCloseEdit} item={{ _id, name }} />
       <Typography
-        variant="h6"
+        variant="body1"
         sx={{
           width: '100%',
           alignSelf: 'flex-start',
           textOverflow: 'ellipsis',
           overflow: 'hidden',
+          fontWeight: 500,
+          p: 1,
+          mb: 1,
         }}
         title={name ?? ''}
       >

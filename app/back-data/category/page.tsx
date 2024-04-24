@@ -149,7 +149,7 @@ const CategoryPage = () => {
       <Grid
         container
         spacing={2}
-        sx={{ p: 3, height: TABLE_MAX_HEIGHT, overflow: 'auto', placeContent: 'start' }}
+        sx={{ p: 2, height: TABLE_MAX_HEIGHT, overflow: 'auto', placeContent: 'start' }}
       >
         {isEmpty && (
           <Typography sx={{ ml: 2 }} variant="body1">

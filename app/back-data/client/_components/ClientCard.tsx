@@ -1,10 +1,10 @@
 import { Box, IconButton, Menu, Paper, Stack } from '@mui/material';
 import React, { FC, MouseEvent, useState } from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { SelectedOptionItem } from '@/constants';
+import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { Client, Product } from '@/http/graphql/codegen/graphql';
+import { Client } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
 import { SelectOption } from '../../types';
@@ -58,7 +58,7 @@ const ClientCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow })
             <LabelText label="이름" text={client.name} />
           </Box>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="상호" text={client.businessName} />
+            <LabelText label="상호" text={client.businessName ?? EMPTY} />
           </Box>
         </Stack>
 
@@ -72,19 +72,22 @@ const ClientCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow })
         </Stack>
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="수수료율" text={(client.feeRate ?? 0) * 100 + '%'} />
+            <LabelText
+              label="수수료율"
+              text={client.feeRate == null ? EMPTY : client.feeRate * 100 + '%'}
+            />
           </Box>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="분류" text={client.clientType ?? ''} />
+            <LabelText label="분류" text={client.clientType ?? EMPTY} />
           </Box>
         </Stack>
 
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="담당자" text={client.manager ?? ''} />
+            <LabelText label="담당자" text={client.manager ?? EMPTY} />
           </Box>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="연락처" text={client.clientType ?? ''} />
+            <LabelText label="연락처" text={client.clientType ?? EMPTY} />
           </Box>
         </Stack>
       </Box>

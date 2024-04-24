@@ -1,6 +1,5 @@
-import { FC, useEffect, useState } from 'react';
-import { Client, Product } from '@/http/graphql/codegen/graphql';
-import { useProducts } from '@/http/graphql/hooks/product/useProducts';
+import { FC, useState } from 'react';
+import { Client } from '@/http/graphql/codegen/graphql';
 import { LIMIT } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { TableBody } from '@mui/material';
@@ -10,6 +9,8 @@ import RemoveClientModal from './RemoveClientModal';
 import ClientDetailPopover from './ClientDetailPopover';
 import { SelectOption } from '../../types';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
+import LoadingRow from '@/components/table/LoadingRow';
+import { ClientHeaderList } from '../constants';
 
 interface Props {
   keyword: string;
@@ -27,6 +28,7 @@ const ClientTableBody: FC<Props> = ({ keyword }) => {
   });
 
   const rows = data?.clients.data ?? [];
+  const isLoading = networkStatus == 3 || networkStatus == 1;
 
   const handleClickOption = (option: SelectOption | null, client: Client | null) => {
     setSelectedClient(client);
@@ -35,19 +37,19 @@ const ClientTableBody: FC<Props> = ({ keyword }) => {
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
-      if (networkStatus != 3 && networkStatus != 1) {
-        const totalCount = data?.clients.totalCount;
-        if (totalCount != null && totalCount > rows.length) {
-          fetchMore({
-            variables: {
-              clientsInput: {
-                keyword,
-                skip: rows.length,
-                limit: LIMIT,
-              },
+      if (isLoading) return;
+
+      const totalCount = data?.clients.totalCount;
+      if (totalCount != null && totalCount > rows.length) {
+        fetchMore({
+          variables: {
+            clientsInput: {
+              keyword,
+              skip: rows.length,
+              limit: LIMIT,
             },
-          });
-        }
+          },
+        });
       }
     }
   };
@@ -65,7 +67,7 @@ const ClientTableBody: FC<Props> = ({ keyword }) => {
   const handleClosePopover = () => setPopoverAnchor(null);
 
   const scrollRef = useInfinityScroll({ callback });
-  const isEmpty = rows.length === 0;
+  const isEmpty = !isLoading && rows.length === 0;
 
   return (
     <TableBody>
@@ -95,7 +97,7 @@ const ClientTableBody: FC<Props> = ({ keyword }) => {
           selectedClient={selectedClient}
         />
       )}
-      <EmptyRow colSpan={6} isEmpty={isEmpty} />
+      <EmptyRow colSpan={ClientHeaderList.length} isEmpty={isEmpty} />
       {rows.map((item, index) => {
         const client = item as unknown as Client;
         const isLast = index === rows.length - 1;
@@ -113,6 +115,7 @@ const ClientTableBody: FC<Props> = ({ keyword }) => {
           />
         );
       })}
+      <LoadingRow isLoading={isLoading} colSpan={ClientHeaderList.length} />
     </TableBody>
   );
 };

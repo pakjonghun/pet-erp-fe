@@ -10,7 +10,7 @@ import EditProductModal from './EditProductModal';
 import ProductDetailPopover from './ProductDetailPopover';
 import EmptyItem from '@/components/ui/listItem/EmptyItem';
 import ProductCard from './ProductCard';
-import LoadingCard from './LoadingCard';
+import LoadingCard from '../../../components/ui/loading/LoadingCard';
 
 interface Props {
   keyword: string;

@@ -1,5 +1,6 @@
 import { CircularProgress, Collapse, TableCell, TableRow } from '@mui/material';
 import { FC } from 'react';
+import CommonLoading from '../ui/loading/CommonLoading';
 
 interface Props {
   isLoading: boolean;
@@ -10,7 +11,7 @@ const LoadingRow: FC<Props> = ({ isLoading, colSpan }) => {
   return (
     <TableRow>
       <TableCell align="center" colSpan={colSpan}>
-        <Collapse in={isLoading}>{<CircularProgress />}</Collapse>
+        <Collapse in={isLoading}>{<CommonLoading />}</Collapse>
       </TableCell>
     </TableRow>
   );

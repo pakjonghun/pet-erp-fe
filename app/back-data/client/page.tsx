@@ -29,12 +29,13 @@ import ClientCards from './_components/ClientCards';
 import ActionButton from '@/components/ui/button/ActionButton';
 import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFile';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
+import { ClientHeaderList } from './constants';
 
 const BackDataPage = () => {
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
-  const uploadRef = useRef<null | HTMLInputElement>(null);
+  const [fileKey, setFileKey] = useState(new Date());
 
   const { refetch } = useProducts({
     keyword,
@@ -53,7 +54,6 @@ const BackDataPage = () => {
       {
         onSuccess: () => {
           snackMessage({ message: '거래처 업로드가 완료되었습니다.', severity: 'success' });
-          if (uploadRef.current) uploadRef.current.value = '';
           refetch();
         },
         onError: (error) => {
@@ -62,7 +62,9 @@ const BackDataPage = () => {
             message: message ?? '거래처 업로드가 실패하였습니다.',
             severity: 'error',
           });
-          if (uploadRef.current) uploadRef.current.value = '';
+        },
+        onSettled: () => {
+          setFileKey(new Date());
         },
       }
     );
@@ -95,7 +97,7 @@ const BackDataPage = () => {
         <TableTitle title="거래처 백데이터" />
         <Stack direction="row" alignItems="center" gap={2}>
           <UploadButton
-            inputRef={uploadRef}
+            fileKey={fileKey}
             loading={isPending}
             onChange={handleUploadExcelFile}
             text="거래처 업로드"
@@ -150,15 +152,9 @@ const BackDataPage = () => {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <HeadCell text="쇼핑몰명" />
-              <HeadCell text="상호" />
-              <HeadCell text="코드" />
-              <HeadCell text="수수료율" />
-              <HeadCell text="분류" />
-              <HeadCell text="결제일" />
-              <HeadCell text="담당자" />
-              <HeadCell text="연락처" />
-              <HeadCell text="거래여부" />
+              {ClientHeaderList.map((item, index) => (
+                <HeadCell key={`${item}_${index}`} text={item} />
+              ))}
             </TableRow>
           </TableHead>
           <ClientTableBody keyword={delayKeyword} />

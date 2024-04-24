@@ -9,6 +9,7 @@ import EmptyItem from '@/components/ui/listItem/EmptyItem';
 import ClientCard from './ClientCard';
 import { SelectOption } from '../../types';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
+import LoadingCard from '../../../../components/ui/loading/LoadingCard';
 
 interface Props {
   keyword: string;
@@ -20,13 +21,14 @@ const ClientCards: FC<Props> = ({ keyword, sx }) => {
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
   const [selectedClient, setSelectedClient] = useState<null | Client>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
-  const { data, networkStatus, fetchMore, refetch } = useClients({
+  const { data, networkStatus, fetchMore } = useClients({
     keyword,
     skip: 0,
     limit: LIMIT,
   });
 
   const rows = data?.clients.data ?? [];
+  const isLoading = networkStatus == 3 || networkStatus == 1;
 
   const handleClickOption = (option: SelectOption | null, client: Client | null) => {
     setSelectedClient(client);
@@ -35,19 +37,19 @@ const ClientCards: FC<Props> = ({ keyword, sx }) => {
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
-      if (networkStatus != 3 && networkStatus != 1) {
-        const totalCount = data?.clients.totalCount;
-        if (totalCount != null && totalCount > rows.length) {
-          fetchMore({
-            variables: {
-              clientsInput: {
-                keyword,
-                skip: rows.length,
-                limit: LIMIT,
-              },
+      if (isLoading) return;
+
+      const totalCount = data?.clients.totalCount;
+      if (totalCount != null && totalCount > rows.length) {
+        fetchMore({
+          variables: {
+            clientsInput: {
+              keyword,
+              skip: rows.length,
+              limit: LIMIT,
             },
-          });
-        }
+          },
+        });
       }
     }
   };
@@ -65,7 +67,7 @@ const ClientCards: FC<Props> = ({ keyword, sx }) => {
   const handleClosePopover = () => setPopoverAnchor(null);
 
   const scrollRef = useInfinityScroll({ callback });
-  const isEmpty = rows.length === 0;
+  const isEmpty = !isLoading && rows.length === 0;
 
   return (
     <Grid
@@ -123,6 +125,7 @@ const ClientCards: FC<Props> = ({ keyword, sx }) => {
           </Grid>
         );
       })}
+      <LoadingCard isLoading={isLoading} />
     </Grid>
   );
 };
