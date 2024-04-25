@@ -1,3 +1,4 @@
+import { FC, useEffect, useState } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
   AutocompleteRenderInputParams,
@@ -9,32 +10,32 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { CreateProductForm, createProductSchema } from '../_validations/createProductValidation';
+import {
+  CreateProductForm,
+  createProductSchema,
+} from '@/app/back-data/product/_validations/createProductValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
+import { useCreateProduct } from '@/http/graphql/hooks/product/useCreateProduct';
 import { useFindManyCategory } from '@/http/graphql/hooks/category/useFindCategories';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT, PRODUCT_PREFIX } from '@/constants';
 import { SelectItem } from '@/components/ui/select/SearchAutoComplete';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
-import { useUpdateProduct } from '@/http/graphql/hooks/product/useUpdateProduct';
-import { Product } from '@/http/graphql/codegen/graphql';
 import { modalSizeProps } from '@/components/commonStyles';
-import { emptyValueToNull } from '@/util';
+import { filterEmptyValues } from '@/util';
 import NumberInput from '@/components/ui/input/NumberInput';
 
 interface Props {
-  selectedProduct: Product;
   open: boolean;
   onClose: () => void;
 }
 
-const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
-  const [updateProduct, { loading }] = useUpdateProduct();
+const CreateProductModal: FC<Props> = ({ open, onClose }) => {
+  const [createProduct, { loading }] = useCreateProduct();
 
   const {
     reset,
@@ -46,14 +47,9 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
   } = useForm<CreateProductForm>({
     resolver: zodResolver(createProductSchema),
     defaultValues: {
-      barCode: selectedProduct.barCode ?? '',
-      category: selectedProduct.category?.name as string,
-      code: selectedProduct.code,
-      leadTime: selectedProduct.leadTime,
-      maintainDate: selectedProduct.maintainDate,
-      name: selectedProduct.name,
-      salePrice: selectedProduct.salePrice,
-      wonPrice: selectedProduct.wonPrice,
+      code: '',
+      name: '',
+      barCode: '',
     },
   });
 
@@ -101,22 +97,21 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
     refetch();
   }, [delayedCategoryKeyword, refetch]);
   const onSubmit = (values: CreateProductForm) => {
-    const { code, ...newValues } = emptyValueToNull(values) as CreateProductForm;
-    updateProduct({
+    const newValues = filterEmptyValues(values) as CreateProductForm;
+    createProduct({
       variables: {
-        updateProductInput: {
+        createProductInput: {
           ...newValues,
-          _id: selectedProduct._id,
           category: category?._id,
         },
       },
       onCompleted: () => {
-        snackMessage({ message: '제품편집이 완료되었습니다.', severity: 'success' });
+        snackMessage({ message: '제품등록이 완료되었습니다.', severity: 'success' });
         handleClose();
       },
       onError: (err) => {
         const message = err.message;
-        snackMessage({ message: message ?? '제품편집이 실패했습니다.', severity: 'error' });
+        snackMessage({ message: message ?? '제품등록이 실패했습니다.', severity: 'error' });
       },
     });
   };
@@ -129,21 +124,21 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        제품 편집
+        제품 입력
       </Typography>
-      <Typography sx={{ mb: 3 }}>제품을 편집합니다.</Typography>
+      <Typography sx={{ mb: 3 }}>새로운 제품을 입력합니다.</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={modalSizeProps}>
           <Controller
             control={control}
             name="code"
             render={({ field }) => (
-              <FormControl>
+              <FormControl required>
                 <TextField
                   {...field}
-                  disabled
                   size="small"
-                  label="제품코드(수정불가)"
+                  required
+                  label="제품코드"
                   error={!!errors.code?.message}
                   helperText={errors.code?.message ?? ''}
                   InputProps={{
@@ -213,7 +208,7 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
             render={({ field }) => (
               <NumberInput
                 field={field}
-                label="최소 유지기간(일)"
+                label="최소 유지기간(날짜)"
                 error={!!errors.maintainDate?.message}
                 helperText={errors.maintainDate?.message ?? ''}
               />
@@ -270,7 +265,7 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
             취소
           </Button>
           <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
-            편집
+            생성
           </Button>
         </Stack>
       </form>
@@ -278,4 +273,4 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
   );
 };
 
-export default EditProductModal;
+export default CreateProductModal;

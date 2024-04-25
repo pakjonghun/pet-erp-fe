@@ -3,12 +3,13 @@ import Cell from '@/components/table/Cell';
 import { IconButton, Menu, TableRow } from '@mui/material';
 import { getKCWFormat } from '@/util';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { SelectOption } from '../types';
+
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { Product } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
+import { SelectOption } from '../../types';
 
 interface Props {
   product: Product;

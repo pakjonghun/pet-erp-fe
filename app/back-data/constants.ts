@@ -1,9 +1,9 @@
 export const BackDataTabs = {
-  'back-data': {
-    label: '제품',
-  },
   'back-data/category': {
     label: '제품분류',
+  },
+  'back-data/product': {
+    label: '제품',
   },
   'back-data/client': {
     label: '거래처',

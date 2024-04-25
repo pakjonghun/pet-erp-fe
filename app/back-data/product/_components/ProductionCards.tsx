@@ -4,13 +4,13 @@ import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import { LIMIT, TABLE_MAX_HEIGHT } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Grid, SxProps } from '@mui/material';
-import { SelectOption } from '../types';
+import { SelectOption } from '../../types';
 import RemoveProductModal from './RemoveProductModal';
 import EditProductModal from './EditProductModal';
 import ProductDetailPopover from './ProductDetailPopover';
 import EmptyItem from '@/components/ui/listItem/EmptyItem';
 import ProductCard from './ProductCard';
-import LoadingCard from '../../../components/ui/loading/LoadingCard';
+import LoadingCard from '@/components/ui/loading/LoadingCard';
 
 interface Props {
   keyword: string;

@@ -6,7 +6,7 @@ import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { TableBody } from '@mui/material';
 import EmptyRow from '@/components/table/EmptyRow';
 import ProductBodyRow from './ProductBodyRow';
-import { SelectOption } from '../types';
+import { SelectOption } from '../../types';
 import RemoveProductModal from './RemoveProductModal';
 import EditProductModal from './EditProductModal';
 import ProductDetailPopover from './ProductDetailPopover';
