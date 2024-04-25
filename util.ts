@@ -60,8 +60,17 @@ export const merge = (existing = { totalCount: 0, data: [] }, incoming: any, { a
 export const filterEmptyValues = (values: object) => {
   const parsedValues = Object.entries(values).filter(([k, v]) => {
     const result = typeof v == 'string' ? !!v.trim() : v != null;
-    console.log(k, v, result);
     return result;
+  });
+
+  const newValues = Object.fromEntries(parsedValues);
+  return newValues;
+};
+
+export const emptyValueToNull = (values: object) => {
+  const parsedValues = Object.entries(values).map(([k, v]) => {
+    const isFilled = typeof v == 'string' ? !!v.trim() : v != null;
+    return [k, isFilled ? v : null];
   });
 
   const newValues = Object.fromEntries(parsedValues);

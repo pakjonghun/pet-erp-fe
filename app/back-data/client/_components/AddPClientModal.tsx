@@ -23,6 +23,7 @@ import { ClientType } from '@/http/graphql/codegen/graphql';
 import { filterEmptyValues } from '@/util';
 import { clientTypes } from '../constants';
 import NumberInput from '@/components/ui/input/NumberInput';
+import { CLIENT_PREFIX } from '@/constants';
 
 interface Props {
   open: boolean;
@@ -57,7 +58,7 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
       variables: {
         createClientInput: {
           ...newValues,
-          feeRate: (Number(values.feeRate) ?? 0) % 100,
+          feeRate: values.feeRate == null ? null : values.feeRate / 100,
         },
       },
       onCompleted: () => {
@@ -119,7 +120,9 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
                   error={!!errors.code?.message}
                   helperText={errors.code?.message ?? ''}
                   InputProps={{
-                    startAdornment: <InputAdornment position="start">c - </InputAdornment>,
+                    startAdornment: (
+                      <InputAdornment position="start">{`${CLIENT_PREFIX} - `}</InputAdornment>
+                    ),
                   }}
                 />
               </FormControl>

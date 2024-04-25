@@ -12,7 +12,6 @@ interface Props {
 }
 
 const NumberInput: FC<Props> = ({ label, field, error = false, helperText = '', endAdornment }) => {
-  console.log(field.value);
   return (
     <TextField
       size="small"
@@ -22,7 +21,7 @@ const NumberInput: FC<Props> = ({ label, field, error = false, helperText = '', 
       onChange={(event) => {
         const isEmpty = event.target.value == null || event.target.value === '';
         if (isEmpty) {
-          field.onChange(undefined);
+          field.onChange(null);
           return;
         }
 

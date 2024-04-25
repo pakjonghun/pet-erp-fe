@@ -10,6 +10,7 @@ import ClientCard from './ClientCard';
 import { SelectOption } from '../../types';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
 import LoadingCard from '../../../../components/ui/loading/LoadingCard';
+import EditPClientModal from './EditPClientModal';
 
 interface Props {
   keyword: string;
@@ -88,13 +89,13 @@ const ClientCards: FC<Props> = ({ keyword, sx }) => {
           selectedClient={selectedClient}
         />
       )}
-      {/* {selectedClient && (
-        <EditClientModal
+      {selectedClient && (
+        <EditPClientModal
           open={optionType === 'edit'}
           onClose={() => handleClickOption(null, null)}
           selectedClient={selectedClient}
         />
-      )} */}
+      )}
       {selectedClient && (
         <ClientDetailPopover
           onClose={handleClosePopover}

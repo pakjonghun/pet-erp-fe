@@ -10,3 +10,6 @@ export type SelectedOptionItem = {
   label: string;
   callback: () => void;
 };
+
+export const PRODUCT_PREFIX = 'P';
+export const CLIENT_PREFIX = 'C';

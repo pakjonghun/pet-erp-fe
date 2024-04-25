@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
   Autocomplete,
@@ -11,18 +12,18 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FC } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { CreateClientForm, createClientSchema } from '../_validations/createClientValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { modalSizeProps } from '@/components/commonStyles';
-import { useCreateClient } from '@/http/graphql/hooks/client/useCreateClient';
 import { Client, ClientType } from '@/http/graphql/codegen/graphql';
-import { filterEmptyValues } from '@/util';
+import { emptyValueToNull, filterEmptyValues } from '@/util';
 import { clientTypes } from '../constants';
 import { useUpdateClient } from '@/http/graphql/hooks/client/useEditClient';
+import NumberInput from '@/components/ui/input/NumberInput';
+import { CLIENT_PREFIX } from '@/constants';
 
 interface Props {
   open: boolean;
@@ -43,25 +44,25 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
     defaultValues: {
       code: selectedClient.code,
       name: selectedClient.name,
-      feeRate: selectedClient.feeRate ?? 0,
-      clientType: selectedClient.clientType,
+      feeRate: selectedClient.feeRate == null ? undefined : selectedClient.feeRate * 100,
+      clientType: selectedClient.clientType ?? '',
       businessName: selectedClient.businessName ?? '',
       businessNumber: selectedClient.businessNumber ?? '',
-      payDate: selectedClient.payDate ?? 0,
+      payDate: selectedClient.payDate,
       manager: selectedClient.manager ?? '',
       managerTel: selectedClient.managerTel ?? '',
-      inActive: selectedClient.inActive ?? true,
+      inActive: !!selectedClient.inActive,
     },
   });
 
   const onSubmit = (values: CreateClientForm) => {
-    const newValues = filterEmptyValues(values) as CreateClientForm;
+    const { code, ...newValues } = emptyValueToNull(values) as CreateClientForm;
     editClient({
       variables: {
         updateClientInput: {
           ...newValues,
           _id: selectedClient._id,
-          feeRate: (Number(values.feeRate) ?? 0) % 100,
+          feeRate: newValues.feeRate == null ? null : Number(newValues.feeRate) / 100,
         },
       },
       onCompleted: () => {
@@ -114,17 +115,18 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
             control={control}
             name="code"
             render={({ field }) => (
-              <FormControl required>
+              <FormControl>
                 <TextField
                   disabled
                   {...field}
                   size="small"
-                  required
-                  label="거래처코드"
+                  label="거래처코드(편집불가)"
                   error={!!errors.code?.message}
                   helperText={errors.code?.message ?? ''}
                   InputProps={{
-                    startAdornment: <InputAdornment position="start">c - </InputAdornment>,
+                    startAdornment: (
+                      <InputAdornment position="start">{`${CLIENT_PREFIX} - `}</InputAdornment>
+                    ),
                   }}
                 />
               </FormControl>
@@ -151,17 +153,12 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
             name="feeRate"
             render={({ field }) => (
               <FormControl>
-                <TextField
-                  InputProps={{
-                    endAdornment: <InputAdornment position="end">%</InputAdornment>,
-                  }}
-                  size="small"
-                  {...field}
-                  onChange={(event) => field.onChange(Number(event.target.value))}
-                  type="number"
+                <NumberInput
+                  field={field}
                   label="수수료 비율(0~100사이 숫자)"
                   error={!!errors.feeRate?.message}
                   helperText={errors.feeRate?.message ?? ''}
+                  endAdornment={<InputAdornment position="end">%</InputAdornment>}
                 />
               </FormControl>
             )}
@@ -229,11 +226,8 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
             control={control}
             name="payDate"
             render={({ field }) => (
-              <TextField
-                type="number"
-                size="small"
-                {...field}
-                onChange={(event) => field.onChange(Number(event.target.value))}
+              <NumberInput
+                field={field}
                 label="결제일(매달 결제할 날짜(1~31사이 값을 입력)"
                 error={!!errors.payDate?.message}
                 helperText={errors.payDate?.message ?? ''}

@@ -17,7 +17,7 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { useFindManyCategory } from '@/http/graphql/hooks/category/useFindCategories';
 import useTextDebounce from '@/hooks/useTextDebounce';
-import { LIMIT } from '@/constants';
+import { LIMIT, PRODUCT_PREFIX } from '@/constants';
 import { SelectItem } from '@/components/ui/select/SearchAutoComplete';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
@@ -146,7 +146,9 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
                   error={!!errors.code?.message}
                   helperText={errors.code?.message ?? ''}
                   InputProps={{
-                    startAdornment: <InputAdornment position="start">p - </InputAdornment>,
+                    startAdornment: (
+                      <InputAdornment position="start">{`${PRODUCT_PREFIX} - `}</InputAdornment>
+                    ),
                   }}
                 />
               </FormControl>

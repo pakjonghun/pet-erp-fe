@@ -11,6 +11,7 @@ import { SelectOption } from '../../types';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
 import LoadingRow from '@/components/table/LoadingRow';
 import { ClientHeaderList } from '../constants';
+import EditPClientModal from './EditPClientModal';
 
 interface Props {
   keyword: string;
@@ -79,13 +80,13 @@ const ClientTableBody: FC<Props> = ({ keyword }) => {
         />
       )}
 
-      {/* {selectedClient && (
-        <EditClientModal
+      {selectedClient && (
+        <EditPClientModal
           open={optionType === 'edit'}
           onClose={() => handleClickOption(null, null)}
           selectedClient={selectedClient}
         />
-      )} */}
+      )}
       {selectedClient && (
         <ClientDetailPopover
           onClose={handleClosePopover}
