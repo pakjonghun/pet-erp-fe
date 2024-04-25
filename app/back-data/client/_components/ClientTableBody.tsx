@@ -1,58 +1,26 @@
 import { FC, useState } from 'react';
 import { Client } from '@/http/graphql/codegen/graphql';
-import { LIMIT } from '@/constants';
-import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { TableBody } from '@mui/material';
 import EmptyRow from '@/components/table/EmptyRow';
 import ClientBodyRow from './ClientBodyRow';
 import RemoveClientModal from './RemoveClientModal';
 import ClientDetailPopover from './ClientDetailPopover';
-import { SelectOption } from '../../types';
-import { useClients } from '@/http/graphql/hooks/client/useClients';
+import { CommonListProps, SelectOption } from '../../types';
 import LoadingRow from '@/components/table/LoadingRow';
 import { ClientHeaderList } from '../constants';
 import EditPClientModal from './EditPClientModal';
 
-interface Props {
-  keyword: string;
-}
+interface Props extends CommonListProps<Client> {}
 
-const ClientTableBody: FC<Props> = ({ keyword }) => {
+const ClientTableBody: FC<Props> = ({ isLoading, isEmpty, data, scrollRef }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
   const [selectedClient, setSelectedClient] = useState<null | Client>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
-  const { data, networkStatus, fetchMore, refetch } = useClients({
-    keyword,
-    skip: 0,
-    limit: LIMIT,
-  });
-
-  const rows = data?.clients.data ?? [];
-  const isLoading = networkStatus == 3 || networkStatus == 1;
 
   const handleClickOption = (option: SelectOption | null, client: Client | null) => {
     setSelectedClient(client);
     setOptionType(option);
-  };
-
-  const callback: IntersectionObserverCallback = (entries) => {
-    if (entries[0].isIntersecting) {
-      if (isLoading) return;
-
-      const totalCount = data?.clients.totalCount;
-      if (totalCount != null && totalCount > rows.length) {
-        fetchMore({
-          variables: {
-            clientsInput: {
-              keyword,
-              skip: rows.length,
-              limit: LIMIT,
-            },
-          },
-        });
-      }
-    }
   };
 
   const handleClickEdit = () => {
@@ -66,9 +34,6 @@ const ClientTableBody: FC<Props> = ({ keyword }) => {
   };
 
   const handleClosePopover = () => setPopoverAnchor(null);
-
-  const scrollRef = useInfinityScroll({ callback });
-  const isEmpty = !isLoading && rows.length === 0;
 
   return (
     <TableBody>
@@ -99,9 +64,9 @@ const ClientTableBody: FC<Props> = ({ keyword }) => {
         />
       )}
       <EmptyRow colSpan={ClientHeaderList.length} isEmpty={isEmpty} />
-      {rows.map((item, index) => {
+      {data.map((item, index) => {
         const client = item as unknown as Client;
-        const isLast = index === rows.length - 1;
+        const isLast = index === data.length - 1;
         return (
           <ClientBodyRow
             onClickRow={(event, client: Client) => {

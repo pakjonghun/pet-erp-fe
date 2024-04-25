@@ -1,59 +1,26 @@
 import { FC, useState } from 'react';
 import { Product } from '@/http/graphql/codegen/graphql';
-import { useProducts } from '@/http/graphql/hooks/product/useProducts';
-import { LIMIT } from '@/constants';
-import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { TableBody } from '@mui/material';
 import EmptyRow from '@/components/table/EmptyRow';
 import ProductBodyRow from './ProductBodyRow';
-import { SelectOption } from '../../types';
+import { CommonListProps, SelectOption } from '../../types';
 import RemoveProductModal from './RemoveProductModal';
 import EditProductModal from './EditProductModal';
 import ProductDetailPopover from './ProductDetailPopover';
 import LoadingRow from '@/components/table/LoadingRow';
 import { ProductHeaderList } from '../constants';
 
-interface Props {
-  keyword: string;
-}
+interface Props extends CommonListProps<Product> {}
 
-const ProductionTableBody: FC<Props> = ({ keyword }) => {
+const ProductionTableBody: FC<Props> = ({ data, isLoading, isEmpty, scrollRef }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
   const [selectedProduct, setSelectedProduct] = useState<null | Product>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
-  const { data, networkStatus, fetchMore } = useProducts({
-    keyword,
-    skip: 0,
-    limit: LIMIT,
-  });
-
-  const rows = data?.products.data ?? [];
 
   const handleClickOption = (option: SelectOption | null, product: Product | null) => {
     setSelectedProduct(product);
     setOptionType(option);
-  };
-
-  const isLoading = networkStatus == 3 || networkStatus == 1;
-
-  const callback: IntersectionObserverCallback = (entries) => {
-    if (entries[0].isIntersecting) {
-      if (isLoading) return;
-
-      const totalCount = data?.products.totalCount;
-      if (totalCount != null && totalCount > rows.length) {
-        fetchMore({
-          variables: {
-            productsInput: {
-              keyword,
-              skip: rows.length,
-              limit: LIMIT,
-            },
-          },
-        });
-      }
-    }
   };
 
   const handleClickEdit = () => {
@@ -67,9 +34,6 @@ const ProductionTableBody: FC<Props> = ({ keyword }) => {
   };
 
   const handleClosePopover = () => setPopoverAnchor(null);
-
-  const scrollRef = useInfinityScroll({ callback });
-  const isEmpty = !isLoading && rows.length === 0;
 
   return (
     <TableBody>
@@ -100,9 +64,9 @@ const ProductionTableBody: FC<Props> = ({ keyword }) => {
         />
       )}
       <EmptyRow colSpan={ProductHeaderList.length} isEmpty={isEmpty} />
-      {rows.map((item, index) => {
+      {data.map((item, index) => {
         const product = item as unknown as Product;
-        const isLast = index === rows.length - 1;
+        const isLast = index === data.length - 1;
         return (
           <ProductBodyRow
             onClickRow={(event, product: Product) => {

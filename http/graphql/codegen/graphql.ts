@@ -261,8 +261,8 @@ export type Product = {
   leadTime?: Maybe<Scalars['Int']['output']>;
   maintainDate?: Maybe<Scalars['Int']['output']>;
   name: Scalars['String']['output'];
-  salePrice: Scalars['Int']['output'];
-  wonPrice: Scalars['Int']['output'];
+  salePrice?: Maybe<Scalars['Int']['output']>;
+  wonPrice?: Maybe<Scalars['Int']['output']>;
 };
 
 export type ProductSaleChartOutput = {
@@ -283,11 +283,11 @@ export type ProductSaleData = {
   leadTime?: Maybe<Scalars['Int']['output']>;
   maintainDate?: Maybe<Scalars['Int']['output']>;
   name: Scalars['String']['output'];
-  salePrice: Scalars['Int']['output'];
+  salePrice?: Maybe<Scalars['Int']['output']>;
   thisMonth?: Maybe<SaleInfo>;
   thisWeek?: Maybe<SaleInfo>;
   today?: Maybe<SaleInfo>;
-  wonPrice: Scalars['Int']['output'];
+  wonPrice?: Maybe<Scalars['Int']['output']>;
 };
 
 export type ProductSaleInput = {
@@ -486,7 +486,7 @@ export type CategoryFragmentFragment = { __typename?: 'Category', _id?: string |
 
 export type UserFragmentFragment = { __typename?: 'User', id: string, role: UserRole, createdAt: any } & { ' $fragmentName'?: 'UserFragmentFragment' };
 
-export type ProductFragmentFragment = { __typename?: 'Product', _id: string, code: string, barCode?: string | null, name: string, wonPrice: number, salePrice: number, leadTime?: number | null, maintainDate?: number | null, category?: (
+export type ProductFragmentFragment = { __typename?: 'Product', _id: string, code: string, barCode?: string | null, name: string, wonPrice?: number | null, salePrice?: number | null, leadTime?: number | null, maintainDate?: number | null, category?: (
     { __typename?: 'Category' }
     & { ' $fragmentRefs'?: { 'CategoryFragmentFragment': CategoryFragmentFragment } }
   ) | null } & { ' $fragmentName'?: 'ProductFragmentFragment' };

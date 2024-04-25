@@ -14,9 +14,10 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Typography,
 } from '@mui/material';
 import { PlusOneOutlined, Search } from '@mui/icons-material';
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import CreateProductModal from './_components/AddProductModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import ProductionTableBody from './_components/ProductionTableBody';
@@ -30,6 +31,8 @@ import ActionButton from '@/components/ui/button/ActionButton';
 import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFile';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { ProductHeaderList } from './constants';
+import useInfinityScroll from '@/hooks/useInfinityScroll';
+import { Product } from '@/http/graphql/codegen/graphql';
 
 const BackDataPage = () => {
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
@@ -37,11 +40,34 @@ const BackDataPage = () => {
   const delayKeyword = useTextDebounce(keyword);
   const [fileKey, setFileKey] = useState(new Date());
 
-  const { refetch } = useProducts({
-    keyword,
+  const { data, networkStatus, fetchMore, refetch } = useProducts({
+    keyword: delayKeyword,
     skip: 0,
     limit: LIMIT,
   });
+  const rows = (data?.products.data as Product[]) ?? [];
+  const isLoading = networkStatus == 3 || networkStatus == 1;
+  const isEmpty = !isLoading && rows.length === 0;
+
+  const callback: IntersectionObserverCallback = (entries) => {
+    if (entries[0].isIntersecting) {
+      if (isLoading) return;
+
+      const totalCount = data?.products.totalCount;
+      if (totalCount != null && totalCount > rows.length) {
+        fetchMore({
+          variables: {
+            productsInput: {
+              keyword,
+              skip: rows.length,
+              limit: LIMIT,
+            },
+          },
+        });
+      }
+    }
+  };
+  const scrollRef = useInfinityScroll({ callback });
 
   const handleUploadExcelFile = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -126,6 +152,9 @@ const BackDataPage = () => {
           />
         </FormControl>
       </FormGroup>
+      <Typography sx={{ p: 3 }}>
+        {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
+      </Typography>
       <ProductionCards
         sx={{
           display: {
@@ -133,7 +162,10 @@ const BackDataPage = () => {
             md: 'none',
           },
         }}
-        keyword={delayKeyword}
+        isLoading={isLoading}
+        data={rows}
+        isEmpty={isEmpty}
+        scrollRef={scrollRef}
       />
       <ScrollTableContainer
         sx={{
@@ -151,7 +183,12 @@ const BackDataPage = () => {
               ))}
             </TableRow>
           </TableHead>
-          <ProductionTableBody keyword={delayKeyword} />
+          <ProductionTableBody
+            isLoading={isLoading}
+            data={rows}
+            isEmpty={isEmpty}
+            scrollRef={scrollRef}
+          />
         </Table>
       </ScrollTableContainer>
     </TablePage>

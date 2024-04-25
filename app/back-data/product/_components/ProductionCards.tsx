@@ -1,10 +1,8 @@
 import { FC, useState } from 'react';
 import { Product } from '@/http/graphql/codegen/graphql';
-import { useProducts } from '@/http/graphql/hooks/product/useProducts';
-import { LIMIT, TABLE_MAX_HEIGHT } from '@/constants';
-import useInfinityScroll from '@/hooks/useInfinityScroll';
+import { TABLE_MAX_HEIGHT } from '@/constants';
 import { Grid, SxProps } from '@mui/material';
-import { SelectOption } from '../../types';
+import { CommonListProps, SelectOption } from '../../types';
 import RemoveProductModal from './RemoveProductModal';
 import EditProductModal from './EditProductModal';
 import ProductDetailPopover from './ProductDetailPopover';
@@ -12,47 +10,19 @@ import EmptyItem from '@/components/ui/listItem/EmptyItem';
 import ProductCard from './ProductCard';
 import LoadingCard from '@/components/ui/loading/LoadingCard';
 
-interface Props {
-  keyword: string;
+interface Props extends CommonListProps<Product> {
   sx?: SxProps;
 }
 
-const ProductionCards: FC<Props> = ({ keyword, sx }) => {
+const ProductionCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
   const [selectedProduct, setSelectedProduct] = useState<null | Product>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
-  const { data, networkStatus, fetchMore } = useProducts({
-    keyword,
-    skip: 0,
-    limit: LIMIT,
-  });
-
-  const rows = data?.products.data ?? [];
 
   const handleClickOption = (option: SelectOption | null, product: Product | null) => {
     setSelectedProduct(product);
     setOptionType(option);
-  };
-
-  const isLoading = networkStatus == 3 || networkStatus == 1;
-  const callback: IntersectionObserverCallback = (entries) => {
-    if (entries[0].isIntersecting) {
-      if (isLoading) return;
-
-      const totalCount = data?.products.totalCount;
-      if (totalCount != null && totalCount > rows.length) {
-        fetchMore({
-          variables: {
-            productsInput: {
-              keyword,
-              skip: rows.length,
-              limit: LIMIT,
-            },
-          },
-        });
-      }
-    }
   };
 
   const handleClickEdit = () => {
@@ -66,9 +36,6 @@ const ProductionCards: FC<Props> = ({ keyword, sx }) => {
   };
 
   const handleClosePopover = () => setPopoverAnchor(null);
-
-  const scrollRef = useInfinityScroll({ callback });
-  const isEmpty = !isLoading && rows.length === 0;
 
   return (
     <Grid
@@ -108,9 +75,9 @@ const ProductionCards: FC<Props> = ({ keyword, sx }) => {
         />
       )}
 
-      {rows.map((item, index) => {
+      {data.map((item, index) => {
         const product = item as unknown as Product;
-        const isLast = index === rows.length - 1;
+        const isLast = index === data.length - 1;
         return (
           <Grid key={product._id} item xs={12} lg={6}>
             <ProductCard

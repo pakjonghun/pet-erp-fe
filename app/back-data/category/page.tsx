@@ -44,6 +44,7 @@ const CategoryPage = () => {
   const hasNext = totalCount != null && totalCount > rows.length;
   const isLoading = networkStatus == 1 || networkStatus == 3;
   const isEmpty = !isLoading && rows.length === 0;
+  const searchCount = rows.length;
 
   const getMoreCategory = () => {
     if (isLoading) return;
@@ -146,16 +147,14 @@ const CategoryPage = () => {
           />
         </FormControl>
       </FormGroup>
+      <Typography sx={{ p: 3, pt: 0 }} variant="body1">
+        {isEmpty ? '검색결과가 없습니다.' : `${searchCount}건의 데이터가 검색되었습니다.`}
+      </Typography>
       <Grid
         container
         spacing={2}
         sx={{ p: 2, height: TABLE_MAX_HEIGHT, overflow: 'auto', placeContent: 'start' }}
       >
-        {isEmpty && (
-          <Typography sx={{ ml: 2 }} variant="body1">
-            검색결과가 없습니다.
-          </Typography>
-        )}
         {rows.map((row) => (
           <Grid key={row._id} item xs={12} sm={4} md={3} lg={2}>
             <CategoryCard item={row} />

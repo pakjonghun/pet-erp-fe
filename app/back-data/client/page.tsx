@@ -14,6 +14,7 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Typography,
 } from '@mui/material';
 import { PlusOneOutlined, Search } from '@mui/icons-material';
 import { ChangeEvent, useState } from 'react';
@@ -23,7 +24,6 @@ import ClientTableBody from './_components/ClientTableBody';
 import { useUploadExcelFile } from '@/http/rest/hooks/file/useUploadExcelFile';
 import { snackMessage } from '@/store/snackMessage';
 import UploadButton from '@/components/ui/button/UploadButtont';
-import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import { LIMIT } from '@/constants';
 import ClientCards from './_components/ClientCards';
 import ActionButton from '@/components/ui/button/ActionButton';
@@ -31,6 +31,8 @@ import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFil
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { ClientHeaderList } from './constants';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
+import useInfinityScroll from '@/hooks/useInfinityScroll';
+import { Client } from '@/http/graphql/codegen/graphql';
 
 const BackDataPage = () => {
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
@@ -38,11 +40,35 @@ const BackDataPage = () => {
   const delayKeyword = useTextDebounce(keyword);
   const [fileKey, setFileKey] = useState(new Date());
 
-  const { refetch } = useClients({
-    keyword,
+  const { data, networkStatus, fetchMore, refetch } = useClients({
+    keyword: delayKeyword,
     skip: 0,
     limit: LIMIT,
   });
+
+  const rows = (data?.clients.data as Client[]) ?? [];
+  const isLoading = networkStatus == 3 || networkStatus == 1;
+
+  const callback: IntersectionObserverCallback = (entries) => {
+    if (entries[0].isIntersecting) {
+      if (isLoading) return;
+
+      const totalCount = data?.clients.totalCount;
+      if (totalCount != null && totalCount > rows.length) {
+        fetchMore({
+          variables: {
+            clientsInput: {
+              keyword,
+              skip: rows.length,
+              limit: LIMIT,
+            },
+          },
+        });
+      }
+    }
+  };
+  const scrollRef = useInfinityScroll({ callback });
+  const isEmpty = !isLoading && rows.length === 0;
 
   const handleUploadExcelFile = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -133,6 +159,9 @@ const BackDataPage = () => {
           />
         </FormControl>
       </FormGroup>
+      <Typography sx={{ p: 3 }}>
+        {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
+      </Typography>
       <ClientCards
         sx={{
           display: {
@@ -140,7 +169,10 @@ const BackDataPage = () => {
             md: 'none',
           },
         }}
-        keyword={delayKeyword}
+        data={rows}
+        isEmpty={isEmpty}
+        isLoading={isLoading}
+        scrollRef={scrollRef}
       />
       <ScrollTableContainer
         sx={{
@@ -158,7 +190,12 @@ const BackDataPage = () => {
               ))}
             </TableRow>
           </TableHead>
-          <ClientTableBody keyword={delayKeyword} />
+          <ClientTableBody
+            data={rows}
+            isEmpty={isEmpty}
+            isLoading={isLoading}
+            scrollRef={scrollRef}
+          />
         </Table>
       </ScrollTableContainer>
     </TablePage>

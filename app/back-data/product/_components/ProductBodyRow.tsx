@@ -3,7 +3,6 @@ import Cell from '@/components/table/Cell';
 import { IconButton, Menu, TableRow } from '@mui/material';
 import { getKCWFormat } from '@/util';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
@@ -45,8 +44,8 @@ const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickR
       product.category?.name ?? EMPTY,
       product.barCode ?? EMPTY,
       product.name,
-      getKCWFormat(product.wonPrice) ?? EMPTY,
-      getKCWFormat(product.salePrice) ?? EMPTY,
+      product.wonPrice == null ? EMPTY : getKCWFormat(product.wonPrice),
+      product.salePrice == null ? EMPTY : getKCWFormat(product.salePrice),
       product.leadTime ? `${product.leadTime}일` : EMPTY,
       product.maintainDate ? `${product.maintainDate}일` : EMPTY,
     ];
@@ -61,9 +60,9 @@ const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickR
           <OptionMenu key={option} menu={menu} option={option} />
         ))}
       </Menu>
-      {parsedRowData.map((item) => (
+      {parsedRowData.map((item, index) => (
         <Cell
-          key={`${product._id}_${item}`}
+          key={`${product._id}_${index}`}
           onClick={(event) => onClickRow(event, product)}
           sx={{ minWidth: 200 }}
         >
