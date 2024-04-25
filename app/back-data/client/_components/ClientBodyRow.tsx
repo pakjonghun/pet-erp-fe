@@ -8,6 +8,7 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { Client } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import { SelectOption } from '../../types';
+import { ClientTypeToHangle } from '../constants';
 
 interface Props {
   client: Client;
@@ -37,6 +38,22 @@ const ClientBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow
     },
   };
 
+  const createRow = (client: Client) => {
+    return [
+      client.name,
+      client.businessName ?? EMPTY,
+      client.code,
+      client.feeRate == null ? EMPTY : client.feeRate * 100 + '%',
+      ClientTypeToHangle[client.clientType],
+      client.payDate ?? EMPTY,
+      client.manager ?? EMPTY,
+      client.managerTel ?? EMPTY,
+      client.inActive ? '거래중' : '거래종료',
+    ];
+  };
+
+  const parsedClient = createRow(client);
+
   return (
     <TableRow hover ref={scrollRef}>
       <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
@@ -44,33 +61,16 @@ const ClientBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow
           <OptionMenu key={option} menu={menu} option={option} />
         ))}
       </Menu>
-      <Cell onClick={(event) => onClickRow(event, client)} sx={{ minWidth: 200 }}>
-        {client.name}
-      </Cell>
-      <Cell onClick={(event) => onClickRow(event, client)} sx={{ minWidth: 200 }}>
-        {client.businessName ?? EMPTY}
-      </Cell>
-      <Cell onClick={(event) => onClickRow(event, client)} sx={{ minWidth: 200 }}>
-        {client.code ?? ''}
-      </Cell>
-      <Cell onClick={(event) => onClickRow(event, client)} sx={{ minWidth: 200 }}>
-        {client.feeRate == null ? EMPTY : client.feeRate * 100 + '%'}
-      </Cell>
-      <Cell onClick={(event) => onClickRow(event, client)} sx={{ minWidth: 200 }}>
-        {client.clientType ?? EMPTY}
-      </Cell>
-      <Cell onClick={(event) => onClickRow(event, client)} sx={{ minWidth: 200 }}>
-        {client.payDate ?? EMPTY}
-      </Cell>
-      <Cell onClick={(event) => onClickRow(event, client)} sx={{ minWidth: 200 }}>
-        {client.manager ?? EMPTY}
-      </Cell>
-      <Cell onClick={(event) => onClickRow(event, client)} sx={{ minWidth: 200 }}>
-        {client.managerTel ?? EMPTY}
-      </Cell>
-      <Cell onClick={(event) => onClickRow(event, client)} sx={{ minWidth: 200 }}>
-        {client.inActive ? '거래중' : '거래종료'}
-      </Cell>
+      {parsedClient.map((item, index) => (
+        <Cell
+          key={`${client._id}_${index}`}
+          onClick={(event) => onClickRow(event, client)}
+          sx={{ minWidth: 200 }}
+        >
+          {item}
+        </Cell>
+      ))}
+
       <Cell sx={{ minWidth: 50 }}>
         <IconButton
           onClick={(event) => {

@@ -1,10 +1,10 @@
 import { FC } from 'react';
 import { Client, Product } from '@/http/graphql/codegen/graphql';
-import { useRemoveProduct } from '@/http/graphql/hooks/product/useRemoveProduct';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import { snackMessage } from '@/store/snackMessage';
 import { Typography, Stack, Button } from '@mui/material';
+import { useRemoveClient } from '@/http/graphql/hooks/client/useDeleteClient';
 
 interface Props {
   open: boolean;
@@ -13,16 +13,16 @@ interface Props {
 }
 
 const RemoveClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
-  const [removeProduct, { loading }] = useRemoveProduct();
+  const [removeClient, { loading }] = useRemoveClient();
 
   const handleClickRemove = () => {
-    removeProduct({
+    removeClient({
       variables: {
         _id: selectedClient._id,
       },
       onCompleted: (res) => {
         snackMessage({
-          message: `${res.removeProduct.name}거래처가 삭제되었습니다.`,
+          message: `${res.removeClient.name}거래처가 삭제되었습니다.`,
           severity: 'success',
         });
         onClose();

@@ -22,7 +22,7 @@ export const useCreateClient = () => {
             });
             return {
               totalCount: existingClients + 1,
-              data: [data, newClientRef, ...existingClients],
+              data: [newClientRef, ...existingClients.data],
             };
           },
         },

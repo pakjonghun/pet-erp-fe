@@ -19,18 +19,19 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { modalSizeProps } from '@/components/commonStyles';
 import { useCreateClient } from '@/http/graphql/hooks/client/useCreateClient';
-import { ClientType } from '@/http/graphql/codegen/graphql';
+import { Client, ClientType } from '@/http/graphql/codegen/graphql';
 import { filterEmptyValues } from '@/util';
 import { clientTypes } from '../constants';
-import NumberInput from '@/components/ui/input/NumberInput';
+import { useUpdateClient } from '@/http/graphql/hooks/client/useEditClient';
 
 interface Props {
   open: boolean;
+  selectedClient: Client;
   onClose: () => void;
 }
 
-const CreateClientModal: FC<Props> = ({ open, onClose }) => {
-  const [createClient, { loading }] = useCreateClient();
+const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
+  const [editClient, { loading }] = useUpdateClient();
 
   const {
     reset,
@@ -40,23 +41,26 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
   } = useForm<CreateClientForm>({
     resolver: zodResolver(createClientSchema),
     defaultValues: {
-      code: '',
-      name: '',
-      clientType: ClientType.Bender,
-      businessName: '',
-      businessNumber: '',
-      manager: '',
-      managerTel: '',
-      inActive: true,
+      code: selectedClient.code,
+      name: selectedClient.name,
+      feeRate: selectedClient.feeRate ?? 0,
+      clientType: selectedClient.clientType,
+      businessName: selectedClient.businessName ?? '',
+      businessNumber: selectedClient.businessNumber ?? '',
+      payDate: selectedClient.payDate ?? 0,
+      manager: selectedClient.manager ?? '',
+      managerTel: selectedClient.managerTel ?? '',
+      inActive: selectedClient.inActive ?? true,
     },
   });
 
   const onSubmit = (values: CreateClientForm) => {
     const newValues = filterEmptyValues(values) as CreateClientForm;
-    createClient({
+    editClient({
       variables: {
-        createClientInput: {
+        updateClientInput: {
           ...newValues,
+          _id: selectedClient._id,
           feeRate: (Number(values.feeRate) ?? 0) % 100,
         },
       },
@@ -112,6 +116,7 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
             render={({ field }) => (
               <FormControl required>
                 <TextField
+                  disabled
                   {...field}
                   size="small"
                   required
@@ -146,12 +151,17 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
             name="feeRate"
             render={({ field }) => (
               <FormControl>
-                <NumberInput
-                  field={field}
+                <TextField
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                  }}
+                  size="small"
+                  {...field}
+                  onChange={(event) => field.onChange(Number(event.target.value))}
+                  type="number"
                   label="수수료 비율(0~100사이 숫자)"
                   error={!!errors.feeRate?.message}
                   helperText={errors.feeRate?.message ?? ''}
-                  endAdornment={<InputAdornment position="end">%</InputAdornment>}
                 />
               </FormControl>
             )}
@@ -219,8 +229,11 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
             control={control}
             name="payDate"
             render={({ field }) => (
-              <NumberInput
-                field={field}
+              <TextField
+                type="number"
+                size="small"
+                {...field}
+                onChange={(event) => field.onChange(Number(event.target.value))}
                 label="결제일(매달 결제할 날짜(1~31사이 값을 입력)"
                 error={!!errors.payDate?.message}
                 helperText={errors.payDate?.message ?? ''}
@@ -271,4 +284,4 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
   );
 };
 
-export default CreateClientModal;
+export default EditPClientModal;

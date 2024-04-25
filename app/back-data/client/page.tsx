@@ -16,7 +16,7 @@ import {
   TextField,
 } from '@mui/material';
 import { PlusOneOutlined, Search } from '@mui/icons-material';
-import { ChangeEvent,  useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import CreateClientModal from './_components/AddPClientModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import ClientTableBody from './_components/ClientTableBody';
@@ -30,6 +30,7 @@ import ActionButton from '@/components/ui/button/ActionButton';
 import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFile';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { ClientHeaderList } from './constants';
+import { useClients } from '@/http/graphql/hooks/client/useClients';
 
 const BackDataPage = () => {
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
@@ -37,7 +38,7 @@ const BackDataPage = () => {
   const delayKeyword = useTextDebounce(keyword);
   const [fileKey, setFileKey] = useState(new Date());
 
-  const { refetch } = useProducts({
+  const { refetch } = useClients({
     keyword,
     skip: 0,
     limit: LIMIT,

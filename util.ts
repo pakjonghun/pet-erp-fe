@@ -58,10 +58,20 @@ export const merge = (existing = { totalCount: 0, data: [] }, incoming: any, { a
 };
 
 export const filterEmptyValues = (values: object) => {
-  const parsedValues = Object.entries(values).filter(([_, v]) =>
-    typeof v == 'string' ? !!v.trim() : v != null
-  );
+  const parsedValues = Object.entries(values).filter(([k, v]) => {
+    const result = typeof v == 'string' ? !!v.trim() : v != null;
+    console.log(k, v, result);
+    return result;
+  });
 
   const newValues = Object.fromEntries(parsedValues);
   return newValues;
+};
+
+export const isNumber = (value: unknown) => {
+  const isNotNull = value !== null;
+  const parseValue = Number(value);
+  const isNan = isNaN(parseValue);
+  const isNotInfinity = !isFinite(parseValue);
+  return isNotNull && !isNan && !isNotInfinity;
 };

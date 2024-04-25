@@ -8,6 +8,7 @@ import { Client } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
 import { SelectOption } from '../../types';
+import { ClientTypeToHangle } from '../constants';
 
 interface Props {
   client: Client;
@@ -78,7 +79,7 @@ const ClientCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow })
             />
           </Box>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="분류" text={client.clientType ?? EMPTY} />
+            <LabelText label="분류" text={ClientTypeToHangle[client.clientType] ?? EMPTY} />
           </Box>
         </Stack>
 
@@ -87,7 +88,7 @@ const ClientCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow })
             <LabelText label="담당자" text={client.manager ?? EMPTY} />
           </Box>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="연락처" text={client.clientType ?? EMPTY} />
+            <LabelText label="연락처" text={client.managerTel ?? EMPTY} />
           </Box>
         </Stack>
       </Box>

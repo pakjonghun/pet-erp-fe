@@ -20,7 +20,7 @@ const documents = {
     "\n  mutation removeCategory($_id: String!) {\n    removeCategory(_id: $_id) {\n      _id\n      name\n    }\n  }\n": types.RemoveCategoryDocument,
     "\n  query clients($clientsInput: ClientsInput!) {\n    clients(clientsInput: $clientsInput) {\n      totalCount\n      data {\n        ...ClientFragment\n      }\n    }\n  }\n": types.ClientsDocument,
     "\n  mutation createClient($createClientInput: CreateClientInput!) {\n    createClient(createClientInput: $createClientInput) {\n      ...ClientFragment\n    }\n  }\n": types.CreateClientDocument,
-    "\n  mutation removeClient($_id: String!) {\n    removeClient(_id: $_id) {\n      ...ClientFragment\n    }\n  }\n": types.RemoveClientDocument,
+    "\n  mutation removeClient($_id: String!) {\n    removeClient(_id: $_id) {\n      _id\n      name\n    }\n  }\n": types.RemoveClientDocument,
     "\n  mutation updateClient($updateClientInput: UpdateClientInput!) {\n    updateClient(updateClientInput: $updateClientInput) {\n      ...ClientFragment\n    }\n  }\n": types.UpdateClientDocument,
     "\n  query topClients($topClientInput: TopClientInput!) {\n    topClients(topClientInput: $topClientInput) {\n      totalCount\n      data {\n        accProfit\n        accPayCost\n        accCount\n        name\n      }\n    }\n  }\n": types.TopClientsDocument,
     "\n  query logs($findLogsQuery: FindLogsDTO!) {\n    logs(findLogsQuery: $findLogsQuery) {\n      totalCount\n      data {\n        ...LogFragment\n      }\n    }\n  }\n": types.LogsDocument,
@@ -83,7 +83,7 @@ export function graphql(source: "\n  mutation createClient($createClientInput: C
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation removeClient($_id: String!) {\n    removeClient(_id: $_id) {\n      ...ClientFragment\n    }\n  }\n"): (typeof documents)["\n  mutation removeClient($_id: String!) {\n    removeClient(_id: $_id) {\n      ...ClientFragment\n    }\n  }\n"];
+export function graphql(source: "\n  mutation removeClient($_id: String!) {\n    removeClient(_id: $_id) {\n      _id\n      name\n    }\n  }\n"): (typeof documents)["\n  mutation removeClient($_id: String!) {\n    removeClient(_id: $_id) {\n      _id\n      name\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
