@@ -1,20 +1,18 @@
 import { FC, useState } from 'react';
 import { Product } from '@/http/graphql/codegen/graphql';
-import { TABLE_MAX_HEIGHT } from '@/constants';
-import { Grid, SxProps } from '@mui/material';
+import { TableBody } from '@mui/material';
+import EmptyRow from '@/components/table/EmptyRow';
+import ProductBodyRow from './SubsidiaryBodyRow';
 import { CommonListProps, SelectOption } from '../../types';
-import RemoveProductModal from './RemoveProductModal';
-import EditProductModal from './EditProductModal';
-import ProductDetailPopover from './ProductDetailPopover';
-import EmptyItem from '@/components/ui/listItem/EmptyItem';
-import ProductCard from './ProductCard';
-import LoadingCard from '@/components/ui/loading/LoadingCard';
+import RemoveSubsidiaryModal from './RemoveSubsidiaryModal';
+import EditProductModal from './EditSubsidiaryModal';
+import ProductDetailPopover from './SubsidiaryDetailPopover';
+import LoadingRow from '@/components/table/LoadingRow';
+import { ProductHeaderList } from '../constants';
 
-interface Props extends CommonListProps<Product> {
-  sx?: SxProps;
-}
+interface Props extends CommonListProps<Product> {}
 
-const ProductionCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx }) => {
+const SubsidiaryTableBody: FC<Props> = ({ data, isLoading, isEmpty, scrollRef }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
   const [selectedProduct, setSelectedProduct] = useState<null | Product>(null);
@@ -38,24 +36,15 @@ const ProductionCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx })
   const handleClosePopover = () => setPopoverAnchor(null);
 
   return (
-    <Grid
-      sx={{
-        ...sx,
-        p: 2,
-        maxHeight: TABLE_MAX_HEIGHT,
-        overflow: 'auto',
-      }}
-      container
-      spacing={2}
-    >
-      <EmptyItem isEmpty={isEmpty} />
+    <TableBody>
       {selectedProduct && (
-        <RemoveProductModal
+        <RemoveSubsidiaryModal
           open={optionType === 'delete'}
           onClose={() => handleClickOption(null, null)}
           selectedProduct={selectedProduct}
         />
       )}
+
       {selectedProduct && (
         <EditProductModal
           open={optionType === 'edit'}
@@ -74,28 +63,27 @@ const ProductionCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx })
           selectedProduct={selectedProduct}
         />
       )}
-
+      <EmptyRow colSpan={ProductHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
         const product = item as unknown as Product;
         const isLast = index === data.length - 1;
         return (
-          <Grid key={product._id} item xs={12} lg={6}>
-            <ProductCard
-              onClickRow={(event, product: Product) => {
-                setPopoverPosition({ left: event.clientX, top: event.clientY });
-                setPopoverAnchor(event.currentTarget);
-                setSelectedProduct(product);
-              }}
-              product={product}
-              scrollRef={isLast ? scrollRef : null}
-              onClickOption={handleClickOption}
-            />
-          </Grid>
+          <ProductBodyRow
+            onClickRow={(event, product: Product) => {
+              setPopoverPosition({ left: event.clientX, top: event.clientY });
+              setPopoverAnchor(event.currentTarget);
+              setSelectedProduct(product);
+            }}
+            key={product._id}
+            product={product}
+            scrollRef={isLast ? scrollRef : null}
+            onClickOption={handleClickOption}
+          />
         );
       })}
-      <LoadingCard isLoading={isLoading} />
-    </Grid>
+      <LoadingRow isLoading={isLoading} colSpan={ProductHeaderList.length} />
+    </TableBody>
   );
 };
 
-export default ProductionCards;
+export default SubsidiaryTableBody;

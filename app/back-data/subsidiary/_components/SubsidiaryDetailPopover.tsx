@@ -17,7 +17,7 @@ interface Props {
   onClickEdit: () => void;
 }
 
-const ProductDetailPopover: FC<Props> = ({
+const SubsidiaryDetailPopover: FC<Props> = ({
   open,
   anchorEl,
   position,
@@ -34,8 +34,8 @@ const ProductDetailPopover: FC<Props> = ({
         <LabelText label="이름" text={selectedProduct.name} />
         <LabelText label="분류" text={selectedProduct.category?.name ?? EMPTY} />
         <LabelText label="바코드" text={selectedProduct.barCode ?? EMPTY} />
-        <LabelText label="판매가" text={getKCWFormat(selectedProduct.salePrice) ?? EMPTY} />
-        <LabelText label="원가" text={getKCWFormat(selectedProduct.wonPrice) ?? EMPTY} />
+        {/* <LabelText label="판매가" text={getKCWFormat(selectedProduct.salePrice) ?? EMPTY} /> */}
+        {/* <LabelText label="원가" text={getKCWFormat(selectedProduct.wonPrice) ?? EMPTY} /> */}
         <LabelText label="유지기간" text={selectedProduct.maintainDate ?? EMPTY} />
         <LabelText label="리드타임" text={selectedProduct.leadTime ?? EMPTY} />
       </Stack>
@@ -51,4 +51,4 @@ const ProductDetailPopover: FC<Props> = ({
   );
 };
 
-export default ProductDetailPopover;
+export default SubsidiaryDetailPopover;

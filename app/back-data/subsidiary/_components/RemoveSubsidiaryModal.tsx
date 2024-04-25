@@ -12,7 +12,7 @@ interface Props {
   onClose: () => void;
 }
 
-const RemoveProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
+const RemoveSubsidiaryModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
   const [removeProduct, { loading }] = useRemoveProduct();
 
   const handleClickRemove = () => {
@@ -65,4 +65,4 @@ const RemoveProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
   );
 };
 
-export default RemoveProductModal;
+export default RemoveSubsidiaryModal;

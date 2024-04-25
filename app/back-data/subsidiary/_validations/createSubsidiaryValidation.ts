@@ -1,6 +1,6 @@
 import z from 'zod';
 
-export const createProductSchema = z.object({
+export const createSubsidiarySchema = z.object({
   code: z
     .string({ required_error: '제품 코드를 입력해주세요.' })
     .min(1, { message: '제품 코드를 입력해주세요.' }),
@@ -31,4 +31,4 @@ export const createProductSchema = z.object({
   category: z.string({ invalid_type_error: '올바른 카테고리를 입력해주세요.' }).optional(),
 });
 
-export type CreateProductForm = z.infer<typeof createProductSchema>;
+export type CreateClientForm = z.infer<typeof createSubsidiarySchema>;

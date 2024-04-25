@@ -1,7 +1,7 @@
 import { FC, MouseEvent, useState } from 'react';
 import { Box, IconButton, Menu, Paper, Stack } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { SelectOption } from '../types';
+import { SelectOption } from '../../types';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';

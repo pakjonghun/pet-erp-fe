@@ -36,7 +36,7 @@ interface Props {
   onClose: () => void;
 }
 
-const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
+const EditSubsidiaryModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
   const [updateProduct, { loading }] = useUpdateProduct();
 
   const {
@@ -281,4 +281,4 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
   );
 };
 
-export default EditProductModal;
+export default EditSubsidiaryModal;

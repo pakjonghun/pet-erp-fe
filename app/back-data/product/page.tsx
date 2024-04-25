@@ -34,7 +34,7 @@ import { ProductHeaderList } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Product } from '@/http/graphql/codegen/graphql';
 
-const BackDataPage = () => {
+const ProductPage = () => {
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
@@ -195,4 +195,4 @@ const BackDataPage = () => {
   );
 };
 
-export default BackDataPage;
+export default ProductPage;

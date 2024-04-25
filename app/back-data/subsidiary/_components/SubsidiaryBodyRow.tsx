@@ -17,7 +17,7 @@ interface Props {
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow }) => {
+const SubsidiaryBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow }) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<SelectOption, SelectedOptionItem> = {
     edit: {
@@ -83,4 +83,4 @@ const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickR
   );
 };
 
-export default ProductBodyRow;
+export default SubsidiaryBodyRow;

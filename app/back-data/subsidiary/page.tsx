@@ -18,15 +18,15 @@ import {
 } from '@mui/material';
 import { PlusOneOutlined, Search } from '@mui/icons-material';
 import { ChangeEvent, useState } from 'react';
-import CreateProductModal from './_components/AddProductModal';
+import CreateSubsidiaryModal from './_components/AddSubsidiarytModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
-import ProductionTableBody from './_components/ProductionTableBody';
+import ProductionTableBody from './_components/SubsidiaryTableBody';
 import { useUploadExcelFile } from '@/http/rest/hooks/file/useUploadExcelFile';
 import { snackMessage } from '@/store/snackMessage';
 import UploadButton from '@/components/ui/button/UploadButtont';
 import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import { LIMIT } from '@/constants';
-import ProductionCards from './_components/ProductionCards';
+import ProductionCards from './_components/SubsidiaryCards';
 import ActionButton from '@/components/ui/button/ActionButton';
 import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFile';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
@@ -111,7 +111,10 @@ const BackDataPage = () => {
   return (
     <TablePage sx={{ flex: 1 }}>
       {openCreateProduct && (
-        <CreateProductModal open={openCreateProduct} onClose={() => setOpenCreateProduct(false)} />
+        <CreateSubsidiaryModal
+          open={openCreateProduct}
+          onClose={() => setOpenCreateProduct(false)}
+        />
       )}
       <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="제품 백데이터" />

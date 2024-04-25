@@ -34,7 +34,7 @@ interface Props {
   onClose: () => void;
 }
 
-const CreateProductModal: FC<Props> = ({ open, onClose }) => {
+const AddSubsidiarytModal: FC<Props> = ({ open, onClose }) => {
   const [createProduct, { loading }] = useCreateProduct();
 
   const {
@@ -273,4 +273,4 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
   );
 };
 
-export default CreateProductModal;
+export default AddSubsidiarytModal;
