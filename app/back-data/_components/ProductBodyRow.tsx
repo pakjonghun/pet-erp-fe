@@ -38,6 +38,21 @@ const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickR
     },
   };
 
+  const createRow = (product: Product) => {
+    return [
+      product.code,
+      product.category?.name ?? EMPTY,
+      product.barCode ?? EMPTY,
+      product.name,
+      getKCWFormat(product.wonPrice) ?? EMPTY,
+      getKCWFormat(product.salePrice) ?? EMPTY,
+      product.leadTime ? `${product.leadTime}일` : EMPTY,
+      product.maintainDate ? `${product.maintainDate}일` : EMPTY,
+    ];
+  };
+
+  const parsedRowData = createRow(product);
+
   return (
     <TableRow hover ref={scrollRef}>
       <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
@@ -45,27 +60,16 @@ const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickR
           <OptionMenu key={option} menu={menu} option={option} />
         ))}
       </Menu>
-      <Cell onClick={(event) => onClickRow(event, product)} sx={{ minWidth: 200 }}>
-        {product.code}
-      </Cell>
-      <Cell onClick={(event) => onClickRow(event, product)} sx={{ minWidth: 200 }}>
-        {product.category?.name ?? EMPTY}
-      </Cell>
-      <Cell onClick={(event) => onClickRow(event, product)} sx={{ minWidth: 200 }}>
-        {product.barCode ?? EMPTY}
-      </Cell>
-      <Cell onClick={(event) => onClickRow(event, product)} sx={{ minWidth: 200 }}>
-        {product.name}
-      </Cell>
-      <Cell onClick={(event) => onClickRow(event, product)} sx={{ minWidth: 200 }}>
-        {getKCWFormat(product.wonPrice) ?? EMPTY}
-      </Cell>
-      <Cell onClick={(event) => onClickRow(event, product)} sx={{ minWidth: 200 }}>
-        {getKCWFormat(product.salePrice) ?? EMPTY}
-      </Cell>
-      <Cell onClick={(event) => onClickRow(event, product)} sx={{ minWidth: 200 }}>
-        {product.leadTime ?? EMPTY}
-      </Cell>
+      {parsedRowData.map((item) => (
+        <Cell
+          key={`${product._id}_${item}`}
+          onClick={(event) => onClickRow(event, product)}
+          sx={{ minWidth: 200 }}
+        >
+          {item}
+        </Cell>
+      ))}
+
       <Cell sx={{ minWidth: 50 }}>
         <IconButton
           onClick={(event) => {

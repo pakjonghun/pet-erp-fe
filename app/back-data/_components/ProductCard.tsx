@@ -81,10 +81,16 @@ const ProductCard: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow 
 
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="리드타임" text={product.leadTime ?? EMPTY} />
+            <LabelText
+              label="리드타임(일)"
+              text={product.leadTime ? `${product.leadTime}일` : EMPTY}
+            />
           </Box>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="최소 유지기간" text={product.maintainDate ?? EMPTY} />
+            <LabelText
+              label="최소 유지기간(일)"
+              text={product.maintainDate ? `${product.maintainDate}일` : EMPTY}
+            />
           </Box>
         </Stack>
       </Box>

@@ -24,7 +24,8 @@ import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 import { useUpdateProduct } from '@/http/graphql/hooks/product/useUpdateProduct';
 import { Product } from '@/http/graphql/codegen/graphql';
 import { modalSizeProps } from '@/components/commonStyles';
-import { filterEmptyValues } from '@/util';
+import { emptyValueToNull } from '@/util';
+import NumberInput from '@/components/ui/input/NumberInput';
 
 interface Props {
   selectedProduct: Product;
@@ -48,11 +49,11 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
       barCode: selectedProduct.barCode ?? '',
       category: selectedProduct.category?.name as string,
       code: selectedProduct.code,
-      leadTime: selectedProduct.leadTime ?? 0,
-      maintainDate: selectedProduct.maintainDate ?? 0,
+      leadTime: selectedProduct.leadTime,
+      maintainDate: selectedProduct.maintainDate,
       name: selectedProduct.name,
-      salePrice: selectedProduct.salePrice ?? 0,
-      wonPrice: selectedProduct.wonPrice ?? 0,
+      salePrice: selectedProduct.salePrice,
+      wonPrice: selectedProduct.wonPrice,
     },
   });
 
@@ -100,7 +101,7 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
     refetch();
   }, [delayedCategoryKeyword, refetch]);
   const onSubmit = (values: CreateProductForm) => {
-    const { code, ...newValues } = filterEmptyValues(values) as CreateProductForm;
+    const { code, ...newValues } = emptyValueToNull(values) as CreateProductForm;
     updateProduct({
       variables: {
         updateProductInput: {
@@ -174,70 +175,48 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
             control={control}
             name="salePrice"
             render={({ field }) => (
-              <FormControl required>
-                <TextField
-                  size="small"
-                  {...field}
-                  required
-                  onChange={(event) => field.onChange(Number(event.target.value))}
-                  type="number"
-                  label="판매가"
-                  error={!!errors.salePrice?.message}
-                  helperText={errors.salePrice?.message ?? ''}
-                />
-              </FormControl>
+              <NumberInput
+                field={field}
+                label="판매가"
+                error={!!errors.salePrice?.message}
+                helperText={errors.salePrice?.message ?? ''}
+              />
             )}
           />
           <Controller
             control={control}
             name="wonPrice"
             render={({ field }) => (
-              <FormControl required>
-                <TextField
-                  size="small"
-                  {...field}
-                  onChange={(event) => field.onChange(Number(event.target.value))}
-                  type="number"
-                  required
-                  label="원가"
-                  error={!!errors.wonPrice?.message}
-                  helperText={errors.wonPrice?.message ?? ''}
-                />
-              </FormControl>
+              <NumberInput
+                field={field}
+                label="원가"
+                error={!!errors.wonPrice?.message}
+                helperText={errors.wonPrice?.message ?? ''}
+              />
             )}
           />
           <Controller
             control={control}
             name="leadTime"
             render={({ field }) => (
-              <FormControl>
-                <TextField
-                  size="small"
-                  {...field}
-                  type="number"
-                  onChange={(event) => field.onChange(Number(event.target.value))}
-                  label="리드타임"
-                  error={!!errors.leadTime?.message}
-                  helperText={errors.leadTime?.message ?? ''}
-                />
-              </FormControl>
+              <NumberInput
+                field={field}
+                label="리드타임(일)"
+                error={!!errors.leadTime?.message}
+                helperText={errors.leadTime?.message ?? ''}
+              />
             )}
           />
           <Controller
             control={control}
             name="maintainDate"
             render={({ field }) => (
-              <FormControl>
-                <TextField
-                  size="small"
-                  {...field}
-                  type="number"
-                  onChange={(event) => field.onChange(Number(event.target.value))}
-                  label="유지기간"
-                  error={!!errors.maintainDate?.message}
-                  helperText={errors.maintainDate?.message ?? ''}
-                />
-              </FormControl>
+              <NumberInput
+                field={field}
+                label="최소 유지기간(일)"
+                error={!!errors.maintainDate?.message}
+                helperText={errors.maintainDate?.message ?? ''}
+              />
             )}
           />
           <Controller

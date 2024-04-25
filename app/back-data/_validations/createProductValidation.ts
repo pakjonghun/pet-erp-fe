@@ -10,18 +10,24 @@ export const createProductSchema = z.object({
     .min(1, { message: '제품 이름을 입력해주세요.' }),
   wonPrice: z
     .number({ required_error: '제품 원가를 입력해주세요.' })
-    .min(0, { message: '제품원가는 0이상의 숫자를 입력하세요.' }),
+    .min(0, { message: '제품원가는 0이상의 숫자를 입력하세요.' })
+    .optional()
+    .nullable(),
   salePrice: z
     .number({ required_error: '제품 원가를 입력해주세요.' })
-    .min(0, { message: '제품원가는 0이상의 숫자를 입력하세요.' }),
+    .min(0, { message: '제품원가는 0이상의 숫자를 입력하세요.' })
+    .optional()
+    .nullable(),
   leadTime: z
     .number({ invalid_type_error: '제품 원가를 입력해주세요.' })
     .min(0, { message: '리드타임은 0이상의 숫자를 입력하세요.' })
-    .optional(),
+    .optional()
+    .nullable(),
   maintainDate: z
     .number({ invalid_type_error: '제품 유지날짜를 입력해주세요.' })
     .min(0, { message: '제품 유지날짜는 0이상의 숫자를 입력하세요.' })
-    .optional(),
+    .optional()
+    .nullable(),
   category: z.string({ invalid_type_error: '올바른 카테고리를 입력해주세요.' }).optional(),
 });
 

@@ -108,8 +108,8 @@ export type CreateProductInput = {
   leadTime?: InputMaybe<Scalars['Int']['input']>;
   maintainDate?: InputMaybe<Scalars['Int']['input']>;
   name: Scalars['String']['input'];
-  salePrice: Scalars['Int']['input'];
-  wonPrice: Scalars['Int']['input'];
+  salePrice?: InputMaybe<Scalars['Int']['input']>;
+  wonPrice?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type CreateUserDto = {
