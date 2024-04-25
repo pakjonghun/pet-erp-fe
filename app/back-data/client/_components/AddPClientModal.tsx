@@ -1,6 +1,6 @@
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
-  AutocompleteRenderInputParams,
+  Autocomplete,
   Button,
   FormControl,
   FormControlLabel,
@@ -11,24 +11,16 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { CreateClientForm, createClientSchema } from '../_validations/createClientValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
-import { useCreateProduct } from '@/http/graphql/hooks/product/useCreateProduct';
-import { useFindManyCategory } from '@/http/graphql/hooks/category/useFindCategories';
-import useTextDebounce from '@/hooks/useTextDebounce';
-import { LIMIT } from '@/constants';
-import { SelectItem } from '@/components/ui/select/SearchAutoComplete';
-import useInfinityScroll from '@/hooks/useInfinityScroll';
-import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 import { modalSizeProps } from '@/components/commonStyles';
-import { DatePicker } from '@mui/x-date-pickers';
-import dayjs from 'dayjs';
 import { useCreateClient } from '@/http/graphql/hooks/client/useCreateClient';
-import { ClientType, CreateClientDocument } from '@/http/graphql/codegen/graphql';
+import { ClientType } from '@/http/graphql/codegen/graphql';
+import { filterEmptyValues } from '@/util';
 
 interface Props {
   open: boolean;
@@ -61,7 +53,7 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
       code: '',
       name: '',
       feeRate: 0,
-      clientType: '',
+      clientType: ClientType.Bender,
       businessName: '',
       businessNumber: '',
       payDate: 1,
@@ -71,16 +63,14 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
     },
   });
 
-  const [categoryKeyword, setCategoryKeyword] = useState('');
-  const delayedCategoryKeyword = useTextDebounce(categoryKeyword);
-
   // const rows = data?.categories.data ?? [];
 
   const onSubmit = (values: CreateClientForm) => {
+    const newValues = filterEmptyValues(values) as CreateClientForm;
     createClient({
       variables: {
         createClientInput: {
-          ...values,
+          ...newValues,
           feeRate: (Number(values.feeRate) ?? 0) % 100,
         },
       },
@@ -105,9 +95,15 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
         거래처 입력
       </Typography>
-      <Typography sx={{ mb: 3 }}>새로운 거래처을 입력합니다.</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FormGroup sx={modalSizeProps}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          gap={3}
+          sx={{ mb: 3 }}
+        >
+          <Typography>새로운 거래처을 입력합니다.</Typography>
           <Controller
             control={control}
             name="inActive"
@@ -121,6 +117,9 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
               );
             }}
           />
+        </Stack>
+
+        <FormGroup sx={modalSizeProps}>
           <Controller
             control={control}
             name="code"
@@ -177,15 +176,29 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
             control={control}
             name="clientType"
             render={({ field }) => (
-              <FormControl>
-                <TextField
-                  size="small"
-                  {...field}
-                  label="거래처 형태"
-                  error={!!errors.clientType?.message}
-                  helperText={errors.clientType?.message ?? ''}
-                />
-              </FormControl>
+              <Autocomplete
+                disablePortal
+                filterSelectedOptions
+                value={field.value}
+                onChange={(_, value) => field.onChange(value)}
+                noOptionsText="검색결과가 없습니다."
+                options={Object.keys(clientTypes)}
+                getOptionLabel={(option) => {
+                  return clientTypes[option as unknown as ClientType] ?? '';
+                }}
+                renderInput={(params) => (
+                  <FormControl fullWidth>
+                    <TextField
+                      {...params}
+                      size="small"
+                      {...field}
+                      label="거래처 형태"
+                      error={!!errors.clientType?.message}
+                      helperText={errors.clientType?.message ?? ''}
+                    />
+                  </FormControl>
+                )}
+              />
             )}
           />
           <Controller
@@ -205,15 +218,31 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
           />
           <Controller
             control={control}
+            name="businessNumber"
+            render={({ field }) => (
+              <FormControl>
+                <TextField
+                  size="small"
+                  {...field}
+                  label="사업자 등록번호"
+                  error={!!errors.businessNumber?.message}
+                  helperText={errors.businessNumber?.message ?? ''}
+                />
+              </FormControl>
+            )}
+          />
+          <Controller
+            control={control}
             name="payDate"
             render={({ field }) => (
               <TextField
                 type="number"
                 size="small"
                 {...field}
+                onChange={(event) => field.onChange(Number(event.target.value))}
                 label="결제일(매달 결제할 날짜(1~31사이 값을 입력)"
-                error={!!errors.businessName?.message}
-                helperText={errors.businessName?.message ?? ''}
+                error={!!errors.payDate?.message}
+                helperText={errors.payDate?.message ?? ''}
               />
             )}
           />
@@ -225,44 +254,28 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
                 <TextField
                   size="small"
                   {...field}
-                  label="관리자"
+                  label="관리자 이름"
                   error={!!errors.manager?.message}
                   helperText={errors.manager?.message ?? ''}
                 />
               </FormControl>
             )}
           />
-
-          {/* <SearchAutoComplete
-            setValue={setCategory}
-            value={categoryOption}
-            scrollRef={null}
-            renderSearchInput={(params: AutocompleteRenderInputParams) => {
-              return (
-                <Controller
-                  control={control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormControl fullWidth>
-                      <TextField
-                        {...field}
-                        {...params}
-                        onChange={(event) => {
-                          field.onChange(event);
-                          setCategoryKeyword(event.target.value);
-                        }}
-                        label="분류"
-                        error={!!errors.category?.message}
-                        helperText={errors.category?.message ?? ''}
-                        size="small"
-                      />
-                    </FormControl>
-                  )}
+          <Controller
+            control={control}
+            name="manager"
+            render={({ field }) => (
+              <FormControl>
+                <TextField
+                  size="small"
+                  {...field}
+                  label="연락처"
+                  error={!!errors.managerTel?.message}
+                  helperText={errors.managerTel?.message ?? ''}
                 />
-              );
-            }}
-            options={rows.map((row) => ({ _id: row._id, label: row.name }))}
-          /> */}
+              </FormControl>
+            )}
+          />
         </FormGroup>
         <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
           <Button type="button" variant="outlined" onClick={handleClose}>

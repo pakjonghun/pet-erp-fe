@@ -16,7 +16,7 @@ import {
   TextField,
 } from '@mui/material';
 import { PlusOneOutlined, Search } from '@mui/icons-material';
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent,  useState } from 'react';
 import CreateClientModal from './_components/AddPClientModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import ClientTableBody from './_components/ClientTableBody';

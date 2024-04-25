@@ -2,7 +2,7 @@ import Cell from '@/components/table/Cell';
 import { IconButton, Menu, TableRow } from '@mui/material';
 import React, { FC, MouseEvent, useState } from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { SelectedOptionItem } from '@/constants';
+import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { Client } from '@/http/graphql/codegen/graphql';
@@ -48,25 +48,25 @@ const ClientBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow
         {client.name}
       </Cell>
       <Cell onClick={(event) => onClickRow(event, client)} sx={{ minWidth: 200 }}>
-        {client.businessName ?? ''}
+        {client.businessName ?? EMPTY}
       </Cell>
       <Cell onClick={(event) => onClickRow(event, client)} sx={{ minWidth: 200 }}>
         {client.code ?? ''}
       </Cell>
       <Cell onClick={(event) => onClickRow(event, client)} sx={{ minWidth: 200 }}>
-        {(client.feeRate ?? 0) * 100 + '%'}
+        {client.feeRate == null ? EMPTY : client.feeRate * 100 + '%'}
       </Cell>
       <Cell onClick={(event) => onClickRow(event, client)} sx={{ minWidth: 200 }}>
-        {client.clientType ?? ''}
+        {client.clientType ?? EMPTY}
       </Cell>
       <Cell onClick={(event) => onClickRow(event, client)} sx={{ minWidth: 200 }}>
-        {client.payDate ?? ''}
+        {client.payDate ?? EMPTY}
       </Cell>
       <Cell onClick={(event) => onClickRow(event, client)} sx={{ minWidth: 200 }}>
-        {client.manager ?? ''}
+        {client.manager ?? EMPTY}
       </Cell>
       <Cell onClick={(event) => onClickRow(event, client)} sx={{ minWidth: 200 }}>
-        {client.managerTel ?? ''}
+        {client.managerTel ?? EMPTY}
       </Cell>
       <Cell onClick={(event) => onClickRow(event, client)} sx={{ minWidth: 200 }}>
         {client.inActive ? '거래중' : '거래종료'}
