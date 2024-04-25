@@ -13,6 +13,7 @@ const TablePage: FC<Props> = ({ children, sx }) => {
         mx: 3,
         mt: 3,
         overflow: 'hidden',
+        pb: 5,
         ...sx,
       }}
     >
