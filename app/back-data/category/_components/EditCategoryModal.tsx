@@ -7,7 +7,7 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { CreateCategoryForm, createCategorySchema } from '../_validations/createCategoryValidation';
 import { Category } from '@/http/graphql/codegen/graphql';
-import { useUpdateCategory } from '@/http/graphql/hooks/category/useEditCategory';
+import { useUpdateProductCategory } from '@/http/graphql/hooks/product-category/useEditProductCategory';
 import { modalSizeProps } from '@/components/commonStyles';
 
 interface Props {
@@ -17,7 +17,7 @@ interface Props {
 }
 
 const EditCategoryModal: FC<Props> = ({ open, item, onClose }) => {
-  const [updateCategory, { loading }] = useUpdateCategory();
+  const [updateCategory, { loading }] = useUpdateProductCategory();
   const {
     reset,
     control,

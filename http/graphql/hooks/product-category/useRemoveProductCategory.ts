@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { graphql } from '../../codegen';
 
-const removeCategory = graphql(`
+const removeProductCategory = graphql(`
   mutation removeCategory($_id: String!) {
     removeCategory(_id: $_id) {
       _id
@@ -10,8 +10,8 @@ const removeCategory = graphql(`
   }
 `);
 
-export const useRemoveCategory = () => {
-  return useMutation(removeCategory, {
+export const useRemoveProductCategory = () => {
+  return useMutation(removeProductCategory, {
     update(cache, { data }) {
       const typeName = data?.removeCategory.__typename;
       const id = data?.removeCategory._id;

@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { graphql } from '../../codegen';
 import { CategoriesInput } from '../../codegen/graphql';
 
-const findManyCategory = graphql(`
+const findManyProductCategory = graphql(`
   query categories($categoriesInput: CategoriesInput!) {
     categories(categoriesInput: $categoriesInput) {
       totalCount
@@ -14,8 +14,8 @@ const findManyCategory = graphql(`
   }
 `);
 
-export const useFindManyCategory = (categoriesInput: CategoriesInput) => {
-  return useQuery(findManyCategory, {
+export const useFindManyProductCategory = (categoriesInput: CategoriesInput) => {
+  return useQuery(findManyProductCategory, {
     variables: {
       categoriesInput,
     },

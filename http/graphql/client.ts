@@ -11,6 +11,11 @@ const link = createHttpLink({
 export const client = new ApolloClient({
   cache: new InMemoryCache({
     fragments: createFragmentRegistry(gql`
+      fragment SubsidiaryCategoryFragment on SubsidiaryCategory {
+        _id
+        name
+      }
+
       fragment LogFragment on Log {
         _id
         userId
@@ -100,6 +105,10 @@ export const client = new ApolloClient({
             merge,
           },
           categories: {
+            keyArgs: ['categoriesInput', ['keyword']],
+            merge,
+          },
+          subsidiaryCategories: {
             keyArgs: ['categoriesInput', ['keyword']],
             merge,
           },

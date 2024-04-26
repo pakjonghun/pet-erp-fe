@@ -19,7 +19,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { useCreateProduct } from '@/http/graphql/hooks/product/useCreateProduct';
-import { useFindManyCategory } from '@/http/graphql/hooks/category/useFindCategories';
+import { useFindManyProductCategory } from '@/http/graphql/hooks/product-category/useFindProductCategories';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT, PRODUCT_PREFIX } from '@/constants';
 import { SelectItem } from '@/components/ui/select/SearchAutoComplete';
@@ -56,7 +56,7 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
   const [categoryKeyword, setCategoryKeyword] = useState('');
   const delayedCategoryKeyword = useTextDebounce(categoryKeyword);
 
-  const { data, networkStatus, refetch, fetchMore } = useFindManyCategory({
+  const { data, networkStatus, refetch, fetchMore } = useFindManyProductCategory({
     keyword: delayedCategoryKeyword,
     limit: LIMIT,
     skip: 0,

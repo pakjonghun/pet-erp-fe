@@ -19,7 +19,7 @@ import { Search } from '@mui/icons-material';
 import { ChangeEvent, useState } from 'react';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import CreateCategoryModal from './_components/AddCategory';
-import { useFindManyCategory } from '@/http/graphql/hooks/category/useFindCategories';
+import { useFindManyProductCategory } from '@/http/graphql/hooks/product-category/useFindProductCategories';
 import { LIMIT, TABLE_MAX_HEIGHT } from '@/constants';
 import CategoryCard from './_components/CategoryCard';
 import UploadButton from '@/components/ui/button/UploadButtont';
@@ -33,7 +33,7 @@ const CategoryPage = () => {
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
 
-  const { data, networkStatus, refetch, fetchMore } = useFindManyCategory({
+  const { data, networkStatus, refetch, fetchMore } = useFindManyProductCategory({
     keyword: delayKeyword,
     limit: LIMIT,
     skip: 0,

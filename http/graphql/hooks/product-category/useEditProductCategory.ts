@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { graphql } from '../../codegen';
 
-const updateCategory = graphql(`
+const updateProductCategory = graphql(`
   mutation updateCategory($updateCategoryInput: UpdateCategoryInput!) {
     updateCategory(updateCategoryInput: $updateCategoryInput) {
       _id
@@ -10,6 +10,6 @@ const updateCategory = graphql(`
   }
 `);
 
-export const useUpdateCategory = () => {
-  return useMutation(updateCategory);
+export const useUpdateProductCategory = () => {
+  return useMutation(updateProductCategory);
 };

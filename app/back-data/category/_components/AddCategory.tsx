@@ -5,7 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
-import { useCreateCategory } from '@/http/graphql/hooks/category/useCreateCategory';
+import { useCreateProductCategory } from '@/http/graphql/hooks/product-category/useCreateProductCategory';
 import { CreateCategoryForm, createCategorySchema } from '../_validations/createCategoryValidation';
 import { modalSizeProps } from '@/components/commonStyles';
 
@@ -15,7 +15,7 @@ interface Props {
 }
 
 const CreateCategoryModal: FC<Props> = ({ open, onClose }) => {
-  const [createCategory, { loading }] = useCreateCategory();
+  const [createCategory, { loading }] = useCreateProductCategory();
 
   const {
     reset,

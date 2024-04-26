@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { graphql } from '../../codegen';
 import { ProductCategory, ProductCategoryFragmentFragmentDoc } from '../../codegen/graphql';
 
-const createCategory = graphql(`
+const createProductCategory = graphql(`
   mutation createCategory($createCategoryInput: CreateCategoryInput!) {
     createCategory(createCategoryInput: $createCategoryInput) {
       _id
@@ -11,8 +11,8 @@ const createCategory = graphql(`
   }
 `);
 
-export const useCreateCategory = () => {
-  return useMutation(createCategory, {
+export const useCreateProductCategory = () => {
+  return useMutation(createProductCategory, {
     update(cache, { data }) {
       cache.modify({
         fields: {

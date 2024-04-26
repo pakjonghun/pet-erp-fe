@@ -5,7 +5,7 @@ import { FC } from 'react';
 import BaseModal from '../../../../components/ui/modal/BaseModal';
 import { snackMessage } from '@/store/snackMessage';
 import CommonLoading from '../../../../components/ui/loading/CommonLoading';
-import { useRemoveCategory } from '@/http/graphql/hooks/category/useRemoveCategory';
+import { useRemoveProductCategory } from '@/http/graphql/hooks/product-category/useRemoveProductCategory';
 import { Category } from '@/http/graphql/codegen/graphql';
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
 }
 
 const DeleteCategoryModal: FC<Props> = ({ item, open, onClose }) => {
-  const [deleteCategory, { loading }] = useRemoveCategory();
+  const [deleteCategory, { loading }] = useRemoveProductCategory();
 
   const handleDelete = () => {
     deleteCategory({
