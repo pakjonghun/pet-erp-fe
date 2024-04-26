@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Paper, Typography } from '@mui/material';
+import { Grid, Paper, Typography } from '@mui/material';
 
 interface Props {
   isEmpty: boolean;
@@ -9,9 +9,11 @@ interface Props {
 const EmptyItem: FC<Props> = ({ isEmpty, message = '검색된 데이터가 없습니다.' }) => {
   if (isEmpty)
     return (
-      <Paper sx={{ px: 3, py: 2 }}>
-        <Typography align="center">{message}</Typography>
-      </Paper>
+      <Grid item xs={12}>
+        <Paper sx={{ px: 3, py: 2 }}>
+          <Typography align="center">{message}</Typography>
+        </Paper>
+      </Grid>
     );
 
   return <></>;

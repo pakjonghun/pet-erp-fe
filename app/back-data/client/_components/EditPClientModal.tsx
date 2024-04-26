@@ -94,7 +94,7 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
           gap={3}
           sx={{ mb: 3 }}
         >
-          <Typography>새로운 거래처을 입력합니다.</Typography>
+          <Typography noWrap>새로운 거래처을 입력합니다.</Typography>
           <Controller
             control={control}
             name="inActive"
@@ -103,7 +103,11 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
                 <FormControlLabel
                   sx={{ width: 'fit-content' }}
                   control={<Switch {...field} />}
-                  label={field.value ? '거래중' : '거래종료'}
+                  label={
+                    <Typography noWrap variant="caption">
+                      {field.value ? '거래중' : '거래종료'}
+                    </Typography>
+                  }
                 />
               );
             }}

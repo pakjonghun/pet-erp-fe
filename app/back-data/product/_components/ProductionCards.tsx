@@ -49,6 +49,7 @@ const ProductionCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx })
       spacing={2}
     >
       <EmptyItem isEmpty={isEmpty} />
+
       {selectedProduct && (
         <RemoveProductModal
           open={optionType === 'delete'}

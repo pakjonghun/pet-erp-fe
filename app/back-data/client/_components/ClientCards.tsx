@@ -49,6 +49,7 @@ const ClientCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx }) => 
       spacing={2}
     >
       <EmptyItem isEmpty={isEmpty} />
+
       {selectedClient && (
         <RemoveClientModal
           open={optionType === 'delete'}
