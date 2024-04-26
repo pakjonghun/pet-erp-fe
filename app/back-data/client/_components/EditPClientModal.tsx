@@ -102,7 +102,7 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
               return (
                 <FormControlLabel
                   sx={{ width: 'fit-content' }}
-                  control={<Switch defaultChecked {...field} />}
+                  control={<Switch {...field} />}
                   label={field.value ? '거래중' : '거래종료'}
                 />
               );
