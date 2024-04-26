@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { graphql } from '../../codegen';
-import { Category, CategoryFragmentFragmentDoc } from '../../codegen/graphql';
+import { ProductCategory, ProductCategoryFragmentFragmentDoc } from '../../codegen/graphql';
 
 const createCategory = graphql(`
   mutation createCategory($createCategoryInput: CreateCategoryInput!) {
@@ -18,8 +18,8 @@ export const useCreateCategory = () => {
         fields: {
           categories(existingCategories = { totalCount: 0, data: [] }) {
             const newCategoryRef = cache.writeFragment({
-              data: data?.createCategory as Category,
-              fragment: CategoryFragmentFragmentDoc,
+              data: data?.createCategory as ProductCategory,
+              fragment: ProductCategoryFragmentFragmentDoc,
             });
             return {
               totalCount: existingCategories.totalCount + 1,

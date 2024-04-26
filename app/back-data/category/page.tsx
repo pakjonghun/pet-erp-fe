@@ -16,7 +16,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Search } from '@mui/icons-material';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import CreateCategoryModal from './_components/AddCategory';
 import { useFindManyCategory } from '@/http/graphql/hooks/category/useFindCategories';

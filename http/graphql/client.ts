@@ -18,7 +18,7 @@ export const client = new ApolloClient({
         logType
       }
 
-      fragment CategoryFragment on Category {
+      fragment ProductCategoryFragment on ProductCategory {
         _id
         name
       }
@@ -39,7 +39,7 @@ export const client = new ApolloClient({
         leadTime
         maintainDate
         category {
-          ...CategoryFragment
+          ...ProductCategoryFragment
         }
       }
 
