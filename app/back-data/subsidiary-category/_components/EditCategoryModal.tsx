@@ -6,8 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { CreateCategoryForm, createCategorySchema } from '../_validations/createCategoryValidation';
-
-import { useUpdateProductCategory } from '@/http/graphql/hooks/product-category/useEditProductCategory';
 import { modalSizeProps } from '@/components/commonStyles';
 import { SubsidiaryCategory } from '@/http/graphql/codegen/graphql';
 import { useUpdateSubsidiaryCategory } from '@/http/graphql/hooks/subsidiary-category/useUpdateSubsidiaryCategory';
