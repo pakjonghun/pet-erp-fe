@@ -31,6 +31,8 @@ const documents = {
     "\n  mutation removeProduct($_id: String!) {\n    removeProduct(_id: $_id) {\n      _id\n      name\n    }\n  }\n": types.RemoveProductDocument,
     "\n  mutation updateProduct($updateProductInput: UpdateProductInput!) {\n    updateProduct(updateProductInput: $updateProductInput) {\n      ...ProductFragment\n    }\n  }\n": types.UpdateProductDocument,
     "\n  mutation createSubsidiaryCategory(\n    $createSubsidiaryCategoryInput: CreateSubsidiaryCategoryInput!\n  ) {\n    createSubsidiaryCategory(createSubsidiaryCategoryInput: $createSubsidiaryCategoryInput) {\n      ...SubsidiaryCategoryFragment\n    }\n  }\n": types.CreateSubsidiaryCategoryDocument,
+    "\n  mutation removeSubsidiaryCategory($_id: String!) {\n    removeSubsidiaryCategory(_id: $_id) {\n      _id\n    }\n  }\n": types.RemoveSubsidiaryCategoryDocument,
+    "\n  query subsidiaryCategories($subsidiaryCategoriesInput: SubsidiaryCategoriesInput!) {\n    subsidiaryCategories(subsidiaryCategoriesInput: $subsidiaryCategoriesInput) {\n      _id\n      name\n    }\n  }\n": types.SubsidiaryCategoriesDocument,
     "\n    mutation updateSubsidiaryCategory(\n      $updateSubsidiaryCategoryInput: UpdateSubsidiaryCategoryInput!\n    ) {\n      updateSubsidiaryCategory(updateSubsidiaryCategoryInput: $updateSubsidiaryCategoryInput) {\n        ...SubsidiaryCategoryFragment\n      }\n    }\n  ": types.UpdateSubsidiaryCategoryDocument,
     "\n  mutation updateUser($updateUserInput: UpdateUserDTO!) {\n    updateUser(updateUserInput: $updateUserInput) {\n      id\n      role\n      createdAt\n    }\n  }\n": types.UpdateUserDocument,
     "\n  mutation CreateUser($createUserInput: CreateUserDTO!) {\n    createUser(createUserInput: $createUserInput) {\n      id\n      role\n      createdAt\n    }\n  }\n": types.CreateUserDocument,
@@ -126,6 +128,14 @@ export function graphql(source: "\n  mutation updateProduct($updateProductInput:
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation createSubsidiaryCategory(\n    $createSubsidiaryCategoryInput: CreateSubsidiaryCategoryInput!\n  ) {\n    createSubsidiaryCategory(createSubsidiaryCategoryInput: $createSubsidiaryCategoryInput) {\n      ...SubsidiaryCategoryFragment\n    }\n  }\n"): (typeof documents)["\n  mutation createSubsidiaryCategory(\n    $createSubsidiaryCategoryInput: CreateSubsidiaryCategoryInput!\n  ) {\n    createSubsidiaryCategory(createSubsidiaryCategoryInput: $createSubsidiaryCategoryInput) {\n      ...SubsidiaryCategoryFragment\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation removeSubsidiaryCategory($_id: String!) {\n    removeSubsidiaryCategory(_id: $_id) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation removeSubsidiaryCategory($_id: String!) {\n    removeSubsidiaryCategory(_id: $_id) {\n      _id\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query subsidiaryCategories($subsidiaryCategoriesInput: SubsidiaryCategoriesInput!) {\n    subsidiaryCategories(subsidiaryCategoriesInput: $subsidiaryCategoriesInput) {\n      _id\n      name\n    }\n  }\n"): (typeof documents)["\n  query subsidiaryCategories($subsidiaryCategoriesInput: SubsidiaryCategoriesInput!) {\n    subsidiaryCategories(subsidiaryCategoriesInput: $subsidiaryCategoriesInput) {\n      _id\n      name\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
