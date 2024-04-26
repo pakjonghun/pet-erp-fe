@@ -8,6 +8,9 @@ export const BackDataTabs = {
   'back-data/client': {
     label: '거래처',
   },
+  'back-data/subsidiary-category': {
+    label: '부자재분류',
+  },
   'back-data/subsidiary': {
     label: '부자재',
   },

@@ -1,13 +1,16 @@
 import { List, Toolbar } from '@mui/material';
-import React from 'react';
+import React, { FC } from 'react';
 import { NavMenus } from '../constants';
-
 import { usePathname } from 'next/navigation';
 import { NavListItem } from '@/components/ui/listItem/menuStyles';
 import { getFirstPath } from '@/util';
 import NavMenu from '@/components/ui/listItem/NavMenu';
 
-const NavContent = () => {
+interface Props {
+  onClose: () => void;
+}
+
+const NavContent: FC<Props> = ({ onClose }) => {
   const pathname = usePathname();
 
   const navList = Object.keys(NavMenus) as (keyof typeof NavMenus)[];
@@ -21,7 +24,7 @@ const NavContent = () => {
       <Toolbar />
       <List>
         {navList.map((text) => (
-          <NavListItem key={text} disablePadding>
+          <NavListItem onClick={onClose} key={text} disablePadding>
             <NavMenu menuKey={text} selected={getSelected(text)} menu={NavMenus[text]} />
           </NavListItem>
         ))}

@@ -34,7 +34,7 @@ const MainLayout: FC<Props> = ({ children }) => {
     <Box component="main">
       {!isPublicPath && (
         <MobileNav open={open} onClose={onClose}>
-          <NavContent />
+          <NavContent onClose={onClose} />
         </MobileNav>
       )}
       <Box
