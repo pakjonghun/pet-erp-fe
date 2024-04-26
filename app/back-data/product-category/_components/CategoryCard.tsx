@@ -1,11 +1,11 @@
 import { FC, useState } from 'react';
 import { Paper, Typography, Stack, Button } from '@mui/material';
-import { Category } from '@/http/graphql/codegen/graphql';
+import { ProductCategory } from '@/http/graphql/codegen/graphql';
 import DeleteCategoryModal from './DeleteCategoryModal';
 import EditCategoryModal from './EditCategoryModal';
 
 interface Props {
-  item: Category;
+  item: ProductCategory;
 }
 
 const CategoryCard: FC<Props> = ({ item: { _id, name } }) => {

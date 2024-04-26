@@ -24,7 +24,13 @@ const NavContent: FC<Props> = ({ onClose }) => {
       <Toolbar />
       <List>
         {navList.map((text) => (
-          <NavListItem onClick={onClose} key={text} disablePadding>
+          <NavListItem
+            onClick={() => {
+              setTimeout(onClose, 300);
+            }}
+            key={text}
+            disablePadding
+          >
             <NavMenu menuKey={text} selected={getSelected(text)} menu={NavMenus[text]} />
           </NavListItem>
         ))}

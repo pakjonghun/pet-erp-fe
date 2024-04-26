@@ -5,6 +5,7 @@ const removeSubsidiaryCategory = graphql(`
   mutation removeSubsidiaryCategory($_id: String!) {
     removeSubsidiaryCategory(_id: $_id) {
       _id
+      name
     }
   }
 `);
@@ -12,7 +13,7 @@ const removeSubsidiaryCategory = graphql(`
 export const useRemoveSubsidiaryCategory = () => {
   return useMutation(removeSubsidiaryCategory, {
     update(cache, { data }) {
-      const type = data?.__typename;
+      const type = data?.removeSubsidiaryCategory.__typename;
       const id = data?.removeSubsidiaryCategory._id;
       cache.evict({ id: `${type}:${id}` });
       cache.gc();

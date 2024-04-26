@@ -6,18 +6,20 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { CreateCategoryForm, createCategorySchema } from '../_validations/createCategoryValidation';
-import { Category } from '@/http/graphql/codegen/graphql';
+
 import { useUpdateProductCategory } from '@/http/graphql/hooks/product-category/useEditProductCategory';
 import { modalSizeProps } from '@/components/commonStyles';
+import { SubsidiaryCategory } from '@/http/graphql/codegen/graphql';
+import { useUpdateSubsidiaryCategory } from '@/http/graphql/hooks/subsidiary-category/useUpdateSubsidiaryCategory';
 
 interface Props {
   open: boolean;
-  item: Category;
+  item: SubsidiaryCategory;
   onClose: () => void;
 }
 
 const EditCategoryModal: FC<Props> = ({ open, item, onClose }) => {
-  const [updateCategory, { loading }] = useUpdateProductCategory();
+  const [updateCategory, { loading }] = useUpdateSubsidiaryCategory();
   const {
     reset,
     control,
@@ -40,18 +42,18 @@ const EditCategoryModal: FC<Props> = ({ open, item, onClose }) => {
   const onSubmit = (values: CreateCategoryForm) => {
     updateCategory({
       variables: {
-        updateCategoryInput: {
+        updateSubsidiaryCategoryInput: {
           _id: item._id as string,
           name: values.name,
         },
       },
       onCompleted: () => {
-        snackMessage({ message: '제품분류 편집이 완료되었습니다.', severity: 'success' });
+        snackMessage({ message: '부자재분류 편집이 완료되었습니다.', severity: 'success' });
         handleClose();
       },
       onError: (err) => {
         const message = err.message;
-        snackMessage({ message: message ?? '제품분류 편집이 실패했습니다.', severity: 'error' });
+        snackMessage({ message: message ?? '부자재분류 편집이 실패했습니다.', severity: 'error' });
       },
     });
   };
@@ -64,9 +66,9 @@ const EditCategoryModal: FC<Props> = ({ open, item, onClose }) => {
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        제품분류 편집
+        부자재분류 편집
       </Typography>
-      <Typography sx={{ mb: 3 }}>{`${item.name}`} 제품분류를 편집합니다.</Typography>
+      <Typography sx={{ mb: 3 }}>{`${item.name}`} 부자재분류를 편집합니다.</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={modalSizeProps}>
           <Controller
@@ -77,7 +79,7 @@ const EditCategoryModal: FC<Props> = ({ open, item, onClose }) => {
                 {...field}
                 required
                 size="small"
-                label="제품분류 이름"
+                label="부자재분류 이름"
                 error={!!errors.name?.message}
                 helperText={errors.name?.message ?? ''}
               />

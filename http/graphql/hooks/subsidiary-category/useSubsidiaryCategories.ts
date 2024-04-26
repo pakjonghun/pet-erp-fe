@@ -5,8 +5,11 @@ import { SubsidiaryCategoriesInput } from '../../codegen/graphql';
 const subsidiaryCategories = graphql(`
   query subsidiaryCategories($subsidiaryCategoriesInput: SubsidiaryCategoriesInput!) {
     subsidiaryCategories(subsidiaryCategoriesInput: $subsidiaryCategoriesInput) {
-      _id
-      name
+      totalCount
+      data {
+        _id
+        name
+      }
     }
   }
 `);

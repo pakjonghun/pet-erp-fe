@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { graphql } from '../../codegen';
 import { SubsidiaryCategory, SubsidiaryCategoryFragmentFragmentDoc } from '../../codegen/graphql';
 
-const createSubsidiary = graphql(`
+const createSubsidiaryCategory = graphql(`
   mutation createSubsidiaryCategory(
     $createSubsidiaryCategoryInput: CreateSubsidiaryCategoryInput!
   ) {
@@ -12,8 +12,8 @@ const createSubsidiary = graphql(`
   }
 `);
 
-export const useCreateSubsidiary = () => {
-  return useMutation(createSubsidiary, {
+export const useCreateSubsidiaryCategory = () => {
+  return useMutation(createSubsidiaryCategory, {
     update(cache, { data }) {
       cache.modify({
         fields: {

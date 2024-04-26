@@ -93,7 +93,7 @@ const CategoryPage = () => {
   const { mutate: download, isPending: isDownloading } = useDownloadExcelFile();
 
   const handleDownload = () => {
-    download('category', {
+    download('product-category', {
       onSuccess: () => {
         snackMessage({ message: '카테고리 다운로드가 완료되었습니다.', severity: 'success' });
       },

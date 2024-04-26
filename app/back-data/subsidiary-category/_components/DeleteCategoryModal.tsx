@@ -5,17 +5,17 @@ import { FC } from 'react';
 import BaseModal from '../../../../components/ui/modal/BaseModal';
 import { snackMessage } from '@/store/snackMessage';
 import CommonLoading from '../../../../components/ui/loading/CommonLoading';
-import { useRemoveProductCategory } from '@/http/graphql/hooks/product-category/useRemoveProductCategory';
-import { Category } from '@/http/graphql/codegen/graphql';
+import { SubsidiaryCategory } from '@/http/graphql/codegen/graphql';
+import { useRemoveSubsidiaryCategory } from '@/http/graphql/hooks/subsidiary-category/useRemoveSubsidiaryCategory';
 
 interface Props {
-  item: Category;
+  item: SubsidiaryCategory;
   open: boolean;
   onClose: () => void;
 }
 
 const DeleteCategoryModal: FC<Props> = ({ item, open, onClose }) => {
-  const [deleteCategory, { loading }] = useRemoveProductCategory();
+  const [deleteCategory, { loading }] = useRemoveSubsidiaryCategory();
 
   const handleDelete = () => {
     deleteCategory({
@@ -24,7 +24,7 @@ const DeleteCategoryModal: FC<Props> = ({ item, open, onClose }) => {
       },
       onCompleted: (res) => {
         snackMessage({
-          message: `${res.removeCategory.name} 삭제가 완료되었습니다.`,
+          message: `${res.removeSubsidiaryCategory.name} 삭제가 완료되었습니다.`,
           severity: 'success',
         });
         onClose();
@@ -41,10 +41,10 @@ const DeleteCategoryModal: FC<Props> = ({ item, open, onClose }) => {
   return (
     <BaseModal open={open} onClose={onClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        제품분류 삭제
+        부자재분류 삭제
       </Typography>
       <Typography sx={{ color: (theme) => theme.palette.warning.dark }}>
-        해당 제품분류가 삭제됩니다.
+        해당 부자재분류가 삭제됩니다.
       </Typography>
       <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
         <Button color="info" variant="outlined" onClick={onClose}>
