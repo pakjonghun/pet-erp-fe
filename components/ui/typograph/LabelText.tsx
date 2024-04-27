@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import { Typography } from '@mui/material';
+import { SxProps, Typography } from '@mui/material';
 
 interface Props {
   label: string;
@@ -8,7 +8,7 @@ interface Props {
 
 const LabelText: FC<Props> = ({ label, text }) => {
   return (
-    <Typography sx={{ display: 'inline-block' }} component="span">
+    <Typography sx={{ display: 'inline-block', whiteSpace: 'break-spaces' }} component="span">
       <Typography component="span" sx={{ fontWeight: 800, mr: 1 }}>
         {label}
       </Typography>

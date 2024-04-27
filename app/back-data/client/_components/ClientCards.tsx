@@ -35,7 +35,10 @@ const ClientCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx }) => 
     handleClickOption('delete', selectedClient);
   };
 
-  const handleClosePopover = () => setPopoverAnchor(null);
+  const handleClosePopover = () => {
+    setPopoverAnchor(null);
+    setSelectedClient(null);
+  };
 
   return (
     <Grid

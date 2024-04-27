@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
   AutocompleteRenderInputParams,
@@ -11,23 +11,22 @@ import {
   Typography,
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
-import {
-  CreateProductForm,
-  createProductSchema,
-} from '@/app/back-data/product/_validations/createProductValidation';
+import { createProductSchema } from '@/app/back-data/product/_validations/createProductValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
-import { useCreateProduct } from '@/http/graphql/hooks/product/useCreateProduct';
-import { useFindManyProductCategory } from '@/http/graphql/hooks/product-category/useFindProductCategories';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT, PRODUCT_PREFIX } from '@/constants';
-import { SelectItem } from '@/components/ui/select/SearchAutoComplete';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 import { modalSizeProps } from '@/components/commonStyles';
 import { filterEmptyValues } from '@/util';
 import NumberInput from '@/components/ui/input/NumberInput';
+import { useCreateSubsidiary } from '@/http/graphql/hooks/subsidiary/useCreateSubsidiary';
+import { CreateSubsidiaryForm } from '../_validations/createSubsidiaryValidation';
+import MultiAutoComplete from '@/components/ui/select/MultiAUtoComplete';
+import { useProducts } from '@/http/graphql/hooks/product/useProducts';
+import { useSubsidiaryCategories } from '@/http/graphql/hooks/subsidiary-category/useSubsidiaryCategories';
 
 interface Props {
   open: boolean;
@@ -35,83 +34,104 @@ interface Props {
 }
 
 const AddSubsidiaryModal: FC<Props> = ({ open, onClose }) => {
-  const [createProduct, { loading }] = useCreateProduct();
+  const [createSubsidiary, { loading }] = useCreateSubsidiary();
 
   const {
     reset,
     control,
     watch,
     handleSubmit,
-    setValue,
     formState: { errors },
-  } = useForm<CreateProductForm>({
+  } = useForm<CreateSubsidiaryForm>({
     resolver: zodResolver(createProductSchema),
     defaultValues: {
       code: '',
       name: '',
-      barCode: '',
     },
   });
 
-  const [categoryKeyword, setCategoryKeyword] = useState('');
-  const delayedCategoryKeyword = useTextDebounce(categoryKeyword);
+  const categoryKeyword = watch('category');
+  const delayedCategoryKeyword = useTextDebounce(categoryKeyword ?? '');
 
-  const { data, networkStatus, refetch, fetchMore } = useFindManyProductCategory({
+  const {
+    data: categories,
+    networkStatus: categoryNetwork,
+    fetchMore: categoryFetchMore,
+  } = useSubsidiaryCategories({
     keyword: delayedCategoryKeyword,
     limit: LIMIT,
     skip: 0,
   });
-  const rows = data?.categories.data ?? [];
 
-  const categoryName = watch('category');
-  const category = rows.find((item) => item.name === categoryName);
-  const categoryOption = category ? { _id: category!._id, label: category!.name } : null;
-
-  const setCategory = (selectedCategory: SelectItem | null) => {
-    if (!selectedCategory) return;
-    setValue('category', selectedCategory?.label ?? '');
-  };
-
-  const callback: IntersectionObserverCallback = (entries) => {
+  const categoryRows = categories?.subsidiaryCategories.data ?? [];
+  const isCategoryLoading = categoryNetwork == 1 || categoryNetwork == 2 || categoryNetwork == 3;
+  const categoryCallback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
-      if (networkStatus != 1 && networkStatus != 3) {
-        const totalCount = data?.categories.totalCount;
-        if (totalCount != null && totalCount > rows.length) {
-          fetchMore({
-            variables: {
-              categoriesInput: {
-                keyword: delayedCategoryKeyword,
-                limit: LIMIT,
-                skip: rows.length,
-              },
+      if (isCategoryLoading) return;
+
+      const totalCount = categories?.subsidiaryCategories.totalCount;
+      if (totalCount != null && totalCount > categoryRows.length) {
+        categoryFetchMore({
+          variables: {
+            categoriesInput: {
+              keyword: delayedCategoryKeyword,
+              limit: LIMIT,
+              skip: categoryRows.length,
             },
-          });
-        }
+          },
+        });
       }
     }
   };
+  const categoryScrollRef = useInfinityScroll({ callback: categoryCallback });
 
-  const scrollRef = useInfinityScroll({ callback });
+  const [productKeyword, setProductKeyword] = useState('');
+  const delayedProductKeyword = useTextDebounce(productKeyword);
 
-  useEffect(() => {
-    refetch();
-  }, [delayedCategoryKeyword, refetch]);
-  const onSubmit = (values: CreateProductForm) => {
-    const newValues = filterEmptyValues(values) as CreateProductForm;
-    createProduct({
+  const {
+    data: products,
+    networkStatus: productNetwork,
+    fetchMore: productFetchMore,
+  } = useProducts({
+    keyword: delayedProductKeyword,
+    limit: LIMIT,
+    skip: 0,
+  });
+  const productRows = products?.products.data ?? [];
+  const isProductLoading = productNetwork == 1 || productNetwork == 2 || productNetwork == 3;
+  const productCallback: IntersectionObserverCallback = (entries) => {
+    if (entries[0].isIntersecting) {
+      if (isProductLoading) return;
+
+      const totalCount = products?.products.totalCount;
+      if (totalCount != null && totalCount > productRows.length) {
+        productFetchMore({
+          variables: {
+            productsInput: {
+              keyword: delayedProductKeyword,
+              limit: LIMIT,
+              skip: productRows.length,
+            },
+          },
+        });
+      }
+    }
+  };
+  const productScrollRef = useInfinityScroll({ callback: productCallback });
+
+  const onSubmit = (values: CreateSubsidiaryForm) => {
+    const newValues = filterEmptyValues(values) as CreateSubsidiaryForm;
+    createSubsidiary({
       variables: {
-        createProductInput: {
-          ...newValues,
-          category: category?._id,
-        },
+        createSubsidiaryInput: newValues,
       },
       onCompleted: () => {
-        snackMessage({ message: '제품등록이 완료되었습니다.', severity: 'success' });
+        snackMessage({ message: '부자재등록이 완료되었습니다.', severity: 'success' });
         handleClose();
       },
       onError: (err) => {
         const message = err.message;
-        snackMessage({ message: message ?? '제품등록이 실패했습니다.', severity: 'error' });
+        snackMessage({ message: message ?? '부자재등록이 실패했습니다.', severity: 'error' });
       },
     });
   };
@@ -124,9 +144,9 @@ const AddSubsidiaryModal: FC<Props> = ({ open, onClose }) => {
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        제품 입력
+        부자재 등록
       </Typography>
-      <Typography sx={{ mb: 3 }}>새로운 제품을 입력합니다.</Typography>
+      <Typography sx={{ mb: 3 }}>새로운 부자재을 등록합니다.</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={modalSizeProps}>
           <Controller
@@ -138,7 +158,7 @@ const AddSubsidiaryModal: FC<Props> = ({ open, onClose }) => {
                   {...field}
                   size="small"
                   required
-                  label="제품코드"
+                  label="부자재코드"
                   error={!!errors.code?.message}
                   helperText={errors.code?.message ?? ''}
                   InputProps={{
@@ -159,23 +179,11 @@ const AddSubsidiaryModal: FC<Props> = ({ open, onClose }) => {
                   size="small"
                   {...field}
                   required
-                  label="제품이름"
+                  label="부자재이름"
                   error={!!errors.name?.message}
                   helperText={errors.name?.message ?? ''}
                 />
               </FormControl>
-            )}
-          />
-          <Controller
-            control={control}
-            name="salePrice"
-            render={({ field }) => (
-              <NumberInput
-                field={field}
-                label="판매가"
-                error={!!errors.salePrice?.message}
-                helperText={errors.salePrice?.message ?? ''}
-              />
             )}
           />
           <Controller
@@ -204,60 +212,59 @@ const AddSubsidiaryModal: FC<Props> = ({ open, onClose }) => {
           />
           <Controller
             control={control}
-            name="maintainDate"
+            name="category"
             render={({ field }) => (
-              <NumberInput
-                field={field}
-                label="최소 유지기간(날짜)"
-                error={!!errors.maintainDate?.message}
-                helperText={errors.maintainDate?.message ?? ''}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="barCode"
-            render={({ field }) => (
-              <FormControl>
-                <TextField
-                  size="small"
-                  {...field}
-                  label="바코드"
-                  error={!!errors.barCode?.message}
-                  helperText={errors.barCode?.message ?? ''}
-                />
-              </FormControl>
-            )}
-          />
-          <SearchAutoComplete
-            setValue={setCategory}
-            value={categoryOption}
-            scrollRef={scrollRef}
-            renderSearchInput={(params: AutocompleteRenderInputParams) => {
-              return (
-                <Controller
-                  control={control}
-                  name="category"
-                  render={({ field }) => (
+              <SearchAutoComplete
+                loading={isCategoryLoading}
+                setValue={(value) => field.onChange(value)}
+                value={field.value ?? ''}
+                scrollRef={categoryScrollRef}
+                options={categoryRows.map((item) => item?.name ?? '') ?? []}
+                renderSearchInput={(params: AutocompleteRenderInputParams) => {
+                  return (
                     <FormControl fullWidth>
                       <TextField
                         {...field}
                         {...params}
-                        onChange={(event) => {
-                          field.onChange(event);
-                          setCategoryKeyword(event.target.value);
-                        }}
                         label="분류"
                         error={!!errors.category?.message}
                         helperText={errors.category?.message ?? ''}
                         size="small"
                       />
                     </FormControl>
-                  )}
-                />
-              );
-            }}
-            options={rows.map((row) => ({ _id: row._id, label: row.name }))}
+                  );
+                }}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="productList"
+            render={({ field }) => (
+              <MultiAutoComplete
+                loading={isProductLoading}
+                onChange={(value) => field.onChange(value)}
+                value={field.value ?? []}
+                scrollRef={productScrollRef}
+                options={productRows.map((row) => row.name) ?? []}
+                renderSearchInput={(params: AutocompleteRenderInputParams) => {
+                  return (
+                    <FormControl fullWidth>
+                      <TextField
+                        {...params}
+                        value={productKeyword}
+                        onChange={(event) => setProductKeyword(event.target.value)}
+                        name={field.name}
+                        label="부자재를 사용하는 제품목록 선택"
+                        error={!!errors.productList?.message}
+                        helperText={errors.productList?.message ?? ''}
+                        size="small"
+                      />
+                    </FormControl>
+                  );
+                }}
+              />
+            )}
           />
         </FormGroup>
         <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">

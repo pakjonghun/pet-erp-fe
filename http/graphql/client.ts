@@ -17,6 +17,7 @@ export const client = new ApolloClient({
       }
 
       fragment SubsidiaryFragment on Subsidiary {
+        _id
         code
         name
         productList {

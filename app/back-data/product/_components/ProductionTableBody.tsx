@@ -33,7 +33,10 @@ const ProductionTableBody: FC<Props> = ({ data, isLoading, isEmpty, scrollRef })
     handleClickOption('delete', selectedProduct);
   };
 
-  const handleClosePopover = () => setPopoverAnchor(null);
+  const handleClosePopover = () => {
+    setPopoverAnchor(null);
+    setSelectedProduct(null);
+  };
 
   return (
     <TableBody>

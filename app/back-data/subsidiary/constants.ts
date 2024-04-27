@@ -1,11 +1,9 @@
-export const ProductHeaderList = [
+export const SubsidiaryHeaderList = [
   '코드',
   '분류',
-  '바코드',
   '이름',
   '원가',
-  '판매가',
   '리드타임(일)',
-  '최소 유지기간(일)',
+  '사용되는 제품목록',
   '',
 ];

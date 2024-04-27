@@ -1,3 +1,4 @@
+import { FC, useEffect } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
   AutocompleteRenderInputParams,
@@ -9,7 +10,6 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
   CreateProductForm,
@@ -21,7 +21,6 @@ import { snackMessage } from '@/store/snackMessage';
 import { useFindManyProductCategory } from '@/http/graphql/hooks/product-category/useFindProductCategories';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT, PRODUCT_PREFIX } from '@/constants';
-import { SelectItem } from '@/components/ui/select/SearchAutoComplete';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 import { useUpdateProduct } from '@/http/graphql/hooks/product/useUpdateProduct';
@@ -60,8 +59,8 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
     },
   });
 
-  const [categoryKeyword, setCategoryKeyword] = useState('');
-  const delayedCategoryKeyword = useTextDebounce(categoryKeyword);
+  const categoryKeyword = watch('category');
+  const delayedCategoryKeyword = useTextDebounce(categoryKeyword ?? '');
 
   const { data, networkStatus, refetch, fetchMore } = useFindManyProductCategory({
     keyword: delayedCategoryKeyword,
@@ -70,30 +69,22 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
   });
   const rows = data?.categories.data ?? [];
 
-  const categoryName = watch('category');
-  const category = rows.find((item) => item.name === categoryName);
-  const categoryOption = category ? { _id: category!._id, label: category!.name } : null;
-
-  const setCategory = (selectedCategory: SelectItem | null) => {
-    if (!selectedCategory) return;
-    setValue('category', selectedCategory?.label ?? '');
-  };
+  const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
-      if (networkStatus != 1 && networkStatus != 3) {
-        const totalCount = data?.categories.totalCount;
-        if (totalCount != null && totalCount > rows.length) {
-          fetchMore({
-            variables: {
-              categoriesInput: {
-                keyword: delayedCategoryKeyword,
-                limit: LIMIT,
-                skip: rows.length,
-              },
+      if (isLoading) return;
+      const totalCount = data?.categories.totalCount;
+      if (totalCount != null && totalCount > rows.length) {
+        fetchMore({
+          variables: {
+            categoriesInput: {
+              keyword: delayedCategoryKeyword,
+              limit: LIMIT,
+              skip: rows.length,
             },
-          });
-        }
+          },
+        });
       }
     }
   };
@@ -110,7 +101,6 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
         updateProductInput: {
           ...newValues,
           _id: selectedProduct._id,
-          category: category?._id,
         },
       },
       onCompleted: () => {
@@ -237,35 +227,31 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
               </FormControl>
             )}
           />
-          <SearchAutoComplete
-            setValue={setCategory}
-            value={categoryOption}
-            scrollRef={scrollRef}
-            renderSearchInput={(params: AutocompleteRenderInputParams) => {
-              return (
-                <Controller
-                  control={control}
-                  name="category"
-                  render={({ field }) => (
+          <Controller
+            control={control}
+            name="category"
+            render={({ field }) => (
+              <SearchAutoComplete
+                options={rows.map((row) => row.name!)}
+                setValue={(value) => field.onChange(value)}
+                value={field.value ?? ''}
+                scrollRef={scrollRef}
+                renderSearchInput={(params: AutocompleteRenderInputParams) => {
+                  return (
                     <FormControl fullWidth>
                       <TextField
                         {...field}
                         {...params}
-                        onChange={(event) => {
-                          field.onChange(event);
-                          setCategoryKeyword(event.target.value);
-                        }}
                         label="분류"
                         error={!!errors.category?.message}
                         helperText={errors.category?.message ?? ''}
                         size="small"
                       />
                     </FormControl>
-                  )}
-                />
-              );
-            }}
-            options={rows.map((row) => ({ _id: row._id, label: row.name }))}
+                  );
+                }}
+              />
+            )}
           />
         </FormGroup>
         <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">

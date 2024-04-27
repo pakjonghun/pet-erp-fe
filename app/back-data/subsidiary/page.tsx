@@ -24,15 +24,16 @@ import ProductionTableBody from './_components/SubsidiaryTableBody';
 import { useUploadExcelFile } from '@/http/rest/hooks/file/useUploadExcelFile';
 import { snackMessage } from '@/store/snackMessage';
 import UploadButton from '@/components/ui/button/UploadButtont';
-import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import { LIMIT } from '@/constants';
-import ProductionCards from './_components/SubsidiaryCards';
 import ActionButton from '@/components/ui/button/ActionButton';
 import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFile';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
-import { ProductHeaderList } from './constants';
+import { SubsidiaryHeaderList } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Product } from '@/http/graphql/codegen/graphql';
+import { useSubsidiaries } from '@/http/graphql/hooks/subsidiary/useSubsidiaries';
+import SubsidiaryCards from './_components/SubsidiaryCards';
+import SubsidiaryTableBody from './_components/SubsidiaryTableBody';
 
 const BackDataPage = () => {
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
@@ -40,12 +41,12 @@ const BackDataPage = () => {
   const delayKeyword = useTextDebounce(keyword);
   const [fileKey, setFileKey] = useState(new Date());
 
-  const { data, networkStatus, fetchMore, refetch } = useProducts({
+  const { data, networkStatus, fetchMore, refetch } = useSubsidiaries({
     keyword: delayKeyword,
     skip: 0,
     limit: LIMIT,
   });
-  const rows = (data?.products.data as Product[]) ?? [];
+  const rows = data?.subsidiaries.data ?? [];
   const isLoading = networkStatus == 3 || networkStatus == 1;
   const isEmpty = !isLoading && rows.length === 0;
 
@@ -53,11 +54,11 @@ const BackDataPage = () => {
     if (entries[0].isIntersecting) {
       if (isLoading) return;
 
-      const totalCount = data?.products.totalCount;
+      const totalCount = data?.subsidiaries.totalCount;
       if (totalCount != null && totalCount > rows.length) {
         fetchMore({
           variables: {
-            productsInput: {
+            subsidiariesInput: {
               keyword,
               skip: rows.length,
               limit: LIMIT,
@@ -76,7 +77,7 @@ const BackDataPage = () => {
     const formBody = new FormData();
     formBody.append('file', file);
     uploadProduct(
-      { service: 'product', formBody },
+      { service: 'subsidiary', formBody },
       {
         onSuccess: () => {
           snackMessage({ message: '부자재 업로드가 완료되었습니다.', severity: 'success' });
@@ -164,7 +165,7 @@ const BackDataPage = () => {
       <Typography sx={{ p: 3 }}>
         {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
       </Typography>
-      <ProductionCards
+      <SubsidiaryCards
         sx={{
           display: {
             xs: 'block',
@@ -187,12 +188,12 @@ const BackDataPage = () => {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              {ProductHeaderList.map((item, index) => (
+              {SubsidiaryHeaderList.map((item, index) => (
                 <HeadCell key={`${index}_${item}`} text={item} />
               ))}
             </TableRow>
           </TableHead>
-          <ProductionTableBody
+          <SubsidiaryTableBody
             isLoading={isLoading}
             data={rows}
             isEmpty={isEmpty}

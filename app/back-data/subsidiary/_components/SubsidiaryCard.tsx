@@ -5,23 +5,24 @@ import { SelectOption } from '../../types';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { Product } from '@/http/graphql/codegen/graphql';
+import { Subsidiary } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
+import { getProductList } from '../util';
 
 interface Props {
-  product: Product;
-  onClickRow: (event: MouseEvent<HTMLSpanElement>, product: Product) => void;
-  onClickOption: (option: SelectOption | null, product: Product | null) => void;
+  subsidiary: Subsidiary;
+  onClickRow: (event: MouseEvent<HTMLSpanElement>, subsidiary: Subsidiary) => void;
+  onClickOption: (option: SelectOption | null, product: Subsidiary | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const SubsidiaryCard: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow }) => {
+const SubsidiaryCard: FC<Props> = ({ subsidiary, scrollRef, onClickOption, onClickRow }) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-  const productOptionMenus: Record<SelectOption, SelectedOptionItem> = {
+  const subsidiaryOptionMenus: Record<SelectOption, SelectedOptionItem> = {
     edit: {
       callback: () => {
-        onClickOption('edit', product);
+        onClickOption('edit', subsidiary);
         setMenuAnchor(null);
       },
       label: '편집',
@@ -29,7 +30,7 @@ const SubsidiaryCard: FC<Props> = ({ product, scrollRef, onClickOption, onClickR
     },
     delete: {
       callback: () => {
-        onClickOption('delete', product);
+        onClickOption('delete', subsidiary);
         setMenuAnchor(null);
       },
       label: '삭제',
@@ -40,7 +41,7 @@ const SubsidiaryCard: FC<Props> = ({ product, scrollRef, onClickOption, onClickR
   return (
     <Paper ref={scrollRef} sx={{ position: 'relative', py: 3, px: 4 }}>
       <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
-        {Object.entries(productOptionMenus).map(([option, menu]) => (
+        {Object.entries(subsidiaryOptionMenus).map(([option, menu]) => (
           <OptionMenu key={option} menu={menu} option={option} />
         ))}
       </Menu>
@@ -52,30 +53,22 @@ const SubsidiaryCard: FC<Props> = ({ product, scrollRef, onClickOption, onClickR
       >
         <MoreHorizIcon />
       </IconButton>
-      <Box onClick={(event) => onClickRow(event, product)}>
+      <Box onClick={(event) => onClickRow(event, subsidiary)}>
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="이름" text={product.name} />
+            <LabelText label="이름" text={subsidiary.name} />
           </Box>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="분류" text={product.category?.name ?? EMPTY} />
+            <LabelText label="분류" text={subsidiary.category?.name ?? EMPTY} />
           </Box>
         </Stack>
 
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="코드" text={product.code} />
+            <LabelText label="코드" text={subsidiary.code} />
           </Box>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="바코드" text={product.barCode ?? EMPTY} />
-          </Box>
-        </Stack>
-        <Stack direction="row" justifyContent="space-between" gap={2}>
-          <Box sx={{ flex: 1 }}>
-            <LabelText label="원가" text={product.wonPrice ?? EMPTY} />
-          </Box>
-          <Box sx={{ flex: 1 }}>
-            <LabelText label="판매가" text={product.salePrice ?? EMPTY} />
+            <LabelText label="원가" text={subsidiary.wonPrice ?? EMPTY} />
           </Box>
         </Stack>
 
@@ -83,15 +76,12 @@ const SubsidiaryCard: FC<Props> = ({ product, scrollRef, onClickOption, onClickR
           <Box sx={{ flex: 1 }}>
             <LabelText
               label="리드타임(일)"
-              text={product.leadTime ? `${product.leadTime}일` : EMPTY}
+              text={subsidiary.leadTime ? `${subsidiary.leadTime}일` : EMPTY}
             />
           </Box>
-          <Box sx={{ flex: 1 }}>
-            <LabelText
-              label="최소 유지기간(일)"
-              text={product.maintainDate ? `${product.maintainDate}일` : EMPTY}
-            />
-          </Box>
+        </Stack>
+        <Stack direction="row" justifyContent="space-between" gap={2}>
+          <LabelText label="제품 리스트" text={getProductList(subsidiary.productList)} />
         </Stack>
       </Box>
     </Paper>

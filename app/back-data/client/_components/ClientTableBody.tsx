@@ -33,7 +33,10 @@ const ClientTableBody: FC<Props> = ({ isLoading, isEmpty, data, scrollRef }) => 
     handleClickOption('delete', selectedClient);
   };
 
-  const handleClosePopover = () => setPopoverAnchor(null);
+  const handleClosePopover = () => {
+    setPopoverAnchor(null);
+    setSelectedClient(null);
+  };
 
   return (
     <TableBody>

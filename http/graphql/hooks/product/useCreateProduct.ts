@@ -59,7 +59,6 @@ export const useCreateProduct = () => {
               (item) => item._id === newCategory._id
             );
 
-            console.log(isExistCategory);
             return isExistCategory //
               ? existing
               : {

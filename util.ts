@@ -40,7 +40,6 @@ const findSkip = (obj: any) => {
 
 export const merge = (existing = { totalCount: 0, data: [] }, incoming: any, { args }: any) => {
   const existingData = existing.data as any[];
-
   const incomingData = incoming.data as any[];
   const merged = existingData ? existingData.slice(0) : [];
   const skip = findSkip(args);

@@ -10,7 +10,7 @@ const EmptyItem: FC<Props> = ({ isEmpty, message = '검색된 데이터가 없�
   if (isEmpty)
     return (
       <Grid item xs={12}>
-        <Paper sx={{ px: 3, py: 2 }}>
+        <Paper elevation={0} sx={{ px: 3, py: 2 }}>
           <Typography align="center">{message}</Typography>
         </Paper>
       </Grid>

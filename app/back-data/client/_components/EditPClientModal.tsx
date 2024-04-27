@@ -99,7 +99,6 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
             control={control}
             name="inActive"
             render={({ field }) => {
-              console.log('거래중', field.value);
               return (
                 <FormControlLabel
                   sx={{ width: 'fit-content' }}

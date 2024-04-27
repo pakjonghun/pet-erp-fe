@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { BaseListItem } from './menuStyles';
 import ListMenu from './ListMenu';
 import { MenuItem } from '@/components/layout/type';

@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { graphql } from '../../codegen';
-import { ProductsInput } from '../../codegen/graphql';
+import { ProductsInput, ProductsOutput, QueryProductsArgs } from '../../codegen/graphql';
 
 const products = graphql(`
   query products($productsInput: ProductsInput!) {
@@ -14,7 +14,7 @@ const products = graphql(`
 `);
 
 export const useProducts = (productsInput: ProductsInput) => {
-  return useQuery(products, {
+  return useQuery<{ products: ProductsOutput }, QueryProductsArgs>(products, {
     variables: {
       productsInput,
     },

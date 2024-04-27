@@ -35,7 +35,10 @@ const ProductionCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx })
     handleClickOption('delete', selectedProduct);
   };
 
-  const handleClosePopover = () => setPopoverAnchor(null);
+  const handleClosePopover = () => {
+    setPopoverAnchor(null);
+    setSelectedProduct(null);
+  };
 
   return (
     <Grid

@@ -1,6 +1,10 @@
-import { useMutation } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { graphql } from '../../codegen';
-import { SubsidiariesInput } from '../../codegen/graphql';
+import {
+  SubsidiariesInput,
+  SubsidiariesOutput,
+  SubsidiariesQueryVariables,
+} from '../../codegen/graphql';
 
 const subsidiaries = graphql(`
   query subsidiaries($subsidiariesInput: SubsidiariesInput!) {
@@ -14,7 +18,7 @@ const subsidiaries = graphql(`
 `);
 
 export const useSubsidiaries = (subsidiariesInput: SubsidiariesInput) => {
-  return useMutation(subsidiaries, {
+  return useQuery<{ subsidiaries: SubsidiariesOutput }, SubsidiariesQueryVariables>(subsidiaries, {
     variables: {
       subsidiariesInput,
     },

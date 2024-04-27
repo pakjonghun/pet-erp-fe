@@ -1,58 +1,61 @@
 import { FC, useState } from 'react';
-import { Product } from '@/http/graphql/codegen/graphql';
+import { Subsidiary } from '@/http/graphql/codegen/graphql';
 import { TableBody } from '@mui/material';
 import EmptyRow from '@/components/table/EmptyRow';
-import ProductBodyRow from './SubsidiaryBodyRow';
 import { CommonListProps, SelectOption } from '../../types';
 import RemoveSubsidiaryModal from './RemoveSubsidiaryModal';
-import EditProductModal from './EditSubsidiaryModal';
+import EditSubsidiaryModal from './EditSubsidiaryModal';
 import ProductDetailPopover from './SubsidiaryDetailPopover';
 import LoadingRow from '@/components/table/LoadingRow';
-import { ProductHeaderList } from '../constants';
+import { SubsidiaryHeaderList } from '../constants';
+import SubsidiaryBodyRow from './SubsidiaryBodyRow';
 
-interface Props extends CommonListProps<Product> {}
+interface Props extends CommonListProps<Subsidiary> {}
 
 const SubsidiaryTableBody: FC<Props> = ({ data, isLoading, isEmpty, scrollRef }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  const [selectedProduct, setSelectedProduct] = useState<null | Product>(null);
+  const [selectedSubsidiary, setSelectedSubsidiary] = useState<null | Subsidiary>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
 
-  const handleClickOption = (option: SelectOption | null, product: Product | null) => {
-    setSelectedProduct(product);
+  const handleClickOption = (option: SelectOption | null, subsidiary: Subsidiary | null) => {
+    setSelectedSubsidiary(subsidiary);
     setOptionType(option);
   };
 
   const handleClickEdit = () => {
     handleClosePopover();
-    handleClickOption('edit', selectedProduct);
+    handleClickOption('edit', selectedSubsidiary);
   };
 
   const handleClickDelete = () => {
     handleClosePopover();
-    handleClickOption('delete', selectedProduct);
+    handleClickOption('delete', selectedSubsidiary);
   };
 
-  const handleClosePopover = () => setPopoverAnchor(null);
+  const handleClosePopover = () => {
+    setPopoverAnchor(null);
+    setSelectedSubsidiary(null);
+  };
 
   return (
     <TableBody>
-      {selectedProduct && (
+      {selectedSubsidiary && (
         <RemoveSubsidiaryModal
           open={optionType === 'delete'}
           onClose={() => handleClickOption(null, null)}
-          selectedProduct={selectedProduct}
+          selectedSubsidiary={selectedSubsidiary}
         />
       )}
 
-      {selectedProduct && (
-        <EditProductModal
+      {selectedSubsidiary && (
+        <EditSubsidiaryModal
           open={optionType === 'edit'}
           onClose={() => handleClickOption(null, null)}
-          selectedProduct={selectedProduct}
+          selectedSubsidiary={selectedSubsidiary}
         />
       )}
-      {selectedProduct && (
+      {selectedSubsidiary && (
         <ProductDetailPopover
           onClose={handleClosePopover}
           position={popoverPosition}
@@ -60,28 +63,27 @@ const SubsidiaryTableBody: FC<Props> = ({ data, isLoading, isEmpty, scrollRef })
           anchorEl={popoverAnchor}
           onClickDelete={handleClickDelete}
           onClickEdit={handleClickEdit}
-          selectedProduct={selectedProduct}
+          selectedSubsidiary={selectedSubsidiary}
         />
       )}
-      <EmptyRow colSpan={ProductHeaderList.length} isEmpty={isEmpty} />
+      <EmptyRow colSpan={SubsidiaryHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
-        const product = item as unknown as Product;
         const isLast = index === data.length - 1;
         return (
-          <ProductBodyRow
-            onClickRow={(event, product: Product) => {
+          <SubsidiaryBodyRow
+            onClickRow={(event, subsidiary: Subsidiary) => {
               setPopoverPosition({ left: event.clientX, top: event.clientY });
               setPopoverAnchor(event.currentTarget);
-              setSelectedProduct(product);
+              setSelectedSubsidiary(subsidiary);
             }}
-            key={product._id}
-            product={product}
+            key={item._id}
+            subsidiary={item}
             scrollRef={isLast ? scrollRef : null}
             onClickOption={handleClickOption}
           />
         );
       })}
-      <LoadingRow isLoading={isLoading} colSpan={ProductHeaderList.length} />
+      <LoadingRow isLoading={isLoading} colSpan={SubsidiaryHeaderList.length} />
     </TableBody>
   );
 };
