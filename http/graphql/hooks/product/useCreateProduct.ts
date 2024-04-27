@@ -1,4 +1,9 @@
-import { Product, ProductFragmentFragmentDoc } from './../../codegen/graphql';
+import {
+  Product,
+  ProductCategory,
+  ProductCategoryFragmentFragmentDoc,
+  ProductFragmentFragmentDoc,
+} from './../../codegen/graphql';
 import { useMutation } from '@apollo/client';
 import { graphql } from '../../codegen';
 
@@ -12,6 +17,7 @@ const createProduct = graphql(`
 
 export const useCreateProduct = () => {
   return useMutation(createProduct, {
+    notifyOnNetworkStatusChange: true,
     update(cache, { data }) {
       cache.modify({
         fields: {
@@ -34,6 +40,32 @@ export const useCreateProduct = () => {
               data: [newProductRef, ...existingProducts.data],
             };
             return newProducts;
+          },
+        },
+      });
+
+      const newCategory = (data?.createProduct as Product).category;
+      if (!newCategory) return;
+
+      cache.modify({
+        fields: {
+          categories(existing = { totalCount: 0, data: [] }) {
+            const newCategoryRef = cache.readFragment({
+              id: `${newCategory.__typename}:${newCategory._id}`,
+              fragment: ProductCategoryFragmentFragmentDoc,
+            });
+
+            const isExistCategory = (existing.data as ProductCategory[]).find(
+              (item) => item._id === newCategory._id
+            );
+
+            console.log(isExistCategory);
+            return isExistCategory //
+              ? existing
+              : {
+                  totalCount: existing.totalCount + 1,
+                  data: [newCategoryRef, ...existing.data],
+                };
           },
         },
       });

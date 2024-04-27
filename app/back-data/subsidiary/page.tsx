@@ -79,12 +79,15 @@ const BackDataPage = () => {
       { service: 'product', formBody },
       {
         onSuccess: () => {
-          snackMessage({ message: '제품 업로드가 완료되었습니다.', severity: 'success' });
+          snackMessage({ message: '부자재 업로드가 완료되었습니다.', severity: 'success' });
           refetch();
         },
         onError: (error) => {
           const message = error.response?.data.message;
-          snackMessage({ message: message ?? '제품 업로드가 실패하였습니다.', severity: 'error' });
+          snackMessage({
+            message: message ?? '부자재 업로드가 실패하였습니다.',
+            severity: 'error',
+          });
         },
         onSettled: () => {
           setFileKey(new Date());
@@ -96,13 +99,16 @@ const BackDataPage = () => {
   const { mutate: download, isPending: isDownloading } = useDownloadExcelFile();
 
   const handleDownload = () => {
-    download('product', {
+    download('subsidiary', {
       onSuccess: () => {
-        snackMessage({ message: '제품 다운로드가 완료되었습니다.', severity: 'success' });
+        snackMessage({ message: '부자재 다운로드가 완료되었습니다.', severity: 'success' });
       },
       onError: (err) => {
         const message = err.message;
-        snackMessage({ message: message ?? '제품 다운로드가 실패하였습니다.', severity: 'error' });
+        snackMessage({
+          message: message ?? '부자재 다운로드가 실패하였습니다.',
+          severity: 'error',
+        });
       },
     });
   };
@@ -117,23 +123,23 @@ const BackDataPage = () => {
         />
       )}
       <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
-        <TableTitle title="제품 백데이터" />
+        <TableTitle title="부자재 백데이터" />
         <Stack direction="row" alignItems="center" gap={2}>
           <UploadButton
             fileKey={fileKey}
             loading={isPending}
             onChange={handleUploadExcelFile}
-            text="제품 업로드"
+            text="부자재 업로드"
           />
           <ActionButton
             icon={isDownloading ? <CommonLoading /> : <FileDownloadIcon />}
-            text="제품 다운로드"
+            text="부자재 다운로드"
             onClick={handleDownload}
           />
 
           <ActionButton
             icon={<PlusOneOutlined />}
-            text="제품 입력"
+            text="부자재 입력"
             onClick={() => setOpenCreateProduct(true)}
           />
         </Stack>
@@ -150,7 +156,7 @@ const BackDataPage = () => {
               ),
             }}
             sx={{ width: 270, my: 2 }}
-            label="검색할 제품 이름을 입력하세요."
+            label="검색할 부자재 이름을 입력하세요."
             size="small"
           />
         </FormControl>

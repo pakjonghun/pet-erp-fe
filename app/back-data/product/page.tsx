@@ -33,6 +33,7 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { ProductHeaderList } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Product } from '@/http/graphql/codegen/graphql';
+import { client } from '@/http/graphql/client';
 
 const ProductPage = () => {
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
@@ -81,6 +82,7 @@ const ProductPage = () => {
         onSuccess: () => {
           snackMessage({ message: '제품 업로드가 완료되었습니다.', severity: 'success' });
           refetch();
+          client.refetchQueries({ include: ['categories'] });
         },
         onError: (error) => {
           const message = error.response?.data.message;
@@ -130,7 +132,7 @@ const ProductPage = () => {
 
           <ActionButton
             icon={<PlusOneOutlined />}
-            text="제품 입력"
+            text="제품 등록"
             onClick={() => setOpenCreateProduct(true)}
           />
         </Stack>

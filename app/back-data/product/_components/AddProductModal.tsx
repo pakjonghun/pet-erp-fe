@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
   AutocompleteRenderInputParams,
@@ -22,7 +22,6 @@ import { useCreateProduct } from '@/http/graphql/hooks/product/useCreateProduct'
 import { useFindManyProductCategory } from '@/http/graphql/hooks/product-category/useFindProductCategories';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT, PRODUCT_PREFIX } from '@/constants';
-import { SelectItem } from '@/components/ui/select/SearchAutoComplete';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 import { modalSizeProps } from '@/components/commonStyles';
@@ -40,9 +39,9 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
   const {
     reset,
     control,
-    watch,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<CreateProductForm>({
     resolver: zodResolver(createProductSchema),
@@ -53,57 +52,48 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
     },
   });
 
-  const [categoryKeyword, setCategoryKeyword] = useState('');
-  const delayedCategoryKeyword = useTextDebounce(categoryKeyword);
+  const categoryKeyword = watch('category');
+  const delayedCategoryKeyword = useTextDebounce(categoryKeyword ?? '');
 
-  const { data, networkStatus, refetch, fetchMore } = useFindManyProductCategory({
+  const { data, networkStatus, fetchMore } = useFindManyProductCategory({
     keyword: delayedCategoryKeyword,
     limit: LIMIT,
     skip: 0,
   });
   const rows = data?.categories.data ?? [];
+  const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
 
-  const categoryName = watch('category');
-  const category = rows.find((item) => item.name === categoryName);
-  const categoryOption = category ? { _id: category!._id, label: category!.name } : null;
-
-  const setCategory = (selectedCategory: SelectItem | null) => {
+  const setCategory = (selectedCategory: string | null) => {
     if (!selectedCategory) return;
-    setValue('category', selectedCategory?.label ?? '');
+    setValue('category', selectedCategory ?? '');
   };
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
-      if (networkStatus != 1 && networkStatus != 3) {
-        const totalCount = data?.categories.totalCount;
-        if (totalCount != null && totalCount > rows.length) {
-          fetchMore({
-            variables: {
-              categoriesInput: {
-                keyword: delayedCategoryKeyword,
-                limit: LIMIT,
-                skip: rows.length,
-              },
+      if (isLoading) return;
+
+      const totalCount = data?.categories.totalCount;
+      if (totalCount != null && totalCount > rows.length) {
+        fetchMore({
+          variables: {
+            categoriesInput: {
+              keyword: delayedCategoryKeyword,
+              limit: LIMIT,
+              skip: rows.length,
             },
-          });
-        }
+          },
+        });
       }
     }
   };
 
   const scrollRef = useInfinityScroll({ callback });
 
-  useEffect(() => {
-    refetch();
-  }, [delayedCategoryKeyword, refetch]);
-  const onSubmit = (values: CreateProductForm) => {
-    const newValues = filterEmptyValues(values) as CreateProductForm;
+  const onSubmit = (createProductInput: CreateProductForm) => {
+    const newValues = filterEmptyValues(createProductInput) as CreateProductForm;
     createProduct({
       variables: {
-        createProductInput: {
-          ...newValues,
-          category: category?._id,
-        },
+        createProductInput: newValues,
       },
       onCompleted: () => {
         snackMessage({ message: '제품등록이 완료되었습니다.', severity: 'success' });
@@ -124,9 +114,9 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        제품 입력
+        제품 등록
       </Typography>
-      <Typography sx={{ mb: 3 }}>새로운 제품을 입력합니다.</Typography>
+      <Typography sx={{ mb: 3 }}>새로운 제품을 등록합니다.</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={modalSizeProps}>
           <Controller
@@ -229,35 +219,32 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
               </FormControl>
             )}
           />
-          <SearchAutoComplete
-            setValue={setCategory}
-            value={categoryOption}
-            scrollRef={scrollRef}
-            renderSearchInput={(params: AutocompleteRenderInputParams) => {
-              return (
-                <Controller
-                  control={control}
-                  name="category"
-                  render={({ field }) => (
+          <Controller
+            control={control}
+            name="category"
+            render={({ field }) => (
+              <SearchAutoComplete
+                loading={isLoading}
+                options={rows.map((row) => row.name!)}
+                setValue={setCategory}
+                value={field.value ?? ''}
+                scrollRef={scrollRef}
+                renderSearchInput={(params: AutocompleteRenderInputParams) => {
+                  return (
                     <FormControl fullWidth>
                       <TextField
-                        {...field}
                         {...params}
-                        onChange={(event) => {
-                          field.onChange(event);
-                          setCategoryKeyword(event.target.value);
-                        }}
+                        {...field}
                         label="분류"
                         error={!!errors.category?.message}
                         helperText={errors.category?.message ?? ''}
                         size="small"
                       />
                     </FormControl>
-                  )}
-                />
-              );
-            }}
-            options={rows.map((row) => ({ _id: row._id, label: row.name }))}
+                  );
+                }}
+              />
+            )}
           />
         </FormGroup>
         <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
@@ -265,7 +252,7 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
             취소
           </Button>
           <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
-            생성
+            등록
           </Button>
         </Stack>
       </form>
