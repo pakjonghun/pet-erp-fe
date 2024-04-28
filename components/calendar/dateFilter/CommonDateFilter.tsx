@@ -4,7 +4,7 @@ import { FC, useState } from 'react';
 import { Box, Button, Menu, MenuItem, Stack, Typography } from '@mui/material';
 import { DateCalendar } from '@mui/x-date-pickers';
 import { Dayjs } from 'dayjs';
-import { NullableRange } from './type';
+import { DateRange } from './type';
 import { dateFilterOptions } from './constants';
 import { getStringRange } from './utils';
 
@@ -15,15 +15,15 @@ interface Props {
     anchorEl: null | HTMLElement;
   };
   date: {
-    range: NullableRange;
-    setRange: (range: NullableRange) => void;
+    range: DateRange;
+    setRange: (range: DateRange) => void;
   };
 }
 
 const CommonDateFilter: FC<Props> = ({ anchor, date }) => {
   const [selectedDateOption, setSelectedDateOption] = useState('이번달');
-  const [from, setForm] = useState<Dayjs | null>(() => date.range.from);
-  const [to, setTo] = useState<Dayjs | null>(() => date.range.to);
+  const [from, setForm] = useState<Dayjs>(() => date.range.from);
+  const [to, setTo] = useState<Dayjs>(() => date.range.to);
   const [canDateControl, setCanDateControl] = useState(false);
 
   const setRange = (getRange: () => { from: Dayjs; to: Dayjs }) => {

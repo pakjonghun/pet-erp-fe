@@ -5,9 +5,9 @@ import { useState } from 'react';
 import { FindLogsDto, Order } from '@/http/graphql/codegen/graphql';
 import Search from './_components/Search';
 import { Box, InputAdornment, TextField } from '@mui/material';
-import CommonDateFilter from '@/components/calendar/CommonDateFilter';
-import { NullableRange } from '@/components/calendar/type';
-import { getStringRange, getThisMonth } from '@/components/calendar/utils';
+import CommonDateFilter from '@/components/calendar/dateFilter/CommonDateFilter';
+import { DateRange } from '@/components/calendar/dateFilter/type';
+import { getStringRange, getThisMonth } from '@/components/calendar/dateFilter/utils';
 import LogTable from './_components/LogTable';
 import { LIMIT } from '@/constants';
 import TableTitle from '@/components/ui/typograph/TableTitle';
@@ -86,7 +86,7 @@ const LogPage = () => {
           }}
           date={{
             range: { from: findLogsQuery.from, to: findLogsQuery.to },
-            setRange: (range: NullableRange) => handleSetFindLogsQuery(range),
+            setRange: (range: DateRange) => handleSetFindLogsQuery(range),
           }}
         />
       </Box>
