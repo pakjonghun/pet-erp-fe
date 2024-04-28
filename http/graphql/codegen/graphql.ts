@@ -126,14 +126,14 @@ export type CreateUserDto = {
 };
 
 export type FindLogsDto = {
-  from?: InputMaybe<Scalars['Date']['input']>;
+  from: Scalars['Date']['input'];
   keyword: Scalars['String']['input'];
   keywordTarget: Scalars['String']['input'];
   limit: Scalars['Int']['input'];
   order?: InputMaybe<Order>;
   skip: Scalars['Int']['input'];
   sort?: InputMaybe<Scalars['String']['input']>;
-  to?: InputMaybe<Scalars['Date']['input']>;
+  to: Scalars['Date']['input'];
 };
 
 export type FindLogsResponseDto = {
@@ -503,8 +503,10 @@ export type TopClientData = {
 };
 
 export type TopClientInput = {
+  from: Scalars['Date']['input'];
   limit: Scalars['Int']['input'];
   skip: Scalars['Int']['input'];
+  to: Scalars['Date']['input'];
 };
 
 export type TopClientOutput = {

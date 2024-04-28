@@ -3,19 +3,19 @@
 import { FC, ReactNode, useState } from 'react';
 import SubHeader from '@/components/layout/header/SubHeader';
 import { Box, Stack } from '@mui/material';
-import dayjs from 'dayjs';
 import SwitchDate from '@/components/calendar/dateSwitch/SwitchDate';
 import { SearchStandard } from '@/components/calendar/dateSwitch/types';
 import { DateRange } from '@/components/calendar/dateFilter/type';
-import { getDateRange, getToday } from '@/components/calendar/dateFilter/utils';
+import { useReactiveVar } from '@apollo/client';
+import { saleRange } from '@/store/saleRange';
 interface Props {
   productSales: ReactNode;
   topClients: ReactNode;
 }
 
 const SaleLayout: FC<Props> = ({ productSales, topClients }) => {
-  const [range, setRange] = useState<DateRange>(getToday());
-  const [dateObj, setDateObj] = useState(dayjs());
+  const range = useReactiveVar(saleRange);
+  const setRange = (value: DateRange) => saleRange(value);
   const [searchStandard, setSearchStandard] = useState<SearchStandard>('일');
 
   return (

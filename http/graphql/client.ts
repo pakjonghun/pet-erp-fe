@@ -101,7 +101,7 @@ export const client = new ApolloClient({
       Query: {
         fields: {
           logs: {
-            keyArgs: ['findLogsQuery', ['keyword']],
+            keyArgs: ['findLogsQuery', ['keyword', 'from', 'to', 'keywordTarget']],
             merge,
           },
           productSales: {
@@ -109,7 +109,7 @@ export const client = new ApolloClient({
             merge,
           },
           topClients: {
-            keyArgs: false,
+            keyArgs: ['topClientInput', ['from', 'to']],
             merge,
           },
           clients: {

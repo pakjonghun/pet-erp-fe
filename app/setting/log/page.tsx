@@ -12,7 +12,6 @@ import LogTable from './_components/LogTable';
 import { LIMIT } from '@/constants';
 import TableTitle from '@/components/ui/typograph/TableTitle';
 import TablePage from '@/components/table/TablePage';
-import { client } from '@/http/graphql/client';
 
 const LogPage = () => {
   const { from, to } = getThisMonth();

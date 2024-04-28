@@ -11,11 +11,16 @@ import TablePage from '@/components/table/TablePage';
 import { LIMIT, TABLE_MAX_HEIGHT } from '@/constants';
 import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
+import { useReactiveVar } from '@apollo/client';
+import { saleRange } from '@/store/saleRange';
 
 const TopClients = () => {
+  const { from, to } = useReactiveVar(saleRange);
   const { data, fetchMore, networkStatus } = useTopClients({
     limit: LIMIT,
     skip: 0,
+    from: from.toDate(),
+    to: to.toDate(),
   });
 
   const rows = data?.topClients.data ?? [];
@@ -31,6 +36,8 @@ const TopClients = () => {
               topClientInput: {
                 skip: rows.length,
                 limit: LIMIT,
+                from: from.toDate(),
+                to: to.toDate(),
               },
             },
           });
