@@ -3,6 +3,8 @@ import Autocomplete, { AutocompleteRenderInputParams } from '@mui/material/Autoc
 import { Box } from '@mui/material';
 
 interface Props {
+  inputValue: string;
+  onInputChange: (e: any, value: string) => void;
   options: string[];
   value: string[];
   loading: boolean;
@@ -12,6 +14,8 @@ interface Props {
 }
 
 const MultiAutoComplete: FC<Props> = ({
+  inputValue,
+  onInputChange,
   value,
   options,
   loading,
@@ -21,13 +25,16 @@ const MultiAutoComplete: FC<Props> = ({
 }) => {
   return (
     <Autocomplete
+      defaultValue={value}
+      inputValue={inputValue}
+      onInputChange={onInputChange}
       noOptionsText="검색 결과가 없습니다."
       loadingText="로딩중입니다."
       loading={loading}
       onChange={(_, value) => onChange(value)}
       multiple
       options={options}
-      value={value}
+      // value={value}
       disablePortal
       renderInput={renderSearchInput}
       renderOption={(props, item, state) => {

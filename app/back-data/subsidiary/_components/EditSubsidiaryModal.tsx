@@ -25,7 +25,7 @@ import {
   CreateSubsidiaryForm,
   createSubsidiarySchema,
 } from '../_validations/createSubsidiaryValidation';
-import MultiAutoComplete from '@/components/ui/select/MultiAUtoComplete';
+import MultiAutoComplete from '@/components/ui/select/MultiAutoComplete';
 import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import { useSubsidiaryCategories } from '@/http/graphql/hooks/subsidiary-category/useSubsidiaryCategories';
 import { Subsidiary } from '@/http/graphql/codegen/graphql';
@@ -100,6 +100,7 @@ const AddSubsidiaryModal: FC<Props> = ({ open, selectedSubsidiary, onClose }) =>
 
   const [productKeyword, setProductKeyword] = useState('');
   const delayedProductKeyword = useTextDebounce(productKeyword);
+  console.log('productKeyword : ', productKeyword);
 
   const {
     data: products,
@@ -238,6 +239,8 @@ const AddSubsidiaryModal: FC<Props> = ({ open, selectedSubsidiary, onClose }) =>
             name="category"
             render={({ field }) => (
               <SearchAutoComplete
+                inputValue={field.value ?? ''}
+                onInputChange={(event) => field.onChange(event)}
                 loading={isCategoryLoading}
                 setValue={(value) => field.onChange(value)}
                 value={field.value ?? ''}
@@ -247,7 +250,6 @@ const AddSubsidiaryModal: FC<Props> = ({ open, selectedSubsidiary, onClose }) =>
                   return (
                     <FormControl fullWidth>
                       <TextField
-                        {...field}
                         {...params}
                         label="분류"
                         error={!!errors.category?.message}
@@ -265,6 +267,8 @@ const AddSubsidiaryModal: FC<Props> = ({ open, selectedSubsidiary, onClose }) =>
             name="productList"
             render={({ field }) => (
               <MultiAutoComplete
+                inputValue={productKeyword}
+                onInputChange={(_, newValue) => setProductKeyword(newValue)}
                 loading={isProductLoading}
                 onChange={(value) => field.onChange(value)}
                 value={field.value ?? []}
@@ -275,8 +279,6 @@ const AddSubsidiaryModal: FC<Props> = ({ open, selectedSubsidiary, onClose }) =>
                     <FormControl fullWidth>
                       <TextField
                         {...params}
-                        value={productKeyword}
-                        onChange={(event) => setProductKeyword(event.target.value)}
                         name={field.name}
                         label="부자재를 사용하는 제품 선택"
                         error={!!errors.productList?.message}

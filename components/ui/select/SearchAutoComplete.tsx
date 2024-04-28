@@ -3,6 +3,8 @@ import Autocomplete, { AutocompleteRenderInputParams } from '@mui/material/Autoc
 import { Box } from '@mui/material';
 
 interface Props {
+  inputValue: string;
+  onInputChange: (e: any, newValue: string) => void;
   value: string | null;
   setValue: (item: string | null) => void;
   options: string[];
@@ -14,6 +16,8 @@ interface Props {
 }
 
 const SearchAutoComplete: React.FC<Props> = ({
+  inputValue,
+  onInputChange,
   value,
   options,
   setValue,
@@ -21,8 +25,12 @@ const SearchAutoComplete: React.FC<Props> = ({
   scrollRef,
   loading = false,
 }) => {
+  console.log('value : ', value);
   return (
     <Autocomplete
+      defaultValue={value}
+      inputValue={inputValue}
+      onInputChange={onInputChange}
       loading={loading}
       loadingText="로딩중"
       value={value}

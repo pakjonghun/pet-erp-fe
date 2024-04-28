@@ -1,6 +1,7 @@
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
+  Autocomplete,
   AutocompleteRenderInputParams,
   Button,
   FormControl,
@@ -24,7 +25,7 @@ import { filterEmptyValues } from '@/util';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { useCreateSubsidiary } from '@/http/graphql/hooks/subsidiary/useCreateSubsidiary';
 import { CreateSubsidiaryForm } from '../_validations/createSubsidiaryValidation';
-import MultiAutoComplete from '@/components/ui/select/MultiAUtoComplete';
+import MultiAutoComplete from '@/components/ui/select/MultiAutoComplete';
 import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import { useSubsidiaryCategories } from '@/http/graphql/hooks/subsidiary-category/useSubsidiaryCategories';
 
@@ -38,8 +39,10 @@ const AddSubsidiaryModal: FC<Props> = ({ open, onClose }) => {
 
   const {
     reset,
+    setValue,
     control,
     watch,
+    getValues,
     handleSubmit,
     formState: { errors },
   } = useForm<CreateSubsidiaryForm>({
@@ -98,6 +101,10 @@ const AddSubsidiaryModal: FC<Props> = ({ open, onClose }) => {
     skip: 0,
   });
   const productRows = products?.products.data ?? [];
+  const cachedOptions = useMemo(
+    () => productRows.map((row) => row.name) ?? [],
+    [products?.products.data]
+  );
   const isProductLoading = productNetwork == 1 || productNetwork == 2 || productNetwork == 3;
   const productCallback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -120,7 +127,8 @@ const AddSubsidiaryModal: FC<Props> = ({ open, onClose }) => {
   const productScrollRef = useInfinityScroll({ callback: productCallback });
 
   const onSubmit = (values: CreateSubsidiaryForm) => {
-    const newValues = filterEmptyValues(values) as CreateSubsidiaryForm;
+    const productList = getValues('productList');
+    const newValues = filterEmptyValues({ ...values, productList }) as CreateSubsidiaryForm;
     createSubsidiary({
       variables: {
         createSubsidiaryInput: newValues,
@@ -215,6 +223,9 @@ const AddSubsidiaryModal: FC<Props> = ({ open, onClose }) => {
             name="category"
             render={({ field }) => (
               <SearchAutoComplete
+                {...field}
+                inputValue={field.value ?? ''}
+                onInputChange={(event) => field.onChange(event)}
                 loading={isCategoryLoading}
                 setValue={(value) => field.onChange(value)}
                 value={field.value ?? ''}
@@ -224,7 +235,6 @@ const AddSubsidiaryModal: FC<Props> = ({ open, onClose }) => {
                   return (
                     <FormControl fullWidth>
                       <TextField
-                        {...field}
                         {...params}
                         label="분류"
                         error={!!errors.category?.message}
@@ -242,18 +252,18 @@ const AddSubsidiaryModal: FC<Props> = ({ open, onClose }) => {
             name="productList"
             render={({ field }) => (
               <MultiAutoComplete
+                inputValue={productKeyword}
+                onInputChange={(_, newValue) => setProductKeyword(newValue)}
                 loading={isProductLoading}
                 onChange={(value) => field.onChange(value)}
                 value={field.value ?? []}
                 scrollRef={productScrollRef}
-                options={productRows.map((row) => row.name) ?? []}
+                options={cachedOptions}
                 renderSearchInput={(params: AutocompleteRenderInputParams) => {
                   return (
                     <FormControl fullWidth>
                       <TextField
                         {...params}
-                        value={productKeyword}
-                        onChange={(event) => setProductKeyword(event.target.value)}
                         name={field.name}
                         label="부자재를 사용하는 제품목록 선택"
                         error={!!errors.productList?.message}
