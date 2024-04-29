@@ -116,10 +116,16 @@ export default function Home() {
         </Grid>
         <Grid container rowSpacing={3} columnSpacing={3}>
           <Grid item xs={12} lg={6}>
-            <DashboardTable saleInfos={monthDatas?.dashboardProducts ?? []} />
+            <DashboardTable
+              title={`${from.get('month') + 1}월 BEST 상품`}
+              saleInfos={monthDatas?.dashboardProducts ?? []}
+            />
           </Grid>
           <Grid item xs={12} lg={6}>
-            <DashboardTable saleInfos={todayDatas?.dashboardProducts ?? []} />
+            <DashboardTable
+              title={`${from.format('MM월 DD일')} BEST 상품`}
+              saleInfos={todayDatas?.dashboardProducts ?? []}
+            />
           </Grid>
         </Grid>
         <Box>

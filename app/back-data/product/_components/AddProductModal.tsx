@@ -224,6 +224,8 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
             name="category"
             render={({ field }) => (
               <SearchAutoComplete
+                inputValue={field.value ?? ''}
+                onInputChange={field.onChange}
                 loading={isLoading}
                 options={rows.map((row) => row.name!)}
                 setValue={setCategory}

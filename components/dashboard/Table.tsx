@@ -11,10 +11,11 @@ import { FC } from 'react';
 import { getKCWFormat, getNumberWithComma } from '@/util';
 
 interface Props {
+  title: string;
   saleInfos: SaleInfo[];
 }
 
-const DashboardTable: FC<Props> = ({ saleInfos }) => {
+const DashboardTable: FC<Props> = ({ saleInfos, title }) => {
   function createData({ accCount, accPayCost, accProfit, name }: SaleInfo) {
     return {
       name,
@@ -30,7 +31,7 @@ const DashboardTable: FC<Props> = ({ saleInfos }) => {
   return (
     <TableContainer component={Paper} sx={{ p: 3 }}>
       <Typography sx={{ my: 1, pl: 1 }} variant="h5">
-        월 BEST 상품
+        {title}
       </Typography>
       <Table sx={{ minWidth: 500 }} aria-label="simple table">
         <TableHead>

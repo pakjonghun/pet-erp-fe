@@ -232,6 +232,8 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
             name="category"
             render={({ field }) => (
               <SearchAutoComplete
+                inputValue={field.value ?? ''}
+                onInputChange={field.onChange}
                 options={rows.map((row) => row.name!)}
                 setValue={(value) => field.onChange(value)}
                 value={field.value ?? ''}
