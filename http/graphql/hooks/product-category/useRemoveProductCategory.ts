@@ -17,7 +17,6 @@ export const useRemoveProductCategory = () => {
       const id = data?.removeCategory._id;
       cache.evict({ id: `${typeName}:${id}` });
       cache.gc();
-
       cache.modify({
         fields: {
           categories(existingCategory = { totalCount: 0, data: [] }) {

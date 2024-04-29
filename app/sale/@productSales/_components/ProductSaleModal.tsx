@@ -18,17 +18,7 @@ interface Props {
 }
 
 const ProductSaleModal: FC<Props> = ({
-  selectedProductSale: {
-    clients,
-    name,
-    thisMonth,
-    lastWeek,
-    thisWeek,
-    today,
-    leadTime,
-    barCode,
-    code,
-  },
+  selectedProductSale: { clients, name, leadTime, barCode, code, sales },
   open,
   onClose,
 }) => {
@@ -38,6 +28,7 @@ const ProductSaleModal: FC<Props> = ({
   const accPayCosts = data?.productSale?.map((item) => item.accPayCost) ?? [];
   const clonedClients = clients.map((client) => Object.assign({}, client));
   clonedClients.sort((a, b) => {
+    if (a?.accCount == null || b?.accCount == null) return 0;
     if (a.accCount > b.accCount) return -1;
     else return 1;
   });
@@ -53,20 +44,20 @@ const ProductSaleModal: FC<Props> = ({
         <LabelText label="바코드" text={barCode ?? ''} />
         <LabelText label="리드타임" text={leadTime ?? ''} />
       </Stack>
-      <Stack direction="row" flexWrap="wrap" gap={3} mb={3}>
+      {/* <Stack direction="row" flexWrap="wrap" gap={3} mb={3}>
         <LabelText label="지난주 판매량" text={getKCWFormat(lastWeek?.accCount ?? 0)} />
         <LabelText label="지난주 매출" text={getKCWFormat(lastWeek?.accPayCost ?? 0)} />
         <LabelText label="지난주 수익" text={getKCWFormat(lastWeek?.accProfit ?? 0)} />
         <LabelText label="지난주 평균 매출" text={getKCWFormat(lastWeek?.averagePayCost ?? 0)} />
-      </Stack>
+      </Stack> */}
 
       <LabelText label="채널별 판매수량" text={''} />
       <Stack direction="row" flexWrap="wrap" rowGap={1} columnGap={2} mt={1}>
         {(clonedClients ?? []).map((client) => {
           return (
             <LabelText
-              key={client._id.mallId}
-              label={client._id.mallId}
+              key={client?._id?.mallId ?? ''}
+              label={client?._id?.mallId ?? ''}
               text={getNumberWithComma(client.accCount ?? 0)}
             />
           );

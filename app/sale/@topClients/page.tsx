@@ -46,7 +46,16 @@ const TopClients = () => {
     }
   };
   const scrollRef = useInfinityScroll({ callback });
-
+  rows.reduce(
+    (acc, cur) => {
+      return {
+        totalCount: acc.totalCount + cur.accCount ?? 0,
+        totalPayCost: acc.totalPayCost + cur.accPayCost ?? 0,
+        totalProfit: acc.totalProfit + cur.accProfit ?? 0,
+      };
+    },
+    { totalCount: 0, totalPayCost: 0, totalProfit: 0 }
+  );
   return (
     <TablePage>
       <TableTitle title={`BEST 거래처`} />

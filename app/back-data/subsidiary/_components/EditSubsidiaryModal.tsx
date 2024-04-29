@@ -100,7 +100,6 @@ const AddSubsidiaryModal: FC<Props> = ({ open, selectedSubsidiary, onClose }) =>
 
   const [productKeyword, setProductKeyword] = useState('');
   const delayedProductKeyword = useTextDebounce(productKeyword);
-  console.log('productKeyword : ', productKeyword);
 
   const {
     data: products,
@@ -140,7 +139,6 @@ const AddSubsidiaryModal: FC<Props> = ({ open, selectedSubsidiary, onClose }) =>
       productList,
     }) as CreateSubsidiaryForm;
 
-    console.log(values, newValues);
     updateSubsidiary({
       variables: {
         updateSubsidiaryInput: {

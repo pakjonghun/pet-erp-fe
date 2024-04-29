@@ -25,7 +25,6 @@ const SearchAutoComplete: React.FC<Props> = ({
   scrollRef,
   loading = false,
 }) => {
-  console.log('value : ', value);
   return (
     <Autocomplete
       defaultValue={value}
