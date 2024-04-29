@@ -31,14 +31,21 @@ export const useCreateSubsidiary = () => {
         fields: {
           subsidiaryCategories(existing = { totalCount: 0, data: [] }) {
             const newSubsidiary = data?.createSubsidiary as Subsidiary;
+            const newCategoryCacheKey = `${newSubsidiary.category?.__typename}:${newSubsidiary?.category?._id}`;
             const newCategoryRef = cache.readFragment({
-              id: `${newSubsidiary.category?.__typename}:${newSubsidiary?.category?._id}`,
+              id: newCategoryCacheKey,
               fragment: SubsidiaryCategoryFragmentFragmentDoc,
             });
 
-            const isExistingCategory = (existing.data as SubsidiaryCategory[]).some(
-              (item) => item._id === newSubsidiary.category?._id
-            );
+            const isExistingCategory = (existing.data as SubsidiaryCategory[]).some((item) => {
+              if ((item as unknown as { __ref: string }).__ref) {
+                return (item as unknown as { __ref: string }).__ref === newCategoryCacheKey;
+              } else {
+                return item._id === newCategoryRef?._id;
+              }
+
+              ``;
+            });
 
             return isExistingCategory
               ? existing
