@@ -31,6 +31,7 @@ const SaleLayout: FC<Props> = ({ productSales, topClients }) => {
     <Box sx={{ height: '100%' }}>
       <SubHeader sx={{ boxShadow: 'none' }} title="판매" />
       <SwitchDate
+        sx={{ pl: 3 }}
         range={range}
         setRange={setRange}
         searchStandard={searchStandard}

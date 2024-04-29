@@ -25,6 +25,8 @@ const documents = {
     "\n  query categories($categoriesInput: CategoriesInput!) {\n    categories(categoriesInput: $categoriesInput) {\n      totalCount\n      data {\n        _id\n        name\n      }\n    }\n  }\n": types.CategoriesDocument,
     "\n  mutation removeCategory($_id: String!) {\n    removeCategory(_id: $_id) {\n      _id\n      name\n    }\n  }\n": types.RemoveCategoryDocument,
     "\n  mutation createProduct($createProductInput: CreateProductInput!) {\n    createProduct(createProductInput: $createProductInput) {\n      ...ProductFragment\n    }\n  }\n": types.CreateProductDocument,
+    "\n  query dashboardProduct($dashboardProductInput: FindDateInput!) {\n    dashboardProduct(dashboardProductInput: $dashboardProductInput) {\n      accPayCost\n      accCount\n      accProfit\n      averagePayCost\n    }\n  }\n": types.DashboardProductDocument,
+    "\n  query dashboardProducts($dashboardProductsInput: FindDateInput!) {\n    dashboardProducts(dashboardProductsInput: $dashboardProductsInput) {\n      name\n      accPayCost\n      accCount\n      accProfit\n      averagePayCost\n    }\n  }\n": types.DashboardProductsDocument,
     "\n  query productSale($productCode: String!) {\n    productSale(productCode: $productCode) {\n      _id\n      accPayCost\n      accProfit\n    }\n  }\n": types.ProductSaleDocument,
     "\n  query productSales($productSalesInput: ProductSaleInput!) {\n    productSales(productSalesInput: $productSalesInput) {\n      totalCount\n      data {\n        code\n        name\n        clients {\n          ...ClientInfo\n        }\n        sales {\n          ...SaleInfo\n        }\n      }\n    }\n  }\n": types.ProductSalesDocument,
     "\n  query products($productsInput: ProductsInput!) {\n    products(productsInput: $productsInput) {\n      totalCount\n      data {\n        ...ProductFragment\n      }\n    }\n  }\n": types.ProductsDocument,
@@ -108,6 +110,14 @@ export function graphql(source: "\n  mutation removeCategory($_id: String!) {\n 
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation createProduct($createProductInput: CreateProductInput!) {\n    createProduct(createProductInput: $createProductInput) {\n      ...ProductFragment\n    }\n  }\n"): (typeof documents)["\n  mutation createProduct($createProductInput: CreateProductInput!) {\n    createProduct(createProductInput: $createProductInput) {\n      ...ProductFragment\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query dashboardProduct($dashboardProductInput: FindDateInput!) {\n    dashboardProduct(dashboardProductInput: $dashboardProductInput) {\n      accPayCost\n      accCount\n      accProfit\n      averagePayCost\n    }\n  }\n"): (typeof documents)["\n  query dashboardProduct($dashboardProductInput: FindDateInput!) {\n    dashboardProduct(dashboardProductInput: $dashboardProductInput) {\n      accPayCost\n      accCount\n      accProfit\n      averagePayCost\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query dashboardProducts($dashboardProductsInput: FindDateInput!) {\n    dashboardProducts(dashboardProductsInput: $dashboardProductsInput) {\n      name\n      accPayCost\n      accCount\n      accProfit\n      averagePayCost\n    }\n  }\n"): (typeof documents)["\n  query dashboardProducts($dashboardProductsInput: FindDateInput!) {\n    dashboardProducts(dashboardProductsInput: $dashboardProductsInput) {\n      name\n      accPayCost\n      accCount\n      accProfit\n      averagePayCost\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

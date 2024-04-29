@@ -10,6 +10,7 @@ import {
   Select,
   SelectChangeEvent,
   Stack,
+  SxProps,
   Typography,
 } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
@@ -26,9 +27,10 @@ interface Props {
   setRange: (value: DateRange) => void;
   searchStandard: SearchStandard;
   setSearchStandard: (value: SearchStandard) => void;
+  sx?: SxProps;
 }
 
-const SwitchDate: FC<Props> = ({ range, searchStandard, setRange, setSearchStandard }) => {
+const SwitchDate: FC<Props> = ({ range, searchStandard, setRange, setSearchStandard, sx }) => {
   const [filterAnchor, setFilterAnchor] = useState<null | HTMLElement>(null);
 
   const handleChangeStandard = (event: SelectChangeEvent<SearchStandard>) => {
@@ -44,7 +46,7 @@ const SwitchDate: FC<Props> = ({ range, searchStandard, setRange, setSearchStand
   const dateValue = getDateValueByStandard(searchStandard, range.from);
 
   return (
-    <Stack direction="column" alignItems="flex-end" mr={3} gap={1}>
+    <Stack direction="column" alignItems="flex-start" mr={3} gap={1} sx={{ ...sx }}>
       <CommonDateFilter
         anchor={{
           open: !!filterAnchor,
