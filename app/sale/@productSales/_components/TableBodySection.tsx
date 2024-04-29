@@ -7,8 +7,10 @@ import Cell from '@/components/table/Cell';
 import EmptyRow from '@/components/table/EmptyRow';
 import { LIMIT } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { getKCWFormat } from '@/util';
+import { getKCWFormat, getNumberWithComma } from '@/util';
 import { TableBody, TableRow, Stack, Chip } from '@mui/material';
+import { useReactiveVar } from '@apollo/client';
+import { saleRange } from '@/store/saleRange';
 
 interface Props {
   keyword: string;
@@ -16,20 +18,23 @@ interface Props {
 }
 
 const TableBodySection: FC<Props> = ({ keyword, setSelectedProductSale }) => {
-  const { data, networkStatus, fetchMore, refetch } = useProductSales({
+  const { from, to } = useReactiveVar(saleRange);
+  const { data, networkStatus, fetchMore } = useProductSales({
     keywordTarget: 'name',
     keyword,
     limit: LIMIT,
     skip: 0,
+    from: from.toISOString(),
+    to: to.toISOString(),
   });
 
-  const rows = data?.productSales.data ?? [];
+  const rows = data?.productSales?.data ?? [];
   const isEmpty = rows.length === 0;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
       if (networkStatus != 1 && networkStatus != 3) {
-        const totalCount = data?.productSales.totalCount;
+        const totalCount = data?.productSales?.totalCount ?? 0;
         if (totalCount != null && totalCount > rows.length) {
           fetchMore({
             variables: {
@@ -38,6 +43,8 @@ const TableBodySection: FC<Props> = ({ keyword, setSelectedProductSale }) => {
                 keyword,
                 limit: LIMIT,
                 skip: rows.length,
+                from: from.toISOString(),
+                to: to.toISOString(),
               },
             },
           });
@@ -61,19 +68,23 @@ const TableBodySection: FC<Props> = ({ keyword, setSelectedProductSale }) => {
             key={index}
           >
             <Cell sx={{ minWidth: 200 }}>{row.name}</Cell>
-            <Cell>{getKCWFormat(row.today?.accPayCost ?? 0)}</Cell>
-            <Cell>{getKCWFormat(row.thisWeek?.accPayCost ?? 0)}</Cell>
-            <Cell>{getKCWFormat(row.lastWeek?.accPayCost ?? 0)}</Cell>
-            <Cell>{getKCWFormat(row.thisMonth?.accPayCost ?? 0)}</Cell>
+            <Cell>{getNumberWithComma(row.sales?.accCount ?? 0)}</Cell>
+            <Cell>{getKCWFormat(row.sales?.accPayCost ?? 0)}</Cell>
+            <Cell>{getKCWFormat(row.sales?.accProfit ?? 0)}</Cell>
             <Cell sx={{ width: '30%' }}>
               <Stack direction="row" flexWrap="wrap" gap={1}>
-                {row.clients.slice(0, 5).map((client) => (
-                  <Chip
-                    key={`${client._id.mallId}_${client._id.productCode}`}
-                    label={client._id.mallId}
-                    variant="outlined"
-                  />
-                ))}
+                {row.clients.slice(0, 5).map((client) => {
+                  if (!!client._id?.mallId) {
+                    return (
+                      <Chip
+                        key={`${client._id.mallId}_${client._id.productCode}`}
+                        label={client._id.mallId}
+                        variant="outlined"
+                      />
+                    );
+                  }
+                  return <></>;
+                })}
               </Stack>
             </Cell>
           </TableRow>

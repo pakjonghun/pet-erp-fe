@@ -12,16 +12,7 @@ const productSales = graphql(`
         clients {
           ...ClientInfo
         }
-        today {
-          ...SaleInfo
-        }
-        thisWeek {
-          ...SaleInfo
-        }
-        lastWeek {
-          ...SaleInfo
-        }
-        thisMonth {
+        sales {
           ...SaleInfo
         }
       }

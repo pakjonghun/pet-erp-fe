@@ -21,7 +21,7 @@ interface Props {
 }
 
 const CommonDateFilter: FC<Props> = ({ anchor, date }) => {
-  const [selectedDateOption, setSelectedDateOption] = useState('이번달');
+  const [selectedDateOption, setSelectedDateOption] = useState('오늘');
   const [from, setForm] = useState<Dayjs>(() => date.range.from);
   const [to, setTo] = useState<Dayjs>(() => date.range.to);
   const [canDateControl, setCanDateControl] = useState(false);

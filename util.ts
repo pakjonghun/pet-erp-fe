@@ -38,9 +38,10 @@ const findSkip = (obj: any) => {
   return null;
 };
 
-export const merge = (existing = { totalCount: 0, data: [] }, incoming: any, { args }: any) => {
-  const existingData = existing.data as any[];
-  const incomingData = incoming.data as any[];
+const baseMergeData = { totalCount: 0, data: [] };
+export const merge = (existing = baseMergeData, incoming: any, { args }: any) => {
+  const existingData = existing?.data as any[];
+  const incomingData = (incoming?.data as any[]) ?? baseMergeData;
   const merged = existingData ? existingData.slice(0) : [];
   const skip = findSkip(args);
   if (skip == null) {
@@ -51,7 +52,7 @@ export const merge = (existing = { totalCount: 0, data: [] }, incoming: any, { a
     merged[skip + i] = incomingData[i];
   }
 
-  const result = { totalCount: incoming.totalCount, data: merged };
+  const result = { totalCount: incoming?.totalCount, data: merged };
 
   return result;
 };

@@ -57,10 +57,9 @@ const ProductSales = () => {
           <TableHead>
             <TableRow>
               <HeadCell text="이름" />
-              <HeadCell text="오늘" />
-              <HeadCell text="이번주" />
-              <HeadCell text="지난주" />
-              <HeadCell text="이번달" />
+              <HeadCell text="수량" />
+              <HeadCell text="매출" />
+              <HeadCell text="수익" />
               <HeadCell text="TOP5 거래처" />
             </TableRow>
           </TableHead>

@@ -1,6 +1,17 @@
-import { getLastMonth, getLastWeek, getThisMonth, getThisWeek, getYesterday } from './utils';
+import {
+  getLastMonth,
+  getLastWeek,
+  getThisMonth,
+  getThisWeek,
+  getToday,
+  getYesterday,
+} from './utils';
 
 export const dateFilterOptions = [
+  {
+    title: '오늘',
+    callback: getToday,
+  },
   {
     title: '어제',
     callback: getYesterday,

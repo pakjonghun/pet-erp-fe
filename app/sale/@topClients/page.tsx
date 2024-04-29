@@ -19,25 +19,25 @@ const TopClients = () => {
   const { data, fetchMore, networkStatus } = useTopClients({
     limit: LIMIT,
     skip: 0,
-    from: from.toDate(),
-    to: to.toDate(),
+    from: from.toISOString(),
+    to: to.toISOString(),
   });
 
-  const rows = data?.topClients.data ?? [];
+  const rows = data?.topClients?.data ?? [];
   const isEmpty = rows.length === 0;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
       if (networkStatus != 1 && networkStatus != 3) {
-        const totalCount = data?.topClients.totalCount;
+        const totalCount = data?.topClients?.totalCount;
         if (totalCount != null && totalCount > rows.length) {
           fetchMore({
             variables: {
               topClientInput: {
                 skip: rows.length,
                 limit: LIMIT,
-                from: from.toDate(),
-                to: to.toDate(),
+                from: from.toISOString(),
+                to: to.toISOString(),
               },
             },
           });
