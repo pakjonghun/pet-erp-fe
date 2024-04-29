@@ -55,9 +55,15 @@ export const useCreateProduct = () => {
               fragment: ProductCategoryFragmentFragmentDoc,
             });
 
-            const isExistCategory = (existing.data as ProductCategory[]).find(
-              (item) => item._id === newCategory._id
-            );
+            const isExistCategory = (existing.data as ProductCategory[]).find((item) => {
+              if ((item as unknown as { __ref: string }).__ref) {
+                return (
+                  (item as unknown as { __ref: string }).__ref ===
+                  `${newCategory.__typename}:${newCategory._id}`
+                );
+              }
+              return item._id === newCategory._id;
+            });
 
             return isExistCategory //
               ? existing
