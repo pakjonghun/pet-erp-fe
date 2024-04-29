@@ -19,11 +19,15 @@ import TablePage from '@/components/table/TablePage';
 import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 import ProductSaleModal from './_components/ProductSaleModal';
 import TableBodySection from './_components/TableBodySection';
+import { useReactiveVar } from '@apollo/client';
+import { saleTotal } from '@/store/saleStore';
+import { getKCWFormat, getNumberWithComma } from '@/util';
 
 const ProductSales = () => {
   const [keyword, setKeyword] = useState('');
   const delayedKeyword = useTextDebounce(keyword);
   const [selectedProductSale, setSelectedProductSale] = useState<null | ProductSaleData>(null);
+  const { totalCount, totalProfit, totalPayCost } = useReactiveVar(saleTotal);
 
   return (
     <TablePage sx={{ flex: 1 }}>
@@ -57,9 +61,31 @@ const ProductSales = () => {
           <TableHead>
             <TableRow>
               <HeadCell text="이름" />
-              <HeadCell text="수량" />
-              <HeadCell text="매출" />
-              <HeadCell text="수익" />
+              <HeadCell
+                text={
+                  <>
+                    수량
+                    <br />({getNumberWithComma(totalCount)})
+                  </>
+                }
+              />
+              <HeadCell
+                text={
+                  <>
+                    매출
+                    <br />({getKCWFormat(totalPayCost)})
+                  </>
+                }
+              />
+
+              <HeadCell
+                text={
+                  <>
+                    수익
+                    <br />({getKCWFormat(totalProfit)})
+                  </>
+                }
+              />
               <HeadCell text="TOP5 거래처" />
             </TableRow>
           </TableHead>

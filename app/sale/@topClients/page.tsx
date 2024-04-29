@@ -12,7 +12,8 @@ import { LIMIT, TABLE_MAX_HEIGHT } from '@/constants';
 import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { useReactiveVar } from '@apollo/client';
-import { saleRange } from '@/store/saleRange';
+import { clientTotal, saleRange } from '@/store/saleStore';
+import { useEffect } from 'react';
 
 const TopClients = () => {
   const { from, to } = useReactiveVar(saleRange);
@@ -25,6 +26,7 @@ const TopClients = () => {
 
   const rows = data?.topClients?.data ?? [];
   const isEmpty = rows.length === 0;
+  const { totalCount, totalPayCost, totalProfit } = useReactiveVar(clientTotal);
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -46,16 +48,22 @@ const TopClients = () => {
     }
   };
   const scrollRef = useInfinityScroll({ callback });
-  rows.reduce(
-    (acc, cur) => {
-      return {
-        totalCount: acc.totalCount + cur.accCount ?? 0,
-        totalPayCost: acc.totalPayCost + cur.accPayCost ?? 0,
-        totalProfit: acc.totalProfit + cur.accProfit ?? 0,
-      };
-    },
-    { totalCount: 0, totalPayCost: 0, totalProfit: 0 }
-  );
+
+  useEffect(() => {
+    const totalData = rows.reduce(
+      (acc, cur) => {
+        return {
+          totalCount: acc.totalCount + cur.accCount ?? 0,
+          totalPayCost: acc.totalPayCost + cur.accPayCost ?? 0,
+          totalProfit: acc.totalProfit + cur.accProfit ?? 0,
+        };
+      },
+      { totalCount: 0, totalPayCost: 0, totalProfit: 0 }
+    );
+
+    clientTotal(totalData);
+  }, [data?.topClients?.data]);
+
   return (
     <TablePage>
       <TableTitle title={`BEST 거래처`} />
@@ -64,9 +72,31 @@ const TopClients = () => {
           <TableHead>
             <TableRow hover>
               <HeadCell text="이름" />
-              <HeadCell text="수량" />
-              <HeadCell text="매출" />
-              <HeadCell text="수익" />
+              <HeadCell
+                text={
+                  <>
+                    수량
+                    <br />({getNumberWithComma(totalCount)})
+                  </>
+                }
+              />
+              <HeadCell
+                text={
+                  <>
+                    매출
+                    <br />({getKCWFormat(totalPayCost)})
+                  </>
+                }
+              />
+
+              <HeadCell
+                text={
+                  <>
+                    수익
+                    <br />({getKCWFormat(totalProfit)})
+                  </>
+                }
+              />
             </TableRow>
           </TableHead>
           <TableBody>

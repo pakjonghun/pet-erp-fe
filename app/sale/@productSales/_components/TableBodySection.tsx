@@ -1,6 +1,6 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { ProductSaleData } from '@/http/graphql/codegen/graphql';
 import { useProductSales } from '@/http/graphql/hooks/product/useProductSaleList';
 import Cell from '@/components/table/Cell';
@@ -10,7 +10,7 @@ import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { getKCWFormat, getNumberWithComma } from '@/util';
 import { TableBody, TableRow, Stack, Chip } from '@mui/material';
 import { useReactiveVar } from '@apollo/client';
-import { saleRange } from '@/store/saleRange';
+import { saleRange, saleTotal } from '@/store/saleStore';
 
 interface Props {
   keyword: string;
@@ -28,7 +28,7 @@ const TableBodySection: FC<Props> = ({ keyword, setSelectedProductSale }) => {
     to: to.toISOString(),
   });
 
-  const rows = data?.productSales?.data ?? [];
+  const rows = (data?.productSales?.data as ProductSaleData[]) ?? [];
   const isEmpty = rows.length === 0;
 
   const callback: IntersectionObserverCallback = (entries) => {
@@ -53,6 +53,21 @@ const TableBodySection: FC<Props> = ({ keyword, setSelectedProductSale }) => {
     }
   };
   const scrollRef = useInfinityScroll({ callback });
+
+  useEffect(() => {
+    const totalData = rows.reduce(
+      (acc, cur) => {
+        return {
+          totalCount: acc.totalCount + (cur?.sales?.accCount ?? 0),
+          totalPayCost: 0 + (cur?.sales?.accPayCost ?? 0),
+          totalProfit: 0 + (cur?.sales?.accProfit ?? 0),
+        };
+      },
+      { totalCount: 0, totalPayCost: 0, totalProfit: 0 }
+    );
+
+    saleTotal(totalData);
+  }, [data?.productSales?.data]);
 
   return (
     <TableBody>
