@@ -13,9 +13,10 @@ import { useReactiveVar } from '@apollo/client';
 import { saleRange } from '@/store/saleStore';
 import { DateRange } from '@/components/calendar/dateFilter/type';
 import { SearchStandard } from '@/components/calendar/dateSwitch/types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDashboardProduct } from '@/http/graphql/hooks/product/useDashboardProduct';
 import { useDashboardProducts } from '@/http/graphql/hooks/product/useDashboardProducts';
+import { getToday } from '@/components/calendar/dateFilter/utils';
 
 export default function Home() {
   const pathname = usePathname();
@@ -48,8 +49,16 @@ export default function Home() {
     to: to.endOf('month').toISOString(),
   });
 
+  useEffect(() => {
+    return () => {
+      saleRange(getToday());
+    };
+  }, []);
+
   return (
-    <Box sx={{ height: '100%', bgcolor: (theme) => theme.palette.primary.light }}>
+    <Box
+      sx={{ height: '100%', bgcolor: (theme) => theme.palette.primary.light }}
+    >
       <SubHeader title="대시보드">
         <Tabs sx={{ mt: 2 }} value={currentTabIndex} indicatorColor="primary">
           {tabs.map((tab) => {
