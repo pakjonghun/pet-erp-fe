@@ -48,7 +48,7 @@ const DashboardTable: FC<Props> = ({ saleInfos, title }) => {
               />
               <DashboardTableCell
                 current={saleInfo.accProfit ?? 0}
-                previous={saleInfo.accProfit ?? 0}
+                previous={saleInfo.prevAccProfit ?? 0}
                 numberType="comma"
               />
               <DashboardTableCell
