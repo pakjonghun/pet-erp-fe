@@ -17,6 +17,7 @@ export const getNumberToString = (number: number, numberType: NumberType) => {
 };
 
 export const getProfitRate = (profit: number, payCost: number) => {
+  if (!payCost) return 0;
   return getFixedTwo(profit / payCost);
 };
 

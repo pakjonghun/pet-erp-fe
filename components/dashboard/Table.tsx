@@ -8,7 +8,6 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Typography } from '@mui/material';
 import { SaleInfos } from '@/http/graphql/codegen/graphql';
-import { getKCWFormat, getNumberWithComma } from '@/util';
 import DashboardTableCell from './TableCell';
 import { getProfitRate } from './utils';
 

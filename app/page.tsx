@@ -189,9 +189,6 @@ export default function Home() {
             />
           </Grid>
         </Grid>
-        <Box>
-          <DashboardChart />
-        </Box>
       </Box>
     </Box>
   );
