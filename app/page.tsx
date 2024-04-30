@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react';
 import { useDashboardProduct } from '@/http/graphql/hooks/product/useDashboardProduct';
 import { useDashboardProducts } from '@/http/graphql/hooks/product/useDashboardProducts';
 import { getToday } from '@/components/calendar/dateFilter/utils';
+import { getKCWFormat } from '@/util';
 
 export default function Home() {
   const pathname = usePathname();
@@ -56,9 +57,7 @@ export default function Home() {
   }, []);
 
   return (
-    <Box
-      sx={{ height: '100%', bgcolor: (theme) => theme.palette.primary.light }}
-    >
+    <Box sx={{ height: '100%', bgcolor: (theme) => theme.palette.primary.light }}>
       <SubHeader title="대시보드">
         <Tabs sx={{ mt: 2 }} value={currentTabIndex} indicatorColor="primary">
           {tabs.map((tab) => {
@@ -84,7 +83,7 @@ export default function Home() {
           })}
         </Tabs>
       </SubHeader>
-      <Box sx={{ p: 3, maxWidth: 1540 }}>
+      <Box sx={{ p: 3 }}>
         <SwitchDate
           range={{ from, to }}
           setRange={setRange}
@@ -92,35 +91,93 @@ export default function Home() {
           setSearchStandard={setSearchStandard}
         />
         <Grid container rowSpacing={3} columnSpacing={3} sx={{ my: 2 }}>
-          <Grid item xs={12} lg={6}>
-            <DashboardCard
-              label="월 매출"
-              count={monthData?.dashboardProduct?.accCount ?? 0}
-              payCost={monthData?.dashboardProduct?.accPayCost ?? 0}
-              profit={monthData?.dashboardProduct?.accProfit ?? 0}
-              profitRate={
-                Math.floor(
-                  ((monthData?.dashboardProduct?.accProfit ?? 0) /
-                    (monthData?.dashboardProduct?.accPayCost ?? 0)) *
-                    10000
-                ) / 100
-              }
-            />
+          <Grid item xs={12} md={6}>
+            <Grid container rowSpacing={3} columnSpacing={3}>
+              <Grid item xs={12} sm={6}>
+                <DashboardCard
+                  label="월 매출"
+                  content={getKCWFormat(monthData?.dashboardProduct?.accPayCost ?? 0)}
+                  beforeContent={getKCWFormat(monthData?.dashboardProduct?.accPayCost ?? 0)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <DashboardCard
+                  label="월 판매수량"
+                  content={getKCWFormat(monthData?.dashboardProduct?.accCount ?? 0)}
+                  beforeContent={getKCWFormat(monthData?.dashboardProduct?.accPayCost ?? 0)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <DashboardCard
+                  label="월 수익"
+                  content={getKCWFormat(monthData?.dashboardProduct?.accProfit ?? 0)}
+                  beforeContent={getKCWFormat(monthData?.dashboardProduct?.accPayCost ?? 0)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <DashboardCard
+                  label="월 수익율"
+                  content={`${
+                    Math.floor(
+                      ((todayData?.dashboardProduct?.accProfit ?? 0) /
+                        (todayData?.dashboardProduct?.accPayCost ?? 0)) *
+                        10000
+                    ) / 100
+                  }%`}
+                  beforeContent={`${
+                    Math.floor(
+                      ((todayData?.dashboardProduct?.accProfit ?? 0) /
+                        (todayData?.dashboardProduct?.accPayCost ?? 0)) *
+                        10000
+                    ) / 100
+                  }%`}
+                />
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item xs={12} lg={6}>
-            <DashboardCard
-              label="일 매출"
-              count={todayData?.dashboardProduct?.accCount ?? 0}
-              payCost={todayData?.dashboardProduct?.accPayCost ?? 0}
-              profit={todayData?.dashboardProduct?.accProfit ?? 0}
-              profitRate={
-                Math.floor(
-                  ((todayData?.dashboardProduct?.accProfit ?? 0) /
-                    (todayData?.dashboardProduct?.accPayCost ?? 0)) *
-                    10000
-                ) / 100
-              }
-            />
+          <Grid item xs={12} md={6}>
+            <Grid container rowSpacing={3} columnSpacing={3}>
+              <Grid item xs={12} sm={6}>
+                <DashboardCard
+                  label="일 매출"
+                  content={getKCWFormat(todayData?.dashboardProduct?.accPayCost ?? 0)}
+                  beforeContent={getKCWFormat(todayData?.dashboardProduct?.accPayCost ?? 0)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <DashboardCard
+                  label="일 판매수량"
+                  content={getKCWFormat(todayData?.dashboardProduct?.accCount ?? 0)}
+                  beforeContent={getKCWFormat(todayData?.dashboardProduct?.accPayCost ?? 0)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <DashboardCard
+                  label="일 수익"
+                  content={getKCWFormat(todayData?.dashboardProduct?.accProfit ?? 0)}
+                  beforeContent={getKCWFormat(todayData?.dashboardProduct?.accPayCost ?? 0)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <DashboardCard
+                  label="일 수익율"
+                  content={`${
+                    Math.floor(
+                      ((todayData?.dashboardProduct?.accProfit ?? 0) /
+                        (todayData?.dashboardProduct?.accPayCost ?? 0)) *
+                        10000
+                    ) / 100
+                  }%`}
+                  beforeContent={`${
+                    Math.floor(
+                      ((todayData?.dashboardProduct?.accProfit ?? 0) /
+                        (todayData?.dashboardProduct?.accPayCost ?? 0)) *
+                        10000
+                    ) / 100
+                  }%`}
+                />
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
         <Grid container rowSpacing={3} columnSpacing={3}>

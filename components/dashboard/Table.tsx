@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -5,10 +6,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { SaleInfo } from '@/http/graphql/codegen/graphql';
-import { FC } from 'react';
 import { getKCWFormat, getNumberWithComma } from '@/util';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
 interface Props {
   title: string;
@@ -47,10 +48,42 @@ const DashboardTable: FC<Props> = ({ saleInfos, title }) => {
           {rows.map((row) => (
             <TableRow key={row.name}>
               <TableCell>{row.name}</TableCell>
-              <TableCell align="right">{row.accPayCost}</TableCell>
-              <TableCell align="right">{row.accCount}</TableCell>
-              <TableCell align="right">{row.accProfit}</TableCell>
-              <TableCell align="right">{row.profitRate}</TableCell>
+              <TableCell>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                  <Typography>{row.accPayCost}</Typography>
+                  <Typography variant="subtitle2" sx={{ display: 'flex' }}>
+                    <ArrowUpwardIcon />
+                    {row.accPayCost}
+                  </Typography>
+                </Box>
+              </TableCell>
+              <TableCell>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                  <Typography>{row.accCount}</Typography>
+                  <Typography variant="subtitle2" sx={{ display: 'flex' }}>
+                    <ArrowUpwardIcon />
+                    {row.accCount}
+                  </Typography>
+                </Box>
+              </TableCell>
+              <TableCell>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                  <Typography>{row.accProfit}</Typography>
+                  <Typography variant="subtitle2" sx={{ display: 'flex' }}>
+                    <ArrowUpwardIcon />
+                    {row.accProfit}
+                  </Typography>
+                </Box>
+              </TableCell>
+              <TableCell>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                  <Typography>{row.profitRate}</Typography>
+                  <Typography variant="subtitle2" sx={{ display: 'flex' }}>
+                    <ArrowUpwardIcon />
+                    {row.profitRate}
+                  </Typography>
+                </Box>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
