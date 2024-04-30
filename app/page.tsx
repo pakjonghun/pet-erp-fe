@@ -97,83 +97,89 @@ export default function Home() {
         <Grid container rowSpacing={3} columnSpacing={3} sx={{ my: 2 }}>
           <Grid item xs={12} md={6}>
             <DashboardCard>
-              <Stack
-                sx={{ width: '100%' }}
-                gap={3}
-                direction="row"
-                flexWrap="wrap"
-                justifyContent="space-around"
-              >
-                <DashboardCardContent
-                  label={`${month} 매출`}
-                  current={monthData?.dashboardProduct?.current?.accPayCost ?? 0}
-                  previous={monthData?.dashboardProduct?.previous?.accPayCost ?? 0}
-                />
-                <DashboardCardContent
-                  numberType="comma"
-                  label={`${month} 판매량`}
-                  current={monthData?.dashboardProduct?.current?.accCount ?? 0}
-                  previous={monthData?.dashboardProduct?.previous?.accCount ?? 0}
-                />
-                <DashboardCardContent
-                  label={`${month} 수익`}
-                  current={monthData?.dashboardProduct?.current?.accProfit ?? 0}
-                  previous={monthData?.dashboardProduct?.previous?.accProfit ?? 0}
-                />
-                <DashboardCardContent
-                  numberType="percent"
-                  label={`${month} 수익율`}
-                  current={getProfitRate(
-                    monthData?.dashboardProduct?.current?.accProfit ?? 0,
-                    monthData?.dashboardProduct?.current?.accPayCost ?? 0
-                  )}
-                  previous={getProfitRate(
-                    monthData?.dashboardProduct?.previous?.accProfit ?? 0,
-                    monthData?.dashboardProduct?.previous?.accPayCost ?? 0
-                  )}
-                />
-              </Stack>
+              <Grid rowSpacing={3} container>
+                <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <DashboardCardContent
+                    label={`${month} 매출`}
+                    current={monthData?.dashboardProduct?.current?.accPayCost ?? 0}
+                    previous={monthData?.dashboardProduct?.previous?.accPayCost ?? 0}
+                  />
+                </Grid>
+                <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <DashboardCardContent
+                    numberType="comma"
+                    label={`${month} 판매량`}
+                    current={monthData?.dashboardProduct?.current?.accCount ?? 0}
+                    previous={monthData?.dashboardProduct?.previous?.accCount ?? 0}
+                  />
+                </Grid>
+
+                <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <DashboardCardContent
+                    label={`${month} 수익`}
+                    current={monthData?.dashboardProduct?.current?.accProfit ?? 0}
+                    previous={monthData?.dashboardProduct?.previous?.accProfit ?? 0}
+                  />
+                </Grid>
+                <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <DashboardCardContent
+                    numberType="percent"
+                    label={`${month} 수익율`}
+                    current={getProfitRate(
+                      monthData?.dashboardProduct?.current?.accProfit ?? 0,
+                      monthData?.dashboardProduct?.current?.accPayCost ?? 0
+                    )}
+                    previous={getProfitRate(
+                      monthData?.dashboardProduct?.previous?.accProfit ?? 0,
+                      monthData?.dashboardProduct?.previous?.accPayCost ?? 0
+                    )}
+                  />
+                </Grid>
+              </Grid>
             </DashboardCard>
             <Grid item xs={12} sm={6}></Grid>
           </Grid>
           <Grid item xs={12} md={6}>
             <DashboardCard>
-              <Stack
-                sx={{ width: '100%' }}
-                gap={3}
-                direction="row"
-                flexWrap="wrap"
-                justifyContent="space-around"
-              >
-                <DashboardCardContent
-                  label={`${date} 매출`}
-                  current={todayData?.dashboardProduct?.current?.accPayCost ?? 0}
-                  previous={todayData?.dashboardProduct?.previous?.accPayCost ?? 0}
-                />
-                <DashboardCardContent
-                  numberType="comma"
-                  label={`${date} 판매량`}
-                  current={todayData?.dashboardProduct?.current?.accCount ?? 0}
-                  previous={todayData?.dashboardProduct?.previous?.accCount ?? 0}
-                />
-                <DashboardCardContent
-                  label={`${date} 수익`}
-                  current={todayData?.dashboardProduct?.current?.accProfit ?? 0}
-                  previous={todayData?.dashboardProduct?.previous?.accProfit ?? 0}
-                />
-                <DashboardCardContent
-                  numberType="percent"
-                  label={`${date} 수익율`}
-                  current={getProfitRate(
-                    todayData?.dashboardProduct?.current?.accProfit ?? 0,
-                    todayData?.dashboardProduct?.current?.accPayCost ?? 0
-                  )}
-                  previous={getProfitRate(
-                    monthData?.dashboardProduct?.previous?.accProfit ?? 0,
-                    monthData?.dashboardProduct?.previous?.accPayCost ?? 0
-                  )}
-                />
-              </Stack>
+              <Grid rowSpacing={3} container>
+                <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <DashboardCardContent
+                    label={`${date} 매출`}
+                    current={todayData?.dashboardProduct?.current?.accPayCost ?? 0}
+                    previous={todayData?.dashboardProduct?.previous?.accPayCost ?? 0}
+                  />
+                </Grid>
+                <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <DashboardCardContent
+                    numberType="comma"
+                    label={`${date} 판매량`}
+                    current={todayData?.dashboardProduct?.current?.accCount ?? 0}
+                    previous={todayData?.dashboardProduct?.previous?.accCount ?? 0}
+                  />
+                </Grid>
+
+                <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <DashboardCardContent
+                    label={`${date} 수익`}
+                    current={todayData?.dashboardProduct?.current?.accProfit ?? 0}
+                    previous={todayData?.dashboardProduct?.previous?.accProfit ?? 0}
+                  />
+                </Grid>
+                <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <DashboardCardContent
+                    numberType="percent"
+                    label={`${date} 수익율`}
+                    current={getProfitRate(
+                      todayData?.dashboardProduct?.current?.accProfit ?? 0,
+                      todayData?.dashboardProduct?.current?.accPayCost ?? 0
+                    )}
+                    previous={getProfitRate(
+                      todayData?.dashboardProduct?.previous?.accProfit ?? 0,
+                      todayData?.dashboardProduct?.previous?.accPayCost ?? 0
+                    )}
+                  />
+                </Grid>
+              </Grid>
             </DashboardCard>
             <Grid item xs={12} sm={6}></Grid>
           </Grid>
