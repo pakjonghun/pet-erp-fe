@@ -56,6 +56,9 @@ export default function Home() {
     };
   }, []);
 
+  const month = from.format('MM월');
+  const date = from.format('MM월 DD일');
+
   return (
     <Box sx={{ height: '100%', bgcolor: (theme) => theme.palette.primary.light }}>
       <SubHeader title="대시보드">
@@ -95,7 +98,7 @@ export default function Home() {
             <Grid container rowSpacing={3} columnSpacing={3}>
               <Grid item xs={12} sm={6}>
                 <DashboardCard
-                  label="월 매출"
+                  label={`${month} 매출`}
                   current={monthData?.dashboardProduct?.current?.accPayCost ?? 0}
                   previous={monthData?.dashboardProduct?.previous?.accPayCost ?? 0}
                 />
@@ -103,14 +106,14 @@ export default function Home() {
               <Grid item xs={12} sm={6}>
                 <DashboardCard
                   numberType="comma"
-                  label="월 판매수량"
+                  label={`${month} 판매량`}
                   current={monthData?.dashboardProduct?.current?.accCount ?? 0}
                   previous={monthData?.dashboardProduct?.previous?.accCount ?? 0}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <DashboardCard
-                  label="월 수익"
+                  label={`${month} 수익`}
                   current={monthData?.dashboardProduct?.current?.accProfit ?? 0}
                   previous={monthData?.dashboardProduct?.previous?.accProfit ?? 0}
                 />
@@ -118,7 +121,7 @@ export default function Home() {
               <Grid item xs={12} sm={6}>
                 <DashboardCard
                   numberType="percent"
-                  label="월 수익율"
+                  label={`${month} 수익율`}
                   current={getProfitRate(
                     monthData?.dashboardProduct?.current?.accProfit ?? 0,
                     monthData?.dashboardProduct?.current?.accPayCost ?? 0
@@ -135,7 +138,7 @@ export default function Home() {
             <Grid container rowSpacing={3} columnSpacing={3}>
               <Grid item xs={12} sm={6}>
                 <DashboardCard
-                  label="일 매출"
+                  label={`${date} 매출`}
                   current={todayData?.dashboardProduct?.current?.accPayCost ?? 0}
                   previous={todayData?.dashboardProduct?.previous?.accPayCost ?? 0}
                 />
@@ -143,14 +146,14 @@ export default function Home() {
               <Grid item xs={12} sm={6}>
                 <DashboardCard
                   numberType="comma"
-                  label="일 판매수량"
+                  label={`${date} 판매수량`}
                   current={todayData?.dashboardProduct?.current?.accCount ?? 0}
                   previous={todayData?.dashboardProduct?.previous?.accCount ?? 0}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <DashboardCard
-                  label="일 수익"
+                  label={`${date} 수익`}
                   current={todayData?.dashboardProduct?.current?.accProfit ?? 0}
                   previous={todayData?.dashboardProduct?.previous?.accProfit ?? 0}
                 />
@@ -158,7 +161,7 @@ export default function Home() {
               <Grid item xs={12} sm={6}>
                 <DashboardCard
                   numberType="percent"
-                  label="일 수익율"
+                  label={`${date} 수익율`}
                   current={getProfitRate(
                     todayData?.dashboardProduct?.current?.accProfit ?? 0,
                     todayData?.dashboardProduct?.current?.accPayCost ?? 0
@@ -175,13 +178,13 @@ export default function Home() {
         <Grid container rowSpacing={3} columnSpacing={3}>
           <Grid item xs={12} lg={6}>
             <DashboardTable
-              title={`${from.get('month') + 1}월 BEST 상품`}
+              title={`${from.format('MM월')} BEST 제품`}
               saleInfos={monthDatas?.dashboardProducts ?? []}
             />
           </Grid>
           <Grid item xs={12} lg={6}>
             <DashboardTable
-              title={`${from.format('MM월 DD일')} BEST 상품`}
+              title={`${from.format('MM월 DD일')} BEST 제품`}
               saleInfos={todayDatas?.dashboardProducts ?? []}
             />
           </Grid>
