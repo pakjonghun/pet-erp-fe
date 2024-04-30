@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react';
 import { useDashboardProduct } from '@/http/graphql/hooks/product/useDashboardProduct';
 import { useDashboardProducts } from '@/http/graphql/hooks/product/useDashboardProducts';
 import { getToday } from '@/components/calendar/dateFilter/utils';
-import { getKCWFormat } from '@/util';
+import { getProfitRate } from '@/components/dashboard/utils';
 
 export default function Home() {
   const pathname = usePathname();
@@ -96,41 +96,37 @@ export default function Home() {
               <Grid item xs={12} sm={6}>
                 <DashboardCard
                   label="월 매출"
-                  content={getKCWFormat(monthData?.dashboardProduct?.accPayCost ?? 0)}
-                  beforeContent={getKCWFormat(monthData?.dashboardProduct?.accPayCost ?? 0)}
+                  current={monthData?.dashboardProduct?.current?.accPayCost ?? 0}
+                  previous={monthData?.dashboardProduct?.previous?.accPayCost ?? 0}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <DashboardCard
+                  numberType="comma"
                   label="월 판매수량"
-                  content={getKCWFormat(monthData?.dashboardProduct?.accCount ?? 0)}
-                  beforeContent={getKCWFormat(monthData?.dashboardProduct?.accPayCost ?? 0)}
+                  current={monthData?.dashboardProduct?.current?.accCount ?? 0}
+                  previous={monthData?.dashboardProduct?.previous?.accCount ?? 0}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <DashboardCard
                   label="월 수익"
-                  content={getKCWFormat(monthData?.dashboardProduct?.accProfit ?? 0)}
-                  beforeContent={getKCWFormat(monthData?.dashboardProduct?.accPayCost ?? 0)}
+                  current={monthData?.dashboardProduct?.current?.accProfit ?? 0}
+                  previous={monthData?.dashboardProduct?.previous?.accProfit ?? 0}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <DashboardCard
+                  numberType="percent"
                   label="월 수익율"
-                  content={`${
-                    Math.floor(
-                      ((todayData?.dashboardProduct?.accProfit ?? 0) /
-                        (todayData?.dashboardProduct?.accPayCost ?? 0)) *
-                        10000
-                    ) / 100
-                  }%`}
-                  beforeContent={`${
-                    Math.floor(
-                      ((todayData?.dashboardProduct?.accProfit ?? 0) /
-                        (todayData?.dashboardProduct?.accPayCost ?? 0)) *
-                        10000
-                    ) / 100
-                  }%`}
+                  current={getProfitRate(
+                    monthData?.dashboardProduct?.current?.accProfit ?? 0,
+                    monthData?.dashboardProduct?.current?.accPayCost ?? 0
+                  )}
+                  previous={getProfitRate(
+                    monthData?.dashboardProduct?.previous?.accProfit ?? 0,
+                    monthData?.dashboardProduct?.previous?.accPayCost ?? 0
+                  )}
                 />
               </Grid>
             </Grid>
@@ -140,41 +136,37 @@ export default function Home() {
               <Grid item xs={12} sm={6}>
                 <DashboardCard
                   label="일 매출"
-                  content={getKCWFormat(todayData?.dashboardProduct?.accPayCost ?? 0)}
-                  beforeContent={getKCWFormat(todayData?.dashboardProduct?.accPayCost ?? 0)}
+                  current={todayData?.dashboardProduct?.current?.accPayCost ?? 0}
+                  previous={todayData?.dashboardProduct?.previous?.accPayCost ?? 0}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <DashboardCard
+                  numberType="comma"
                   label="일 판매수량"
-                  content={getKCWFormat(todayData?.dashboardProduct?.accCount ?? 0)}
-                  beforeContent={getKCWFormat(todayData?.dashboardProduct?.accPayCost ?? 0)}
+                  current={todayData?.dashboardProduct?.current?.accCount ?? 0}
+                  previous={todayData?.dashboardProduct?.previous?.accCount ?? 0}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <DashboardCard
                   label="일 수익"
-                  content={getKCWFormat(todayData?.dashboardProduct?.accProfit ?? 0)}
-                  beforeContent={getKCWFormat(todayData?.dashboardProduct?.accPayCost ?? 0)}
+                  current={todayData?.dashboardProduct?.current?.accProfit ?? 0}
+                  previous={todayData?.dashboardProduct?.previous?.accProfit ?? 0}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <DashboardCard
+                  numberType="percent"
                   label="일 수익율"
-                  content={`${
-                    Math.floor(
-                      ((todayData?.dashboardProduct?.accProfit ?? 0) /
-                        (todayData?.dashboardProduct?.accPayCost ?? 0)) *
-                        10000
-                    ) / 100
-                  }%`}
-                  beforeContent={`${
-                    Math.floor(
-                      ((todayData?.dashboardProduct?.accProfit ?? 0) /
-                        (todayData?.dashboardProduct?.accPayCost ?? 0)) *
-                        10000
-                    ) / 100
-                  }%`}
+                  current={getProfitRate(
+                    todayData?.dashboardProduct?.current?.accProfit ?? 0,
+                    todayData?.dashboardProduct?.current?.accPayCost ?? 0
+                  )}
+                  previous={getProfitRate(
+                    todayData?.dashboardProduct?.previous?.accProfit ?? 0,
+                    todayData?.dashboardProduct?.previous?.accPayCost ?? 0
+                  )}
                 />
               </Grid>
             </Grid>

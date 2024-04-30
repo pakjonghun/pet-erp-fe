@@ -10,6 +10,11 @@ const dashboardProducts = graphql(`
       accCount
       accProfit
       averagePayCost
+      averagePayCost
+      prevAccPayCost
+      prevAccCount
+      prevAccProfit
+      prevAveragePayCost
     }
   }
 `);

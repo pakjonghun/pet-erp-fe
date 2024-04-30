@@ -6,29 +6,18 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Box, Typography } from '@mui/material';
-import { SaleInfo } from '@/http/graphql/codegen/graphql';
+import { Typography } from '@mui/material';
+import { SaleInfos } from '@/http/graphql/codegen/graphql';
 import { getKCWFormat, getNumberWithComma } from '@/util';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import DashboardTableCell from './TableCell';
+import { getProfitRate } from './utils';
 
 interface Props {
   title: string;
-  saleInfos: SaleInfo[];
+  saleInfos: SaleInfos[];
 }
 
 const DashboardTable: FC<Props> = ({ saleInfos, title }) => {
-  function createData({ accCount, accPayCost, accProfit, name }: SaleInfo) {
-    return {
-      name,
-      accCount: getNumberWithComma(accCount ?? 0),
-      accPayCost: getKCWFormat(accPayCost ?? 0),
-      accProfit: getKCWFormat(accProfit ?? 0),
-      profitRate: Math.floor(((accProfit ?? 0) / (accPayCost ?? 0)) * 10000) / 100,
-    };
-  }
-
-  const rows = saleInfos.map((sale) => createData(sale));
-
   return (
     <TableContainer component={Paper} sx={{ p: 3 }}>
       <Typography sx={{ my: 1, pl: 1 }} variant="h5">
@@ -45,45 +34,31 @@ const DashboardTable: FC<Props> = ({ saleInfos, title }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.name}>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                  <Typography>{row.accPayCost}</Typography>
-                  <Typography variant="subtitle2" sx={{ display: 'flex' }}>
-                    <ArrowUpwardIcon />
-                    {row.accPayCost}
-                  </Typography>
-                </Box>
-              </TableCell>
-              <TableCell>
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                  <Typography>{row.accCount}</Typography>
-                  <Typography variant="subtitle2" sx={{ display: 'flex' }}>
-                    <ArrowUpwardIcon />
-                    {row.accCount}
-                  </Typography>
-                </Box>
-              </TableCell>
-              <TableCell>
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                  <Typography>{row.accProfit}</Typography>
-                  <Typography variant="subtitle2" sx={{ display: 'flex' }}>
-                    <ArrowUpwardIcon />
-                    {row.accProfit}
-                  </Typography>
-                </Box>
-              </TableCell>
-              <TableCell>
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                  <Typography>{row.profitRate}</Typography>
-                  <Typography variant="subtitle2" sx={{ display: 'flex' }}>
-                    <ArrowUpwardIcon />
-                    {row.profitRate}
-                  </Typography>
-                </Box>
-              </TableCell>
+          {saleInfos.map((saleInfo) => (
+            <TableRow key={saleInfo.name}>
+              <TableCell>{saleInfo.name}</TableCell>
+              <DashboardTableCell
+                current={saleInfo.accPayCost ?? 0}
+                previous={saleInfo.prevAccPayCost ?? 0}
+              />
+              <DashboardTableCell
+                current={saleInfo.accCount ?? 0}
+                previous={saleInfo.prevAccCount ?? 0}
+                numberType="comma"
+              />
+              <DashboardTableCell
+                current={saleInfo.accProfit ?? 0}
+                previous={saleInfo.accProfit ?? 0}
+                numberType="comma"
+              />
+              <DashboardTableCell
+                current={getProfitRate(saleInfo?.accProfit ?? 0, saleInfo?.accPayCost ?? 0)}
+                previous={getProfitRate(
+                  saleInfo?.prevAccProfit ?? 0,
+                  saleInfo?.prevAccPayCost ?? 0
+                )}
+                numberType="percent"
+              />
             </TableRow>
           ))}
         </TableBody>

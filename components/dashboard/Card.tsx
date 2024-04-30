@@ -4,14 +4,22 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { Stack } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { NumberType } from './type';
+import { getArrow, getColor, getFixedTwo, getNumberToString } from './utils';
 
 interface Props {
   label: string;
-  content: string;
-  beforeContent: string;
+  current: number;
+  previous: number;
+  numberType?: NumberType;
 }
 
-const DashboardCard: FC<Props> = ({ label, content, beforeContent }) => {
+const DashboardCard: FC<Props> = ({ label, current, previous, numberType = 'currency' }) => {
+  const currentNumberString = getNumberToString(current, numberType);
+  const compareNumber = getFixedTwo(current - previous);
+  const compareNumberString = getNumberToString(compareNumber, numberType);
+
   return (
     <Card
       sx={{
@@ -27,11 +35,11 @@ const DashboardCard: FC<Props> = ({ label, content, beforeContent }) => {
         </Typography>
         <Stack direction="column" flexWrap="wrap" gap={1}>
           <Typography component="div" variant="h6">
-            {content}
+            {currentNumberString}
           </Typography>
-          <Typography sx={{ display: 'flex' }}>
-            <ArrowUpwardIcon />
-            {beforeContent}
+          <Typography sx={{ display: 'flex', color: getColor(compareNumber) }}>
+            {getArrow(compareNumber)}
+            {compareNumberString}
           </Typography>
         </Stack>
       </CardContent>
