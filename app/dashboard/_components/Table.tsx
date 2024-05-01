@@ -10,6 +10,7 @@ import { Typography } from '@mui/material';
 import { SaleInfos } from '@/http/graphql/codegen/graphql';
 import DashboardTableCell from './TableCell';
 import { getProfitRate } from '../utils';
+import EmptyRow from '@/components/table/EmptyRow';
 
 interface Props {
   title: string;
@@ -17,6 +18,7 @@ interface Props {
 }
 
 const DashboardTable: FC<Props> = ({ saleInfos, title }) => {
+  const isEmpty = saleInfos.length === 0;
   return (
     <TableContainer component={Paper} sx={{ p: 3 }}>
       <Typography sx={{ my: 1, pl: 1 }} variant="h5">
@@ -33,6 +35,8 @@ const DashboardTable: FC<Props> = ({ saleInfos, title }) => {
           </TableRow>
         </TableHead>
         <TableBody>
+          <EmptyRow colSpan={5} isEmpty={isEmpty} />
+
           {saleInfos.map((saleInfo) => (
             <TableRow key={saleInfo.name}>
               <TableCell>{saleInfo.name}</TableCell>

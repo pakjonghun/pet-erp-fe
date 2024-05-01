@@ -2,9 +2,9 @@ import { useQuery } from '@apollo/client';
 import { graphql } from '../../codegen';
 import { FindDateInput } from '../../codegen/graphql';
 
-const dashboardProduct = graphql(`
-  query dashboardProduct($dashboardProductInput: FindDateInput!) {
-    dashboardProduct(dashboardProductInput: $dashboardProductInput) {
+const dashboardClient = graphql(`
+  query dashboardClient($dashboardClientInput: FindDateInput!) {
+    dashboardClient(dashboardClientInput: $dashboardClientInput) {
       current {
         accPayCost
         accCount
@@ -23,11 +23,10 @@ const dashboardProduct = graphql(`
   }
 `);
 
-export const useDashboardProduct = (dashboardProductInput: FindDateInput) => {
-  return useQuery(dashboardProduct, {
+export const useDashboardClient = (dashboardClientInput: FindDateInput) => {
+  return useQuery(dashboardClient, {
     variables: {
-      dashboardProductInput,
+      dashboardClientInput,
     },
-    notifyOnNetworkStatusChange: true,
   });
 };

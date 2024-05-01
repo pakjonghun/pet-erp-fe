@@ -11,7 +11,7 @@ const EmptyRow: FC<Props> = ({ isEmpty, colSpan, message = '검색된 데이터�
   if (isEmpty)
     return (
       <TableRow>
-        <TableCell colSpan={colSpan} align="center">
+        <TableCell sx={{ border: 'none' }} colSpan={colSpan} align="center">
           {message}
         </TableCell>
       </TableRow>
