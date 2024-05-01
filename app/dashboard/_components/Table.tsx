@@ -9,7 +9,7 @@ import Paper from '@mui/material/Paper';
 import { Typography } from '@mui/material';
 import { SaleInfos } from '@/http/graphql/codegen/graphql';
 import DashboardTableCell from './TableCell';
-import { getProfitRate } from './utils';
+import { getProfitRate } from '../utils';
 
 interface Props {
   title: string;

@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import Typography from '@mui/material/Typography';
 import { Stack } from '@mui/material';
-import { NumberType } from './type';
-import { getArrow, getColor, getFixedTwo, getNumberToString } from './utils';
+import { NumberType } from '../type';
+import { getArrow, getColor, getFixedTwo, getNumberToString } from '../utils';
 
 interface Props {
   label: string;

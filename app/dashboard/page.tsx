@@ -1,7 +1,7 @@
-'use client';
-
 import { redirect } from 'next/navigation';
 
-export default function Home() {
+const page = () => {
   redirect('/dashboard/product');
-}
+};
+
+export default page;

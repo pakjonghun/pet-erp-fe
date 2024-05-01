@@ -16,7 +16,7 @@ const Hero: FC<Props> = ({ isLogin }) => {
         textDecoration: 'none',
         color: 'inherit',
       }}
-      href={isLogin ? '/' : '/login'}
+      href={isLogin ? '/dashboard' : '/login'}
       component={Link}
       direction="row"
     >
