@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, ReactNode, useState } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import SubHeader from '@/components/layout/header/SubHeader';
 import { Box, Tabs, Tab } from '@mui/material';
 import Link from 'next/link';
@@ -12,6 +12,7 @@ import { saleRange } from '@/store/saleStore';
 import { SearchStandard } from '@/components/calendar/dateSwitch/types';
 import { DateRange } from '@/components/calendar/dateFilter/type';
 import { DashboardTabs } from './constants';
+import { getToday } from '@/components/calendar/dateFilter/utils';
 
 interface Props {
   children: ReactNode;
@@ -27,6 +28,15 @@ const DashboardLayout: FC<Props> = ({ children }) => {
   const { from, to } = useReactiveVar(saleRange);
   const setRange = (value: DateRange) => saleRange(value);
   const [searchStandard, setSearchStandard] = useState<SearchStandard>('일');
+
+  const handleResetDateRange = () => {
+    setRange(getToday());
+  };
+
+  useEffect(() => {
+    return handleResetDateRange();
+  }, []);
+
   return (
     <Box sx={{ height: '100%', bgcolor: (theme) => theme.palette.primary.light }}>
       <SubHeader title="대시보드">
@@ -49,6 +59,7 @@ const DashboardLayout: FC<Props> = ({ children }) => {
                 component={Link}
                 label={tabItem.label}
                 key={tab}
+                onClick={handleResetDateRange}
               />
             );
           })}
