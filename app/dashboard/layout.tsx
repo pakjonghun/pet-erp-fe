@@ -40,7 +40,11 @@ const DashboardLayout: FC<Props> = ({ children }) => {
   return (
     <Box sx={{ height: '100%', bgcolor: (theme) => theme.palette.primary.light }}>
       <SubHeader title="대시보드">
-        <Tabs sx={{ mt: 2 }} value={currentTabIndex} indicatorColor="primary">
+        <Tabs
+          sx={{ mt: 2 }}
+          value={currentTabIndex == -1 ? 0 : currentTabIndex}
+          indicatorColor="primary"
+        >
           {tabs.map((tab) => {
             const tabItem = DashboardTabs[tab];
             return (

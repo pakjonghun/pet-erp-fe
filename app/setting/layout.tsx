@@ -20,7 +20,7 @@ const SettingLayout: FC<Props> = ({ children }) => {
   return (
     <>
       <SubHeader title="설정">
-        <Tabs value={currentTabIndex} indicatorColor="primary">
+        <Tabs value={currentTabIndex == -1 ? 0 : currentTabIndex} indicatorColor="primary">
           {tabs.map((tab) => {
             const tabItem = SettingTabs[tab];
             return (

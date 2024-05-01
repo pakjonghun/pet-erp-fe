@@ -22,7 +22,12 @@ const BackDataLayout: FC<Props> = ({ children }) => {
   return (
     <>
       <SubHeader title="백데이터">
-        <Tabs variant="scrollable" sx={{ mt: 2 }} value={currentTabIndex} indicatorColor="primary">
+        <Tabs
+          variant="scrollable"
+          sx={{ mt: 2 }}
+          value={currentTabIndex == -1 ? 0 : currentTabIndex}
+          indicatorColor="primary"
+        >
           {tabs.map((tab) => {
             const tabItem = BackDataTabs[tab];
             return (

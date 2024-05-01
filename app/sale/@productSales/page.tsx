@@ -86,6 +86,14 @@ const ProductSales = () => {
                   </>
                 }
               />
+              <HeadCell
+                text={
+                  <>
+                    수익율
+                    <br />({getKCWFormat(totalProfit)})
+                  </>
+                }
+              />
               <HeadCell text="TOP5 거래처" />
             </TableRow>
           </TableHead>

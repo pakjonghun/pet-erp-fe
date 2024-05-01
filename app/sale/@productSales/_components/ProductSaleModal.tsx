@@ -44,13 +44,6 @@ const ProductSaleModal: FC<Props> = ({
         <LabelText label="바코드" text={barCode ?? ''} />
         <LabelText label="리드타임" text={leadTime ?? ''} />
       </Stack>
-      {/* <Stack direction="row" flexWrap="wrap" gap={3} mb={3}>
-        <LabelText label="지난주 판매량" text={getKCWFormat(lastWeek?.accCount ?? 0)} />
-        <LabelText label="지난주 매출" text={getKCWFormat(lastWeek?.accPayCost ?? 0)} />
-        <LabelText label="지난주 수익" text={getKCWFormat(lastWeek?.accProfit ?? 0)} />
-        <LabelText label="지난주 평균 매출" text={getKCWFormat(lastWeek?.averagePayCost ?? 0)} />
-      </Stack> */}
-
       <LabelText label="채널별 판매수량" text={''} />
       <Stack direction="row" flexWrap="wrap" rowGap={1} columnGap={2} mt={1}>
         {(clonedClients ?? []).map((client) => {

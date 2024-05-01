@@ -11,6 +11,8 @@ import { getKCWFormat, getNumberWithComma } from '@/utils/common';
 import { TableBody, TableRow, Stack, Chip } from '@mui/material';
 import { useReactiveVar } from '@apollo/client';
 import { saleRange, saleTotal } from '@/store/saleStore';
+import SaleTableCell from '@/components/table/SaleTableCell';
+import { getProfitRate } from '@/utils/sale';
 
 interface Props {
   keyword: string;
@@ -83,9 +85,24 @@ const TableBodySection: FC<Props> = ({ keyword, setSelectedProductSale }) => {
             key={index}
           >
             <Cell sx={{ minWidth: 200 }}>{row.name}</Cell>
-            <Cell>{getNumberWithComma(row.sales?.accCount ?? 0)}</Cell>
-            <Cell>{getKCWFormat(row.sales?.accPayCost ?? 0)}</Cell>
-            <Cell>{getKCWFormat(row.sales?.accProfit ?? 0)}</Cell>
+            <SaleTableCell
+              current={row.sales?.accCount ?? 0}
+              previous={row.sales?.accCount ?? 0}
+              numberType="comma"
+            />
+            <SaleTableCell
+              current={row.sales?.accPayCost ?? 0}
+              previous={row.sales?.accPayCost ?? 0}
+            />
+            <SaleTableCell
+              current={row.sales?.accProfit ?? 0}
+              previous={row.sales?.accProfit ?? 0}
+            />
+            <SaleTableCell
+              numberType="percent"
+              current={getProfitRate(row?.sales?.accProfit ?? 0, row?.sales?.accPayCost ?? 0)}
+              previous={getProfitRate(row?.sales?.accProfit ?? 0, row?.sales?.accPayCost ?? 0)}
+            />
             <Cell sx={{ width: '30%' }}>
               <Stack direction="row" flexWrap="wrap" gap={1}>
                 {row.clients.slice(0, 5).map((client) => {
