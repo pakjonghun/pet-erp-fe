@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Subsidiary } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
 import ModalTitle from '@/components/ui/typograph/ModalTitle';
-import { getKCWFormat } from '@/util';
+import { getKCWFormat } from '@/utils/common';
 import { Stack, Button } from '@mui/material';
 import BasePopover from '@/components/ui/modal/BasePopover';
 import { EMPTY } from '@/constants';

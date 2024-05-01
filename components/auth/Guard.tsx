@@ -5,7 +5,7 @@ import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 import { authState } from '@/store/isLogin';
 import { usePathname } from 'next/navigation';
 import { PUBLIC_PATH } from '@/constants';
-import { getFirstPath } from '@/util';
+import { getFirstPath } from '@/utils/common';
 
 interface Props {
   children: ReactNode;

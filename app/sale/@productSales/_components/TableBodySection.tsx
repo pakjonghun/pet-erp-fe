@@ -7,7 +7,7 @@ import Cell from '@/components/table/Cell';
 import EmptyRow from '@/components/table/EmptyRow';
 import { LIMIT } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { getKCWFormat, getNumberWithComma } from '@/util';
+import { getKCWFormat, getNumberWithComma } from '@/utils/common';
 import { TableBody, TableRow, Stack, Chip } from '@mui/material';
 import { useReactiveVar } from '@apollo/client';
 import { saleRange, saleTotal } from '@/store/saleStore';

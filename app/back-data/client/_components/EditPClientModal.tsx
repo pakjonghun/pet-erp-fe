@@ -19,7 +19,7 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { modalSizeProps } from '@/components/commonStyles';
 import { Client, ClientType } from '@/http/graphql/codegen/graphql';
-import { emptyValueToNull, filterEmptyValues } from '@/util';
+import { emptyValueToNull, filterEmptyValues } from '@/utils/common';
 import { clientTypes } from '../constants';
 import { useUpdateClient } from '@/http/graphql/hooks/client/useEditClient';
 import NumberInput from '@/components/ui/input/NumberInput';

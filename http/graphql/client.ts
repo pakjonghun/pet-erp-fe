@@ -1,7 +1,7 @@
 import { BASE_URL } from '@/http/constants';
 import { ApolloClient, InMemoryCache, createHttpLink, gql } from '@apollo/client';
 import { createFragmentRegistry } from '@apollo/client/cache';
-import { merge } from '@/util';
+import { merge } from '@/utils/common';
 
 const link = createHttpLink({
   uri: `${BASE_URL}/graphql`,

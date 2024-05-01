@@ -8,9 +8,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Typography } from '@mui/material';
 import { SaleInfos } from '@/http/graphql/codegen/graphql';
-import DashboardTableCell from './TableCell';
-import { getProfitRate } from '../utils';
 import EmptyRow from '@/components/table/EmptyRow';
+import DashboardTableBody from './TableBody';
 
 interface Props {
   title: string;
@@ -36,34 +35,7 @@ const DashboardTable: FC<Props> = ({ saleInfos, title }) => {
         </TableHead>
         <TableBody>
           <EmptyRow colSpan={5} isEmpty={isEmpty} />
-
-          {saleInfos.map((saleInfo) => (
-            <TableRow key={saleInfo.name}>
-              <TableCell>{saleInfo.name}</TableCell>
-              <DashboardTableCell
-                current={saleInfo.accPayCost ?? 0}
-                previous={saleInfo.prevAccPayCost ?? 0}
-              />
-              <DashboardTableCell
-                current={saleInfo.accCount ?? 0}
-                previous={saleInfo.prevAccCount ?? 0}
-                numberType="comma"
-              />
-              <DashboardTableCell
-                current={saleInfo.accProfit ?? 0}
-                previous={saleInfo.prevAccProfit ?? 0}
-                numberType="comma"
-              />
-              <DashboardTableCell
-                current={getProfitRate(saleInfo?.accProfit ?? 0, saleInfo?.accPayCost ?? 0)}
-                previous={getProfitRate(
-                  saleInfo?.prevAccProfit ?? 0,
-                  saleInfo?.prevAccPayCost ?? 0
-                )}
-                numberType="percent"
-              />
-            </TableRow>
-          ))}
+          <DashboardTableBody saleInfos={saleInfos} />
         </TableBody>
       </Table>
     </TableContainer>

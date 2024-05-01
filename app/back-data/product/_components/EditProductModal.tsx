@@ -26,7 +26,7 @@ import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 import { useUpdateProduct } from '@/http/graphql/hooks/product/useUpdateProduct';
 import { Product } from '@/http/graphql/codegen/graphql';
 import { modalSizeProps } from '@/components/commonStyles';
-import { emptyValueToNull } from '@/util';
+import { emptyValueToNull } from '@/utils/common';
 import NumberInput from '@/components/ui/input/NumberInput';
 
 interface Props {

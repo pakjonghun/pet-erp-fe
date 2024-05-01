@@ -21,7 +21,7 @@ import ProductSaleModal from './_components/ProductSaleModal';
 import TableBodySection from './_components/TableBodySection';
 import { useReactiveVar } from '@apollo/client';
 import { saleTotal } from '@/store/saleStore';
-import { getKCWFormat, getNumberWithComma } from '@/util';
+import { getKCWFormat, getNumberWithComma } from '@/utils/common';
 
 const ProductSales = () => {
   const [keyword, setKeyword] = useState('');

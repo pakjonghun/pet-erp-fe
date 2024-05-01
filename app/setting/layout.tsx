@@ -5,7 +5,7 @@ import React, { FC, ReactNode } from 'react';
 import { SettingTabs } from './constants';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { getOriginPath } from '@/util';
+import { getOriginPath } from '@/utils/common';
 import SubHeader from '@/components/layout/header/SubHeader';
 
 interface Props {

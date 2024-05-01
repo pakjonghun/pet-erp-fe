@@ -1,5 +1,5 @@
 import { PUBLIC_PATH } from '@/constants';
-import { getFirstPath } from '@/util';
+import { getFirstPath } from '@/utils/common';
 import { usePathname } from 'next/navigation';
 
 const useGetIsPublicPath = () => {

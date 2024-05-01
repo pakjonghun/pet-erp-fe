@@ -2,7 +2,7 @@
 
 import DashboardCard from '@/app/dashboard/_components/Card';
 import DashboardCardContent from '@/app/dashboard/_components/CardContent';
-import { getProfitRate } from '@/app/dashboard/utils';
+import { getProfitRate } from '@/utils/sale';
 import { useDashboardProduct } from '@/http/graphql/hooks/product/useDashboardProduct';
 import { saleRange } from '@/store/saleStore';
 import { useReactiveVar } from '@apollo/client';

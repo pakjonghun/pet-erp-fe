@@ -4,7 +4,7 @@ import { useTopClients } from '@/http/graphql/hooks/client/useTopClients';
 import { Table, TableBody, TableHead, TableRow } from '@mui/material';
 import Cell from '@/components/table/Cell';
 import EmptyRow from '@/components/table/EmptyRow';
-import { getKCWFormat, getNumberWithComma } from '@/util';
+import { getKCWFormat, getNumberWithComma } from '@/utils/common';
 import TableTitle from '@/components/ui/typograph/TableTitle';
 import HeadCell from '@/components/table/HeadCell';
 import TablePage from '@/components/table/TablePage';

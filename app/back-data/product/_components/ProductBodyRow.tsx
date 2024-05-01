@@ -1,7 +1,7 @@
 import { FC, MouseEvent, useState } from 'react';
 import Cell from '@/components/table/Cell';
 import { IconButton, Menu, TableRow } from '@mui/material';
-import { getKCWFormat } from '@/util';
+import { getKCWFormat } from '@/utils/common';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';

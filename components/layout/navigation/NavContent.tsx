@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { NavMenus } from '../constants';
 import { usePathname } from 'next/navigation';
 import { NavListItem } from '@/components/ui/listItem/menuStyles';
-import { getFirstPath } from '@/util';
+import { getFirstPath } from '@/utils/common';
 import NavMenu from '@/components/ui/listItem/NavMenu';
 
 interface Props {

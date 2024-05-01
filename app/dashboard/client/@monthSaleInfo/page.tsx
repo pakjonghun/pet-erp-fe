@@ -1,7 +1,7 @@
 'use client';
 import DashboardCard from '@/app/dashboard/_components/Card';
 import DashboardCardContent from '@/app/dashboard/_components/CardContent';
-import { getProfitRate } from '@/app/dashboard/utils';
+import { getProfitRate } from '@/utils/sale';
 import { useDashboardClient } from '@/http/graphql/hooks/client/useDashboardClient';
 import { saleRange } from '@/store/saleStore';
 import { useReactiveVar } from '@apollo/client';

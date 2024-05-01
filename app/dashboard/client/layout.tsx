@@ -1,5 +1,5 @@
-import { Box, Grid, Skeleton } from '@mui/material';
 import { FC, ReactNode } from 'react';
+import { Grid } from '@mui/material';
 
 interface Props {
   dateSaleInfo: ReactNode;
@@ -30,7 +30,6 @@ const ProductLayout: FC<Props> = ({
           {monthSaleInfos}
         </Grid>
         <Grid item xs={12} lg={6}>
-          {/* <Skeleton variant="rounded" width="100%" height={'100%'} sx={{ minHeight: 500 }} /> */}
           {dateSaleInfos}
         </Grid>
       </Grid>

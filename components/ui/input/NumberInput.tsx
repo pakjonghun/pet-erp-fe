@@ -1,4 +1,4 @@
-import { isNumber } from '@/util';
+import { isNumber } from '@/utils/common';
 import { TextField } from '@mui/material';
 import { FC, ReactElement } from 'react';
 import { ControllerRenderProps } from 'react-hook-form';

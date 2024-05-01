@@ -3,7 +3,7 @@
 import { Stack } from '@mui/material';
 import { NavMenus } from '../constants';
 import { usePathname } from 'next/navigation';
-import { getFirstPath } from '@/util';
+import { getFirstPath } from '@/utils/common';
 import HeaderMenu from '@/components/ui/listItem/HeaderMenu';
 
 const HeaderNav = () => {

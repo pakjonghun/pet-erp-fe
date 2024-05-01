@@ -1,7 +1,7 @@
 'use client';
 
 import LabelText from '@/components/ui/typograph/LabelText';
-import { getDateFormat } from '@/util';
+import { getDateFormat } from '@/utils/common';
 import { IconButton, Menu, Paper, Stack } from '@mui/material';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import { FC, useState } from 'react';

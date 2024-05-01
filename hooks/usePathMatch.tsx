@@ -1,4 +1,4 @@
-import { getFirstPath } from '@/util';
+import { getFirstPath } from '@/utils/common';
 import { usePathname } from 'next/navigation';
 
 const usePathMatch = (path: string) => {

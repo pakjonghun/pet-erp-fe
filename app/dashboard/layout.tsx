@@ -5,7 +5,7 @@ import SubHeader from '@/components/layout/header/SubHeader';
 import { Box, Tabs, Tab } from '@mui/material';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { getOriginPath } from '@/util';
+import { getOriginPath } from '@/utils/common';
 import SwitchDate from '@/components/calendar/dateSwitch/SwitchDate';
 import { useReactiveVar } from '@apollo/client';
 import { saleRange } from '@/store/saleStore';

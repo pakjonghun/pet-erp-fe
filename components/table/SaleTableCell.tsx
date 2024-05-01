@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import Typography from '@mui/material/Typography';
 import { Box, TableCell } from '@mui/material';
-import { NumberType } from '../type';
-import { getArrow, getColor, getFixedTwo, getNumberToString } from '../utils';
+import { NumberType } from '@/types';
+import { getArrow, getColor, getFixedTwo, getNumberToString } from '@/utils/sale';
 
 interface Props {
   current: number;
@@ -10,7 +10,7 @@ interface Props {
   numberType?: NumberType;
 }
 
-const DashboardTableCell: FC<Props> = ({ current, previous, numberType = 'currency' }) => {
+const SaleTableCell: FC<Props> = ({ current, previous, numberType = 'currency' }) => {
   const currentNumberString = getNumberToString(current, numberType);
   const compareNumber = getFixedTwo(current - previous);
   const compareNumberString = getNumberToString(compareNumber, numberType);
@@ -28,4 +28,4 @@ const DashboardTableCell: FC<Props> = ({ current, previous, numberType = 'curren
   );
 };
 
-export default DashboardTableCell;
+export default SaleTableCell;

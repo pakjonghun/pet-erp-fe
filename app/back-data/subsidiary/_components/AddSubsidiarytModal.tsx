@@ -21,7 +21,7 @@ import { LIMIT, PRODUCT_PREFIX } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 import { modalSizeProps } from '@/components/commonStyles';
-import { filterEmptyValues } from '@/util';
+import { filterEmptyValues } from '@/utils/common';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { useCreateSubsidiary } from '@/http/graphql/hooks/subsidiary/useCreateSubsidiary';
 import { CreateSubsidiaryForm } from '../_validations/createSubsidiaryValidation';

@@ -9,7 +9,7 @@ import { useProductSaleChart } from '@/http/graphql/hooks/product/useProductSale
 import { LineChart } from '@mui/x-charts/LineChart';
 import dayjs from 'dayjs';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
-import { getKCWFormat, getNumberWithComma } from '@/util';
+import { getKCWFormat, getNumberWithComma } from '@/utils/common';
 
 interface Props {
   selectedProductSale: ProductSaleData;

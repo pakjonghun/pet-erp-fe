@@ -19,7 +19,7 @@ import { LIMIT, PRODUCT_PREFIX } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 import { modalSizeProps } from '@/components/commonStyles';
-import { emptyValueToNull } from '@/util';
+import { emptyValueToNull } from '@/utils/common';
 import NumberInput from '@/components/ui/input/NumberInput';
 import {
   CreateSubsidiaryForm,
