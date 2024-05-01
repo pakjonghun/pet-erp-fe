@@ -13,7 +13,15 @@ const productSales = graphql(`
           ...ClientInfo
         }
         sales {
-          ...SaleInfo
+          accPayCost
+          accCount
+          name
+          accProfit
+          averagePayCost
+          prevAccPayCost
+          prevAccCount
+          prevAccProfit
+          prevAveragePayCost
         }
       }
     }

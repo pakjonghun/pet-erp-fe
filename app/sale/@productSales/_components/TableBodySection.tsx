@@ -7,7 +7,6 @@ import Cell from '@/components/table/Cell';
 import EmptyRow from '@/components/table/EmptyRow';
 import { LIMIT } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { getKCWFormat, getNumberWithComma } from '@/utils/common';
 import { TableBody, TableRow, Stack, Chip } from '@mui/material';
 import { useReactiveVar } from '@apollo/client';
 import { saleRange, saleTotal } from '@/store/saleStore';
@@ -87,21 +86,24 @@ const TableBodySection: FC<Props> = ({ keyword, setSelectedProductSale }) => {
             <Cell sx={{ minWidth: 200 }}>{row.name}</Cell>
             <SaleTableCell
               current={row.sales?.accCount ?? 0}
-              previous={row.sales?.accCount ?? 0}
+              previous={row.sales?.prevAccCount ?? 0}
               numberType="comma"
             />
             <SaleTableCell
               current={row.sales?.accPayCost ?? 0}
-              previous={row.sales?.accPayCost ?? 0}
+              previous={row.sales?.prevAccPayCost ?? 0}
             />
             <SaleTableCell
               current={row.sales?.accProfit ?? 0}
-              previous={row.sales?.accProfit ?? 0}
+              previous={row.sales?.prevAccProfit ?? 0}
             />
             <SaleTableCell
               numberType="percent"
               current={getProfitRate(row?.sales?.accProfit ?? 0, row?.sales?.accPayCost ?? 0)}
-              previous={getProfitRate(row?.sales?.accProfit ?? 0, row?.sales?.accPayCost ?? 0)}
+              previous={getProfitRate(
+                row?.sales?.prevAccProfit ?? 0,
+                row?.sales?.prevAccPayCost ?? 0
+              )}
             />
             <Cell sx={{ width: '30%' }}>
               <Stack direction="row" flexWrap="wrap" gap={1}>
