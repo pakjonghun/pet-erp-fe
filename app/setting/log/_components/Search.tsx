@@ -1,3 +1,4 @@
+import { FC, useEffect, useState } from 'react';
 import { FindLogsDto } from '@/http/graphql/codegen/graphql';
 import BaseSelect from '@/components/ui/select/BaseSelect';
 import { SearchOutlined } from '@mui/icons-material';
@@ -8,7 +9,6 @@ import {
   SelectChangeEvent,
   TextField,
 } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
 import useTextDebounce from '@/hooks/useTextDebounce';
 
 interface Props {

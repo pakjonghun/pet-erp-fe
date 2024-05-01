@@ -64,7 +64,7 @@ const ProductSales = () => {
               <HeadCell
                 text={
                   <>
-                    수량
+                    판매수량
                     <br />({getNumberWithComma(totalCount)})
                   </>
                 }

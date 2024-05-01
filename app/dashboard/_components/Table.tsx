@@ -29,7 +29,7 @@ const DashboardTable: FC<Props> = ({ saleInfos, title }) => {
           <TableRow>
             <TableCell>이름</TableCell>
             <TableCell align="right">매출</TableCell>
-            <TableCell align="right">수량</TableCell>
+            <TableCell align="right">판매수량</TableCell>
             <TableCell align="right">수익</TableCell>
             <TableCell align="right">수익율</TableCell>
           </TableRow>
