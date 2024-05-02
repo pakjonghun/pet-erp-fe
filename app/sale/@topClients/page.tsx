@@ -69,7 +69,17 @@ const TopClients = () => {
   return (
     <TablePage>
       <TableTitle title={`TOP10 거래처`} />
-      <ClientSaleCards data={rows} isEmpty={isEmpty} isLoading={isLoading} scrollRef={null} />
+      <ClientSaleCards
+        sx={{
+          display: {
+            md: 'none',
+          },
+        }}
+        data={rows}
+        isEmpty={isEmpty}
+        isLoading={isLoading}
+        scrollRef={null}
+      />
       <ScrollTableContainer
         sx={{
           display: {
