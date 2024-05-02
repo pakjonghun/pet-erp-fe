@@ -6,9 +6,10 @@ import RemoveClientModal from './RemoveClientModal';
 import ClientDetailPopover from './ClientDetailPopover';
 import EmptyItem from '@/components/ui/listItem/EmptyItem';
 import ClientCard from './ClientCard';
-import { CommonListProps, SelectOption } from '../../types';
+import { SelectOption } from '../../types';
 import LoadingCard from '../../../../components/ui/loading/LoadingCard';
 import EditPClientModal from './EditPClientModal';
+import { CommonListProps } from '@/types';
 
 interface Props extends CommonListProps<Client> {
   sx?: SxProps;

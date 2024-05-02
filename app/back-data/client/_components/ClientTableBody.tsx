@@ -5,10 +5,11 @@ import EmptyRow from '@/components/table/EmptyRow';
 import ClientBodyRow from './ClientBodyRow';
 import RemoveClientModal from './RemoveClientModal';
 import ClientDetailPopover from './ClientDetailPopover';
-import { CommonListProps, SelectOption } from '../../types';
+import { SelectOption } from '../../types';
 import LoadingRow from '@/components/table/LoadingRow';
 import { ClientHeaderList } from '../constants';
 import EditPClientModal from './EditPClientModal';
+import { CommonListProps } from '@/types';
 
 interface Props extends CommonListProps<Client> {}
 

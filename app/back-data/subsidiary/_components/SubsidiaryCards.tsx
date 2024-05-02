@@ -1,13 +1,14 @@
 import { FC, useState } from 'react';
-import { Product, Subsidiary } from '@/http/graphql/codegen/graphql';
+import { Subsidiary } from '@/http/graphql/codegen/graphql';
 import { TABLE_MAX_HEIGHT } from '@/constants';
 import { Grid, SxProps } from '@mui/material';
-import { CommonListProps, SelectOption } from '../../types';
+import { SelectOption } from '../../types';
 import RemoveSubsidiaryModal from './RemoveSubsidiaryModal';
 import EmptyItem from '@/components/ui/listItem/EmptyItem';
 import LoadingCard from '@/components/ui/loading/LoadingCard';
 import SubsidiaryDetailPopover from './SubsidiaryDetailPopover';
 import SubsidiaryCard from './SubsidiaryCard';
+import { CommonListProps } from '@/types';
 
 interface Props extends CommonListProps<Subsidiary> {
   sx?: SxProps;
@@ -58,13 +59,6 @@ const SubsidiaryCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx })
           selectedSubsidiary={selectedSubsidiary}
         />
       )}
-      {/* {selectedSubsidiary && (
-        <EditSubsidiaryModal
-          open={optionType === 'edit'}
-          onClose={() => handleClickOption(null, null)}
-          selectedSubsidiary={selectedSubsidiary}
-        />
-      )} */}
       {selectedSubsidiary && (
         <SubsidiaryDetailPopover
           onClose={handleClosePopover}

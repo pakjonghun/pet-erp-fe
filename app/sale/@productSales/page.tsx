@@ -1,33 +1,76 @@
 'use client';
 
-import HeadCell from '@/components/table/HeadCell';
 import TableTitle from '@/components/ui/typograph/TableTitle';
-import {
-  Table,
-  TableHead,
-  TableRow,
-  FormControl,
-  FormGroup,
-  TextField,
-  InputAdornment,
-} from '@mui/material';
+import { FormControl, FormGroup, TextField, InputAdornment } from '@mui/material';
 import { ProductSaleData } from '@/http/graphql/codegen/graphql';
 import { Search } from '@mui/icons-material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import TablePage from '@/components/table/TablePage';
-import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 import ProductSaleModal from './_components/ProductSaleModal';
-import TableBodySection from './_components/TableBodySection';
+import ProductSaleTable from './_components/ProductSaleTable';
+import ProductSaleCards from './_components/ProductSaleCards';
 import { useReactiveVar } from '@apollo/client';
-import { saleTotal } from '@/store/saleStore';
-import { getKCWFormat, getNumberWithComma } from '@/utils/common';
+import { useProductSales } from '@/http/graphql/hooks/product/useProductSaleList';
+import { LIMIT } from '@/constants';
+import useInfinityScroll from '@/hooks/useInfinityScroll';
+import { saleRange, saleTotal } from '@/store/saleStore';
 
 const ProductSales = () => {
   const [keyword, setKeyword] = useState('');
   const delayedKeyword = useTextDebounce(keyword);
   const [selectedProductSale, setSelectedProductSale] = useState<null | ProductSaleData>(null);
-  const { totalCount, totalProfit, totalPayCost } = useReactiveVar(saleTotal);
+  const { from, to } = useReactiveVar(saleRange);
+  const { data, networkStatus, fetchMore } = useProductSales({
+    keywordTarget: 'name',
+    keyword: delayedKeyword,
+    limit: LIMIT,
+    skip: 0,
+    from: from.toISOString(),
+    to: to.toISOString(),
+  });
+
+  const rows = (data?.productSales?.data as ProductSaleData[]) ?? [];
+  const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
+  const isEmpty = !isLoading && rows.length === 0;
+
+  const callback: IntersectionObserverCallback = (entries) => {
+    if (entries[0].isIntersecting) {
+      if (isLoading) return;
+
+      const totalCount = data?.productSales?.totalCount ?? 0;
+      if (totalCount != null && totalCount > rows.length) {
+        fetchMore({
+          variables: {
+            productSalesInput: {
+              keywordTarget: 'name',
+              keyword,
+              limit: LIMIT,
+              skip: rows.length,
+              from: from.toISOString(),
+              to: to.toISOString(),
+            },
+          },
+        });
+      }
+    }
+  };
+  const scrollRef = useInfinityScroll({ callback });
+
+  useEffect(() => {
+    const totalData = rows.reduce(
+      (acc, cur) => {
+        return {
+          totalCount: acc.totalCount + (cur?.sales?.accCount ?? 0),
+          totalPayCost: 0 + (cur?.sales?.accPayCost ?? 0),
+          totalProfit: 0 + (cur?.sales?.accProfit ?? 0),
+        };
+      },
+      { totalCount: 0, totalPayCost: 0, totalProfit: 0 }
+    );
+
+    saleTotal(totalData);
+  }, [data?.productSales?.data]);
 
   return (
     <TablePage sx={{ flex: 1 }}>
@@ -56,53 +99,14 @@ const ProductSales = () => {
           />
         </FormControl>
       </FormGroup>
-      <ScrollTableContainer>
-        <Table stickyHeader>
-          <TableHead>
-            <TableRow>
-              <HeadCell text="이름" />
-              <HeadCell
-                text={
-                  <>
-                    판매수량
-                    <br />({getNumberWithComma(totalCount)})
-                  </>
-                }
-              />
-              <HeadCell
-                text={
-                  <>
-                    매출
-                    <br />({getKCWFormat(totalPayCost)})
-                  </>
-                }
-              />
-
-              <HeadCell
-                text={
-                  <>
-                    수익
-                    <br />({getKCWFormat(totalProfit)})
-                  </>
-                }
-              />
-              <HeadCell
-                text={
-                  <>
-                    수익율
-                    <br />({getKCWFormat(totalProfit)})
-                  </>
-                }
-              />
-              <HeadCell text="TOP5 거래처" />
-            </TableRow>
-          </TableHead>
-          <TableBodySection
-            keyword={delayedKeyword}
-            setSelectedProductSale={setSelectedProductSale}
-          />
-        </Table>
-      </ScrollTableContainer>
+      <ProductSaleCards data={rows} isEmpty={isEmpty} isLoading={isLoading} scrollRef={scrollRef} />
+      <ProductSaleTable
+        data={rows}
+        isEmpty={isEmpty}
+        isLoading={isLoading}
+        scrollRef={scrollRef}
+        setSelectedProductSale={setSelectedProductSale}
+      />
     </TablePage>
   );
 };

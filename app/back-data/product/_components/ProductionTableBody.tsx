@@ -3,12 +3,13 @@ import { Product } from '@/http/graphql/codegen/graphql';
 import { TableBody } from '@mui/material';
 import EmptyRow from '@/components/table/EmptyRow';
 import ProductBodyRow from './ProductBodyRow';
-import { CommonListProps, SelectOption } from '../../types';
+import { SelectOption } from '../../types';
 import RemoveProductModal from './RemoveProductModal';
 import EditProductModal from './EditProductModal';
 import ProductDetailPopover from './ProductDetailPopover';
 import LoadingRow from '@/components/table/LoadingRow';
 import { ProductHeaderList } from '../constants';
+import { CommonListProps } from '@/types';
 
 interface Props extends CommonListProps<Product> {}
 

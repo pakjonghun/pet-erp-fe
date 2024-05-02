@@ -2,13 +2,14 @@ import { FC, useState } from 'react';
 import { Product } from '@/http/graphql/codegen/graphql';
 import { TABLE_MAX_HEIGHT } from '@/constants';
 import { Grid, SxProps } from '@mui/material';
-import { CommonListProps, SelectOption } from '../../types';
+import { SelectOption } from '../../types';
 import RemoveProductModal from './RemoveProductModal';
 import EditProductModal from './EditProductModal';
 import ProductDetailPopover from './ProductDetailPopover';
 import EmptyItem from '@/components/ui/listItem/EmptyItem';
 import ProductCard from './ProductCard';
 import LoadingCard from '@/components/ui/loading/LoadingCard';
+import { CommonListProps } from '@/types';
 
 interface Props extends CommonListProps<Product> {
   sx?: SxProps;
