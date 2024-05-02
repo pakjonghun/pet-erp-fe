@@ -99,7 +99,17 @@ const ProductSales = () => {
           />
         </FormControl>
       </FormGroup>
-      <ProductSaleCards data={rows} isEmpty={isEmpty} isLoading={isLoading} scrollRef={scrollRef} />
+      <ProductSaleCards
+        sx={{
+          display: {
+            md: 'none',
+          },
+        }}
+        data={rows}
+        isEmpty={isEmpty}
+        isLoading={isLoading}
+        scrollRef={scrollRef}
+      />
       <ProductSaleTable
         data={rows}
         isEmpty={isEmpty}

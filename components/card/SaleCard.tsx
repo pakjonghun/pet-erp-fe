@@ -1,24 +1,26 @@
 import { FC } from 'react';
 import Typography from '@mui/material/Typography';
-import { Box, SxProps, TableCell } from '@mui/material';
+import { Box, Stack, SxProps } from '@mui/material';
 import { NumberType } from '@/types';
 import { getArrow, getColor, getFixedTwo, getNumberToString } from '@/utils/sale';
 
 interface Props {
   current: number;
   previous: number;
+  label: string;
   numberType?: NumberType;
   sx?: SxProps;
 }
 
-const SaleTableCell: FC<Props> = ({ current, previous, numberType = 'currency', sx }) => {
+const SaleCard: FC<Props> = ({ label, current, previous, numberType = 'currency', sx }) => {
   const currentNumberString = getNumberToString(current, numberType);
   const compareNumber = getFixedTwo(current - previous);
   const compareNumberString = getNumberToString(compareNumber, numberType);
 
   return (
-    <TableCell sx={{ ...sx }}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', gap: 3, my: 1 }}>
+      <Typography>{label}</Typography>
+      <Stack direction="row" gap={2}>
         <Typography>{currentNumberString}</Typography>
         <Typography
           variant="subtitle2"
@@ -27,9 +29,9 @@ const SaleTableCell: FC<Props> = ({ current, previous, numberType = 'currency', 
           {getArrow(compareNumber)}
           {compareNumberString}
         </Typography>
-      </Box>
-    </TableCell>
+      </Stack>
+    </Box>
   );
 };
 
-export default SaleTableCell;
+export default SaleCard;

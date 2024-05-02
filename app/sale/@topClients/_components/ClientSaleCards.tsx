@@ -5,13 +5,13 @@ import { Grid, SxProps } from '@mui/material';
 import { CommonListProps } from '@/types';
 import EmptyItem from '@/components/ui/listItem/EmptyItem';
 import LoadingCard from '@/components/ui/loading/LoadingCard';
-import ProductSaleCard from './ProductSaleCard';
+import ProductSaleCard from '../../@productSales/_components/ProductSaleCard';
 
 interface Props extends CommonListProps<ProductSaleData> {
   sx?: SxProps;
 }
 
-const ProductSaleCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx }) => {
+const ClientSaleCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx }) => {
   return (
     <Grid
       sx={{
@@ -38,4 +38,4 @@ const ProductSaleCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx }
   );
 };
 
-export default ProductSaleCards;
+export default ClientSaleCards;

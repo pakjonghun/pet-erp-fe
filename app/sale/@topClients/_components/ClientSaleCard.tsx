@@ -9,7 +9,7 @@ interface Props {
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const ProductSaleCard: FC<Props> = ({ productSaleData, scrollRef }) => {
+const ClientSaleCard: FC<Props> = ({ productSaleData, scrollRef }) => {
   return (
     <Paper ref={scrollRef} sx={{ position: 'relative', py: 3, px: 4 }}>
       <Box>
@@ -67,4 +67,4 @@ const ProductSaleCard: FC<Props> = ({ productSaleData, scrollRef }) => {
   );
 };
 
-export default ProductSaleCard;
+export default ClientSaleCard;

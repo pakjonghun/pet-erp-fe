@@ -32,7 +32,7 @@ export const getColor = (compareNumber: number) => {
 };
 
 export const getArrow = (compareNumber: number) => {
-  if (compareNumber > 0) return <ArrowUpwardIcon />;
+  if (compareNumber > 0) return <ArrowUpwardIcon sx={{ width: 16, height: 16 }} />;
   if (compareNumber === 0) return '';
-  if (compareNumber < 0) return <ArrowDownwardIcon />;
+  if (compareNumber < 0) return <ArrowDownwardIcon sx={{ width: 16, height: 16 }} />;
 };
