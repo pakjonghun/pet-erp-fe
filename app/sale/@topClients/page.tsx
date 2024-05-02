@@ -94,6 +94,7 @@ const TopClients = () => {
             <TableRow hover>
               <HeadCell text="이름" />
               <HeadCell
+                sx={{ textAlign: 'right' }}
                 text={
                   <>
                     판매수량
@@ -102,6 +103,7 @@ const TopClients = () => {
                 }
               />
               <HeadCell
+                sx={{ textAlign: 'right' }}
                 text={
                   <>
                     매출
@@ -111,6 +113,7 @@ const TopClients = () => {
               />
 
               <HeadCell
+                sx={{ textAlign: 'right' }}
                 text={
                   <>
                     수익
@@ -119,6 +122,7 @@ const TopClients = () => {
                 }
               />
               <HeadCell
+                sx={{ textAlign: 'right' }}
                 text={
                   <>
                     수익율

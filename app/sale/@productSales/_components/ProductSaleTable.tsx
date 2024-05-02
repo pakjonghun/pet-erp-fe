@@ -39,6 +39,7 @@ const ProductSaleTable: FC<Props> = ({
           <TableRow>
             <HeadCell text="이름" />
             <HeadCell
+              sx={{ textAlign: 'right' }}
               text={
                 <>
                   판매수량
@@ -47,6 +48,7 @@ const ProductSaleTable: FC<Props> = ({
               }
             />
             <HeadCell
+              sx={{ textAlign: 'right' }}
               text={
                 <>
                   매출
@@ -56,6 +58,7 @@ const ProductSaleTable: FC<Props> = ({
             />
 
             <HeadCell
+              sx={{ textAlign: 'right' }}
               text={
                 <>
                   수익
@@ -64,6 +67,7 @@ const ProductSaleTable: FC<Props> = ({
               }
             />
             <HeadCell
+              sx={{ textAlign: 'right' }}
               text={
                 <>
                   수익율
