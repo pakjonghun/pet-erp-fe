@@ -25,7 +25,7 @@ const DashboardCardContent: FC<Props> = ({ label, current, previous, numberType 
         <Typography component="div" variant="h6">
           {currentNumberString}
         </Typography>
-        <Typography sx={{ display: 'flex', color: getColor(compareNumber) }}>
+        <Typography sx={{ display: 'flex', alignItems: 'center', color: getColor(compareNumber) }}>
           {getArrow(compareNumber)}
           {compareNumberString}
         </Typography>

@@ -14,60 +14,71 @@ import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { useReactiveVar } from '@apollo/client';
 import { clientTotal, saleRange } from '@/store/saleStore';
 import { useEffect } from 'react';
+import { useDashboardClients } from '@/http/graphql/hooks/client/useDashboardClients';
+import ClientSaleTableBodySection from './_components/ClientSaleTableBodySection';
+import ClientSaleCards from './_components/ClientSaleCards';
 
 const TopClients = () => {
   const { from, to } = useReactiveVar(saleRange);
-  const { data, fetchMore, networkStatus } = useTopClients({
-    limit: LIMIT,
-    skip: 0,
+  const { data, fetchMore, networkStatus } = useDashboardClients({
     from: from.toISOString(),
     to: to.toISOString(),
   });
 
-  const rows = data?.topClients?.data ?? [];
-  const isEmpty = rows.length === 0;
+  const rows = data?.dashboardClients ?? [];
+  const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
+  const isEmpty = !isLoading && rows.length === 0;
   const { totalCount, totalPayCost, totalProfit } = useReactiveVar(clientTotal);
 
-  const callback: IntersectionObserverCallback = (entries) => {
-    if (entries[0].isIntersecting) {
-      if (networkStatus != 1 && networkStatus != 3) {
-        const totalCount = data?.topClients?.totalCount;
-        if (totalCount != null && totalCount > rows.length) {
-          fetchMore({
-            variables: {
-              topClientInput: {
-                skip: rows.length,
-                limit: LIMIT,
-                from: from.toISOString(),
-                to: to.toISOString(),
-              },
-            },
-          });
-        }
-      }
-    }
-  };
-  const scrollRef = useInfinityScroll({ callback });
+  // const callback: IntersectionObserverCallback = (entries) => {
+  //   if (entries[0].isIntersecting) {
+  //     if (isLoading) return;
+
+  //     const totalCount = data?.dashboardClients?.totalCount;
+  //     if (totalCount != null && totalCount > rows.length) {
+  //       fetchMore({
+  //         variables: {
+  //           topClientInput: {
+  //             skip: rows.length,
+  //             limit: LIMIT,
+  //             from: from.toISOString(),
+  //             to: to.toISOString(),
+  //           },
+  //         },
+  //       });
+  //     }
+  //   }
+  // };
+  // const scrollRef = useInfinityScroll({ callback });
 
   useEffect(() => {
     const totalData = rows.reduce(
       (acc, cur) => {
         return {
-          totalCount: acc.totalCount + cur.accCount ?? 0,
-          totalPayCost: acc.totalPayCost + cur.accPayCost ?? 0,
-          totalProfit: acc.totalProfit + cur.accProfit ?? 0,
+          totalCount: acc.totalCount + (cur?.accCount ?? 0),
+          totalPayCost: acc.totalPayCost + (cur?.accPayCost ?? 0),
+          totalProfit: acc.totalProfit + (cur?.accProfit ?? 0),
         };
       },
       { totalCount: 0, totalPayCost: 0, totalProfit: 0 }
     );
 
     clientTotal(totalData);
-  }, [data?.topClients?.data]);
+  }, [data?.dashboardClients]);
 
   return (
     <TablePage>
-      <TableTitle title={`BEST 거래처`} />
-      <ScrollTableContainer sx={{ maxHeight: `calc(${TABLE_MAX_HEIGHT} + 71.98px)` }}>
+      <TableTitle title={`TOP10 거래처`} />
+      <ClientSaleCards data={rows} isEmpty={isEmpty} isLoading={isLoading} scrollRef={null} />
+      <ScrollTableContainer
+        sx={{
+          display: {
+            xs: 'none',
+            md: 'block',
+          },
+          maxHeight: `calc(${TABLE_MAX_HEIGHT} + 71.98px)`,
+        }}
+      >
         <Table stickyHeader>
           <TableHead>
             <TableRow hover>
@@ -97,22 +108,23 @@ const TopClients = () => {
                   </>
                 }
               />
+              <HeadCell
+                text={
+                  <>
+                    수익율
+                    <br />({getKCWFormat(totalProfit)})
+                  </>
+                }
+              />
             </TableRow>
           </TableHead>
-          <TableBody>
-            <EmptyRow colSpan={4} isEmpty={isEmpty} />
-            {rows.map((row, index) => {
-              const isLast = index === rows.length - 1;
-              return (
-                <TableRow ref={isLast ? scrollRef : null} hover key={row.name}>
-                  <Cell>{row.name}</Cell>
-                  <Cell>{getNumberWithComma(row.accCount)}</Cell>
-                  <Cell>{getKCWFormat(row.accPayCost)}</Cell>
-                  <Cell>{getKCWFormat(row.accProfit)}</Cell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
+
+          <ClientSaleTableBodySection
+            data={rows}
+            isEmpty={isEmpty}
+            isLoading={isLoading}
+            scrollRef={null}
+          />
         </Table>
       </ScrollTableContainer>
     </TablePage>
