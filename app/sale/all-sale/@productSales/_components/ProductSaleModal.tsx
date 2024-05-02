@@ -2,7 +2,7 @@
 
 import { FC } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
-import BaseModal from '../../../../components/ui/modal/BaseModal';
+import BaseModal from '../../../../../components/ui/modal/BaseModal';
 import { ProductSaleData } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
 import { useProductSaleChart } from '@/http/graphql/hooks/product/useProductSaleChart';

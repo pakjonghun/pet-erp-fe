@@ -14,11 +14,10 @@ import { SaleTabs } from './constants';
 import { getOriginPath } from '@/utils/common';
 import Link from 'next/link';
 interface Props {
-  productSales: ReactNode;
-  topClients: ReactNode;
+  children: ReactNode;
 }
 
-const SaleLayout: FC<Props> = ({ productSales, topClients }) => {
+const SaleLayout: FC<Props> = ({ children }) => {
   const pathname = usePathname();
   const tabs = Object.keys(SaleTabs) as (keyof typeof SaleTabs)[];
   const currentTabIndex = tabs.findIndex((item) => {
@@ -88,8 +87,7 @@ const SaleLayout: FC<Props> = ({ productSales, topClients }) => {
           },
         }}
       >
-        {topClients}
-        {productSales}
+        {children}
       </Stack>
     </Box>
   );

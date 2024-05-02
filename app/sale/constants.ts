@@ -1,5 +1,5 @@
 export const SaleTabs = {
-  sale: {
+  'sale/all-sale': {
     label: '제품 판매',
   },
   'sale/whole-sale': {
