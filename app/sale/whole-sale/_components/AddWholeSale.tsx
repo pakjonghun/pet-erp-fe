@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
   AutocompleteRenderInputParams,
@@ -27,13 +27,22 @@ import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 import { modalSizeProps } from '@/components/commonStyles';
 import { filterEmptyValues } from '@/utils/common';
 import NumberInput from '@/components/ui/input/NumberInput';
+import {
+  CreateWholeSaleForm,
+  CreateWholeSaleProductForm,
+  createWholeSaleProductSchema,
+  createWholeSaleSchema,
+} from '../_validations/createWholeSaleValidation';
+import dayjs from 'dayjs';
+import { useProducts } from '@/http/graphql/hooks/product/useProducts';
+import { Product } from '@/http/graphql/codegen/graphql';
 
 interface Props {
   open: boolean;
   onClose: () => void;
 }
 
-const CreateProductModal: FC<Props> = ({ open, onClose }) => {
+const AddWholeSale: FC<Props> = ({ open, onClose }) => {
   const [createProduct, { loading }] = useCreateProduct();
 
   const {
@@ -41,31 +50,52 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
     control,
     handleSubmit,
     setValue,
-    watch,
+    getValues,
     formState: { errors },
-  } = useForm<CreateProductForm>({
-    resolver: zodResolver(createProductSchema),
+  } = useForm<CreateWholeSaleForm>({
+    resolver: zodResolver(createWholeSaleSchema),
     defaultValues: {
-      code: '',
-      name: '',
-      barCode: '',
+      mallId: '',
+      saleAt: dayjs().toDate(),
+      products: [],
     },
   });
 
-  const categoryKeyword = watch('category');
-  const delayedCategoryKeyword = useTextDebounce(categoryKeyword ?? '');
+  const {
+    // reset,
+    // control,
+    // handleSubmit,
+    // setValue,
+    // getValues,
+    // formState: { errors },
+  } = useForm<CreateWholeSaleProductForm>({
+    resolver: zodResolver(createWholeSaleProductSchema),
+    defaultValues: {
+      count: 0,
+      productCode: '',
+      productName: '',
+    },
+  });
 
-  const { data, networkStatus, fetchMore } = useFindManyProductCategory({
-    keyword: delayedCategoryKeyword,
+  const [productKeyword, setProductKeyword] = useState('');
+  const delayedProductKeyword = useTextDebounce(productKeyword ?? '');
+
+  const { data, networkStatus, fetchMore } = useProducts({
+    keyword: delayedProductKeyword,
     limit: LIMIT,
     skip: 0,
   });
-  const rows = data?.categories.data ?? [];
+  const rows = data?.products.data ?? [];
   const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
 
-  const setCategory = (selectedCategory: string | null) => {
-    if (!selectedCategory) return;
-    setValue('category', selectedCategory ?? '');
+  const setCategory = (product?: Product | null) => {
+    if (!product) return;
+
+    const products = getValues('products');
+    const parseProduct = {
+      count: 0,
+    };
+    setValue('products', [...products, product]);
   };
 
   const callback: IntersectionObserverCallback = (entries) => {
@@ -96,12 +126,12 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
         createProductInput: newValues,
       },
       onCompleted: () => {
-        snackMessage({ message: '제품등록이 완료되었습니다.', severity: 'success' });
+        snackMessage({ message: '도매 판매등록이 완료되었습니다.', severity: 'success' });
         handleClose();
       },
       onError: (err) => {
         const message = err.message;
-        snackMessage({ message: message ?? '제품등록이 실패했습니다.', severity: 'error' });
+        snackMessage({ message: message ?? '도매 판매등록이 실패했습니다.', severity: 'error' });
       },
     });
   };
@@ -114,9 +144,9 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        제품 등록
+        도매 판매 등록
       </Typography>
-      <Typography sx={{ mb: 3 }}>새로운 제품을 등록합니다.</Typography>
+      <Typography sx={{ mb: 3 }}>새로운 도매 판매를 등록합니다.</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={modalSizeProps}>
           <Controller
@@ -128,7 +158,7 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
                   {...field}
                   size="small"
                   required
-                  label="제품코드"
+                  label="도매 판매코드"
                   error={!!errors.code?.message}
                   helperText={errors.code?.message ?? ''}
                   InputProps={{
@@ -149,7 +179,7 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
                   size="small"
                   {...field}
                   required
-                  label="제품이름"
+                  label="도매 판매이름"
                   error={!!errors.name?.message}
                   helperText={errors.name?.message ?? ''}
                 />
@@ -262,4 +292,4 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
   );
 };
 
-export default CreateProductModal;
+export default AddWholeSale;

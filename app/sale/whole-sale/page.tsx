@@ -1,6 +1,5 @@
 'use client';
 
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import HeadCell from '@/components/table/HeadCell';
 import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 import TablePage from '@/components/table/TablePage';
@@ -18,7 +17,7 @@ import {
 } from '@mui/material';
 import { PlusOneOutlined, Search } from '@mui/icons-material';
 import { ChangeEvent, useState } from 'react';
-import CreateProductModal from './_components/AddProductModal';
+import CreateProductModal from './_components/AddWholeSale';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import ProductionTableBody from './_components/ProductionTableBody';
 import { useUploadExcelFile } from '@/http/rest/hooks/file/useUploadExcelFile';
@@ -116,23 +115,18 @@ const ProductPage = () => {
         <CreateProductModal open={openCreateProduct} onClose={() => setOpenCreateProduct(false)} />
       )}
       <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
-        <TableTitle title="제품 백데이터" />
+        <TableTitle title="도매 판매" />
         <Stack direction="row" alignItems="center" gap={2}>
           <UploadButton
             fileKey={fileKey}
             loading={isPending}
             onChange={handleUploadExcelFile}
-            text="제품 업로드"
-          />
-          <ActionButton
-            icon={isDownloading ? <CommonLoading /> : <FileDownloadIcon />}
-            text="제품 다운로드"
-            onClick={handleDownload}
+            text="도매 판매 업로드"
           />
 
           <ActionButton
             icon={<PlusOneOutlined />}
-            text="제품 등록"
+            text="도매 판매 등록"
             onClick={() => setOpenCreateProduct(true)}
           />
         </Stack>
