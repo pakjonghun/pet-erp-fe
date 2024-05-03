@@ -89,10 +89,25 @@ export type CreateClientInput = {
   payDate?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type CreateFactoryInput = {
+  /** Example field (placeholder) */
+  exampleField: Scalars['Int']['input'];
+};
+
 export type CreateLogDto = {
   description: Scalars['String']['input'];
   logType: LogType;
   userId: Scalars['String']['input'];
+};
+
+export type CreateMoveInput = {
+  /** Example field (placeholder) */
+  exampleField: Scalars['Int']['input'];
+};
+
+export type CreateOrderInput = {
+  /** Example field (placeholder) */
+  exampleField: Scalars['Int']['input'];
 };
 
 export type CreateProductInput = {
@@ -104,6 +119,15 @@ export type CreateProductInput = {
   name: Scalars['String']['input'];
   salePrice?: InputMaybe<Scalars['Int']['input']>;
   wonPrice?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type CreateStockInput = {
+  /** Example field (placeholder) */
+  exampleField: Scalars['Int']['input'];
+};
+
+export type CreateStorageInput = {
+  exampleField: Scalars['Int']['input'];
 };
 
 export type CreateSubsidiaryCategoryInput = {
@@ -123,6 +147,34 @@ export type CreateUserDto = {
   id: Scalars['String']['input'];
   password: Scalars['String']['input'];
   role: Scalars['String']['input'];
+};
+
+export type CreateWholeSaleInput = {
+  mallId?: InputMaybe<Scalars['String']['input']>;
+  payCost?: InputMaybe<Scalars['Int']['input']>;
+  productList: Array<CreateWholeSaleProductList>;
+  saleAt?: InputMaybe<Scalars['Date']['input']>;
+  storage: Scalars['String']['input'];
+  wonCost?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type CreateWholeSaleProductList = {
+  code: Scalars['String']['input'];
+  count?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+};
+
+export type CreateWholesaleSupplierInput = {
+  /** Example field (placeholder) */
+  exampleField: Scalars['Int']['input'];
+};
+
+export type Factory = {
+  __typename?: 'Factory';
+  address?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  note?: Maybe<Scalars['String']['output']>;
+  phoneNumber?: Maybe<Scalars['String']['output']>;
 };
 
 export type FindDateInput = {
@@ -164,28 +216,61 @@ export enum LogType {
   Upload = 'UPLOAD'
 }
 
+export type Move = {
+  __typename?: 'Move';
+  _id: Scalars['ID']['output'];
+  count: Scalars['Int']['output'];
+  fromDate: Scalars['Date']['output'];
+  fromStock: Stock;
+  product: Product;
+  subsidiary: Subsidiary;
+  toDate: Scalars['Date']['output'];
+  toStock: Stock;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createCategory: ProductCategory;
   createClient: Client;
+  createFactory: Factory;
   createLog: Log;
+  createMove: Move;
+  createOrder: ProductOrder;
   createProduct: Product;
+  createStock: Stock;
+  createStorage: Storage;
   createSubsidiary: Subsidiary;
   createSubsidiaryCategory: SubsidiaryCategory;
   createUser: User;
+  createWholeSale: Sale;
+  createWholesaleSupplier: WholesaleSupplier;
   removeCategory: ProductCategory;
   removeClient: Client;
+  removeFactory: Factory;
+  removeMove: Move;
+  removeOrder: ProductOrder;
   removeProduct: Product;
+  removeStock: Stock;
+  removeStorage: Storage;
   removeSubsidiary: Subsidiary;
   removeSubsidiaryCategory: SubsidiaryCategory;
   removeUser: User;
+  removeWholeSale: Sale;
+  removeWholesaleSupplier: WholesaleSupplier;
   updateCategory: ProductCategory;
   updateClient: Client;
+  updateFactory: Factory;
+  updateMove: Move;
+  updateOrder: ProductOrder;
   updateProduct: Product;
   updateProfile: User;
+  updateStock: Stock;
+  updateStorage: Storage;
   updateSubsidiary: Subsidiary;
   updateSubsidiaryCategory: SubsidiaryCategory;
   updateUser: User;
+  updateWholeSale: Sale;
+  updateWholesaleSupplier: WholesaleSupplier;
 };
 
 
@@ -199,13 +284,38 @@ export type MutationCreateClientArgs = {
 };
 
 
+export type MutationCreateFactoryArgs = {
+  createFactoryInput: CreateFactoryInput;
+};
+
+
 export type MutationCreateLogArgs = {
   createLogInput: CreateLogDto;
 };
 
 
+export type MutationCreateMoveArgs = {
+  createMoveInput: CreateMoveInput;
+};
+
+
+export type MutationCreateOrderArgs = {
+  createOrderInput: CreateOrderInput;
+};
+
+
 export type MutationCreateProductArgs = {
   createProductInput: CreateProductInput;
+};
+
+
+export type MutationCreateStockArgs = {
+  createStockInput: CreateStockInput;
+};
+
+
+export type MutationCreateStorageArgs = {
+  createStorageInput: CreateStorageInput;
 };
 
 
@@ -224,6 +334,16 @@ export type MutationCreateUserArgs = {
 };
 
 
+export type MutationCreateWholeSaleArgs = {
+  createWholeSaleInput: CreateWholeSaleInput;
+};
+
+
+export type MutationCreateWholesaleSupplierArgs = {
+  createWholesaleSupplierInput: CreateWholesaleSupplierInput;
+};
+
+
 export type MutationRemoveCategoryArgs = {
   _id: Scalars['String']['input'];
 };
@@ -234,8 +354,33 @@ export type MutationRemoveClientArgs = {
 };
 
 
+export type MutationRemoveFactoryArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type MutationRemoveMoveArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type MutationRemoveOrderArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
 export type MutationRemoveProductArgs = {
   _id: Scalars['String']['input'];
+};
+
+
+export type MutationRemoveStockArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type MutationRemoveStorageArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -254,6 +399,16 @@ export type MutationRemoveUserArgs = {
 };
 
 
+export type MutationRemoveWholeSaleArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type MutationRemoveWholesaleSupplierArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
 export type MutationUpdateCategoryArgs = {
   updateCategoryInput: UpdateCategoryInput;
 };
@@ -264,6 +419,21 @@ export type MutationUpdateClientArgs = {
 };
 
 
+export type MutationUpdateFactoryArgs = {
+  updateFactoryInput: UpdateFactoryInput;
+};
+
+
+export type MutationUpdateMoveArgs = {
+  updateMoveInput: UpdateMoveInput;
+};
+
+
+export type MutationUpdateOrderArgs = {
+  updateOrderInput: UpdateOrderInput;
+};
+
+
 export type MutationUpdateProductArgs = {
   updateProductInput: UpdateProductInput;
 };
@@ -271,6 +441,16 @@ export type MutationUpdateProductArgs = {
 
 export type MutationUpdateProfileArgs = {
   updateProfileInput: UpdateProfileDto;
+};
+
+
+export type MutationUpdateStockArgs = {
+  updateStockInput: UpdateStockInput;
+};
+
+
+export type MutationUpdateStorageArgs = {
+  updateStorageInput: UpdateStorageInput;
 };
 
 
@@ -286,6 +466,16 @@ export type MutationUpdateSubsidiaryCategoryArgs = {
 
 export type MutationUpdateUserArgs = {
   updateUserInput: UpdateUserDto;
+};
+
+
+export type MutationUpdateWholeSaleArgs = {
+  updateWholeSaleInput: UpdateWholeSaleInput;
+};
+
+
+export type MutationUpdateWholesaleSupplierArgs = {
+  updateWholesaleSupplierInput: UpdateWholesaleSupplierInput;
 };
 
 export type MyInfo = {
@@ -317,6 +507,18 @@ export type ProductCategory = {
   __typename?: 'ProductCategory';
   _id?: Maybe<Scalars['ID']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+};
+
+export type ProductOrder = {
+  __typename?: 'ProductOrder';
+  _id: Scalars['ID']['output'];
+  count: Scalars['Int']['output'];
+  factory: Factory;
+  notPayCost: Scalars['Int']['output'];
+  payCost: Scalars['Int']['output'];
+  product: Product;
+  storage: Storage;
+  totalPayCost: Scalars['Int']['output'];
 };
 
 export type ProductSaleChartOutput = {
@@ -379,17 +581,24 @@ export type Query = {
   dashboardClients?: Maybe<Array<SaleInfos>>;
   dashboardProduct?: Maybe<TotalSaleInfo>;
   dashboardProducts?: Maybe<Array<SaleInfos>>;
+  factory: Factory;
+  findAll: Array<ProductOrder>;
+  findOne: ProductOrder;
   logs: FindLogsResponseDto;
+  move: Move;
   myInfo: MyInfo;
   product: Product;
   productSale?: Maybe<Array<ProductSaleChartOutput>>;
   productSales?: Maybe<ProductSaleOutput>;
   products: ProductsOutput;
+  stock: Stock;
+  storage: Storage;
   subsidiaries: SubsidiariesOutput;
   subsidiaryCategories: SubsidiaryCategoriesOutput;
-  topClients?: Maybe<TopClientOutput>;
   user: User;
   users: Array<User>;
+  wholeSale: Sale;
+  wholesaleSupplier: WholesaleSupplier;
 };
 
 
@@ -428,8 +637,23 @@ export type QueryDashboardProductsArgs = {
 };
 
 
+export type QueryFactoryArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type QueryFindOneArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
 export type QueryLogsArgs = {
   findLogsQuery: FindLogsDto;
+};
+
+
+export type QueryMoveArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -453,6 +677,16 @@ export type QueryProductsArgs = {
 };
 
 
+export type QueryStockArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type QueryStorageArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
 export type QuerySubsidiariesArgs = {
   subsidiariesInput: SubsidiariesInput;
 };
@@ -463,13 +697,45 @@ export type QuerySubsidiaryCategoriesArgs = {
 };
 
 
-export type QueryTopClientsArgs = {
-  topClientInput: TopClientInput;
+export type QueryUserArgs = {
+  id: Scalars['String']['input'];
 };
 
 
-export type QueryUserArgs = {
-  id: Scalars['String']['input'];
+export type QueryWholeSaleArgs = {
+  _id: Scalars['String']['input'];
+};
+
+
+export type QueryWholesaleSupplierArgs = {
+  id: Scalars['Int']['input'];
+};
+
+export type Sale = {
+  __typename?: 'Sale';
+  _id: Scalars['ID']['output'];
+  address1?: Maybe<Scalars['String']['output']>;
+  barCode?: Maybe<Scalars['String']['output']>;
+  code: Scalars['String']['output'];
+  consignee?: Maybe<Scalars['String']['output']>;
+  count?: Maybe<Scalars['Int']['output']>;
+  deliveryCost?: Maybe<Scalars['String']['output']>;
+  deliveryName?: Maybe<Scalars['String']['output']>;
+  invoiceNumber?: Maybe<Scalars['String']['output']>;
+  isWholeSale?: Maybe<Scalars['Boolean']['output']>;
+  mallId?: Maybe<Scalars['String']['output']>;
+  message?: Maybe<Scalars['String']['output']>;
+  orderNumber?: Maybe<Scalars['String']['output']>;
+  orderStatus?: Maybe<Scalars['String']['output']>;
+  originOrderNumber?: Maybe<Scalars['String']['output']>;
+  payCost?: Maybe<Scalars['Int']['output']>;
+  postalCode?: Maybe<Scalars['String']['output']>;
+  productCode?: Maybe<Scalars['String']['output']>;
+  productName?: Maybe<Scalars['String']['output']>;
+  saleAt?: Maybe<Scalars['Date']['output']>;
+  shoppingMall?: Maybe<Scalars['String']['output']>;
+  telephoneNumber1?: Maybe<Scalars['String']['output']>;
+  wonCost?: Maybe<Scalars['Int']['output']>;
 };
 
 export type SaleInfo = {
@@ -492,6 +758,23 @@ export type SaleInfos = {
   prevAccPayCost?: Maybe<Scalars['Int']['output']>;
   prevAccProfit?: Maybe<Scalars['Float']['output']>;
   prevAveragePayCost?: Maybe<Scalars['Float']['output']>;
+};
+
+export type Stock = {
+  __typename?: 'Stock';
+  _id: Scalars['ID']['output'];
+  isSubsidiary: Scalars['Boolean']['output'];
+  product: Product;
+  storage: Storage;
+};
+
+export type Storage = {
+  __typename?: 'Storage';
+  _id: Scalars['ID']['output'];
+  address?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  note?: Maybe<Scalars['String']['output']>;
+  phoneNumber?: Maybe<Scalars['String']['output']>;
 };
 
 export type SubsidiariesInput = {
@@ -535,27 +818,6 @@ export type SubsidiaryCategory = {
   name?: Maybe<Scalars['String']['output']>;
 };
 
-export type TopClientData = {
-  __typename?: 'TopClientData';
-  accCount: Scalars['Int']['output'];
-  accPayCost: Scalars['Int']['output'];
-  accProfit: Scalars['Int']['output'];
-  name: Scalars['String']['output'];
-};
-
-export type TopClientInput = {
-  from: Scalars['Date']['input'];
-  limit: Scalars['Int']['input'];
-  skip: Scalars['Int']['input'];
-  to: Scalars['Date']['input'];
-};
-
-export type TopClientOutput = {
-  __typename?: 'TopClientOutput';
-  data: Array<TopClientData>;
-  totalCount: Scalars['Int']['output'];
-};
-
 export type TotalSaleInfo = {
   __typename?: 'TotalSaleInfo';
   current?: Maybe<SaleInfo>;
@@ -581,6 +843,24 @@ export type UpdateClientInput = {
   payDate?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type UpdateFactoryInput = {
+  /** Example field (placeholder) */
+  exampleField?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['Int']['input'];
+};
+
+export type UpdateMoveInput = {
+  /** Example field (placeholder) */
+  exampleField?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['Int']['input'];
+};
+
+export type UpdateOrderInput = {
+  /** Example field (placeholder) */
+  exampleField?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['Int']['input'];
+};
+
 export type UpdateProductInput = {
   _id: Scalars['String']['input'];
   barCode?: InputMaybe<Scalars['String']['input']>;
@@ -596,6 +876,17 @@ export type UpdateProductInput = {
 export type UpdateProfileDto = {
   password?: InputMaybe<Scalars['String']['input']>;
   role?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateStockInput = {
+  /** Example field (placeholder) */
+  exampleField?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['Int']['input'];
+};
+
+export type UpdateStorageInput = {
+  exampleField?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['Int']['input'];
 };
 
 export type UpdateSubsidiaryCategoryInput = {
@@ -619,6 +910,22 @@ export type UpdateUserDto = {
   role?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdateWholeSaleInput = {
+  _id: Scalars['String']['input'];
+  mallId?: InputMaybe<Scalars['String']['input']>;
+  payCost?: InputMaybe<Scalars['Int']['input']>;
+  productList?: InputMaybe<Array<CreateWholeSaleProductList>>;
+  saleAt?: InputMaybe<Scalars['Date']['input']>;
+  storage?: InputMaybe<Scalars['String']['input']>;
+  wonCost?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type UpdateWholesaleSupplierInput = {
+  /** Example field (placeholder) */
+  exampleField?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['Int']['input'];
+};
+
 export type User = {
   __typename?: 'User';
   _id: Scalars['ID']['output'];
@@ -633,6 +940,15 @@ export enum UserRole {
   Manager = 'MANAGER',
   Staff = 'STAFF'
 }
+
+export type WholesaleSupplier = {
+  __typename?: 'WholesaleSupplier';
+  _id: Scalars['ID']['output'];
+  address1?: Maybe<Scalars['String']['output']>;
+  feeRate?: Maybe<Scalars['Float']['output']>;
+  name: Scalars['String']['output'];
+  telephoneNumber1?: Maybe<Scalars['String']['output']>;
+};
 
 export enum ClientType {
   Bender = 'bender',
@@ -717,13 +1033,6 @@ export type UpdateClientMutation = { __typename?: 'Mutation', updateClient: (
     { __typename?: 'Client' }
     & { ' $fragmentRefs'?: { 'ClientFragmentFragment': ClientFragmentFragment } }
   ) };
-
-export type TopClientsQueryVariables = Exact<{
-  topClientInput: TopClientInput;
-}>;
-
-
-export type TopClientsQuery = { __typename?: 'Query', topClients?: { __typename?: 'TopClientOutput', totalCount: number, data: Array<{ __typename?: 'TopClientData', accProfit: number, accPayCost: number, accCount: number, name: string }> } | null };
 
 export type LogsQueryVariables = Exact<{
   findLogsQuery: FindLogsDto;
@@ -955,7 +1264,6 @@ export const DashboardClientDocument = {"kind":"Document","definitions":[{"kind"
 export const DashboardClientsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"dashboardClients"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"dashboardClientsInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"FindDateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"dashboardClients"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"dashboardClientsInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"dashboardClientsInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"accPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"accCount"}},{"kind":"Field","name":{"kind":"Name","value":"accProfit"}},{"kind":"Field","name":{"kind":"Name","value":"averagePayCost"}},{"kind":"Field","name":{"kind":"Name","value":"averagePayCost"}},{"kind":"Field","name":{"kind":"Name","value":"prevAccPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"prevAccCount"}},{"kind":"Field","name":{"kind":"Name","value":"prevAccProfit"}},{"kind":"Field","name":{"kind":"Name","value":"prevAveragePayCost"}}]}}]}}]} as unknown as DocumentNode<DashboardClientsQuery, DashboardClientsQueryVariables>;
 export const RemoveClientDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"removeClient"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeClient"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"_id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<RemoveClientMutation, RemoveClientMutationVariables>;
 export const UpdateClientDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateClient"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"updateClientInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateClientInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateClient"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"updateClientInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"updateClientInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ClientFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ClientFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Client"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"feeRate"}},{"kind":"Field","name":{"kind":"Name","value":"clientType"}},{"kind":"Field","name":{"kind":"Name","value":"businessName"}},{"kind":"Field","name":{"kind":"Name","value":"businessNumber"}},{"kind":"Field","name":{"kind":"Name","value":"payDate"}},{"kind":"Field","name":{"kind":"Name","value":"manager"}},{"kind":"Field","name":{"kind":"Name","value":"managerTel"}},{"kind":"Field","name":{"kind":"Name","value":"inActive"}}]}}]} as unknown as DocumentNode<UpdateClientMutation, UpdateClientMutationVariables>;
-export const TopClientsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"topClients"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"topClientInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"TopClientInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"topClients"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"topClientInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"topClientInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accProfit"}},{"kind":"Field","name":{"kind":"Name","value":"accPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"accCount"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<TopClientsQuery, TopClientsQueryVariables>;
 export const LogsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"logs"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"findLogsQuery"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"FindLogsDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"logs"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"findLogsQuery"},"value":{"kind":"Variable","name":{"kind":"Name","value":"findLogsQuery"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"LogFragment"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"LogFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Log"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"logType"}}]}}]} as unknown as DocumentNode<LogsQuery, LogsQueryVariables>;
 export const CreateCategoryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createCategory"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"createCategoryInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateCategoryInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createCategory"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"createCategoryInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"createCategoryInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<CreateCategoryMutation, CreateCategoryMutationVariables>;
 export const UpdateCategoryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateCategory"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"updateCategoryInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateCategoryInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateCategory"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"updateCategoryInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"updateCategoryInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<UpdateCategoryMutation, UpdateCategoryMutationVariables>;

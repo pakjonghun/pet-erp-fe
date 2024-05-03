@@ -20,7 +20,6 @@ const documents = {
     "\n  query dashboardClients($dashboardClientsInput: FindDateInput!) {\n    dashboardClients(dashboardClientsInput: $dashboardClientsInput) {\n      name\n      accPayCost\n      accCount\n      accProfit\n      averagePayCost\n      averagePayCost\n      prevAccPayCost\n      prevAccCount\n      prevAccProfit\n      prevAveragePayCost\n    }\n  }\n": types.DashboardClientsDocument,
     "\n  mutation removeClient($_id: String!) {\n    removeClient(_id: $_id) {\n      _id\n      name\n    }\n  }\n": types.RemoveClientDocument,
     "\n  mutation updateClient($updateClientInput: UpdateClientInput!) {\n    updateClient(updateClientInput: $updateClientInput) {\n      ...ClientFragment\n    }\n  }\n": types.UpdateClientDocument,
-    "\n  query topClients($topClientInput: TopClientInput!) {\n    topClients(topClientInput: $topClientInput) {\n      totalCount\n      data {\n        accProfit\n        accPayCost\n        accCount\n        name\n      }\n    }\n  }\n": types.TopClientsDocument,
     "\n  query logs($findLogsQuery: FindLogsDTO!) {\n    logs(findLogsQuery: $findLogsQuery) {\n      totalCount\n      data {\n        ...LogFragment\n      }\n    }\n  }\n": types.LogsDocument,
     "\n  mutation createCategory($createCategoryInput: CreateCategoryInput!) {\n    createCategory(createCategoryInput: $createCategoryInput) {\n      _id\n      name\n    }\n  }\n": types.CreateCategoryDocument,
     "\n  mutation updateCategory($updateCategoryInput: UpdateCategoryInput!) {\n    updateCategory(updateCategoryInput: $updateCategoryInput) {\n      _id\n      name\n    }\n  }\n": types.UpdateCategoryDocument,
@@ -92,10 +91,6 @@ export function graphql(source: "\n  mutation removeClient($_id: String!) {\n   
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation updateClient($updateClientInput: UpdateClientInput!) {\n    updateClient(updateClientInput: $updateClientInput) {\n      ...ClientFragment\n    }\n  }\n"): (typeof documents)["\n  mutation updateClient($updateClientInput: UpdateClientInput!) {\n    updateClient(updateClientInput: $updateClientInput) {\n      ...ClientFragment\n    }\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n  query topClients($topClientInput: TopClientInput!) {\n    topClients(topClientInput: $topClientInput) {\n      totalCount\n      data {\n        accProfit\n        accPayCost\n        accCount\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  query topClients($topClientInput: TopClientInput!) {\n    topClients(topClientInput: $topClientInput) {\n      totalCount\n      data {\n        accProfit\n        accPayCost\n        accCount\n        name\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

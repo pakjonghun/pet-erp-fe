@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { PlusOneOutlined, Search } from '@mui/icons-material';
 import { ChangeEvent, useState } from 'react';
-import CreateProductModal from './_components/AddWholeSale';
+import AddWholeSaleModal from './_components/AddWholeSaleModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import ProductionTableBody from './_components/ProductionTableBody';
 import { useUploadExcelFile } from '@/http/rest/hooks/file/useUploadExcelFile';
@@ -112,18 +112,11 @@ const ProductPage = () => {
   return (
     <TablePage sx={{ flex: 1 }}>
       {openCreateProduct && (
-        <CreateProductModal open={openCreateProduct} onClose={() => setOpenCreateProduct(false)} />
+        <AddWholeSaleModal open={openCreateProduct} onClose={() => setOpenCreateProduct(false)} />
       )}
       <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="도매 판매" />
         <Stack direction="row" alignItems="center" gap={2}>
-          <UploadButton
-            fileKey={fileKey}
-            loading={isPending}
-            onChange={handleUploadExcelFile}
-            text="도매 판매 업로드"
-          />
-
           <ActionButton
             icon={<PlusOneOutlined />}
             text="도매 판매 등록"
