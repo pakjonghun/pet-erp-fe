@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
   Autocomplete,
@@ -29,11 +29,9 @@ import {
   createWholeSaleSchema,
 } from '../_validations/createWholeSaleValidation';
 import dayjs from 'dayjs';
-import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import { Product, WholesaleSupplier } from '@/http/graphql/codegen/graphql';
-import { CheckBox, PlusOne } from '@mui/icons-material';
+import { PlusOne } from '@mui/icons-material';
 import WholeSaleProductSearch from './WholeSaleProductSearch';
-import ProductLayout from '@/app/dashboard/client/layout';
 
 const options: WholesaleSupplier[] = [
   {
@@ -120,12 +118,14 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
   };
 
   const addProduct = (product: Product | null, index: number) => {
+    const prevProductCount = getValues(`productList.${index}.count`);
+
     if (!product) return;
 
     const newProduct: CreateWholeSaleProductForm = {
       name: product.name,
       code: product.code,
-      count: 0,
+      count: prevProductCount == null ? 0 : prevProductCount,
       wonCost: product.wonPrice,
       payCost: product.salePrice,
     };
@@ -135,6 +135,7 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
     const suffixProductList = productList.slice(index + 1);
     const newProductList = [...preProductList, newProduct, ...suffixProductList];
     setValue('productList', newProductList);
+    calculatePrice();
   };
 
   const removeProductList = (index: number) => {
@@ -143,6 +144,14 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
     const suffixProductList = productList.slice(index + 1);
     const newProductList = [...preProductList, ...suffixProductList];
     setValue('productList', newProductList);
+    calculatePrice();
+  };
+
+  const calculatePrice = () => {
+    calculateWonPrice();
+    if (!isManualCalculate) {
+      calculatePayCost();
+    }
   };
 
   const currentProductList = watch('productList');
@@ -169,10 +178,7 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
 
   const handleChangeCount = (index: number, count: number | null) => {
     setValue(`productList.${index}.count`, count);
-    calculateWonPrice();
-    if (!isManualCalculate) {
-      calculatePayCost();
-    }
+    calculatePrice();
   };
 
   const handleCheckIsManualCalculate = (value: boolean) => {
@@ -195,6 +201,7 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
         <FormGroup sx={modalSizeProps}>
           <FormLabel>도매 거래처 정보 입력</FormLabel>
           <Autocomplete
+            clearIcon="nono"
             size="small"
             options={options}
             getOptionLabel={(option) => option.name}
