@@ -164,11 +164,6 @@ export type CreateWholeSaleProductList = {
   name: Scalars['String']['input'];
 };
 
-export type CreateWholesaleSupplierInput = {
-  /** Example field (placeholder) */
-  exampleField: Scalars['Int']['input'];
-};
-
 export type Factory = {
   __typename?: 'Factory';
   address?: Maybe<Scalars['String']['output']>;
@@ -243,7 +238,6 @@ export type Mutation = {
   createSubsidiaryCategory: SubsidiaryCategory;
   createUser: User;
   createWholeSale: Sale;
-  createWholesaleSupplier: WholesaleSupplier;
   removeCategory: ProductCategory;
   removeClient: Client;
   removeFactory: Factory;
@@ -256,7 +250,6 @@ export type Mutation = {
   removeSubsidiaryCategory: SubsidiaryCategory;
   removeUser: User;
   removeWholeSale: Sale;
-  removeWholesaleSupplier: WholesaleSupplier;
   updateCategory: ProductCategory;
   updateClient: Client;
   updateFactory: Factory;
@@ -270,7 +263,6 @@ export type Mutation = {
   updateSubsidiaryCategory: SubsidiaryCategory;
   updateUser: User;
   updateWholeSale: WholeSaleOutput;
-  updateWholesaleSupplier: WholesaleSupplier;
 };
 
 
@@ -339,11 +331,6 @@ export type MutationCreateWholeSaleArgs = {
 };
 
 
-export type MutationCreateWholesaleSupplierArgs = {
-  createWholesaleSupplierInput: CreateWholesaleSupplierInput;
-};
-
-
 export type MutationRemoveCategoryArgs = {
   _id: Scalars['String']['input'];
 };
@@ -400,11 +387,6 @@ export type MutationRemoveUserArgs = {
 
 
 export type MutationRemoveWholeSaleArgs = {
-  id: Scalars['Int']['input'];
-};
-
-
-export type MutationRemoveWholesaleSupplierArgs = {
   id: Scalars['Int']['input'];
 };
 
@@ -471,11 +453,6 @@ export type MutationUpdateUserArgs = {
 
 export type MutationUpdateWholeSaleArgs = {
   updateWholeSaleInput: UpdateWholeSaleInput;
-};
-
-
-export type MutationUpdateWholesaleSupplierArgs = {
-  updateWholesaleSupplierInput: UpdateWholesaleSupplierInput;
 };
 
 export type MyInfo = {
@@ -598,7 +575,6 @@ export type Query = {
   user: User;
   users: Array<User>;
   wholeSale: Sale;
-  wholesaleSupplier: WholesaleSupplier;
 };
 
 
@@ -704,11 +680,6 @@ export type QueryUserArgs = {
 
 export type QueryWholeSaleArgs = {
   _id: Scalars['String']['input'];
-};
-
-
-export type QueryWholesaleSupplierArgs = {
-  id: Scalars['Int']['input'];
 };
 
 export type Sale = {
@@ -920,12 +891,6 @@ export type UpdateWholeSaleInput = {
   wonCost?: InputMaybe<Scalars['Int']['input']>;
 };
 
-export type UpdateWholesaleSupplierInput = {
-  /** Example field (placeholder) */
-  exampleField?: InputMaybe<Scalars['Int']['input']>;
-  id: Scalars['Int']['input'];
-};
-
 export type User = {
   __typename?: 'User';
   _id: Scalars['ID']['output'];
@@ -961,15 +926,6 @@ export type WholeSaleProduct = {
   count: Scalars['Int']['output'];
   productCode: Scalars['String']['output'];
   productName: Scalars['String']['output'];
-};
-
-export type WholesaleSupplier = {
-  __typename?: 'WholesaleSupplier';
-  _id: Scalars['ID']['output'];
-  address1?: Maybe<Scalars['String']['output']>;
-  feeRate?: Maybe<Scalars['Float']['output']>;
-  name: Scalars['String']['output'];
-  telephoneNumber1?: Maybe<Scalars['String']['output']>;
 };
 
 export enum ClientType {

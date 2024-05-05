@@ -26,12 +26,13 @@ import {
   createWholeSaleSchema,
 } from '../_validations/createWholeSaleValidation';
 import dayjs from 'dayjs';
-import { Client, ClientType, Product, WholesaleSupplier } from '@/http/graphql/codegen/graphql';
+import { Client, ClientType } from '@/http/graphql/codegen/graphql';
 import { PlusOne } from '@mui/icons-material';
 import WholeSaleProductSearch from './WholeSaleProductSearch';
 import LabelText from '@/components/ui/typograph/LabelText';
 import { EMPTY } from '@/constants';
 import { FormControl } from '@mui/base';
+import { getProfitRate } from '@/utils/sale';
 
 export const initProductItem = { name: '', code: '', count: 0, salePrice: 0, storage: '' };
 
@@ -133,18 +134,19 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
     replace(newFields);
   };
 
-  // const calculatePayCost = () => {
-  //   const totalPayCost = productList.reduce((acc, cur) => {
-  //     return (cur?.count ?? 0) * (cur?.salePrice ?? 0) + acc;
-  //   }, 0);
-
-  //   setValue('payCost', totalPayCost);
-  // };
   const productList = watch('productList');
 
-  const totalPayCost = productList.reduce((acc, cur) => {
-    return (cur?.count ?? 0) * (cur?.salePrice ?? 0) + acc;
-  }, 0);
+  const { payCost, wonCost } = productList.reduce(
+    (acc, cur) => {
+      const newPayCost = (cur?.count ?? 0) * (cur?.salePrice ?? 0) + acc.payCost;
+      const newWonCost = (cur?.count ?? 0) * (cur?.wonPrice ?? 0) + acc.wonCost;
+      return { payCost: newPayCost, wonCost: newWonCost };
+    },
+    { payCost: 0, wonCost: 0 }
+  );
+
+  const totalWonCost = wonCost;
+  const totalPayCost = isManualChangePrice ? watch('payCost') ?? 0 : payCost;
 
   return (
     <BaseModal open={open} onClose={handleClose}>
@@ -207,7 +209,7 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
           />
         </FormGroup>
         {productList.length > 0 && (
-          <Stack direction="row" sx={{ mt: 2 }} gap={3}>
+          <Stack direction="row" sx={{ mt: 2 }} gap={3} alignItems="center">
             <Controller
               control={control}
               name="payCost"
@@ -217,7 +219,7 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
                     <TextField
                       label="판매가 합계"
                       {...field}
-                      value={isManualChangePrice ? field.value ?? 0 : totalPayCost}
+                      value={totalPayCost}
                       size="small"
                       disabled={!isManualChangePrice}
                     />
@@ -234,6 +236,12 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
                   onChange={(_, checked) => setIsManualChangePrice(checked)}
                 />
               }
+            />
+            <LabelText label="원가" text={totalWonCost} />
+            <LabelText label="수익" text={totalPayCost - totalWonCost} />
+            <LabelText
+              label="수익율"
+              text={getProfitRate(totalPayCost - totalWonCost, totalPayCost) + '%'}
             />
           </Stack>
         )}
