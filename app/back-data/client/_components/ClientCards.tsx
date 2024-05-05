@@ -17,7 +17,7 @@ interface Props extends CommonListProps<Client> {
 
 const ClientCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
-  const [popoverAnchor, setPopover] = useState<null | HTMLElement>(null);
+  const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
   const [selectedClient, setSelectedClient] = useState<null | Client>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
 

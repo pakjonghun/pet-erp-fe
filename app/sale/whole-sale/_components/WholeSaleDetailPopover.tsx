@@ -28,7 +28,7 @@ const WholeSaleDetailPopover: FC<Props> = ({
 }) => {
   return (
     <BasePopover onClose={onClose} position={position} open={open} anchorEl={anchorEl}>
-      <ModalTitle text="제품 세부내용" />
+      {/* <ModalTitle text="제품 세부내용" />
       <Stack>
         <LabelText label="거래처" text={selectedWholeSale.mallId} />
         <LabelText
@@ -57,7 +57,7 @@ const WholeSaleDetailPopover: FC<Props> = ({
         />
         <LabelText label="유지기간" text={selectedWholeSale.maintainDate ?? EMPTY} />
         <LabelText label="리드타임" text={selectedWholeSale.leadTime ?? EMPTY} />
-      </Stack>
+      </Stack> */}
       <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
         <Button color="error" variant="outlined" onClick={onClickDelete}>
           삭제
