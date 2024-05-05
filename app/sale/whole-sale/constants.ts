@@ -1,6 +1,6 @@
-export const ProductHeaderList = [
-  '이름',
-  '판매 거래처',
+export const WholeSaleHeaderList = [
+  '도매판매 거래처',
+  '제품 이름',
   '연락처',
   '원가',
   '판매가',

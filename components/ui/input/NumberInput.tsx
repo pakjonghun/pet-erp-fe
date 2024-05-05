@@ -1,5 +1,5 @@
 import { isNumber } from '@/utils/common';
-import { TextField, TextFieldProps } from '@mui/material';
+import { SxProps, TextField, TextFieldProps } from '@mui/material';
 import { FC, ReactElement } from 'react';
 import { ControllerRenderProps } from 'react-hook-form';
 
@@ -11,6 +11,7 @@ interface Props {
   endAdornment?: ReactElement;
   onChange?: (value: number | null) => void;
   textFieldProps?: TextFieldProps;
+  sx?: SxProps;
 }
 
 const NumberInput: FC<Props> = ({
@@ -21,11 +22,12 @@ const NumberInput: FC<Props> = ({
   endAdornment,
   onChange,
   textFieldProps,
+  sx,
 }) => {
   return (
     <TextField
+      sx={sx}
       {...textFieldProps}
-      fullWidth
       size="small"
       {...field}
       value={field.value == null ? '' : field.value}
@@ -40,7 +42,6 @@ const NumberInput: FC<Props> = ({
 
         const isNumberData = isNumber(event.target.value);
         if (!isNumberData) return;
-
         changeFunc(Number(event.target.value));
       }}
       label={label}

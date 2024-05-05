@@ -1,16 +1,19 @@
 import { z } from 'zod';
 
 export const createWholeSaleProductSchema = z.object({
-  count: z.number().min(1, { message: '재품 수량은 1 이상의 숫자를 입력하세요.' }).nullable(),
+  storage: z.string().min(1, { message: '창고를 입력하세요.' }),
   name: z.string().min(1, { message: '제품 이름을 입력하세요.' }),
   code: z.string().min(1, { message: '제품 코드를 입력하세요.' }),
-  wonCost: z.number().nullable().optional(),
-  payCost: z.number().nullable().optional(),
+  wonPrice: z.number().nullable().optional(),
+  salePrice: z.number().nullable().optional(),
+  count: z
+    .number()
+    .min(1, { message: '재품 수량은 1 이상의 숫자를 입력하세요.' })
+    .nullable()
+    .optional(),
 });
 
 export const createWholeSaleSchema = z.object({
-  storage: z.string().min(1, { message: '창고를 입력하세요.' }),
-  address1: z.string().optional().nullable(),
   telephoneNumber1: z.string().optional().nullable(),
   saleAt: z.date(),
   payCost: z

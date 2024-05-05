@@ -6,23 +6,23 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { Product } from '@/http/graphql/codegen/graphql';
+import { Sale } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import { SelectOption } from '@/app/back-data/types';
 
 interface Props {
-  product: Product;
-  onClickRow: (event: MouseEvent<HTMLTableCellElement>, product: Product) => void;
-  onClickOption: (option: SelectOption | null, product: Product | null) => void;
+  wholeSale: Sale;
+  onClickRow: (event: MouseEvent<HTMLTableCellElement>, product: Sale) => void;
+  onClickOption: (option: SelectOption | null, product: Sale | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow }) => {
+const WholeSaleBodyRow: FC<Props> = ({ wholeSale, scrollRef, onClickOption, onClickRow }) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<SelectOption, SelectedOptionItem> = {
     edit: {
       callback: () => {
-        onClickOption('edit', product);
+        onClickOption('edit', wholeSale);
         setMenuAnchor(null);
       },
       label: '편집',
@@ -30,7 +30,7 @@ const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickR
     },
     delete: {
       callback: () => {
-        onClickOption('delete', product);
+        onClickOption('delete', wholeSale);
         setMenuAnchor(null);
       },
       label: '삭제',
@@ -38,20 +38,20 @@ const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickR
     },
   };
 
-  const createRow = (product: Product) => {
+  const createRow = (sale: Sale) => {
     return [
-      product.code,
-      product.category?.name ?? EMPTY,
-      product.barCode ?? EMPTY,
-      product.name,
-      product.wonPrice == null ? EMPTY : getKCWFormat(product.wonPrice),
-      product.salePrice == null ? EMPTY : getKCWFormat(product.salePrice),
-      product.leadTime ? `${product.leadTime}일` : EMPTY,
-      product.maintainDate ? `${product.maintainDate}일` : EMPTY,
+      sale.mallId,
+      sale.productName,
+      sale.telephoneNumber1,
+      sale.wonCost ?? EMPTY,
+      sale.payCost ?? EMPTY,
+      EMPTY,
+      EMPTY,
+      sale.count ?? EMPTY,
     ];
   };
 
-  const parsedRowData = createRow(product);
+  const parsedRowData = createRow(wholeSale);
 
   return (
     <TableRow hover ref={scrollRef}>
@@ -62,8 +62,8 @@ const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickR
       </Menu>
       {parsedRowData.map((item, index) => (
         <Cell
-          key={`${product._id}_${index}`}
-          onClick={(event) => onClickRow(event, product)}
+          key={`${wholeSale._id}_${index}`}
+          onClick={(event) => onClickRow(event, wholeSale)}
           sx={{ minWidth: 200 }}
         >
           {item}
@@ -83,4 +83,4 @@ const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickR
   );
 };
 
-export default ProductBodyRow;
+export default WholeSaleBodyRow;

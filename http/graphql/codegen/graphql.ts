@@ -269,7 +269,7 @@ export type Mutation = {
   updateSubsidiary: Subsidiary;
   updateSubsidiaryCategory: SubsidiaryCategory;
   updateUser: User;
-  updateWholeSale: Sale;
+  updateWholeSale: WholeSaleOutput;
   updateWholesaleSupplier: WholesaleSupplier;
 };
 
@@ -719,7 +719,7 @@ export type Sale = {
   code: Scalars['String']['output'];
   consignee?: Maybe<Scalars['String']['output']>;
   count?: Maybe<Scalars['Int']['output']>;
-  deliveryCost?: Maybe<Scalars['String']['output']>;
+  deliveryCost?: Maybe<Scalars['Int']['output']>;
   deliveryName?: Maybe<Scalars['String']['output']>;
   invoiceNumber?: Maybe<Scalars['String']['output']>;
   isWholeSale?: Maybe<Scalars['Boolean']['output']>;
@@ -940,6 +940,28 @@ export enum UserRole {
   Manager = 'MANAGER',
   Staff = 'STAFF'
 }
+
+export type WholeSaleOutput = {
+  __typename?: 'WholeSaleOutput';
+  _id: Scalars['String']['output'];
+  address1?: Maybe<Scalars['String']['output']>;
+  count: Scalars['Int']['output'];
+  deliveryCost?: Maybe<Scalars['Int']['output']>;
+  mallId?: Maybe<Scalars['String']['output']>;
+  payCost?: Maybe<Scalars['Int']['output']>;
+  productList: Array<WholeSaleProduct>;
+  saleAt?: Maybe<Scalars['Date']['output']>;
+  telephoneNumber1?: Maybe<Scalars['String']['output']>;
+  wonCost?: Maybe<Scalars['Int']['output']>;
+};
+
+export type WholeSaleProduct = {
+  __typename?: 'WholeSaleProduct';
+  code: Scalars['String']['output'];
+  count: Scalars['Int']['output'];
+  productCode: Scalars['String']['output'];
+  productName: Scalars['String']['output'];
+};
 
 export type WholesaleSupplier = {
   __typename?: 'WholesaleSupplier';

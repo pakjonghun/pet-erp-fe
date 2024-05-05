@@ -1,9 +1,9 @@
 import { FC } from 'react';
-import { Product } from '@/http/graphql/codegen/graphql';
+import { WholeSaleOutput } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
 import ModalTitle from '@/components/ui/typograph/ModalTitle';
 import { getKCWFormat } from '@/utils/common';
-import { Stack, Button } from '@mui/material';
+import { Stack, Button, Chip } from '@mui/material';
 import BasePopover from '@/components/ui/modal/BasePopover';
 import { EMPTY } from '@/constants';
 
@@ -11,17 +11,17 @@ interface Props {
   open: boolean;
   anchorEl: null | HTMLElement;
   position: { left: number; top: number };
-  selectedProduct: Product;
+  selectedWholeSale: WholeSaleOutput;
   onClose: () => void;
   onClickDelete: () => void;
   onClickEdit: () => void;
 }
 
-const ProductDetailPopover: FC<Props> = ({
+const WholeSaleDetailPopover: FC<Props> = ({
   open,
   anchorEl,
   position,
-  selectedProduct,
+  selectedWholeSale,
   onClose,
   onClickDelete,
   onClickEdit,
@@ -30,28 +30,33 @@ const ProductDetailPopover: FC<Props> = ({
     <BasePopover onClose={onClose} position={position} open={open} anchorEl={anchorEl}>
       <ModalTitle text="제품 세부내용" />
       <Stack>
-        <LabelText label="코드" text={selectedProduct.code} />
-        <LabelText label="이름" text={selectedProduct.name} />
-        <LabelText label="분류" text={selectedProduct.category?.name ?? EMPTY} />
-        <LabelText label="바코드" text={selectedProduct.barCode ?? EMPTY} />
+        <LabelText label="거래처" text={selectedWholeSale.mallId} />
+        <LabelText
+          label="제품목록"
+          text={selectedWholeSale.productList.map((product) => (
+            <Chip key={product.code} label={product.productName} />
+          ))}
+        />
+        <LabelText label="분류" text={selectedWholeSale.category?.name ?? EMPTY} />
+        <LabelText label="바코드" text={selectedWholeSale.barCode ?? EMPTY} />
         <LabelText
           label="판매가"
           text={
-            selectedProduct.salePrice == null
+            selectedWholeSale.salePrice == null
               ? EMPTY
-              : getKCWFormat(selectedProduct.salePrice) ?? EMPTY
+              : getKCWFormat(selectedWholeSale.salePrice) ?? EMPTY
           }
         />
         <LabelText
           label="원가"
           text={
-            selectedProduct.wonPrice == null
+            selectedWholeSale.wonPrice == null
               ? EMPTY
-              : getKCWFormat(selectedProduct.wonPrice) ?? EMPTY
+              : getKCWFormat(selectedWholeSale.wonPrice) ?? EMPTY
           }
         />
-        <LabelText label="유지기간" text={selectedProduct.maintainDate ?? EMPTY} />
-        <LabelText label="리드타임" text={selectedProduct.leadTime ?? EMPTY} />
+        <LabelText label="유지기간" text={selectedWholeSale.maintainDate ?? EMPTY} />
+        <LabelText label="리드타임" text={selectedWholeSale.leadTime ?? EMPTY} />
       </Stack>
       <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
         <Button color="error" variant="outlined" onClick={onClickDelete}>
@@ -65,4 +70,4 @@ const ProductDetailPopover: FC<Props> = ({
   );
 };
 
-export default ProductDetailPopover;
+export default WholeSaleDetailPopover;

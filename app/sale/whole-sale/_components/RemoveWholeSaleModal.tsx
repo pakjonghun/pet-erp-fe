@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Product } from '@/http/graphql/codegen/graphql';
+import { WholeSaleOutput } from '@/http/graphql/codegen/graphql';
 import { useRemoveProduct } from '@/http/graphql/hooks/product/useRemoveProduct';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import BaseModal from '@/components/ui/modal/BaseModal';
@@ -8,28 +8,29 @@ import { Typography, Stack, Button } from '@mui/material';
 
 interface Props {
   open: boolean;
-  selectedProduct: Product;
+  selectedWholeSale: WholeSaleOutput;
   onClose: () => void;
 }
 
-const RemoveProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
-  const [removeProduct, { loading }] = useRemoveProduct();
+const RemoveWholeSaleModal: FC<Props> = ({ open, selectedWholeSale, onClose }) => {
+  const [removeWholeSale, { loading }] = useRemoveProduct();
 
   const handleClickRemove = () => {
-    removeProduct({
+    removeWholeSale({
       variables: {
-        _id: selectedProduct._id,
+        _id: selectedWholeSale._id,
       },
       onCompleted: (res) => {
         snackMessage({
-          message: `${res.removeProduct.name}제품이 삭제되었습니다.`,
+          message: `${selectedWholeSale.mallId}거래처와 도매 거래 삭제되었습니다.`,
           severity: 'success',
         });
         onClose();
       },
       onError: (err) => {
         snackMessage({
-          message: err.message ?? `${selectedProduct.name}제품 삭제가 실패했습니다.`,
+          message:
+            err.message ?? `${selectedWholeSale.mallId}거래처와 도매 거래 삭제가 실패했습니다.`,
           severity: 'error',
         });
         onClose();
@@ -40,10 +41,10 @@ const RemoveProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
   return (
     <BaseModal onClose={onClose} open={open}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        제품 삭제
+        도매 판매삭제
       </Typography>
       <Typography sx={{ color: (theme) => theme.palette.warning.dark }}>
-        삭제된 제품은 복구가 불가능합니다.
+        삭제된 판매는 복구가 불가능합니다.
       </Typography>
       <Typography sx={{ color: (theme) => theme.palette.warning.dark }}>
         정말로 삭제하겠습니까?
@@ -65,4 +66,4 @@ const RemoveProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
   );
 };
 
-export default RemoveProductModal;
+export default RemoveWholeSaleModal;

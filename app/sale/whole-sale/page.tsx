@@ -16,36 +16,81 @@ import {
   Typography,
 } from '@mui/material';
 import { PlusOneOutlined, Search } from '@mui/icons-material';
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import AddWholeSaleModal from './_components/AddWholeSaleModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
-import ProductionTableBody from './_components/ProductionTableBody';
-import { useUploadExcelFile } from '@/http/rest/hooks/file/useUploadExcelFile';
-import { snackMessage } from '@/store/snackMessage';
-import UploadButton from '@/components/ui/button/UploadButtont';
+import WholeSaleTableBody from './_components/WholeSaleTableBody';
 import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import { LIMIT } from '@/constants';
-import ProductionCards from './_components/ProductionCards';
+import WholeSaleCards from './_components/WholeSaleCards';
 import ActionButton from '@/components/ui/button/ActionButton';
-import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFile';
-import CommonLoading from '@/components/ui/loading/CommonLoading';
-import { ProductHeaderList } from './constants';
+import { WholeSaleHeaderList } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { Product } from '@/http/graphql/codegen/graphql';
-import { client } from '@/http/graphql/client';
+import { WholeSaleOutput } from '@/http/graphql/codegen/graphql';
+
+const rows: WholeSaleOutput[] = [
+  {
+    _id: '12334',
+    count: 12,
+    address1: '456 Elm St, Greendale',
+    telephoneNumber1: '555-6789',
+    saleAt: new Date('2023-01-20'),
+    payCost: 49.99,
+    mallId: 'MALL1002',
+    wonCost: 20.0,
+    deliveryCost: 3.5,
+    productList: [
+      {
+        code: '123_123_!233',
+        productName: 'Wirel3ess M2ouse',
+        productCode: 'PRD441001',
+        count: 1,
+      },
+      {
+        code: '123_123_!4323',
+        productName: 'Wi223reless M4ouse',
+        productCode: 'PRD130302',
+        count: 11,
+      },
+    ],
+  },
+  {
+    _id: '1234',
+    count: 2,
+    address1: '456 Elm St, Greendale',
+    telephoneNumber1: '555-6789',
+    saleAt: new Date('2023-01-20'),
+    payCost: 49.99,
+    mallId: 'MALL1002',
+    wonCost: 20.0,
+    deliveryCost: 3.5,
+    productList: [
+      {
+        code: '123_123_!23',
+        productName: 'Wireless M2ouse',
+        productCode: 'PRD41001',
+        count: 1,
+      },
+      {
+        code: '123_123_!423',
+        productName: 'Wi22reless M4ouse',
+        productCode: 'PRD10302',
+        count: 1,
+      },
+    ],
+  },
+];
 
 const ProductPage = () => {
-  const { mutate: uploadProduct, isPending } = useUploadExcelFile();
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
-  const [fileKey, setFileKey] = useState(new Date());
 
   const { data, networkStatus, fetchMore, refetch } = useProducts({
     keyword: delayKeyword,
     skip: 0,
     limit: LIMIT,
   });
-  const rows = (data?.products.data as Product[]) ?? [];
+  // const rows = (data?.products.data as Product[]) ?? [];
   const isLoading = networkStatus == 3 || networkStatus == 1;
   const isEmpty = !isLoading && rows.length === 0;
 
@@ -68,45 +113,6 @@ const ProductPage = () => {
     }
   };
   const scrollRef = useInfinityScroll({ callback });
-
-  const handleUploadExcelFile = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const formBody = new FormData();
-    formBody.append('file', file);
-    uploadProduct(
-      { service: 'product', formBody },
-      {
-        onSuccess: () => {
-          snackMessage({ message: '제품 업로드가 완료되었습니다.', severity: 'success' });
-          refetch();
-          client.refetchQueries({ include: ['categories'] });
-        },
-        onError: (error) => {
-          const message = error.response?.data.message;
-          snackMessage({ message: message ?? '제품 업로드가 실패하였습니다.', severity: 'error' });
-        },
-        onSettled: () => {
-          setFileKey(new Date());
-        },
-      }
-    );
-  };
-
-  const { mutate: download, isPending: isDownloading } = useDownloadExcelFile();
-
-  const handleDownload = () => {
-    download('product', {
-      onSuccess: () => {
-        snackMessage({ message: '제품 다운로드가 완료되었습니다.', severity: 'success' });
-      },
-      onError: (err) => {
-        const message = err.message;
-        snackMessage({ message: message ?? '제품 다운로드가 실패하였습니다.', severity: 'error' });
-      },
-    });
-  };
 
   const [openCreateProduct, setOpenCreateProduct] = useState(false);
   return (
@@ -144,7 +150,7 @@ const ProductPage = () => {
       <Typography sx={{ p: 3 }}>
         {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
       </Typography>
-      <ProductionCards
+      <WholeSaleCards
         sx={{
           display: {
             xs: 'block',
@@ -167,17 +173,17 @@ const ProductPage = () => {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              {ProductHeaderList.map((item, index) => (
+              {WholeSaleHeaderList.map((item, index) => (
                 <HeadCell key={`${index}_${item}`} text={item} />
               ))}
             </TableRow>
           </TableHead>
-          <ProductionTableBody
+          {/* <WholeSaleTableBody
             isLoading={isLoading}
             data={rows}
             isEmpty={isEmpty}
             scrollRef={scrollRef}
-          />
+          /> */}
         </Table>
       </ScrollTableContainer>
     </TablePage>

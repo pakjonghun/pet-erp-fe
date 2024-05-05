@@ -1,44 +1,44 @@
 import { FC, useState } from 'react';
-import { Product } from '@/http/graphql/codegen/graphql';
+import { Product, Sale, WholeSaleOutput } from '@/http/graphql/codegen/graphql';
 import { TABLE_MAX_HEIGHT } from '@/constants';
 import { Grid, SxProps } from '@mui/material';
-import RemoveProductModal from './RemoveProductModal';
+import RemoveWholeSaleModal from './RemoveWholeSaleModal';
 import EditProductModal from './EditProductModal';
-import ProductDetailPopover from './ProductDetailPopover';
+import ProductDetailPopover from './WholeSaleDetailPopover';
 import EmptyItem from '@/components/ui/listItem/EmptyItem';
 import ProductCard from './ProductCard';
 import LoadingCard from '@/components/ui/loading/LoadingCard';
 import { CommonListProps } from '@/types';
 import { SelectOption } from '@/app/back-data/types';
 
-interface Props extends CommonListProps<Product> {
+interface Props extends CommonListProps<WholeSaleOutput> {
   sx?: SxProps;
 }
 
-const ProductionCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx }) => {
+const WholeSaleCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  const [selectedProduct, setSelectedProduct] = useState<null | Product>(null);
+  const [selectedWholeSale, setSelectedWholeSale] = useState<null | WholeSaleOutput>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
 
-  const handleClickOption = (option: SelectOption | null, product: Product | null) => {
-    setSelectedProduct(product);
+  const handleClickOption = (option: SelectOption | null, wholeSale: WholeSaleOutput | null) => {
+    setSelectedWholeSale(wholeSale);
     setOptionType(option);
   };
 
   const handleClickEdit = () => {
     handleClosePopover();
-    handleClickOption('edit', selectedProduct);
+    handleClickOption('edit', selectedWholeSale);
   };
 
   const handleClickDelete = () => {
     handleClosePopover();
-    handleClickOption('delete', selectedProduct);
+    handleClickOption('delete', selectedWholeSale);
   };
 
   const handleClosePopover = () => {
     setPopoverAnchor(null);
-    setSelectedProduct(null);
+    setSelectedWholeSale(null);
   };
 
   return (
@@ -54,21 +54,21 @@ const ProductionCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx })
     >
       <EmptyItem isEmpty={isEmpty} />
 
-      {selectedProduct && (
-        <RemoveProductModal
+      {selectedWholeSale && (
+        <RemoveWholeSaleModal
           open={optionType === 'delete'}
           onClose={() => handleClickOption(null, null)}
-          selectedProduct={selectedProduct}
+          selectedWholeSale={selectedWholeSale}
         />
       )}
-      {selectedProduct && (
+      {/* {selectedWholeSale && (
         <EditProductModal
           open={optionType === 'edit'}
           onClose={() => handleClickOption(null, null)}
-          selectedProduct={selectedProduct}
+          selectedProduct={selectedWholeSale}
         />
-      )}
-      {selectedProduct && (
+      )} */}
+      {/* {selectedWholeSale && (
         <ProductDetailPopover
           onClose={handleClosePopover}
           position={popoverPosition}
@@ -76,11 +76,11 @@ const ProductionCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx })
           anchorEl={popoverAnchor}
           onClickDelete={handleClickDelete}
           onClickEdit={handleClickEdit}
-          selectedProduct={selectedProduct}
+          selectedProduct={selectedWholeSale}
         />
-      )}
+      )} */}
 
-      {data.map((item, index) => {
+      {/* {data.map((item, index) => {
         const product = item as unknown as Product;
         const isLast = index === data.length - 1;
         return (
@@ -89,7 +89,7 @@ const ProductionCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx })
               onClickRow={(event, product: Product) => {
                 setPopoverPosition({ left: event.clientX, top: event.clientY });
                 setPopoverAnchor(event.currentTarget);
-                setSelectedProduct(product);
+                setSelectedWholeSale(product);
               }}
               product={product}
               scrollRef={isLast ? scrollRef : null}
@@ -97,10 +97,10 @@ const ProductionCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx })
             />
           </Grid>
         );
-      })}
+      })} */}
       <LoadingCard isLoading={isLoading} />
     </Grid>
   );
 };
 
-export default ProductionCards;
+export default WholeSaleCards;
