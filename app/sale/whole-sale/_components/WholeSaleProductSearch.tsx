@@ -9,7 +9,12 @@ import { LIMIT } from '@/constants';
 import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Autocomplete, Box, IconButton, Stack, TextField } from '@mui/material';
-import { Control, Controller, FieldArrayWithId, FieldErrors } from 'react-hook-form';
+import {
+  Control,
+  Controller,
+  FieldArrayWithId,
+  FieldErrors,
+} from 'react-hook-form';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { initProductItem } from './AddWholeSaleModal';
 
@@ -61,7 +66,8 @@ const WholeSaleProductSearch: FC<Props> = ({
   });
 
   const rows = data?.products.data ?? [];
-  const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
+  const isLoading =
+    networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -113,7 +119,9 @@ const WholeSaleProductSearch: FC<Props> = ({
               loadingText="로딩중"
               noOptionsText="검색 결과가 없습니다."
               disablePortal
-              renderInput={(params) => <TextField {...params} label="창고" required />}
+              renderInput={(params) => (
+                <TextField {...params} label="창고" required />
+              )}
               renderOption={(props, item, state) => {
                 const { key, ...rest } = props as any;
                 const isLast = state.index === storages.length - 1;
@@ -135,7 +143,9 @@ const WholeSaleProductSearch: FC<Props> = ({
             <Autocomplete
               value={field.value}
               getOptionDisabled={(option) => {
-                return selectedProductList.some((item) => item.code === option.code);
+                return selectedProductList.some(
+                  (item) => item.code === option.code
+                );
               }}
               fullWidth
               filterSelectedOptions
@@ -173,7 +183,12 @@ const WholeSaleProductSearch: FC<Props> = ({
                 const { key, ...rest } = props as any;
                 const isLast = state.index === rows.length - 1;
                 return (
-                  <Box component="li" ref={isLast ? scrollRef : null} key={item._id} {...rest}>
+                  <Box
+                    component="li"
+                    ref={isLast ? scrollRef : null}
+                    key={item._id}
+                    {...rest}
+                  >
                     {item.name}
                   </Box>
                 );

@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { PlusOneOutlined, Search } from '@mui/icons-material';
 import { useState } from 'react';
-import CreateClientModal from './_components/AddPClientModal';
+import CreateClientModal from './_components/AddPStockModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import ProductStockTableBody from './_components/ProductStockTableBody';
 import { LIMIT } from '@/constants';
