@@ -134,6 +134,11 @@ const AddPStockModal: FC<Props> = ({ open, onClose }) => {
     replace(clonedFields);
   };
 
+  const totalCount = currentProductList.reduce(
+    (acc, cur) => acc + cur.count,
+    0
+  );
+
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
@@ -150,6 +155,7 @@ const AddPStockModal: FC<Props> = ({ open, onClose }) => {
             >
               추가
             </Button>
+            <Typography>{totalCount}</Typography>
           </Stack>
           <Stack sx={{ mt: 2 }} gap={2}>
             {/* {fields.map((product, index) => {
