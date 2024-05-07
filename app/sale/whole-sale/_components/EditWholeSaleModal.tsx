@@ -31,7 +31,11 @@ import {
   createWholeSaleSchema,
 } from '../_validations/createWholeSaleValidation';
 import dayjs from 'dayjs';
-import { Client, ClientType } from '@/http/graphql/codegen/graphql';
+import {
+  Client,
+  ClientType,
+  WholeSaleOutput,
+} from '@/http/graphql/codegen/graphql';
 import { PlusOne } from '@mui/icons-material';
 import WholeSaleProductSearch from './WholeSaleProductSearch';
 import LabelText from '@/components/ui/typograph/LabelText';
@@ -78,10 +82,11 @@ export const clients: Client[] = [
 
 interface Props {
   open: boolean;
+  wholeSale: WholeSaleOutput;
   onClose: () => void;
 }
 
-const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
+const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
   const [isManualChangePrice, setIsManualChangePrice] = useState(false);
   const [createProduct, { loading }] = useCreateProduct();
 
@@ -95,12 +100,12 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
   } = useForm<CreateWholeSaleForm>({
     resolver: zodResolver(createWholeSaleSchema),
     defaultValues: {
-      mallId: '',
-      saleAt: dayjs().toDate(),
-      productList: [],
+      ...wholeSale,
+      // mallId: '',
+      // saleAt: dayjs().toDate(),
+      // productList: [],
     },
   });
-
   const { fields, append, remove, replace } = useFieldArray({
     control,
     name: 'productList',
@@ -331,4 +336,4 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
   );
 };
 
-export default AddWholeSaleModal;
+export default EditWholeSaleModal;

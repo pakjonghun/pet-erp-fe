@@ -27,8 +27,13 @@ const WholeSaleDetailPopover: FC<Props> = ({
   onClickEdit,
 }) => {
   return (
-    <BasePopover onClose={onClose} position={position} open={open} anchorEl={anchorEl}>
-      {/* <ModalTitle text="제품 세부내용" />
+    <BasePopover
+      onClose={onClose}
+      position={position}
+      open={open}
+      anchorEl={anchorEl}
+    >
+      <ModalTitle text="제품 세부내용" />
       <Stack>
         <LabelText label="거래처" text={selectedWholeSale.mallId} />
         <LabelText
@@ -37,27 +42,31 @@ const WholeSaleDetailPopover: FC<Props> = ({
             <Chip key={product.code} label={product.productName} />
           ))}
         />
-        <LabelText label="분류" text={selectedWholeSale.category?.name ?? EMPTY} />
-        <LabelText label="바코드" text={selectedWholeSale.barCode ?? EMPTY} />
+        <LabelText
+          label="연락처"
+          text={selectedWholeSale.telephoneNumber1 ?? EMPTY}
+        />
+        <LabelText label="원가" text={selectedWholeSale.wonCost ?? EMPTY} />
         <LabelText
           label="판매가"
           text={
-            selectedWholeSale.salePrice == null
+            selectedWholeSale.payCost == null
               ? EMPTY
-              : getKCWFormat(selectedWholeSale.salePrice) ?? EMPTY
+              : getKCWFormat(selectedWholeSale.payCost) ?? EMPTY
           }
         />
         <LabelText
           label="원가"
           text={
-            selectedWholeSale.wonPrice == null
+            selectedWholeSale.wonCost == null
               ? EMPTY
-              : getKCWFormat(selectedWholeSale.wonPrice) ?? EMPTY
+              : getKCWFormat(selectedWholeSale.wonCost) ?? EMPTY
           }
         />
-        <LabelText label="유지기간" text={selectedWholeSale.maintainDate ?? EMPTY} />
-        <LabelText label="리드타임" text={selectedWholeSale.leadTime ?? EMPTY} />
-      </Stack> */}
+        <LabelText label="수익" text={EMPTY} />
+        <LabelText label="수익율" text={EMPTY} />
+        <LabelText label="판매수량" text={EMPTY} />
+      </Stack>
       <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
         <Button color="error" variant="outlined" onClick={onClickDelete}>
           삭제

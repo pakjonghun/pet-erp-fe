@@ -10,18 +10,29 @@ import ProductCard from './ProductCard';
 import LoadingCard from '@/components/ui/loading/LoadingCard';
 import { CommonListProps } from '@/types';
 import { SelectOption } from '@/app/back-data/types';
+import EditWholeSaleModal from './EditWholeSaleModal';
 
 interface Props extends CommonListProps<WholeSaleOutput> {
   sx?: SxProps;
 }
 
-const WholeSaleCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx }) => {
+const WholeSaleCards: FC<Props> = ({
+  data,
+  isLoading,
+  isEmpty,
+  scrollRef,
+  sx,
+}) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  const [selectedWholeSale, setSelectedWholeSale] = useState<null | WholeSaleOutput>(null);
+  const [selectedWholeSale, setSelectedWholeSale] =
+    useState<null | WholeSaleOutput>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
 
-  const handleClickOption = (option: SelectOption | null, wholeSale: WholeSaleOutput | null) => {
+  const handleClickOption = (
+    option: SelectOption | null,
+    wholeSale: WholeSaleOutput | null
+  ) => {
     setSelectedWholeSale(wholeSale);
     setOptionType(option);
   };
@@ -61,14 +72,14 @@ const WholeSaleCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx }) 
           selectedWholeSale={selectedWholeSale}
         />
       )}
-      {/* {selectedWholeSale && (
-        <EditProductModal
+      {selectedWholeSale && (
+        <EditWholeSaleModal
           open={optionType === 'edit'}
           onClose={() => handleClickOption(null, null)}
-          selectedProduct={selectedWholeSale}
+          wholeSale={selectedWholeSale}
         />
-      )} */}
-      {/* {selectedWholeSale && (
+      )}
+      {selectedWholeSale && (
         <ProductDetailPopover
           onClose={handleClosePopover}
           position={popoverPosition}
@@ -76,28 +87,28 @@ const WholeSaleCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx }) 
           anchorEl={popoverAnchor}
           onClickDelete={handleClickDelete}
           onClickEdit={handleClickEdit}
-          selectedProduct={selectedWholeSale}
+          selectedWholeSale={selectedWholeSale}
         />
-      )} */}
+      )}
 
-      {/* {data.map((item, index) => {
-        const product = item as unknown as Product;
+      {data.map((item, index) => {
+        const sale = item as unknown as WholeSaleOutput;
         const isLast = index === data.length - 1;
         return (
-          <Grid key={product._id} item xs={12} lg={6}>
+          <Grid key={sale._id} item xs={12} lg={6}>
             <ProductCard
-              onClickRow={(event, product: Product) => {
+              onClickRow={(event, sale: WholeSaleOutput) => {
                 setPopoverPosition({ left: event.clientX, top: event.clientY });
                 setPopoverAnchor(event.currentTarget);
-                setSelectedWholeSale(product);
+                setSelectedWholeSale(sale);
               }}
-              product={product}
+              sale={sale}
               scrollRef={isLast ? scrollRef : null}
               onClickOption={handleClickOption}
             />
           </Grid>
         );
-      })} */}
+      })}
       <LoadingCard isLoading={isLoading} />
     </Grid>
   );

@@ -118,9 +118,17 @@ const ProductPage = () => {
   return (
     <TablePage sx={{ flex: 1 }}>
       {openCreateProduct && (
-        <AddWholeSaleModal open={openCreateProduct} onClose={() => setOpenCreateProduct(false)} />
+        <AddWholeSaleModal
+          open={openCreateProduct}
+          onClose={() => setOpenCreateProduct(false)}
+        />
       )}
-      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+      <Stack
+        sx={{ px: 2 }}
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <TableTitle title="도매 판매" />
         <Stack direction="row" alignItems="center" gap={2}>
           <ActionButton
@@ -178,12 +186,12 @@ const ProductPage = () => {
               ))}
             </TableRow>
           </TableHead>
-          {/* <WholeSaleTableBody
+          <WholeSaleTableBody
             isLoading={isLoading}
             data={rows}
             isEmpty={isEmpty}
             scrollRef={scrollRef}
-          /> */}
+          />
         </Table>
       </ScrollTableContainer>
     </TablePage>

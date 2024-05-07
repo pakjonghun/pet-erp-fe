@@ -4,24 +4,35 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { Product } from '@/http/graphql/codegen/graphql';
+import { Product, WholeSaleOutput } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
 import { SelectOption } from '@/app/back-data/types';
 
 interface Props {
-  product: Product;
-  onClickRow: (event: MouseEvent<HTMLSpanElement>, product: Product) => void;
-  onClickOption: (option: SelectOption | null, product: Product | null) => void;
+  sale: WholeSaleOutput;
+  onClickRow: (
+    event: MouseEvent<HTMLSpanElement>,
+    sale: WholeSaleOutput
+  ) => void;
+  onClickOption: (
+    option: SelectOption | null,
+    sale: WholeSaleOutput | null
+  ) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const ProductCard: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow }) => {
+const WholeSaleCard: FC<Props> = ({
+  sale,
+  scrollRef,
+  onClickOption,
+  onClickRow,
+}) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<SelectOption, SelectedOptionItem> = {
     edit: {
       callback: () => {
-        onClickOption('edit', product);
+        onClickOption('edit', sale);
         setMenuAnchor(null);
       },
       label: '편집',
@@ -29,7 +40,7 @@ const ProductCard: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow 
     },
     delete: {
       callback: () => {
-        onClickOption('delete', product);
+        onClickOption('delete', sale);
         setMenuAnchor(null);
       },
       label: '삭제',
@@ -39,7 +50,11 @@ const ProductCard: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow 
 
   return (
     <Paper ref={scrollRef} sx={{ position: 'relative', py: 3, px: 4 }}>
-      <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
+      <Menu
+        anchorEl={menuAnchor}
+        open={!!menuAnchor}
+        onClose={() => setMenuAnchor(null)}
+      >
         {Object.entries(productOptionMenus).map(([option, menu]) => (
           <OptionMenu key={option} menu={menu} option={option} />
         ))}
@@ -52,45 +67,41 @@ const ProductCard: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow 
       >
         <MoreHorizIcon />
       </IconButton>
-      <Box onClick={(event) => onClickRow(event, product)}>
+      <Box onClick={(event) => onClickRow(event, sale)}>
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="이름" text={product.name} />
+            <LabelText label="이름" text={sale.mallId} />
           </Box>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="분류" text={product.category?.name ?? EMPTY} />
+            <LabelText label="연락처" text={sale.telephoneNumber1 ?? EMPTY} />
+          </Box>
+        </Stack>
+        <Stack direction="row" justifyContent="space-between" gap={2}>
+          <Box sx={{ flex: 1 }}>
+            <LabelText
+              label="제품 이름"
+              text={
+                sale.productList.map((item) => item.productName).join(', ') ??
+                EMPTY
+              }
+            />
+          </Box>
+        </Stack>
+        <Stack direction="row" justifyContent="space-between" gap={2}>
+          <Box sx={{ flex: 1 }}>
+            <LabelText label="원가" text={sale.wonCost ?? EMPTY} />
+          </Box>
+          <Box sx={{ flex: 1 }}>
+            <LabelText label="판매가" text={sale.payCost ?? EMPTY} />
           </Box>
         </Stack>
 
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="코드" text={product.code} />
+            <LabelText label="수익" text={EMPTY} />
           </Box>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="바코드" text={product.barCode ?? EMPTY} />
-          </Box>
-        </Stack>
-        <Stack direction="row" justifyContent="space-between" gap={2}>
-          <Box sx={{ flex: 1 }}>
-            <LabelText label="원가" text={product.wonPrice ?? EMPTY} />
-          </Box>
-          <Box sx={{ flex: 1 }}>
-            <LabelText label="판매가" text={product.salePrice ?? EMPTY} />
-          </Box>
-        </Stack>
-
-        <Stack direction="row" justifyContent="space-between" gap={2}>
-          <Box sx={{ flex: 1 }}>
-            <LabelText
-              label="리드타임(일)"
-              text={product.leadTime ? `${product.leadTime}일` : EMPTY}
-            />
-          </Box>
-          <Box sx={{ flex: 1 }}>
-            <LabelText
-              label="최소 유지기간(일)"
-              text={product.maintainDate ? `${product.maintainDate}일` : EMPTY}
-            />
+            <LabelText label="수익율" text={EMPTY} />
           </Box>
         </Stack>
       </Box>
@@ -98,4 +109,4 @@ const ProductCard: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow 
   );
 };
 
-export default ProductCard;
+export default WholeSaleCard;

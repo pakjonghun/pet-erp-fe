@@ -6,18 +6,29 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { Sale } from '@/http/graphql/codegen/graphql';
+import { Sale, WholeSaleOutput } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import { SelectOption } from '@/app/back-data/types';
 
 interface Props {
-  wholeSale: Sale;
-  onClickRow: (event: MouseEvent<HTMLTableCellElement>, product: Sale) => void;
-  onClickOption: (option: SelectOption | null, product: Sale | null) => void;
+  wholeSale: WholeSaleOutput;
+  onClickRow: (
+    event: MouseEvent<HTMLTableCellElement>,
+    sale: WholeSaleOutput
+  ) => void;
+  onClickOption: (
+    option: SelectOption | null,
+    sale: WholeSaleOutput | null
+  ) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const WholeSaleBodyRow: FC<Props> = ({ wholeSale, scrollRef, onClickOption, onClickRow }) => {
+const WholeSaleBodyRow: FC<Props> = ({
+  wholeSale,
+  scrollRef,
+  onClickOption,
+  onClickRow,
+}) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<SelectOption, SelectedOptionItem> = {
     edit: {
@@ -38,10 +49,10 @@ const WholeSaleBodyRow: FC<Props> = ({ wholeSale, scrollRef, onClickOption, onCl
     },
   };
 
-  const createRow = (sale: Sale) => {
+  const createRow = (sale: WholeSaleOutput) => {
     return [
       sale.mallId,
-      sale.productName,
+      sale.productList.map((item) => item.productName).join(', '),
       sale.telephoneNumber1,
       sale.wonCost ?? EMPTY,
       sale.payCost ?? EMPTY,
@@ -55,7 +66,11 @@ const WholeSaleBodyRow: FC<Props> = ({ wholeSale, scrollRef, onClickOption, onCl
 
   return (
     <TableRow hover ref={scrollRef}>
-      <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
+      <Menu
+        anchorEl={menuAnchor}
+        open={!!menuAnchor}
+        onClose={() => setMenuAnchor(null)}
+      >
         {Object.entries(productOptionMenus).map(([option, menu]) => (
           <OptionMenu key={option} menu={menu} option={option} />
         ))}
