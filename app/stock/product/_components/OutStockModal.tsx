@@ -14,24 +14,18 @@ import {
   Typography,
 } from '@mui/material';
 import { FC } from 'react';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { CreateClientForm, createClientSchema } from '../_validations/createClientValidation';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
-import { snackMessage } from '@/store/snackMessage';
-import { modalSizeProps } from '@/components/commonStyles';
 import { useCreateClient } from '@/http/graphql/hooks/client/useCreateClient';
-import { ClientType } from '@/http/graphql/codegen/graphql';
-import { filterEmptyValues } from '@/utils/common';
-import { clientTypes, initStock } from '../constants';
-import NumberInput from '@/components/ui/input/NumberInput';
-import { CLIENT_PREFIX } from '@/constants';
+import { initStock } from '../constants';
 import {
   CreateProductForm,
   CreateProductStockForm,
   createProductStockSchema,
 } from '../_validations/createProductStockList';
 import StockProduct from './StockProduct';
+import { filterEmptyValues } from '@/utils/common';
 
 interface Props {
   open: boolean;
@@ -122,7 +116,6 @@ const AddPStockModal: FC<Props> = ({ open, onClose }) => {
             {fields.map((product, index) => {
               return (
                 <StockProduct
-                  selectedProductList={currentProductList}
                   index={index}
                   control={control}
                   error={errors.productList?.[index]}

@@ -4,61 +4,44 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import {
-  Client,
-  TotalProductStockOutput,
-} from '@/http/graphql/codegen/graphql';
+import { Client, TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
+import InventoryIcon from '@mui/icons-material/Inventory';
 // import { SelectOption } from '../../types';
 import { ClientTypeToHangle } from '../constants';
 
 interface Props {
   stock: TotalProductStockOutput;
-  onClickRow: (
-    event: MouseEvent<HTMLSpanElement>,
-    stock: TotalProductStockOutput
-  ) => void;
-  onClickOption: (
-    option: any | null,
-    stock: TotalProductStockOutput | null
-  ) => void;
+  onClickRow: (event: MouseEvent<HTMLSpanElement>, stock: TotalProductStockOutput) => void;
+  onClickOption: (option: any | null, stock: TotalProductStockOutput | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const ProductStockCard: FC<Props> = ({
-  stock,
-  scrollRef,
-  onClickOption,
-  onClickRow,
-}) => {
+const ProductStockCard: FC<Props> = ({ stock, scrollRef, onClickOption, onClickRow }) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<any, SelectedOptionItem> = {
     edit: {
       callback: () => {
-        onClickOption('edit', stock);
+        onClickOption('add', stock);
         setMenuAnchor(null);
       },
-      label: '편집',
-      icon: <Edit />,
+      label: '입고',
+      icon: <InventoryIcon />,
     },
     delete: {
       callback: () => {
-        onClickOption('delete', stock);
+        onClickOption('out', stock);
         setMenuAnchor(null);
       },
-      label: '삭제',
-      icon: <DeleteOutlinedIcon />,
+      label: '출고',
+      icon: <InventoryIcon />,
     },
   };
 
   return (
     <Paper ref={scrollRef} sx={{ position: 'relative', py: 3, px: 4 }}>
-      <Menu
-        anchorEl={menuAnchor}
-        open={!!menuAnchor}
-        onClose={() => setMenuAnchor(null)}
-      >
+      <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
         {Object.entries(productOptionMenus).map(([option, menu]) => (
           <OptionMenu key={option} menu={menu} option={option} />
         ))}

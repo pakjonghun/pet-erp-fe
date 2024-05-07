@@ -1,12 +1,6 @@
 import PlusOneIcon from '@mui/icons-material/PlusOne';
 import BaseModal from '@/components/ui/modal/BaseModal';
-import {
-  Button,
-  FormGroup,
-  FormLabel,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Button, FormGroup, FormLabel, Stack, Typography } from '@mui/material';
 import { FC } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -24,9 +18,10 @@ import StockProduct from './StockProduct';
 interface Props {
   open: boolean;
   onClose: () => void;
+  product?: string;
 }
 
-const AddProductStockModal: FC<Props> = ({ open, onClose }) => {
+const AddProductStockModal: FC<Props> = ({ open, onClose, product }) => {
   const [createClient, { loading }] = useCreateClient();
 
   const {
@@ -44,28 +39,6 @@ const AddProductStockModal: FC<Props> = ({ open, onClose }) => {
 
   const onSubmit = (values: CreateProductStockForm) => {
     const newValues = filterEmptyValues(values) as CreateProductStockForm;
-    // createClient({
-    //   variables: {
-    //     createClientInput: {
-    //       ...newValues,
-    //       feeRate: values.feeRate == null ? null : values.feeRate / 100,
-    //     },
-    //   },
-    //   onCompleted: () => {
-    //     snackMessage({
-    //       message: '거래처등록이 완료되었습니다.',
-    //       severity: 'success',
-    //     });
-    //     handleClose();
-    //   },
-    //   onError: (err) => {
-    //     const message = err.message;
-    //     snackMessage({
-    //       message: message ?? '거래처등록이 실패했습니다.',
-    //       severity: 'error',
-    //     });
-    //   },
-    // });
   };
 
   const handleClose = () => {
@@ -79,7 +52,8 @@ const AddProductStockModal: FC<Props> = ({ open, onClose }) => {
   });
 
   const handleAppendProduct = () => {
-    append(initStock);
+    const newStock = product ? { ...initStock, product } : initStock;
+    append(newStock);
   };
 
   const currentProductList = watch('productList');
@@ -110,7 +84,7 @@ const AddProductStockModal: FC<Props> = ({ open, onClose }) => {
             {fields.map((product, index) => {
               return (
                 <StockProduct
-                  selectedProductList={currentProductList}
+                  isProductFreeze={!!product}
                   index={index}
                   control={control}
                   error={errors.productList?.[index]}

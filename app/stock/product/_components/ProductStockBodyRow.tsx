@@ -10,28 +10,17 @@ import OptionMenu from '@/components/ui/listItem/OptionMenu';
 
 interface Props {
   productStock: TotalProductStockOutput;
-  onClickRow: (
-    event: MouseEvent<HTMLTableCellElement>,
-    stock: TotalProductStockOutput
-  ) => void;
-  onClickOption: (
-    option: any | null,
-    client: TotalProductStockOutput | null
-  ) => void;
+  onClickRow: (event: MouseEvent<HTMLTableCellElement>, stock: TotalProductStockOutput) => void;
+  onClickOption: (option: any | null, client: TotalProductStockOutput | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const ProductStockBodyRow: FC<Props> = ({
-  productStock,
-  scrollRef,
-  onClickOption,
-  onClickRow,
-}) => {
+const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption, onClickRow }) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<any, SelectedOptionItem> = {
     edit: {
       callback: () => {
-        onClickOption('edit', productStock);
+        onClickOption('add', productStock);
         setMenuAnchor(null);
       },
       label: '입고',
@@ -39,7 +28,7 @@ const ProductStockBodyRow: FC<Props> = ({
     },
     delete: {
       callback: () => {
-        onClickOption('delete', productStock);
+        onClickOption('out', productStock);
         setMenuAnchor(null);
       },
       label: '출고',
@@ -60,11 +49,7 @@ const ProductStockBodyRow: FC<Props> = ({
 
   return (
     <TableRow hover ref={scrollRef}>
-      <Menu
-        anchorEl={menuAnchor}
-        open={!!menuAnchor}
-        onClose={() => setMenuAnchor(null)}
-      >
+      <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
         {Object.entries(productOptionMenus).map(([option, menu]) => (
           <OptionMenu key={option} menu={menu} option={option} />
         ))}

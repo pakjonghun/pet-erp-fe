@@ -18,9 +18,10 @@ import StockProduct from './StockProduct';
 interface Props {
   open: boolean;
   onClose: () => void;
+  product?: string;
 }
 
-const OutProductStockModal: FC<Props> = ({ open, onClose }) => {
+const OutProductStockModal: FC<Props> = ({ open, onClose, product }) => {
   const [createClient, { loading }] = useCreateClient();
 
   const {
@@ -51,7 +52,9 @@ const OutProductStockModal: FC<Props> = ({ open, onClose }) => {
   });
 
   const handleAppendProduct = () => {
-    append(initStock);
+    const newStock = product ? { ...initStock, product } : initStock;
+    console.log('newStock : ', newStock);
+    append(newStock);
   };
 
   const currentProductList = watch('productList');
@@ -82,7 +85,7 @@ const OutProductStockModal: FC<Props> = ({ open, onClose }) => {
             {fields.map((product, index) => {
               return (
                 <StockProduct
-                  selectedProductList={currentProductList}
+                  isProductFreeze={!!product}
                   index={index}
                   control={control}
                   error={errors.productList?.[index]}

@@ -17,8 +17,8 @@ interface Props {
     index: number,
     newItem: FieldArrayWithId<CreateProductStockForm, 'productList', 'id'>
   ) => void;
-  selectedProductList: CreateProductForm[];
   error?: FieldErrors<CreateProductForm>;
+  isProductFreeze?: boolean;
 }
 
 const storages = [
@@ -39,14 +39,13 @@ const storages = [
 ];
 
 const StockProduct: FC<Props> = ({
-  selectedProductList,
   index,
   control,
   remove,
   replace,
   error,
+  isProductFreeze = false,
 }) => {
-  const currentProduct = selectedProductList[index];
   const [productKeyword, setProductKeyword] = useState('');
   const delayedProductKeyword = useTextDebounce(productKeyword ?? '');
 
@@ -57,7 +56,6 @@ const StockProduct: FC<Props> = ({
   });
 
   const rows = data?.products.data.map((item) => item.name) ?? [];
-  console.log(rows);
   const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
 
   const callback: IntersectionObserverCallback = (entries) => {
@@ -130,6 +128,7 @@ const StockProduct: FC<Props> = ({
         render={({ field }) => {
           return (
             <Autocomplete
+              disabled={isProductFreeze}
               value={field.value}
               fullWidth
               filterSelectedOptions

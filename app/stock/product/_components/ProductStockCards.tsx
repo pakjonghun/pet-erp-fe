@@ -1,8 +1,5 @@
 import { FC, useState } from 'react';
-import {
-  ProductSaleChartOutput,
-  TotalProductStockOutput,
-} from '@/http/graphql/codegen/graphql';
+import { ProductSaleChartOutput, TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
 import { TABLE_MAX_HEIGHT } from '@/constants';
 import { Grid, SxProps } from '@mui/material';
 import ProductStockDetailPopover from './ClientDetailPopover';
@@ -12,30 +9,29 @@ import ProductStockCard from './ProductStockCard';
 import LoadingCard from '../../../../components/ui/loading/LoadingCard';
 import EditPClientModal from './EditPClientModal';
 import { CommonListProps } from '@/types';
+import AddProductStockModal from './AddProductStockModal';
+import OutProductStockModal from './OutProductStockModal';
 
 interface Props extends CommonListProps<TotalProductStockOutput> {
   sx?: SxProps;
 }
 
-const ProductStockCards: FC<Props> = ({
-  isLoading,
-  isEmpty,
-  data,
-  scrollRef,
-  sx,
-}) => {
+const ProductStockCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  const [productStock, setProductStock] =
-    useState<null | TotalProductStockOutput>(null);
+  const [productStock, setProductStock] = useState<null | TotalProductStockOutput>(null);
   const [optionType, setOptionType] = useState<null | any>(null);
 
-  const handleClickOption = (
-    option: any | null,
-    client: TotalProductStockOutput | null
-  ) => {
+  const handleClickOption = (option: any | null, client: TotalProductStockOutput | null) => {
     setProductStock(client);
-    setOptionType(option);
+    if (option == 'add') {
+      setOpenAddStock(true);
+    }
+
+    if (option == 'out') {
+      setOpenOutStock(true);
+    }
+    // setOptionType(option);
   };
 
   const handleClickEdit = () => {
@@ -53,6 +49,9 @@ const ProductStockCards: FC<Props> = ({
     setProductStock(null);
   };
 
+  const [openAddStock, setOpenAddStock] = useState(false);
+  const [openOutStock, setOpenOutStock] = useState(false);
+
   return (
     <Grid
       sx={{
@@ -65,6 +64,21 @@ const ProductStockCards: FC<Props> = ({
       spacing={2}
     >
       <EmptyItem isEmpty={isEmpty} />
+
+      {productStock?.product.name && (
+        <AddProductStockModal
+          product={productStock.product.name}
+          open={openAddStock}
+          onClose={() => setOpenAddStock(false)}
+        />
+      )}
+      {productStock?.product.name && (
+        <OutProductStockModal
+          product={productStock.product.name}
+          open={openOutStock}
+          onClose={() => setOpenOutStock(false)}
+        />
+      )}
 
       {productStock && (
         <ProductStockDetailPopover
