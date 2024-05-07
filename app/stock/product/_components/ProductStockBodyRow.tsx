@@ -1,17 +1,12 @@
+import InventoryIcon from '@mui/icons-material/Inventory';
 import Cell from '@/components/table/Cell';
 import { IconButton, Menu, TableRow } from '@mui/material';
 import React, { FC, MouseEvent, useState } from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { EMPTY, SelectedOptionItem } from '@/constants';
-import { Edit } from '@mui/icons-material';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import {
-  Client,
-  TotalProductStockOutput,
-} from '@/http/graphql/codegen/graphql';
+import { SelectedOptionItem } from '@/constants';
+import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 // import { SelectOption } from '../../types';
-import { ClientTypeToHangle } from '../constants';
 
 interface Props {
   productStock: TotalProductStockOutput;
@@ -40,7 +35,7 @@ const ProductStockBodyRow: FC<Props> = ({
         setMenuAnchor(null);
       },
       label: '입고',
-      icon: <Edit />,
+      icon: <InventoryIcon />,
     },
     delete: {
       callback: () => {
@@ -48,7 +43,7 @@ const ProductStockBodyRow: FC<Props> = ({
         setMenuAnchor(null);
       },
       label: '출고',
-      icon: <DeleteOutlinedIcon />,
+      icon: <InventoryIcon />,
     },
   };
 

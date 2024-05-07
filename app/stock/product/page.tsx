@@ -28,6 +28,7 @@ import { ClientHeaderList } from './constants';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
+import InventoryIcon from '@mui/icons-material/Inventory';
 
 const totalProductStockOutputs: TotalProductStockOutput[] = [
   {
@@ -78,15 +79,15 @@ const BackDataPage = () => {
 
       const totalCount = data?.clients.totalCount;
       if (totalCount != null && totalCount > rows.length) {
-        fetchMore({
-          variables: {
-            clientsInput: {
-              keyword,
-              skip: rows.length,
-              limit: LIMIT,
-            },
-          },
-        });
+        // fetchMore({
+        //   variables: {
+        //     clientsInput: {
+        //       keyword,
+        //       skip: rows.length,
+        //       limit: LIMIT,
+        //     },
+        //   },
+        // });
       }
     }
   };
@@ -111,12 +112,12 @@ const BackDataPage = () => {
         <TableTitle title="거래처 백데이터" />
         <Stack direction="row" alignItems="center" gap={2}>
           <ActionButton
-            icon={<PlusOneOutlined />}
+            icon={<InventoryIcon />}
             text="출고"
             onClick={() => setOpenCreateClient(true)}
           />
           <ActionButton
-            icon={<PlusOneOutlined />}
+            icon={<InventoryIcon />}
             text="입고"
             onClick={() => setOpenCreateClient(true)}
           />

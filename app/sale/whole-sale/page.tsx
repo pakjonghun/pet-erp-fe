@@ -100,15 +100,15 @@ const ProductPage = () => {
 
       const totalCount = data?.products.totalCount;
       if (totalCount != null && totalCount > rows.length) {
-        fetchMore({
-          variables: {
-            productsInput: {
-              keyword,
-              skip: rows.length,
-              limit: LIMIT,
-            },
-          },
-        });
+        // fetchMore({
+        //   variables: {
+        //     productsInput: {
+        //       keyword,
+        //       skip: rows.length,
+        //       limit: LIMIT,
+        //     },
+        //   },
+        // });
       }
     }
   };
