@@ -14,6 +14,12 @@ export const BackDataTabs = {
   'back-data/subsidiary': {
     label: '부자재',
   },
+  'back-data/storage': {
+    label: '창고',
+  },
+  'back-data/factory': {
+    label: '공장',
+  },
 };
 
 export const ContextOptions = ['edit', 'delete'] as const;
