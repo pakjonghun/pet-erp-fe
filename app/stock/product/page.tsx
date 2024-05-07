@@ -1,6 +1,5 @@
 'use client';
 
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import HeadCell from '@/components/table/HeadCell';
 import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 import TablePage from '@/components/table/TablePage';
@@ -16,9 +15,10 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { PlusOneOutlined, Search } from '@mui/icons-material';
+import { Search } from '@mui/icons-material';
 import { useState } from 'react';
-import CreateClientModal from './_components/AddPStockModal';
+import AddProductStockModal from './_components/AddProductStockModal';
+import OutProductStockModal from './_components/OutProductStockModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import ProductStockTableBody from './_components/ProductStockTableBody';
 import { LIMIT } from '@/constants';
@@ -94,32 +94,28 @@ const BackDataPage = () => {
   const scrollRef = useInfinityScroll({ callback });
   const isEmpty = !isLoading && rows.length === 0;
 
-  const [openCreateClient, setOpenCreateClient] = useState(false);
+  const [openAddStock, setOpenAddStock] = useState(false);
+  const [openOutStock, setOpenOutStock] = useState(false);
   return (
     <TablePage sx={{ flex: 1 }}>
-      {openCreateClient && (
-        <CreateClientModal
-          open={openCreateClient}
-          onClose={() => setOpenCreateClient(false)}
-        />
+      {openAddStock && (
+        <AddProductStockModal open={openAddStock} onClose={() => setOpenAddStock(false)} />
       )}
-      <Stack
-        sx={{ px: 2 }}
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
+      {openOutStock && (
+        <OutProductStockModal open={openOutStock} onClose={() => setOpenOutStock(false)} />
+      )}
+      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="거래처 백데이터" />
         <Stack direction="row" alignItems="center" gap={2}>
           <ActionButton
             icon={<InventoryIcon />}
-            text="출고"
-            onClick={() => setOpenCreateClient(true)}
+            text="입고"
+            onClick={() => setOpenAddStock(true)}
           />
           <ActionButton
             icon={<InventoryIcon />}
-            text="입고"
-            onClick={() => setOpenCreateClient(true)}
+            text="출고"
+            onClick={() => setOpenOutStock(true)}
           />
         </Stack>
       </Stack>

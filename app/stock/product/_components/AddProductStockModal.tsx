@@ -1,63 +1,32 @@
 import PlusOneIcon from '@mui/icons-material/PlusOne';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
-  Autocomplete,
   Button,
-  FormControl,
-  FormControlLabel,
   FormGroup,
   FormLabel,
-  InputAdornment,
   Stack,
-  Switch,
-  TextField,
   Typography,
 } from '@mui/material';
 import { FC } from 'react';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import {
-  CreateClientForm,
-  createClientSchema,
-} from '../_validations/createClientValidation';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
-import { snackMessage } from '@/store/snackMessage';
-import { modalSizeProps } from '@/components/commonStyles';
 import { useCreateClient } from '@/http/graphql/hooks/client/useCreateClient';
-import { ClientType } from '@/http/graphql/codegen/graphql';
 import { filterEmptyValues } from '@/utils/common';
-import { clientTypes } from '../constants';
-import NumberInput from '@/components/ui/input/NumberInput';
-import { CLIENT_PREFIX } from '@/constants';
+import { initStock } from '../constants';
 import {
   CreateProductForm,
   CreateProductStockForm,
   createProductStockSchema,
 } from '../_validations/createProductStockList';
-
-const storages = [
-  {
-    _id: '123',
-    name: 'Central Warehouse',
-    phoneNumber: '123-456-7890',
-    address: '123 Central Ave, Big City',
-    note: 'Main distribution center',
-  },
-  {
-    _id: '1234',
-    name: 'East Side Storage',
-    phoneNumber: '987-654-3210',
-    address: '456 East St, Capital City',
-    note: 'Handles east region deliveries',
-  },
-];
+import StockProduct from './StockProduct';
 
 interface Props {
   open: boolean;
   onClose: () => void;
 }
 
-const AddPStockModal: FC<Props> = ({ open, onClose }) => {
+const AddProductStockModal: FC<Props> = ({ open, onClose }) => {
   const [createClient, { loading }] = useCreateClient();
 
   const {
@@ -110,67 +79,47 @@ const AddPStockModal: FC<Props> = ({ open, onClose }) => {
   });
 
   const handleAppendProduct = () => {
-    const initStock = {
-      storage: '',
-      product: '',
-      count: 0,
-    };
-
     append(initStock);
-  };
-
-  const handleRemoveProduct = (index: number) => {
-    remove(index);
   };
 
   const currentProductList = watch('productList');
 
-  const handleReplaceProduct = (
-    index: number,
-    newProduct: CreateProductForm
-  ) => {
+  const handleReplaceProduct = (index: number, newProduct: CreateProductForm) => {
     const clonedFields = [...currentProductList];
     clonedFields[index] = newProduct;
     replace(clonedFields);
   };
 
-  const totalCount = currentProductList.reduce(
-    (acc, cur) => acc + cur.count,
-    0
-  );
+  const totalCount = currentProductList.reduce((acc, cur) => acc + cur.count, 0);
 
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        거래처 입력
+        입고 재고 입력
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={{ mt: 4 }}>
           <Stack direction="row" alignItems="center" gap={3}>
             <FormLabel>입고 재고 목록</FormLabel>
-            <Button
-              onClick={handleAppendProduct}
-              variant="outlined"
-              endIcon={<PlusOneIcon />}
-            >
+            <Button onClick={handleAppendProduct} variant="outlined" endIcon={<PlusOneIcon />}>
               추가
             </Button>
-            <Typography>{totalCount}</Typography>
+            <Typography>{`총수량 : ${totalCount}EA`}</Typography>
           </Stack>
           <Stack sx={{ mt: 2 }} gap={2}>
-            {/* {fields.map((product, index) => {
+            {fields.map((product, index) => {
               return (
-                <WholeSaleProductSearch
-                  selectedProductList={productList}
+                <StockProduct
+                  selectedProductList={currentProductList}
                   index={index}
                   control={control}
                   error={errors.productList?.[index]}
-                  key={`${product.code}_${index}_'autocomplete`}
+                  key={`${product.id}_${index}_'autocomplete`}
                   remove={remove}
-                  replace={handleReplace}
+                  replace={handleReplaceProduct}
                 />
               );
-            })} */}
+            })}
           </Stack>
         </FormGroup>
 
@@ -178,11 +127,7 @@ const AddPStockModal: FC<Props> = ({ open, onClose }) => {
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
-          <Button
-            type="submit"
-            endIcon={loading ? <CommonLoading /> : ''}
-            variant="contained"
-          >
+          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
             입고
           </Button>
         </Stack>
@@ -191,4 +136,4 @@ const AddPStockModal: FC<Props> = ({ open, onClose }) => {
   );
 };
 
-export default AddPStockModal;
+export default AddProductStockModal;

@@ -31,3 +31,9 @@ export const clientTypes: Record<ClientType, string> = {
   [ClientType.Reward]: '리워드',
   [ClientType.WholeSale]: '도매몰',
 };
+
+export const initStock = {
+  storage: '',
+  product: '',
+  count: 0,
+};

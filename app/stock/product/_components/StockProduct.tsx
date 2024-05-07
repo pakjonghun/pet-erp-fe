@@ -5,17 +5,9 @@ import { LIMIT } from '@/constants';
 import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Autocomplete, Box, IconButton, Stack, TextField } from '@mui/material';
-import {
-  Control,
-  Controller,
-  FieldArrayWithId,
-  FieldErrors,
-} from 'react-hook-form';
+import { Control, Controller, FieldArrayWithId, FieldErrors } from 'react-hook-form';
 import NumberInput from '@/components/ui/input/NumberInput';
-import {
-  CreateProductForm,
-  CreateProductStockForm,
-} from '../_validations/createProductStockList';
+import { CreateProductForm, CreateProductStockForm } from '../_validations/createProductStockList';
 
 interface Props {
   index: number;
@@ -25,7 +17,7 @@ interface Props {
     index: number,
     newItem: FieldArrayWithId<CreateProductStockForm, 'productList', 'id'>
   ) => void;
-  selectedProductList: CreateProductStockForm[];
+  selectedProductList: CreateProductForm[];
   error?: FieldErrors<CreateProductForm>;
 }
 
@@ -64,9 +56,9 @@ const StockProduct: FC<Props> = ({
     skip: 0,
   });
 
-  const rows = data?.products.data ?? [];
-  const isLoading =
-    networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
+  const rows = data?.products.data.map((item) => item.name) ?? [];
+  console.log(rows);
+  const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -118,9 +110,7 @@ const StockProduct: FC<Props> = ({
               loadingText="로딩중"
               noOptionsText="검색 결과가 없습니다."
               disablePortal
-              renderInput={(params) => (
-                <TextField {...params} label="창고" required />
-              )}
+              renderInput={(params) => <TextField {...params} label="창고" required />}
               renderOption={(props, item, state) => {
                 const { key, ...rest } = props as any;
                 const isLast = state.index === storages.length - 1;
@@ -136,37 +126,25 @@ const StockProduct: FC<Props> = ({
       />
       <Controller
         control={control}
-        name={`productList.${index}`}
+        name={`productList.${index}.product`}
         render={({ field }) => {
           return (
             <Autocomplete
               value={field.value}
-              getOptionDisabled={(option) => {
-                return selectedProductList.some((item) => item === option);
-              }}
               fullWidth
               filterSelectedOptions
               size="small"
               options={rows}
-              getOptionLabel={(option) => option.name ?? ''}
-              isOptionEqualToValue={(item1, item2) => item1._id === item2._id}
+              // getOptionLabel={(option) => option ?? ''}
+              isOptionEqualToValue={(item1, item2) => item1 === item2}
               inputValue={productKeyword}
               onInputChange={(_, value) => setProductKeyword(value)}
               loading={isLoading}
               loadingText="로딩중"
               noOptionsText="검색 결과가 없습니다."
-              //   onChange={(_, value) => {
-              //     const prev = field.value;
-              //     const newField =
-              //       value == null
-              //         ? {
-              //             ...prev,
-              //             ...initProductItem,
-              //             storage: currentProduct.storage,
-              //           }
-              //         : { ...prev, ...currentProduct, ...value };
-              //     handleReplaceItem(newField);
-              //   }}
+              onChange={(_, value) => {
+                field.onChange(value);
+              }}
               disablePortal
               renderInput={(params) => (
                 <TextField
@@ -180,13 +158,8 @@ const StockProduct: FC<Props> = ({
                 const { key, ...rest } = props as any;
                 const isLast = state.index === rows.length - 1;
                 return (
-                  <Box
-                    component="li"
-                    ref={isLast ? scrollRef : null}
-                    key={item._id}
-                    {...rest}
-                  >
-                    {item.name}
+                  <Box component="li" ref={isLast ? scrollRef : null} key={item} {...rest}>
+                    {item}
                   </Box>
                 );
               }}
