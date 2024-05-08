@@ -467,6 +467,12 @@ export enum Order {
   Desc = 'DESC'
 }
 
+export type OrderProduct = {
+  __typename?: 'OrderProduct';
+  count: Scalars['Int']['output'];
+  product: Product;
+};
+
 export type Product = {
   __typename?: 'Product';
   _id: Scalars['ID']['output'];
@@ -493,7 +499,7 @@ export type ProductOrder = {
   factory: Factory;
   notPayCost: Scalars['Int']['output'];
   payCost: Scalars['Int']['output'];
-  product: Product;
+  products: Array<OrderProduct>;
   storage: Storage;
   totalPayCost: Scalars['Int']['output'];
 };
