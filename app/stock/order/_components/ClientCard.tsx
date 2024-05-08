@@ -66,6 +66,38 @@ const ClientCard: FC<Props> = ({
         <MoreHorizIcon />
       </IconButton>
       <Box onClick={(event) => onClickRow(event, client)}>
+        <Stack direction="row" justifyContent="space-between" gap={2}>
+          <Box sx={{ flex: 1 }}>
+            <LabelText label="공장" text={client.factory.name} />
+          </Box>
+          <Box sx={{ flex: 1 }}>
+            <LabelText label="공장 연락처" text={client.factory.phoneNumber} />
+          </Box>
+        </Stack>
+        <Stack direction="row" justifyContent="space-between" gap={2}>
+          <Box sx={{ flex: 1 }}>
+            <LabelText
+              label="제품"
+              text={client.products.map(
+                (item) => `${item.product.name}(${item.count}EA)`
+              )}
+            />
+          </Box>
+        </Stack>
+        <Stack direction="row" justifyContent="space-between" gap={2}>
+          <Box sx={{ flex: 1 }}>
+            <LabelText label="계약금" text={client.payCost} />
+          </Box>
+          <Box sx={{ flex: 1 }}>
+            <LabelText label="잔금" text={client.notPayCost} />
+          </Box>
+        </Stack>
+        <Stack direction="row" justifyContent="space-between" gap={2}>
+          <Box sx={{ flex: 1 }}>
+            <LabelText label="총 금액" text={client.totalPayCost} />
+          </Box>
+        </Stack>
+
         {/* <Stack direction="row" justifyContent="space-between" gap={2}>
           <Box sx={{ flex: 1 }}>
             <LabelText label="이름" text={client.name} />

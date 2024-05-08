@@ -19,6 +19,7 @@ const ClientTableBody: FC<Props> = ({
   data,
   scrollRef,
 }) => {
+  console.log('data : ', data);
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
   const [selectedClient, setSelectedClient] = useState<null | ProductOrder>(

@@ -2,10 +2,10 @@ import Cell from '@/components/table/Cell';
 import { IconButton, Menu, TableRow } from '@mui/material';
 import React, { FC, MouseEvent, useState } from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { EMPTY, SelectedOptionItem } from '@/constants';
+import { SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { Client, ProductOrder } from '@/http/graphql/codegen/graphql';
+import { ProductOrder } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 // import { SelectOption } from '../../types';
 import { ClientTypeToHangle } from '../constants';
@@ -46,17 +46,15 @@ const ClientBodyRow: FC<Props> = ({
     },
   };
 
-  const createRow = (client: ProductOrder) => {
+  const createRow = (order: ProductOrder) => {
     return [
-      // client.name,
-      // client.businessName ?? EMPTY,
-      // client.code,
-      // client.feeRate == null ? EMPTY : client.feeRate * 100 + '%',
-      // ClientTypeToHangle[client.clientType],
-      // client.payDate ?? EMPTY,
-      // client.manager ?? EMPTY,
-      // client.managerTel ?? EMPTY,
-      // client.inActive ? '거래중' : '거래종료',
+      order.factory.name,
+      order.products.map((item) => `${item.product.name}(${item.count}EA), `),
+      order.count,
+      order.payCost,
+      order.notPayCost,
+      order.totalPayCost,
+      '완료',
     ];
   };
 

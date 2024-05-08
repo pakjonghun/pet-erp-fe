@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { PlusOneOutlined, Search } from '@mui/icons-material';
 import { useState } from 'react';
-import CreateClientModal from './_components/AddPClientModal';
+import CreateClientModal from './_components/AddOrderModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import ClientTableBody from './_components/ClientTableBody';
 import { LIMIT } from '@/constants';
@@ -29,11 +29,11 @@ import { useClients } from '@/http/graphql/hooks/client/useClients';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Client, ProductOrder } from '@/http/graphql/codegen/graphql';
 
-const productOrders = [
+const productOrders: ProductOrder[] = [
   {
     _id: '5f76fddc2fa9b89b77b8d1fe',
     factory: {
-      _id: '5f76fddc2fa9b89b77b8d1fa',
+      // _id: '5f76fddc2fa9b89b77b8d1fa',
       name: 'Global Tech Factory',
     },
     storage: {
@@ -44,6 +44,7 @@ const productOrders = [
       {
         count: 100,
         product: {
+          code: '1',
           _id: '5f76fddc2fa9b89b77b8d1fc',
           name: 'Laptop',
         },
@@ -52,6 +53,7 @@ const productOrders = [
         count: 50,
         product: {
           _id: '5f76fddc2fa9b89b77b8d1fd',
+          code: '2',
           name: 'Desktop Computer',
         },
       },
@@ -64,7 +66,7 @@ const productOrders = [
   {
     _id: '5f76fddc2fa9b89b77b8d2fe',
     factory: {
-      _id: '5f76fddc2fa9b89b77b8d2fa',
+      // _id: '5f76fddc2fa9b89b77b8d2fa',
       name: 'HighTech Solutions Inc.',
     },
     storage: {
@@ -75,6 +77,7 @@ const productOrders = [
       {
         count: 200,
         product: {
+          code: '3',
           _id: '5f76fddc2fa9b89b77b8d2fc',
           name: 'Smartphone',
         },
@@ -82,6 +85,7 @@ const productOrders = [
       {
         count: 150,
         product: {
+          code: '4',
           _id: '5f76fddc2fa9b89b77b8d2fd',
           name: 'Tablet',
         },
@@ -104,7 +108,7 @@ const OrderPage = () => {
     limit: LIMIT,
   });
 
-  const rows = (data?.clients.data as ProductOrder[]) ?? [];
+  const rows = productOrders ?? [];
   const isLoading = networkStatus == 3 || networkStatus == 1;
 
   const callback: IntersectionObserverCallback = (entries) => {
@@ -113,15 +117,15 @@ const OrderPage = () => {
 
       const totalCount = data?.clients.totalCount;
       if (totalCount != null && totalCount > rows.length) {
-        fetchMore({
-          variables: {
-            clientsInput: {
-              keyword,
-              skip: rows.length,
-              limit: LIMIT,
-            },
-          },
-        });
+        // fetchMore({
+        //   variables: {
+        //     clientsInput: {
+        //       keyword,
+        //       skip: rows.length,
+        //       limit: LIMIT,
+        //     },
+        //   },
+        // });
       }
     }
   };

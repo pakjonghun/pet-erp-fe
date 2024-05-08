@@ -13,7 +13,10 @@ import {
 } from '@mui/material';
 import { FC } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { CreateClientForm, createClientSchema } from '../_validations/createClientValidation';
+import {
+  CreateClientForm,
+  createClientSchema,
+} from '../_validations/createClientValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
@@ -30,7 +33,7 @@ interface Props {
   onClose: () => void;
 }
 
-const CreateClientModal: FC<Props> = ({ open, onClose }) => {
+const AddOrderModal: FC<Props> = ({ open, onClose }) => {
   const [createClient, { loading }] = useCreateClient();
 
   const {
@@ -62,12 +65,18 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
         },
       },
       onCompleted: () => {
-        snackMessage({ message: '거래처등록이 완료되었습니다.', severity: 'success' });
+        snackMessage({
+          message: '거래처등록이 완료되었습니다.',
+          severity: 'success',
+        });
         handleClose();
       },
       onError: (err) => {
         const message = err.message;
-        snackMessage({ message: message ?? '거래처등록이 실패했습니다.', severity: 'error' });
+        snackMessage({
+          message: message ?? '거래처등록이 실패했습니다.',
+          severity: 'error',
+        });
       },
     });
   };
@@ -154,7 +163,9 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
                   label="수수료 비율(0~100사이 숫자)"
                   error={!!errors.feeRate?.message}
                   helperText={errors.feeRate?.message ?? ''}
-                  endAdornment={<InputAdornment position="end">%</InputAdornment>}
+                  endAdornment={
+                    <InputAdornment position="end">%</InputAdornment>
+                  }
                 />
               </FormControl>
             )}
@@ -265,7 +276,11 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
-          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
+          <Button
+            type="submit"
+            endIcon={loading ? <CommonLoading /> : ''}
+            variant="contained"
+          >
             등록
           </Button>
         </Stack>
@@ -274,4 +289,4 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
   );
 };
 
-export default CreateClientModal;
+export default AddOrderModal;
