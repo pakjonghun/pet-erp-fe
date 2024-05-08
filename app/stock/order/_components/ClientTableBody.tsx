@@ -7,6 +7,7 @@ import ClientBodyRow from './ClientBodyRow';
 import LoadingRow from '@/components/table/LoadingRow';
 import { OrderHeaderList } from '../constants';
 import { CommonListProps } from '@/types';
+import EditOrderModal from './EditOrderModal';
 
 interface Props extends CommonListProps<ProductOrder> {}
 
@@ -46,6 +47,14 @@ const ClientTableBody: FC<Props> = ({
 
   return (
     <TableBody>
+      {selectedOrder && (
+        <EditOrderModal
+          open={optionType === 'edit'}
+          onClose={() => handleClickOption(null, null)}
+          selectedOrder={selectedOrder}
+        />
+      )}
+
       {/* {selectedClient && (
         <RemoveClientModal
           open={optionType === 'delete'}
