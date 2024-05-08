@@ -22,7 +22,7 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { modalSizeProps } from '@/components/commonStyles';
 import { useCreateClient } from '@/http/graphql/hooks/client/useCreateClient';
-import { ClientType } from '@/http/graphql/codegen/graphql';
+import { ClientType, ProductOrder } from '@/http/graphql/codegen/graphql';
 import { filterEmptyValues } from '@/utils/common';
 import { clientTypes } from '../constants';
 import NumberInput from '@/components/ui/input/NumberInput';
@@ -53,11 +53,12 @@ const factories = [
 ];
 
 interface Props {
+  selectedOrder: ProductOrder;
   open: boolean;
   onClose: () => void;
 }
 
-const AddOrderModal: FC<Props> = ({ open, onClose }) => {
+const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
   const [createClient, { loading }] = useCreateClient();
 
   const {
@@ -69,12 +70,15 @@ const AddOrderModal: FC<Props> = ({ open, onClose }) => {
   } = useForm<CreateOrderForm>({
     resolver: zodResolver(createOrderSchema),
     defaultValues: {
-      count: 0,
-      factory: '',
-      products: [],
-      payCost: 0,
-      notPayCost: 0,
-      totalPayCost: 0,
+      count: selectedOrder.count,
+      factory: selectedOrder.factory.name,
+      notPayCost: selectedOrder.notPayCost,
+      payCost: selectedOrder.payCost,
+      products: selectedOrder.products.map((item) => ({
+        product: item.product.name,
+        count: item.count,
+      })),
+      totalPayCost: selectedOrder.totalPayCost,
     },
   });
 
@@ -139,7 +143,7 @@ const AddOrderModal: FC<Props> = ({ open, onClose }) => {
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        발주 등록
+        발주 편집
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Typography>새로운 발주를 등록합니다.</Typography>
@@ -260,7 +264,7 @@ const AddOrderModal: FC<Props> = ({ open, onClose }) => {
             endIcon={loading ? <CommonLoading /> : ''}
             variant="contained"
           >
-            등록
+            편집
           </Button>
         </Stack>
       </form>
@@ -268,4 +272,4 @@ const AddOrderModal: FC<Props> = ({ open, onClose }) => {
   );
 };
 
-export default AddOrderModal;
+export default EditOrderModal;

@@ -1,14 +1,11 @@
 import { FC, useState } from 'react';
-import { Client, ProductOrder } from '@/http/graphql/codegen/graphql';
+import { ProductOrder } from '@/http/graphql/codegen/graphql';
 import { TableBody } from '@mui/material';
 import EmptyRow from '@/components/table/EmptyRow';
 import ClientBodyRow from './ClientBodyRow';
-import RemoveClientModal from './RemoveClientModal';
-import ClientDetailPopover from './ClientDetailPopover';
 // import { SelectOption } from '../../types';
 import LoadingRow from '@/components/table/LoadingRow';
 import { OrderHeaderList } from '../constants';
-import EditPClientModal from './EditPClientModal';
 import { CommonListProps } from '@/types';
 
 interface Props extends CommonListProps<ProductOrder> {}
