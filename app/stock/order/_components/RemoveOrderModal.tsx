@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Client, Product } from '@/http/graphql/codegen/graphql';
+import { ProductOrder } from '@/http/graphql/codegen/graphql';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import { snackMessage } from '@/store/snackMessage';
@@ -8,28 +8,28 @@ import { useRemoveClient } from '@/http/graphql/hooks/client/useDeleteClient';
 
 interface Props {
   open: boolean;
-  selectedClient: Client;
+  selectedOrder: ProductOrder;
   onClose: () => void;
 }
 
-const RemoveClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
+const RemoveOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
   const [removeClient, { loading }] = useRemoveClient();
 
   const handleClickRemove = () => {
     removeClient({
       variables: {
-        _id: selectedClient._id,
+        _id: selectedOrder._id,
       },
       onCompleted: (res) => {
         snackMessage({
-          message: `${res.removeClient.name}거래처가 삭제되었습니다.`,
+          message: `${res.removeClient.name}발주가 삭제되었습니다.`,
           severity: 'success',
         });
         onClose();
       },
       onError: (err) => {
         snackMessage({
-          message: err.message ?? `${selectedClient.name}거래처 삭제가 실패했습니다.`,
+          message: err.message ?? `${selectedOrder.name}발주 삭제가 실패했습니다.`,
           severity: 'error',
         });
         onClose();
@@ -40,10 +40,10 @@ const RemoveClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
   return (
     <BaseModal onClose={onClose} open={open}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        거래처 삭제
+        발주 삭제
       </Typography>
       <Typography sx={{ color: (theme) => theme.palette.warning.dark }}>
-        삭제된 거래처은 복구가 불가능합니다.
+        삭제된 발주는 복구가 불가능합니다.
       </Typography>
       <Typography sx={{ color: (theme) => theme.palette.warning.dark }}>
         정말로 삭제하겠습니까?
@@ -65,4 +65,4 @@ const RemoveClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
   );
 };
 
-export default RemoveClientModal;
+export default RemoveOrderModal;

@@ -10,12 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import { FC, useState } from 'react';
-import {
-  Controller,
-  FieldArrayWithId,
-  useFieldArray,
-  useForm,
-} from 'react-hook-form';
+import { Controller, FieldArrayWithId, useFieldArray, useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
@@ -27,10 +22,7 @@ import { filterEmptyValues } from '@/utils/common';
 import { clientTypes } from '../constants';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { CLIENT_PREFIX } from '@/constants';
-import {
-  CreateOrderForm,
-  createOrderSchema,
-} from '../_validations/createOrderValidation';
+import { CreateOrderForm, createOrderSchema } from '../_validations/createOrderValidation';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import OrderProduct from './OrderProduct';
 import { PlusOne } from '@mui/icons-material';
@@ -164,9 +156,7 @@ const AddOrderModal: FC<Props> = ({ open, onClose }) => {
                   loadingText="로딩중"
                   noOptionsText="검색 결과가 없습니다."
                   disablePortal
-                  renderInput={(params) => (
-                    <TextField {...params} label="공장" required />
-                  )}
+                  renderInput={(params) => <TextField {...params} label="공장" required />}
                   renderOption={(props, item, state) => {
                     const { key, ...rest } = props as any;
                     const isLast = state.index === factories.length - 1;
@@ -186,10 +176,9 @@ const AddOrderModal: FC<Props> = ({ open, onClose }) => {
             name="payCost"
             render={({ field }) => {
               return (
-                <TextField
-                  {...field}
+                <NumberInput
+                  field={field}
                   label="계약금"
-                  size="small"
                   error={!!errors.payCost?.message}
                   helperText={errors.payCost?.message ?? ''}
                 />
@@ -201,10 +190,9 @@ const AddOrderModal: FC<Props> = ({ open, onClose }) => {
             name="notPayCost"
             render={({ field }) => {
               return (
-                <TextField
-                  {...field}
+                <NumberInput
+                  field={field}
                   label="잔금"
-                  size="small"
                   error={!!errors.notPayCost?.message}
                   helperText={errors.notPayCost?.message ?? ''}
                 />
@@ -216,10 +204,9 @@ const AddOrderModal: FC<Props> = ({ open, onClose }) => {
             name="totalPayCost"
             render={({ field }) => {
               return (
-                <TextField
-                  {...field}
+                <NumberInput
+                  field={field}
                   label="총 금액"
-                  size="small"
                   error={!!errors.totalPayCost?.message}
                   helperText={errors.totalPayCost?.message ?? ''}
                 />
@@ -255,11 +242,7 @@ const AddOrderModal: FC<Props> = ({ open, onClose }) => {
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
-          <Button
-            type="submit"
-            endIcon={loading ? <CommonLoading /> : ''}
-            variant="contained"
-          >
+          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
             등록
           </Button>
         </Stack>

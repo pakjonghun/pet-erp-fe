@@ -1,6 +1,5 @@
 'use client';
 
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import HeadCell from '@/components/table/HeadCell';
 import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 import TablePage from '@/components/table/TablePage';
@@ -20,14 +19,14 @@ import { PlusOneOutlined, Search } from '@mui/icons-material';
 import { useState } from 'react';
 import CreateClientModal from './_components/AddOrderModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
-import ClientTableBody from './_components/ClientTableBody';
+import ClientTableBody from './_components/OrderTableBody';
 import { LIMIT } from '@/constants';
-import ClientCards from './_components/ClientCards';
+import ClientCards from './_components/OrderCards';
 import ActionButton from '@/components/ui/button/ActionButton';
 import { OrderHeaderList } from './constants';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { Client, ProductOrder } from '@/http/graphql/codegen/graphql';
+import { ProductOrder } from '@/http/graphql/codegen/graphql';
 
 const productOrders: ProductOrder[] = [
   {
@@ -136,17 +135,9 @@ const OrderPage = () => {
   return (
     <TablePage sx={{ flex: 1 }}>
       {openCreateClient && (
-        <CreateClientModal
-          open={openCreateClient}
-          onClose={() => setOpenCreateClient(false)}
-        />
+        <CreateClientModal open={openCreateClient} onClose={() => setOpenCreateClient(false)} />
       )}
-      <Stack
-        sx={{ px: 2 }}
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
+      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="발주" />
         <Stack direction="row" alignItems="center" gap={2}>
           <ActionButton

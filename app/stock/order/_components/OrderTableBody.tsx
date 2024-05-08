@@ -2,30 +2,23 @@ import { FC, useState } from 'react';
 import { ProductOrder } from '@/http/graphql/codegen/graphql';
 import { TableBody } from '@mui/material';
 import EmptyRow from '@/components/table/EmptyRow';
-import ClientBodyRow from './ClientBodyRow';
-// import { SelectOption } from '../../types';
+import OrderBodyRow from './OrderBodyRow';
 import LoadingRow from '@/components/table/LoadingRow';
 import { OrderHeaderList } from '../constants';
 import { CommonListProps } from '@/types';
 import EditOrderModal from './EditOrderModal';
+import RemoveOrderModal from './RemoveOrderModal';
+import OrderDetailPopover from './OrderDetailPopover';
 
 interface Props extends CommonListProps<ProductOrder> {}
 
-const ClientTableBody: FC<Props> = ({
-  isLoading,
-  isEmpty,
-  data,
-  scrollRef,
-}) => {
+const OrderTableBody: FC<Props> = ({ isLoading, isEmpty, data, scrollRef }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
   const [selectedOrder, setSelectedOrder] = useState<null | ProductOrder>(null);
   const [optionType, setOptionType] = useState<null | any>(null);
 
-  const handleClickOption = (
-    option: any | null,
-    client: ProductOrder | null
-  ) => {
+  const handleClickOption = (option: any | null, client: ProductOrder | null) => {
     setSelectedOrder(client);
     setOptionType(option);
   };
@@ -55,38 +48,31 @@ const ClientTableBody: FC<Props> = ({
         />
       )}
 
-      {/* {selectedClient && (
-        <RemoveClientModal
+      {selectedOrder && (
+        <RemoveOrderModal
           open={optionType === 'delete'}
           onClose={() => handleClickOption(null, null)}
-          selectedClient={selectedClient}
+          selectedOrder={selectedOrder}
         />
       )}
 
-      {selectedClient && (
-        <EditPClientModal
-          open={optionType === 'edit'}
-          onClose={() => handleClickOption(null, null)}
-          selectedClient={selectedClient}
-        />
-      )}
-      {selectedClient && (
-        <ClientDetailPopover
+      {selectedOrder && (
+        <OrderDetailPopover
           onClose={handleClosePopover}
           position={popoverPosition}
           open={!!popoverAnchor}
           anchorEl={popoverAnchor}
           onClickDelete={handleClickDelete}
           onClickEdit={handleClickEdit}
-          selectedClient={selectedClient}
+          selectedOrder={selectedOrder}
         />
-      )} */}
+      )}
       <EmptyRow colSpan={OrderHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
         const order = item as unknown as ProductOrder;
         const isLast = index === data.length - 1;
         return (
-          <ClientBodyRow
+          <OrderBodyRow
             onClickRow={(event, client: ProductOrder) => {
               setPopoverPosition({ left: event.clientX, top: event.clientY });
               setPopoverAnchor(event.currentTarget);
@@ -104,4 +90,4 @@ const ClientTableBody: FC<Props> = ({
   );
 };
 
-export default ClientTableBody;
+export default OrderTableBody;

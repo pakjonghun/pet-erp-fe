@@ -12,20 +12,12 @@ import { ClientTypeToHangle } from '../constants';
 
 interface Props {
   client: ProductOrder;
-  onClickRow: (
-    event: MouseEvent<HTMLSpanElement>,
-    client: ProductOrder
-  ) => void;
+  onClickRow: (event: MouseEvent<HTMLSpanElement>, client: ProductOrder) => void;
   onClickOption: (option: any | null, client: ProductOrder | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const ClientCard: FC<Props> = ({
-  client,
-  scrollRef,
-  onClickOption,
-  onClickRow,
-}) => {
+const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<any, SelectedOptionItem> = {
     edit: {
@@ -48,11 +40,7 @@ const ClientCard: FC<Props> = ({
 
   return (
     <Paper ref={scrollRef} sx={{ position: 'relative', py: 3, px: 4 }}>
-      <Menu
-        anchorEl={menuAnchor}
-        open={!!menuAnchor}
-        onClose={() => setMenuAnchor(null)}
-      >
+      <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
         {Object.entries(productOptionMenus).map(([option, menu]) => (
           <OptionMenu key={option} menu={menu} option={option} />
         ))}
@@ -78,9 +66,7 @@ const ClientCard: FC<Props> = ({
           <Box sx={{ flex: 1 }}>
             <LabelText
               label="제품"
-              text={client.products.map(
-                (item) => `${item.product.name}(${item.count}EA)`
-              )}
+              text={client.products.map((item) => `${item.product.name}(${item.count}EA)`)}
             />
           </Box>
         </Stack>
@@ -140,4 +126,4 @@ const ClientCard: FC<Props> = ({
   );
 };
 
-export default ClientCard;
+export default OrderCard;

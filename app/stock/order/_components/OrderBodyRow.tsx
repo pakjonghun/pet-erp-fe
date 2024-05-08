@@ -8,24 +8,15 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { ProductOrder } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 // import { SelectOption } from '../../types';
-import { ClientTypeToHangle } from '../constants';
 
 interface Props {
   client: ProductOrder;
-  onClickRow: (
-    event: MouseEvent<HTMLTableCellElement>,
-    client: ProductOrder
-  ) => void;
+  onClickRow: (event: MouseEvent<HTMLTableCellElement>, client: ProductOrder) => void;
   onClickOption: (option: any | null, client: ProductOrder | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const ClientBodyRow: FC<Props> = ({
-  client,
-  scrollRef,
-  onClickOption,
-  onClickRow,
-}) => {
+const OrderBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<any, SelectedOptionItem> = {
     edit: {
@@ -62,11 +53,7 @@ const ClientBodyRow: FC<Props> = ({
 
   return (
     <TableRow hover ref={scrollRef}>
-      <Menu
-        anchorEl={menuAnchor}
-        open={!!menuAnchor}
-        onClose={() => setMenuAnchor(null)}
-      >
+      <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
         {Object.entries(productOptionMenus).map(([option, menu]) => (
           <OptionMenu key={option} menu={menu} option={option} />
         ))}
@@ -94,4 +81,4 @@ const ClientBodyRow: FC<Props> = ({
   );
 };
 
-export default ClientBodyRow;
+export default OrderBodyRow;
