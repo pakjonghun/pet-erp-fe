@@ -19,35 +19,32 @@ const ClientTableBody: FC<Props> = ({
   data,
   scrollRef,
 }) => {
-  console.log('data : ', data);
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  const [selectedClient, setSelectedClient] = useState<null | ProductOrder>(
-    null
-  );
+  const [selectedOrder, setSelectedOrder] = useState<null | ProductOrder>(null);
   const [optionType, setOptionType] = useState<null | any>(null);
 
   const handleClickOption = (
     option: any | null,
     client: ProductOrder | null
   ) => {
-    setSelectedClient(client);
+    setSelectedOrder(client);
     setOptionType(option);
   };
 
   const handleClickEdit = () => {
     handleClosePopover();
-    handleClickOption('edit', selectedClient);
+    handleClickOption('edit', selectedOrder);
   };
 
   const handleClickDelete = () => {
     handleClosePopover();
-    handleClickOption('delete', selectedClient);
+    handleClickOption('delete', selectedOrder);
   };
 
   const handleClosePopover = () => {
     setPopoverAnchor(null);
-    setSelectedClient(null);
+    setSelectedOrder(null);
   };
 
   return (
@@ -80,17 +77,17 @@ const ClientTableBody: FC<Props> = ({
       )} */}
       <EmptyRow colSpan={OrderHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
-        const client = item as unknown as ProductOrder;
+        const order = item as unknown as ProductOrder;
         const isLast = index === data.length - 1;
         return (
           <ClientBodyRow
             onClickRow={(event, client: ProductOrder) => {
               setPopoverPosition({ left: event.clientX, top: event.clientY });
               setPopoverAnchor(event.currentTarget);
-              setSelectedClient(client);
+              setSelectedOrder(client);
             }}
-            key={client._id}
-            client={client}
+            key={order._id}
+            client={order}
             scrollRef={isLast ? scrollRef : null}
             onClickOption={handleClickOption}
           />

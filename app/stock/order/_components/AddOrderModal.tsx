@@ -1,18 +1,25 @@
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
   Autocomplete,
+  Box,
   Button,
   FormControl,
   FormControlLabel,
   FormGroup,
+  FormLabel,
   InputAdornment,
   Stack,
   Switch,
   TextField,
   Typography,
 } from '@mui/material';
-import { FC } from 'react';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { FC, useState } from 'react';
+import {
+  Controller,
+  FieldArrayWithId,
+  useFieldArray,
+  useForm,
+} from 'react-hook-form';
 import {
   CreateClientForm,
   createClientSchema,
@@ -31,6 +38,9 @@ import {
   CreateOrderForm,
   createOrderSchema,
 } from '../_validations/createOrderValidation';
+import useTextDebounce from '@/hooks/useTextDebounce';
+import OrderProduct from './OrderProduct';
+import { PlusOne } from '@mui/icons-material';
 
 const factories = [
   {
@@ -110,6 +120,25 @@ const AddOrderModal: FC<Props> = ({ open, onClose }) => {
     onClose();
   };
 
+  const handleAddProduct = () => {
+    const initProduct = {
+      product: '',
+      count: 0,
+    };
+
+    append(initProduct);
+  };
+
+  const [factoryKeyword, setFactoryKeyword] = useState('');
+  const delayedFactoryKeyword = useTextDebounce(factoryKeyword);
+
+  const handleReplace = (
+    index: number,
+    newItem: FieldArrayWithId<CreateOrderForm, 'products', 'id'>
+  ) => {
+    //
+  };
+
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
@@ -121,12 +150,47 @@ const AddOrderModal: FC<Props> = ({ open, onClose }) => {
         <FormGroup sx={modalSizeProps}>
           <Controller
             control={control}
+            name="factory"
+            render={({ field }) => {
+              return (
+                <Autocomplete
+                  value={field.value}
+                  onChange={(_, value) => field.onChange(value)}
+                  sx={{ mt: 3 }}
+                  size="small"
+                  options={factories.map((item) => item.name)}
+                  isOptionEqualToValue={(item1, item2) => item1 === item2}
+                  defaultValue={null}
+                  inputValue={factoryKeyword}
+                  onInputChange={(_, value) => setFactoryKeyword(value)}
+                  loading={false}
+                  loadingText="로딩중"
+                  noOptionsText="검색 결과가 없습니다."
+                  disablePortal
+                  renderInput={(params) => (
+                    <TextField {...params} label="공장" required />
+                  )}
+                  renderOption={(props, item, state) => {
+                    const { key, ...rest } = props as any;
+                    const isLast = state.index === factories.length - 1;
+                    return (
+                      <Box component="li" ref={null} key={item} {...rest}>
+                        {item}
+                      </Box>
+                    );
+                  }}
+                />
+              );
+            }}
+          />
+
+          <Controller
+            control={control}
             name="payCost"
             render={({ field }) => {
               return (
                 <TextField
                   {...field}
-                  sx={{ mt: 4 }}
                   label="계약금"
                   size="small"
                   error={!!errors.payCost?.message}
@@ -165,6 +229,30 @@ const AddOrderModal: FC<Props> = ({ open, onClose }) => {
               );
             }}
           />
+          <Stack direction="row" gap={3} alignItems="center" sx={{ mt: 2 }}>
+            <FormLabel> 제품 추가</FormLabel>
+            <Button
+              onClick={handleAddProduct}
+              size="small"
+              variant="outlined"
+              endIcon={<PlusOne />}
+            >
+              제품 추가
+            </Button>
+          </Stack>
+
+          {fields.map((field, index) => {
+            return (
+              <OrderProduct
+                key={`${index}_${field.id}`}
+                control={control}
+                index={index}
+                remove={remove}
+                replace={handleReplace}
+                error={errors.products}
+              />
+            );
+          })}
         </FormGroup>
         <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
           <Button type="button" variant="outlined" onClick={handleClose}>
