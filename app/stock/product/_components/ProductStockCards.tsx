@@ -1,13 +1,11 @@
 import { FC, useState } from 'react';
-import { ProductSaleChartOutput, TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
+import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
 import { TABLE_MAX_HEIGHT } from '@/constants';
 import { Grid, SxProps } from '@mui/material';
 import ProductStockDetailPopover from './ClientDetailPopover';
 import EmptyItem from '@/components/ui/listItem/EmptyItem';
 import ProductStockCard from './ProductStockCard';
-// import { SelectOption } from '../../types';
 import LoadingCard from '../../../../components/ui/loading/LoadingCard';
-import EditPClientModal from './EditPClientModal';
 import { CommonListProps } from '@/types';
 import AddProductStockModal from './AddProductStockModal';
 import OutProductStockModal from './OutProductStockModal';
@@ -31,7 +29,6 @@ const ProductStockCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx 
     if (option == 'out') {
       setOpenOutStock(true);
     }
-    // setOptionType(option);
   };
 
   const handleClickEdit = () => {
@@ -65,16 +62,16 @@ const ProductStockCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx 
     >
       <EmptyItem isEmpty={isEmpty} />
 
-      {productStock?.product.name && (
+      {productStock && (
         <AddProductStockModal
-          product={productStock.product.name}
+          productStock={productStock}
           open={openAddStock}
           onClose={() => setOpenAddStock(false)}
         />
       )}
       {productStock?.product.name && (
         <OutProductStockModal
-          product={productStock.product.name}
+          productStock={productStock}
           open={openOutStock}
           onClose={() => setOpenOutStock(false)}
         />

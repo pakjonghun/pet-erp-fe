@@ -2,11 +2,13 @@ import InventoryIcon from '@mui/icons-material/Inventory';
 import Cell from '@/components/table/Cell';
 import { IconButton, Menu, TableRow } from '@mui/material';
 import React, { FC, MouseEvent, useState } from 'react';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { SelectedOptionItem } from '@/constants';
 import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
-// import { SelectOption } from '../../types';
+import CollapseRow from './CollapseRow';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import OptionCell from './OptionCell';
 
 interface Props {
   productStock: TotalProductStockOutput;
@@ -16,6 +18,7 @@ interface Props {
 }
 
 const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption, onClickRow }) => {
+  const [open, setOpen] = useState(true);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<any, SelectedOptionItem> = {
     edit: {
@@ -48,32 +51,33 @@ const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption
   const parsedClient = createRow(productStock);
 
   return (
-    <TableRow hover ref={scrollRef}>
-      <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
-        {Object.entries(productOptionMenus).map(([option, menu]) => (
-          <OptionMenu key={option} menu={menu} option={option} />
-        ))}
-      </Menu>
-      {parsedClient.map((item, index) => (
-        <Cell
-          key={`${productStock.__typename}_${index}`}
-          onClick={(event) => onClickRow(event, productStock)}
-          sx={{ minWidth: 200 }}
-        >
-          {item}
+    <>
+      <TableRow hover ref={scrollRef}>
+        <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
+          {Object.entries(productOptionMenus).map(([option, menu]) => (
+            <OptionMenu key={option} menu={menu} option={option} />
+          ))}
+        </Menu>
+        <Cell onClick={() => setOpen((prev) => !prev)}>
+          <IconButton>{open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}</IconButton>
         </Cell>
-      ))}
+        {parsedClient.map((item, index) => (
+          <Cell
+            key={`${productStock.__typename}_${index}`}
+            onClick={(event) => {
+              onClickRow(event, productStock);
+              setOpen((prev) => !prev);
+            }}
+            sx={{ minWidth: 200 }}
+          >
+            {item}
+          </Cell>
+        ))}
 
-      <Cell sx={{ minWidth: 50 }}>
-        <IconButton
-          onClick={(event) => {
-            setMenuAnchor(event.currentTarget);
-          }}
-        >
-          <MoreHorizIcon />
-        </IconButton>
-      </Cell>
-    </TableRow>
+        <OptionCell onClick={setMenuAnchor} />
+      </TableRow>
+      <CollapseRow onClickOption={onClickOption} productStock={productStock} open={open} />
+    </>
   );
 };
 

@@ -5,12 +5,14 @@ interface Props {
   text: string;
   icon: ReactNode;
   onClick: () => void;
+  size?: 'small' | 'large' | 'medium';
 }
 
-const ActionButton: FC<Props> = ({ text, icon, onClick }) => {
+const ActionButton: FC<Props> = ({ text, icon, onClick, size = 'medium' }) => {
   return (
     <>
       <Button
+        size={size}
         sx={{
           display: {
             xs: 'none',

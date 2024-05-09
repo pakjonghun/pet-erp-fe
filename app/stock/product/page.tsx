@@ -60,9 +60,10 @@ const totalProductStockOutputs: TotalProductStockOutput[] = [
   },
 ];
 
-const BackDataPage = () => {
+const ProductStockPage = () => {
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
+  const [productStock, setProductStock] = useState<null | TotalProductStockOutput>(null);
 
   const { data, networkStatus, fetchMore, refetch } = useClients({
     keyword: delayKeyword,
@@ -99,10 +100,24 @@ const BackDataPage = () => {
   return (
     <TablePage sx={{ flex: 1 }}>
       {openAddStock && (
-        <AddProductStockModal open={openAddStock} onClose={() => setOpenAddStock(false)} />
+        <AddProductStockModal
+          productStock={productStock}
+          open={openAddStock}
+          onClose={() => {
+            setOpenAddStock(false);
+            setProductStock(null);
+          }}
+        />
       )}
       {openOutStock && (
-        <OutProductStockModal open={openOutStock} onClose={() => setOpenOutStock(false)} />
+        <OutProductStockModal
+          productStock={productStock}
+          open={openOutStock}
+          onClose={() => {
+            setOpenOutStock(false);
+            setProductStock(null);
+          }}
+        />
       )}
       <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="거래처 백데이터" />
@@ -168,6 +183,10 @@ const BackDataPage = () => {
             </TableRow>
           </TableHead>
           <ProductStockTableBody
+            productStock={productStock}
+            setProductStock={setProductStock}
+            openAddStock={() => setOpenAddStock(true)}
+            openOutStock={() => setOpenOutStock(true)}
             data={rows}
             isEmpty={isEmpty}
             isLoading={isLoading}
@@ -179,4 +198,4 @@ const BackDataPage = () => {
   );
 };
 
-export default BackDataPage;
+export default ProductStockPage;

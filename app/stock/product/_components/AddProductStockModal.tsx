@@ -14,14 +14,15 @@ import {
   createProductStockSchema,
 } from '../_validations/createProductStockList';
 import StockProduct from './StockProduct';
+import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  product?: string;
+  productStock: null | TotalProductStockOutput;
 }
 
-const AddProductStockModal: FC<Props> = ({ open, onClose, product }) => {
+const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
   const [createClient, { loading }] = useCreateClient();
 
   const {
@@ -52,7 +53,9 @@ const AddProductStockModal: FC<Props> = ({ open, onClose, product }) => {
   });
 
   const handleAppendProduct = () => {
-    const newStock = product ? { ...initStock, product } : initStock;
+    const newStock = productStock
+      ? { ...initStock, product: productStock?.product.name ?? '' }
+      : initStock;
     append(newStock);
   };
 

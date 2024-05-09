@@ -1,6 +1,7 @@
 import { ClientType } from '@/http/graphql/codegen/graphql';
 
 export const ClientHeaderList = [
+  '',
   '제품이름',
   '재고수량',
   '최근 1주 판매량',
