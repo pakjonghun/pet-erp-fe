@@ -1,19 +1,15 @@
+import { FC } from 'react';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import {
   TableRow,
   TableCell,
-  Collapse,
-  Box,
-  Tabs,
   Table,
   TableHead,
   TableContainer,
   TableBody,
   Typography,
   Stack,
-  alpha,
 } from '@mui/material';
-import { FC } from 'react';
 import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
 import ActionButton from '@/components/ui/button/ActionButton';
 
@@ -22,7 +18,7 @@ interface Props {
   onClickOption: (option: any | null, client: TotalProductStockOutput | null) => void;
 }
 
-const TotalProductStock: FC<Props> = ({ productStock, onClickOption }) => {
+const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) => {
   return (
     <TableContainer sx={{ mt: 1 }}>
       <Stack direction="row" alignItems="center" gap={2}>
@@ -59,13 +55,7 @@ const TotalProductStock: FC<Props> = ({ productStock, onClickOption }) => {
             <TableCell>재고</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody
-        // sx={{
-        //   'tr:last-child .MuiTableCell-root': {
-        //     border: 'none',
-        //   },
-        // }}
-        >
+        <TableBody>
           <TableRow>
             <TableCell>제작중</TableCell>
             <TableCell>1공장</TableCell>
@@ -82,4 +72,4 @@ const TotalProductStock: FC<Props> = ({ productStock, onClickOption }) => {
   );
 };
 
-export default TotalProductStock;
+export default SubTableTotalProductStock;

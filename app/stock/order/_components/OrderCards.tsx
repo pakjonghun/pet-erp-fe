@@ -6,8 +6,8 @@ import EmptyItem from '@/components/ui/listItem/EmptyItem';
 import OrderCard from './OrderCard';
 import LoadingCard from '../../../../components/ui/loading/LoadingCard';
 import { CommonListProps } from '@/types';
-import EditOrderModal from './EditOrderModal';
-import RemoveOrderModal from './RemoveOrderModal';
+import EditOrderModal from '../../_components/EditOrderModal';
+import RemoveOrderModal from '../../_components/RemoveOrderModal';
 import OrderDetailPopover from './OrderDetailPopover';
 
 interface Props extends CommonListProps<ProductOrder> {

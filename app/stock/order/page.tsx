@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { PlusOneOutlined, Search } from '@mui/icons-material';
 import { useState } from 'react';
-import CreateClientModal from './_components/AddOrderModal';
+import AddOrderModal from '../_components/AddOrderModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import OrderTableBody from './_components/OrderTableBody';
 import { LIMIT } from '@/constants';
@@ -133,7 +133,7 @@ const OrderPage = () => {
   return (
     <TablePage sx={{ flex: 1 }}>
       {openCreateClient && (
-        <CreateClientModal open={openCreateClient} onClose={() => setOpenCreateClient(false)} />
+        <AddOrderModal open={openCreateClient} onClose={() => setOpenCreateClient(false)} />
       )}
       <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="발주" />

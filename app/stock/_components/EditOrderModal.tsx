@@ -19,10 +19,9 @@ import { modalSizeProps } from '@/components/commonStyles';
 import { useCreateClient } from '@/http/graphql/hooks/client/useCreateClient';
 import { ClientType, ProductOrder } from '@/http/graphql/codegen/graphql';
 import { filterEmptyValues } from '@/utils/common';
-import { clientTypes } from '../constants';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { CLIENT_PREFIX } from '@/constants';
-import { CreateOrderForm, createOrderSchema } from '../_validations/createOrderValidation';
+import { CreateOrderForm, createOrderSchema } from '../_validation/createOrderValidation';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import OrderProduct from './OrderProduct';
 import { PlusOne } from '@mui/icons-material';
@@ -52,7 +51,6 @@ interface Props {
 
 const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
   const [createClient, { loading }] = useCreateClient();
-
   const {
     reset,
     watch,

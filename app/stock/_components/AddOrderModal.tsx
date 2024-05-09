@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 import { Controller, FieldArrayWithId, useFieldArray, useForm } from 'react-hook-form';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
@@ -19,10 +18,9 @@ import { modalSizeProps } from '@/components/commonStyles';
 import { useCreateClient } from '@/http/graphql/hooks/client/useCreateClient';
 import { ClientType } from '@/http/graphql/codegen/graphql';
 import { filterEmptyValues } from '@/utils/common';
-import { clientTypes } from '../constants';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { CLIENT_PREFIX } from '@/constants';
-import { CreateOrderForm, createOrderSchema } from '../_validations/createOrderValidation';
+import { CreateOrderForm, createOrderSchema } from '../_validation/createOrderValidation';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import OrderProduct from './OrderProduct';
 import { PlusOne } from '@mui/icons-material';

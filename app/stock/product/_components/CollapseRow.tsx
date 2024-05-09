@@ -18,7 +18,8 @@ import { ClientHeaderList } from '../constants';
 import { NormalTab } from '@/components/commonStyles';
 import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
 import ActionButton from '@/components/ui/button/ActionButton';
-import TotalProductStock from './TotalProductStock';
+import SubTableOrder from './SubTableOrder';
+import SubTableTotalProductStock from './SubTableTotalProductStock';
 
 interface Props {
   open: boolean;
@@ -55,10 +56,17 @@ const CollapseRow: FC<Props> = ({ open, productStock, onClickOption }) => {
               })}
             </Tabs>
             {tabValue === 0 && (
-              <TotalProductStock onClickOption={onClickOption} productStock={productStock} />
+              <SubTableTotalProductStock
+                onClickOption={onClickOption}
+                productStock={productStock}
+              />
             )}
-            {tabValue === 1 && (
-              <TotalProductStock onClickOption={onClickOption} productStock={productStock} />
+            {tabValue === 1 && <SubTableOrder productStock={productStock} />}
+            {tabValue === 2 && (
+              <SubTableTotalProductStock
+                onClickOption={onClickOption}
+                productStock={productStock}
+              />
             )}
           </Box>
         </Collapse>

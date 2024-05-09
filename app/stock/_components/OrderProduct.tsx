@@ -7,7 +7,7 @@ import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Autocomplete, Box, IconButton, Stack, TextField } from '@mui/material';
 import { Control, Controller, FieldArrayWithId, FieldErrors } from 'react-hook-form';
 import NumberInput from '@/components/ui/input/NumberInput';
-import { CreateOrderForm, CreateMoveProductForm } from '../_validations/createOrderValidation';
+import { CreateOrderForm, CreateMoveProductForm } from '../_validation/createOrderValidation';
 
 interface Props {
   index: number;

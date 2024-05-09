@@ -20,6 +20,7 @@ interface Props {
 const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption, onClickRow }) => {
   const [open, setOpen] = useState(true);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
+
   const productOptionMenus: Record<any, SelectedOptionItem> = {
     edit: {
       callback: () => {

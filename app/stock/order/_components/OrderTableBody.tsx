@@ -6,8 +6,8 @@ import OrderBodyRow from './OrderBodyRow';
 import LoadingRow from '@/components/table/LoadingRow';
 import { OrderHeaderList } from '../constants';
 import { CommonListProps } from '@/types';
-import EditOrderModal from './EditOrderModal';
-import RemoveOrderModal from './RemoveOrderModal';
+import EditOrderModal from '../../_components/EditOrderModal';
+import RemoveOrderModal from '../../_components/RemoveOrderModal';
 import OrderDetailPopover from './OrderDetailPopover';
 
 interface Props extends CommonListProps<ProductOrder> {}

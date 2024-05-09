@@ -8,7 +8,6 @@ import { ProductOrder } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
 // import { SelectOption } from '../../types';
-import { ClientTypeToHangle } from '../constants';
 
 interface Props {
   client: ProductOrder;
