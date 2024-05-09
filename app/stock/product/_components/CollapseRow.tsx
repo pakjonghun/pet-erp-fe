@@ -1,23 +1,8 @@
-import InventoryIcon from '@mui/icons-material/Inventory';
-import {
-  TableRow,
-  TableCell,
-  Collapse,
-  Box,
-  Tabs,
-  Table,
-  TableHead,
-  TableContainer,
-  TableBody,
-  Typography,
-  Stack,
-  alpha,
-} from '@mui/material';
+import { TableRow, TableCell, Collapse, Box, Tabs, alpha } from '@mui/material';
 import React, { FC, useState } from 'react';
 import { ClientHeaderList } from '../constants';
 import { NormalTab } from '@/components/commonStyles';
 import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
-import ActionButton from '@/components/ui/button/ActionButton';
 import SubTableOrder from './SubTableOrder';
 import SubTableTotalProductStock from './SubTableTotalProductStock';
 import SubTableMove from './SubTableMove';

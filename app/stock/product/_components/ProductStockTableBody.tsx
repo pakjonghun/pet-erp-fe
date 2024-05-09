@@ -3,16 +3,10 @@ import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
 import { Box, Collapse, Tab, TableBody, TableCell, TableRow, Tabs } from '@mui/material';
 import EmptyRow from '@/components/table/EmptyRow';
 import ProductStockBodyRow from './ProductStockBodyRow';
-import RemoveProductStockModal from './RemoveProductStockModal';
-import ClientDetailPopover from './ClientDetailPopover';
 // import { SelectOption } from '../../types';
 import LoadingRow from '@/components/table/LoadingRow';
 import { ClientHeaderList } from '../constants';
-import EditPClientModal from './EditPClientModal';
 import { CommonListProps } from '@/types';
-import AddProductStockModal from './AddProductStockModal';
-import OutProductStockModal from './OutProductStockModal';
-import CollapseRow from './CollapseRow';
 
 interface Props extends CommonListProps<TotalProductStockOutput> {
   openAddStock: () => void;

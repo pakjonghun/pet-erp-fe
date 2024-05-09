@@ -120,7 +120,7 @@ const ProductStockPage = () => {
         />
       )}
       <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
-        <TableTitle title="거래처 백데이터" />
+        <TableTitle title="제품별 재고관리" />
         <Stack direction="row" alignItems="center" gap={2}>
           <ActionButton
             icon={<InventoryIcon />}
