@@ -17,81 +17,56 @@ import {
 } from '@mui/material';
 import { PlusOneOutlined, Search } from '@mui/icons-material';
 import { useState } from 'react';
-import CreateClientModal from './_components/AddOrderModal';
+import AddMoveModal from './_components/AddMoveModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
-import OrderTableBody from './_components/OrderTableBody';
+import MoveTableBody from './_components/MoveTableBody';
 import { LIMIT } from '@/constants';
-import ClientCards from './_components/OrderCards';
+import MoveCards from './_components/MoveCards';
 import ActionButton from '@/components/ui/button/ActionButton';
 import { OrderHeaderList } from './constants';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { ProductOrder } from '@/http/graphql/codegen/graphql';
+import { Move } from '@/http/graphql/codegen/graphql';
 
-const productOrders: ProductOrder[] = [
+const moves: Move[] = [
   {
-    _id: '5f76fddc2fa9b89b77b8d1fe',
-    factory: {
-      _id: '5f76fddc2fa9b89b77b8d1fa',
-      name: 'Global Tech Factory',
+    _id: '123',
+    fromStorage: {
+      _id: '1',
+      name: 'Central Storage',
     },
-    storage: {
-      _id: '5f76fddc2fa9b89b77b8d1fb',
-      name: 'Central Storage Facility',
+    toStorage: {
+      _id: '4',
+      name: 'Central Storage',
     },
+    toFactory: {
+      _id: '1',
+      name: 'Central Storage',
+    },
+    fromFactory: {
+      _id: '3',
+      name: 'Central Storage',
+    },
+    endDate: new Date(),
+    startDate: new Date(),
     products: [
       {
-        count: 100,
+        count: 500,
         product: {
-          code: '1',
-          _id: '5f76fddc2fa9b89b77b8d1fc',
-          name: 'Laptop',
+          _id: '201',
+          name: 'LED Display',
+          code: 'Components',
         },
       },
       {
-        count: 50,
+        count: 300,
         product: {
-          _id: '5f76fddc2fa9b89b77b8d1fd',
-          code: '2',
-          name: 'Desktop Computer',
+          _id: '202',
+          name: 'Microchip',
+          code: 'Components',
         },
       },
     ],
-    payCost: 30000,
-    notPayCost: 5000,
-    totalPayCost: 35000,
-  },
-  {
-    _id: '5f76fddc2fa9b89b77b8d2fe',
-    factory: {
-      _id: '5f76fddc2fa9b89b77b8d2fa',
-      name: 'HighTech Solutions Inc.',
-    },
-    storage: {
-      _id: '5f76fddc2fa9b89b77b8d2fb',
-      name: 'Secondary Storage Unit',
-    },
-    products: [
-      {
-        count: 200,
-        product: {
-          code: '3',
-          _id: '5f76fddc2fa9b89b77b8d2fc',
-          name: 'Smartphone',
-        },
-      },
-      {
-        count: 150,
-        product: {
-          code: '4',
-          _id: '5f76fddc2fa9b89b77b8d2fd',
-          name: 'Tablet',
-        },
-      },
-    ],
-    payCost: 45000,
-    notPayCost: 7500,
-    totalPayCost: 52500,
   },
 ];
 
@@ -105,7 +80,7 @@ const OrderPage = () => {
     limit: LIMIT,
   });
 
-  const rows = productOrders ?? [];
+  const rows = moves ?? [];
   const isLoading = networkStatus == 3 || networkStatus == 1;
 
   const callback: IntersectionObserverCallback = (entries) => {
@@ -133,14 +108,14 @@ const OrderPage = () => {
   return (
     <TablePage sx={{ flex: 1 }}>
       {openCreateClient && (
-        <CreateClientModal open={openCreateClient} onClose={() => setOpenCreateClient(false)} />
+        <AddMoveModal open={openCreateClient} onClose={() => setOpenCreateClient(false)} />
       )}
       <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
-        <TableTitle title="발주" />
+        <TableTitle title="이동" />
         <Stack direction="row" alignItems="center" gap={2}>
           <ActionButton
             icon={<PlusOneOutlined />}
-            text="발주 등록"
+            text="이동 등록"
             onClick={() => setOpenCreateClient(true)}
           />
         </Stack>
@@ -157,7 +132,7 @@ const OrderPage = () => {
               ),
             }}
             sx={{ width: 270, my: 2 }}
-            label="검색할 공장 이름을 입력하세요."
+            label="검색할 제품 이름을 입력하세요."
             size="small"
           />
         </FormControl>
@@ -165,7 +140,7 @@ const OrderPage = () => {
       <Typography sx={{ p: 3 }}>
         {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
       </Typography>
-      <ClientCards
+      <MoveCards
         sx={{
           display: {
             xs: 'block',
@@ -193,7 +168,7 @@ const OrderPage = () => {
               ))}
             </TableRow>
           </TableHead>
-          <OrderTableBody
+          <MoveTableBody
             data={rows}
             isEmpty={isEmpty}
             isLoading={isLoading}

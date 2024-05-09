@@ -61,7 +61,6 @@ const AddOrderModal: FC<Props> = ({ open, onClose }) => {
   } = useForm<CreateOrderForm>({
     resolver: zodResolver(createOrderSchema),
     defaultValues: {
-      count: 0,
       factory: '',
       products: [],
       payCost: 0,

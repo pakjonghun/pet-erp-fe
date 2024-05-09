@@ -7,17 +7,17 @@ import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Autocomplete, Box, IconButton, Stack, TextField } from '@mui/material';
 import { Control, Controller, FieldArrayWithId, FieldErrors } from 'react-hook-form';
 import NumberInput from '@/components/ui/input/NumberInput';
-import { CreateOrderForm, CreateMoveProductForm } from '../_validations/createOrderValidation';
+import { CreateMoveForm, CreateMoveProductForm } from '../_validations/createMoveValidation';
 
 interface Props {
   index: number;
   control: Control<any>;
   remove: (index: number) => void;
-  replace: (index: number, newItem: FieldArrayWithId<CreateOrderForm, 'products', 'id'>) => void;
+  replace: (index: number, newItem: FieldArrayWithId<CreateMoveForm, 'products', 'id'>) => void;
   error?: FieldErrors<CreateMoveProductForm>;
 }
 
-const OrderProduct: FC<Props> = ({ index, control, remove, replace, error }) => {
+const MoveProduct: FC<Props> = ({ index, control, remove, replace, error }) => {
   const [productKeyword, setProductKeyword] = useState('');
   const delayedProductKeyword = useTextDebounce(productKeyword ?? '');
 
@@ -53,7 +53,7 @@ const OrderProduct: FC<Props> = ({ index, control, remove, replace, error }) => 
 
   const [storageKeyword, setStorageKeyword] = useState('');
 
-  const handleReplaceItem = (newItem: FieldArrayWithId<CreateOrderForm, 'products', 'id'>) => {
+  const handleReplaceItem = (newItem: FieldArrayWithId<CreateMoveForm, 'products', 'id'>) => {
     replace(index, newItem);
   };
 
@@ -101,7 +101,7 @@ const OrderProduct: FC<Props> = ({ index, control, remove, replace, error }) => 
             <NumberInput
               helperText={error?.count?.message ?? ''}
               error={!!error?.count?.message}
-              label="발주 수량"
+              label="수량"
               field={field}
             />
           );
@@ -114,4 +114,4 @@ const OrderProduct: FC<Props> = ({ index, control, remove, replace, error }) => 
   );
 };
 
-export default OrderProduct;
+export default MoveProduct;

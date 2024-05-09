@@ -5,23 +5,24 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { ProductOrder } from '@/http/graphql/codegen/graphql';
+import { Move } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
+import dayjs from 'dayjs';
 // import { SelectOption } from '../../types';
 
 interface Props {
-  client: ProductOrder;
-  onClickRow: (event: MouseEvent<HTMLTableCellElement>, client: ProductOrder) => void;
-  onClickOption: (option: any | null, client: ProductOrder | null) => void;
+  move: Move;
+  onClickRow: (event: MouseEvent<HTMLTableCellElement>, move: Move) => void;
+  onClickOption: (option: any | null, move: Move | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const OrderBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) => {
+const MoveBodyRow: FC<Props> = ({ move, scrollRef, onClickOption, onClickRow }) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<any, SelectedOptionItem> = {
     edit: {
       callback: () => {
-        onClickOption('edit', client);
+        onClickOption('edit', move);
         setMenuAnchor(null);
       },
       label: '편집',
@@ -29,7 +30,7 @@ const OrderBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow 
     },
     delete: {
       callback: () => {
-        onClickOption('delete', client);
+        onClickOption('delete', move);
         setMenuAnchor(null);
       },
       label: '삭제',
@@ -37,19 +38,17 @@ const OrderBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow 
     },
   };
 
-  const createRow = (order: ProductOrder) => {
+  const createRow = (move: Move) => {
     return [
-      order.factory.name,
-      order.products.map((item) => `${item.product.name}(${item.count}EA), `),
-      0,
-      order.payCost,
-      order.notPayCost,
-      order.totalPayCost,
-      '완료',
+      move.fromStorage?.name,
+      move.toStorage?.name,
+      dayjs(move.startDate.name).format('YYYY-MM-DD'),
+      dayjs(move.endDate.name).format('YYYY-MM-DD'),
+      move.products.map((item) => `${item.product.name}(${item.count}EA), `),
     ];
   };
 
-  const parsedClient = createRow(client);
+  const parsedClient = createRow(move);
 
   return (
     <TableRow hover ref={scrollRef}>
@@ -60,8 +59,8 @@ const OrderBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow 
       </Menu>
       {parsedClient.map((item, index) => (
         <Cell
-          key={`${client._id}_${index}`}
-          onClick={(event) => onClickRow(event, client)}
+          key={`${move._id}_${index}`}
+          onClick={(event) => onClickRow(event, move)}
           sx={{ minWidth: 200 }}
         >
           {item}
@@ -81,4 +80,4 @@ const OrderBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow 
   );
 };
 
-export default OrderBodyRow;
+export default MoveBodyRow;

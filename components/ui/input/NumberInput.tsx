@@ -26,6 +26,7 @@ const NumberInput: FC<Props> = ({
 }) => {
   return (
     <TextField
+      required
       sx={sx}
       {...textFieldProps}
       size="small"

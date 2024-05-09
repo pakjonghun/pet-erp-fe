@@ -1,43 +1,44 @@
 import { FC, useState } from 'react';
-import { ProductOrder } from '@/http/graphql/codegen/graphql';
+import { Move, ProductOrder } from '@/http/graphql/codegen/graphql';
 import { TABLE_MAX_HEIGHT } from '@/constants';
 import { Grid, SxProps } from '@mui/material';
 import EmptyItem from '@/components/ui/listItem/EmptyItem';
-import OrderCard from './OrderCard';
+import MoveCard from './MoveCard';
 import LoadingCard from '../../../../components/ui/loading/LoadingCard';
 import { CommonListProps } from '@/types';
-import EditOrderModal from './EditOrderModal';
-import RemoveOrderModal from './RemoveOrderModal';
-import OrderDetailPopover from './OrderDetailPopover';
+import EditOrderModal from './EditMoveModal';
+import RemoveMoveModal from './RemoveMoveModal';
+import MoveDetailPopover from './MoveDetailPopover';
+import EditMoveModal from './EditMoveModal';
 
-interface Props extends CommonListProps<ProductOrder> {
+interface Props extends CommonListProps<Move> {
   sx?: SxProps;
 }
 
-const OrderCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx }) => {
+const MoveCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  const [selectedOrder, setSelectedOrder] = useState<null | ProductOrder>(null);
+  const [selectedMove, setSelectedMove] = useState<null | Move>(null);
   const [optionType, setOptionType] = useState<null | any>(null);
 
-  const handleClickOption = (option: any | null, client: ProductOrder | null) => {
-    setSelectedOrder(client);
+  const handleClickOption = (option: any | null, move: Move | null) => {
+    setSelectedMove(move);
     setOptionType(option);
   };
 
   const handleClickEdit = () => {
     handleClosePopover();
-    handleClickOption('edit', selectedOrder);
+    handleClickOption('edit', selectedMove);
   };
 
   const handleClickDelete = () => {
     handleClosePopover();
-    handleClickOption('delete', selectedOrder);
+    handleClickOption('delete', selectedMove);
   };
 
   const handleClosePopover = () => {
     setPopoverAnchor(null);
-    setSelectedOrder(null);
+    setSelectedMove(null);
   };
 
   return (
@@ -53,46 +54,46 @@ const OrderCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx }) => {
     >
       <EmptyItem isEmpty={isEmpty} />
 
-      {selectedOrder && (
-        <EditOrderModal
+      {selectedMove && (
+        <EditMoveModal
           open={optionType === 'edit'}
           onClose={() => handleClickOption(null, null)}
-          selectedOrder={selectedOrder}
+          selectedMove={selectedMove}
         />
       )}
 
-      {selectedOrder && (
-        <RemoveOrderModal
+      {selectedMove && (
+        <RemoveMoveModal
           open={optionType === 'delete'}
           onClose={() => handleClickOption(null, null)}
-          selectedOrder={selectedOrder}
+          selectedMove={selectedMove}
         />
       )}
 
-      {selectedOrder && (
-        <OrderDetailPopover
+      {selectedMove && (
+        <MoveDetailPopover
           onClose={handleClosePopover}
           position={popoverPosition}
           open={!!popoverAnchor}
           anchorEl={popoverAnchor}
           onClickDelete={handleClickDelete}
           onClickEdit={handleClickEdit}
-          selectedOrder={selectedOrder}
+          selectedMove={selectedMove}
         />
       )}
 
       {data.map((item, index) => {
-        const client = item as unknown as ProductOrder;
+        const move = item as unknown as Move;
         const isLast = index === data.length - 1;
         return (
-          <Grid key={client._id} item xs={12} lg={6}>
-            <OrderCard
-              onClickRow={(event, client: ProductOrder) => {
+          <Grid key={move._id} item xs={12} lg={6}>
+            <MoveCard
+              onClickRow={(event, move: Move) => {
                 setPopoverPosition({ left: event.clientX, top: event.clientY });
                 setPopoverAnchor(event.currentTarget);
-                setSelectedOrder(client);
+                setSelectedMove(move);
               }}
-              client={client}
+              move={move}
               scrollRef={isLast ? scrollRef : null}
               onClickOption={handleClickOption}
             />
@@ -104,4 +105,4 @@ const OrderCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx }) => {
   );
 };
 
-export default OrderCards;
+export default MoveCards;

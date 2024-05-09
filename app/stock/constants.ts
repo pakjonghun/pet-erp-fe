@@ -8,7 +8,7 @@ export const DashboardTabs = {
   'stock/order': {
     label: '발주 관리',
   },
-  'stock/movement': {
+  'stock/move': {
     label: '이동 관리',
   },
 };

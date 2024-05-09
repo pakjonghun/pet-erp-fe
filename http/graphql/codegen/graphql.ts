@@ -166,6 +166,7 @@ export type CreateWholeSaleProductList = {
 
 export type Factory = {
   __typename?: 'Factory';
+  _id: Scalars['ID']['output'];
   address?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   note?: Maybe<Scalars['String']['output']>;
@@ -214,13 +215,19 @@ export enum LogType {
 export type Move = {
   __typename?: 'Move';
   _id: Scalars['ID']['output'];
+  endDate?: Maybe<Scalars['Date']['output']>;
+  fromFactory?: Maybe<Factory>;
+  fromStorage?: Maybe<Storage>;
+  products: Array<MoveProduct>;
+  startDate: Scalars['Date']['output'];
+  toFactory?: Maybe<Factory>;
+  toStorage?: Maybe<Storage>;
+};
+
+export type MoveProduct = {
+  __typename?: 'MoveProduct';
   count: Scalars['Int']['output'];
-  fromDate: Scalars['Date']['output'];
-  fromStock: Stock;
   product: Product;
-  subsidiary: Subsidiary;
-  toDate: Scalars['Date']['output'];
-  toStock: Stock;
 };
 
 export type Mutation = {
@@ -495,7 +502,6 @@ export type ProductCategory = {
 export type ProductOrder = {
   __typename?: 'ProductOrder';
   _id: Scalars['ID']['output'];
-  count: Scalars['Int']['output'];
   factory: Factory;
   notPayCost: Scalars['Int']['output'];
   payCost: Scalars['Int']['output'];

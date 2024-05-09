@@ -11,23 +11,24 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 import { Controller, FieldArrayWithId, useFieldArray, useForm } from 'react-hook-form';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { modalSizeProps } from '@/components/commonStyles';
 import { useCreateClient } from '@/http/graphql/hooks/client/useCreateClient';
-import { ClientType, ProductOrder } from '@/http/graphql/codegen/graphql';
+import { ClientType } from '@/http/graphql/codegen/graphql';
 import { filterEmptyValues } from '@/utils/common';
 import { clientTypes } from '../constants';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { CLIENT_PREFIX } from '@/constants';
-import { CreateOrderForm, createOrderSchema } from '../_validations/createOrderValidation';
 import useTextDebounce from '@/hooks/useTextDebounce';
-import OrderProduct from './OrderProduct';
+import MoveProduct from './MoveProduct';
 import { PlusOne } from '@mui/icons-material';
+import { CreateMoveForm, createMoveSchema } from '../_validations/createMoveValidation';
+import dayjs from 'dayjs';
+import { DatePicker } from '@mui/x-date-pickers';
 
-const factories = [
+const places = [
   {
     _id: '123',
     name: 'Central Warehouse',
@@ -45,12 +46,11 @@ const factories = [
 ];
 
 interface Props {
-  selectedOrder: ProductOrder;
   open: boolean;
   onClose: () => void;
 }
 
-const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
+const AddMoveModal: FC<Props> = ({ open, onClose }) => {
   const [createClient, { loading }] = useCreateClient();
 
   const {
@@ -59,17 +59,14 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateOrderForm>({
-    resolver: zodResolver(createOrderSchema),
+  } = useForm<CreateMoveForm>({
+    resolver: zodResolver(createMoveSchema),
     defaultValues: {
-      factory: selectedOrder.factory.name,
-      notPayCost: selectedOrder.notPayCost,
-      payCost: selectedOrder.payCost,
-      products: selectedOrder.products.map((item) => ({
-        product: item.product.name,
-        count: item.count,
-      })),
-      totalPayCost: selectedOrder.totalPayCost,
+      fromPlace: '',
+      toPlace: '',
+      endDate: dayjs().endOf('date').toDate(),
+      startDate: dayjs().startOf('date').toDate(),
+      products: [],
     },
   });
 
@@ -78,8 +75,8 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
     name: 'products',
   });
 
-  const onSubmit = (values: CreateOrderForm) => {
-    const newValues = filterEmptyValues(values) as CreateOrderForm;
+  const onSubmit = (values: CreateMoveForm) => {
+    const newValues = filterEmptyValues(values) as CreateMoveForm;
     // createClient({
     //   variables: {
     //     createClientInput: {
@@ -118,12 +115,12 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
     append(initProduct);
   };
 
-  const [factoryKeyword, setFactoryKeyword] = useState('');
-  const delayedFactoryKeyword = useTextDebounce(factoryKeyword);
+  const [fromPlaceKeyword, setFromPlaceKeyword] = useState('');
+  const [toPlaceKeyword, setToPlaceKeyword] = useState('');
 
   const handleReplace = (
     index: number,
-    newItem: FieldArrayWithId<CreateOrderForm, 'products', 'id'>
+    newItem: FieldArrayWithId<CreateMoveForm, 'products', 'id'>
   ) => {
     //
   };
@@ -134,35 +131,36 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        발주 편집
+        이동 등록
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Typography>새로운 발주를 등록합니다.</Typography>
+        <Typography>새로운 이동을 등록합니다.</Typography>
 
         <FormGroup sx={modalSizeProps}>
           <Controller
             control={control}
-            name="factory"
+            name="fromPlace"
             render={({ field }) => {
               return (
                 <Autocomplete
+                  groupBy={(item) => item[0]}
                   value={field.value}
                   onChange={(_, value) => field.onChange(value)}
                   sx={{ mt: 3 }}
                   size="small"
-                  options={factories.map((item) => item.name)}
+                  options={places.map((item) => item.name)}
                   isOptionEqualToValue={(item1, item2) => item1 === item2}
                   defaultValue={null}
-                  inputValue={factoryKeyword}
-                  onInputChange={(_, value) => setFactoryKeyword(value)}
+                  inputValue={fromPlaceKeyword}
+                  onInputChange={(_, value) => setFromPlaceKeyword(value)}
                   loading={false}
                   loadingText="로딩중"
                   noOptionsText="검색 결과가 없습니다."
                   disablePortal
-                  renderInput={(params) => <TextField {...params} label="공장" required />}
+                  renderInput={(params) => <TextField {...params} label="출발장소" required />}
                   renderOption={(props, item, state) => {
                     const { key, ...rest } = props as any;
-                    const isLast = state.index === factories.length - 1;
+                    const isLast = state.index === places.length - 1;
                     return (
                       <Box component="li" ref={null} key={item} {...rest}>
                         {item}
@@ -176,49 +174,51 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
 
           <Controller
             control={control}
-            name="payCost"
+            name="toPlace"
             render={({ field }) => {
               return (
-                <TextField
-                  {...field}
-                  label="계약금"
+                <Autocomplete
+                  value={field.value}
+                  onChange={(_, value) => field.onChange(value)}
                   size="small"
-                  error={!!errors.payCost?.message}
-                  helperText={errors.payCost?.message ?? ''}
+                  options={places.map((item) => item.name)}
+                  isOptionEqualToValue={(item1, item2) => item1 === item2}
+                  defaultValue={null}
+                  inputValue={toPlaceKeyword}
+                  onInputChange={(_, value) => setToPlaceKeyword(value)}
+                  loading={false}
+                  loadingText="로딩중"
+                  noOptionsText="검색 결과가 없습니다."
+                  disablePortal
+                  renderInput={(params) => <TextField {...params} label="도착장소" required />}
+                  renderOption={(props, item, state) => {
+                    const { key, ...rest } = props as any;
+                    const isLast = state.index === places.length - 1;
+                    return (
+                      <Box component="li" ref={null} key={item} {...rest}>
+                        {item}
+                      </Box>
+                    );
+                  }}
                 />
               );
             }}
           />
+
           <Controller
             control={control}
-            name="notPayCost"
+            name="endDate"
             render={({ field }) => {
               return (
-                <TextField
-                  {...field}
-                  label="잔금"
-                  size="small"
-                  error={!!errors.notPayCost?.message}
-                  helperText={errors.notPayCost?.message ?? ''}
+                <DatePicker
+                  label="출발날짜"
+                  value={dayjs(field.value)}
+                  onChange={(value) => field.onChange(value?.toDate())}
                 />
               );
             }}
           />
-          <Controller
-            control={control}
-            name="totalPayCost"
-            render={({ field }) => {
-              return (
-                <TextField
-                  {...field}
-                  label="총 금액"
-                  size="small"
-                  error={!!errors.totalPayCost?.message}
-                  helperText={errors.totalPayCost?.message ?? ''}
-                />
-              );
-            }}
-          />
+
           <Stack direction="row" gap={3} alignItems="center" sx={{ mt: 2 }}>
             <FormLabel> {`제품 추가(총 수량 : ${totalCount}EA)`}</FormLabel>
             <Button
@@ -233,7 +233,7 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
 
           {fields.map((field, index) => {
             return (
-              <OrderProduct
+              <MoveProduct
                 key={`${index}_${field.id}`}
                 control={control}
                 index={index}
@@ -249,7 +249,7 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
             취소
           </Button>
           <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
-            편집
+            등록
           </Button>
         </Stack>
       </form>
@@ -257,4 +257,4 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
   );
 };
 
-export default EditOrderModal;
+export default AddMoveModal;
