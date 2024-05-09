@@ -11,6 +11,7 @@ import {
   TableBody,
   Typography,
   Stack,
+  alpha,
 } from '@mui/material';
 import { FC } from 'react';
 import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
@@ -23,13 +24,13 @@ interface Props {
 
 const TotalProductStock: FC<Props> = ({ productStock, onClickOption }) => {
   return (
-    <TableContainer sx={{ mt: 1, border: '1px solid lightGray' }}>
+    <TableContainer sx={{ mt: 1 }}>
       <Stack direction="row" alignItems="center" gap={2}>
         <Typography
-          variant="caption"
-          sx={{ p: 2, display: 'inline-block' }}
+          variant="subtitle1"
+          sx={{ p: 2, pt: 0, display: 'inline-block' }}
         >{`${productStock.product.name}(${productStock.storageCount}+${productStock.orderCount})`}</Typography>
-        <Stack direction="row" alignItems="center" gap={2}>
+        <Stack direction="row" alignItems="center" gap={2} sx={{ ml: 'auto' }}>
           <ActionButton
             size="small"
             icon={<InventoryIcon />}
@@ -44,15 +45,27 @@ const TotalProductStock: FC<Props> = ({ productStock, onClickOption }) => {
           />
         </Stack>
       </Stack>
-      <Table>
-        <TableHead>
+      <Table sx={{ mt: 2 }} size="small">
+        <TableHead
+          sx={{
+            '.MuiTableCell-root': {
+              fontWeight: 800,
+            },
+          }}
+        >
           <TableRow>
             <TableCell>구분</TableCell>
             <TableCell>위치</TableCell>
             <TableCell>재고</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody
+        // sx={{
+        //   'tr:last-child .MuiTableCell-root': {
+        //     border: 'none',
+        //   },
+        // }}
+        >
           <TableRow>
             <TableCell>제작중</TableCell>
             <TableCell>1공장</TableCell>

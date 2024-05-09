@@ -20,7 +20,7 @@ const ActionButton: FC<Props> = ({ text, icon, onClick, size = 'medium' }) => {
           },
         }}
         onClick={onClick}
-        variant="contained"
+        variant="outlined"
         startIcon={icon}
       >
         {text}

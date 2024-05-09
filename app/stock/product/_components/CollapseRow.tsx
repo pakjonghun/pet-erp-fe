@@ -11,6 +11,7 @@ import {
   TableBody,
   Typography,
   Stack,
+  alpha,
 } from '@mui/material';
 import React, { FC, useState } from 'react';
 import { ClientHeaderList } from '../constants';
@@ -32,10 +33,16 @@ const CollapseRow: FC<Props> = ({ open, productStock, onClickOption }) => {
 
   return (
     <TableRow>
-      <TableCell colSpan={ClientHeaderList.length} sx={{ py: 0 }}>
+      <TableCell
+        sx={{
+          py: 0,
+          bgcolor: (theme) => alpha(theme.palette.grey[100], 0.5),
+        }}
+        colSpan={ClientHeaderList.length}
+      >
         <Collapse in={open}>
-          <Box sx={{ m: 1 }}>
-            <Tabs value={tabValue} sx={{ borderBottom: '1px solid gray' }}>
+          <Box sx={{ mt: 4, mb: 8, width: '90%', ml: 'auto' }}>
+            <Tabs value={tabValue} sx={{ borderBottom: '1px solid gray', mb: 3 }}>
               {CollapseTabs.map((tab, index) => {
                 return (
                   <NormalTab
@@ -50,7 +57,7 @@ const CollapseRow: FC<Props> = ({ open, productStock, onClickOption }) => {
             {tabValue === 0 && (
               <TotalProductStock onClickOption={onClickOption} productStock={productStock} />
             )}
-            {tabValue === 0 && (
+            {tabValue === 1 && (
               <TotalProductStock onClickOption={onClickOption} productStock={productStock} />
             )}
           </Box>
