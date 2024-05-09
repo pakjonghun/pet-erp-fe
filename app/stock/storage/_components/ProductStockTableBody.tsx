@@ -5,7 +5,7 @@ import EmptyRow from '@/components/table/EmptyRow';
 import ProductStockBodyRow from './ProductStockBodyRow';
 // import { SelectOption } from '../../types';
 import LoadingRow from '@/components/table/LoadingRow';
-import { ProductStockHeaderList } from '../constants';
+import { StockStorageHeaderList } from '../constants';
 import { CommonListProps } from '@/types';
 
 interface Props extends CommonListProps<TotalProductStockOutput> {
@@ -71,7 +71,7 @@ const ProductStockTableBody: FC<Props> = ({
           selectedClient={selectedClient}
         />
       )} */}
-      <EmptyRow colSpan={ProductStockHeaderList.length} isEmpty={isEmpty} />
+      <EmptyRow colSpan={StockStorageHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
         const stock = item as unknown as TotalProductStockOutput;
         const isLast = index === data.length - 1;
@@ -89,7 +89,7 @@ const ProductStockTableBody: FC<Props> = ({
           />
         );
       })}
-      <LoadingRow isLoading={isLoading} colSpan={ProductStockHeaderList.length} />
+      <LoadingRow isLoading={isLoading} colSpan={StockStorageHeaderList.length} />
     </TableBody>
   );
 };

@@ -24,7 +24,7 @@ import ProductStockTableBody from './_components/ProductStockTableBody';
 import { LIMIT } from '@/constants';
 import ProductStockCards from './_components/ProductStockCards';
 import ActionButton from '@/components/ui/button/ActionButton';
-import { ClientHeaderList } from './constants';
+import { ProductStockHeaderList } from './constants';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
@@ -177,7 +177,7 @@ const ProductStockPage = () => {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              {ClientHeaderList.map((item, index) => (
+              {ProductStockHeaderList.map((item, index) => (
                 <HeadCell key={`${item}_${index}`} text={item} />
               ))}
             </TableRow>

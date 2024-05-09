@@ -1,6 +1,6 @@
 import { TableRow, TableCell, Collapse, Box, Tabs, alpha } from '@mui/material';
 import React, { FC, useState } from 'react';
-import { ProductStockHeaderList } from '../constants';
+import { StockStorageHeaderList } from '../constants';
 import { NormalTab } from '@/components/commonStyles';
 import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
 import SubTableOrder from './SubTableOrder';
@@ -25,7 +25,7 @@ const CollapseRow: FC<Props> = ({ open, productStock, onClickOption }) => {
           py: 0,
           bgcolor: (theme) => alpha(theme.palette.grey[100], 0.5),
         }}
-        colSpan={ProductStockHeaderList.length}
+        colSpan={StockStorageHeaderList.length}
       >
         <Collapse in={open}>
           <Box sx={{ mt: 4, mb: 8, width: '90%', ml: 'auto' }}>

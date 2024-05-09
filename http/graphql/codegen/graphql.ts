@@ -581,6 +581,7 @@ export type Query = {
   productSales?: Maybe<ProductSaleOutput>;
   products: ProductsOutput;
   stock: Stock;
+  stockStorages: Array<StockStorageOutput>;
   storage: Storage;
   subsidiaries: SubsidiariesOutput;
   subsidiaryCategories: SubsidiaryCategoriesOutput;
@@ -750,6 +751,17 @@ export type Stock = {
   isSubsidiary: Scalars['Boolean']['output'];
   product: Product;
   storage: Storage;
+};
+
+export type StockStorageOutput = {
+  __typename?: 'StockStorageOutput';
+  _id: Scalars['ID']['output'];
+  address?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  note?: Maybe<Scalars['String']['output']>;
+  phoneNumber?: Maybe<Scalars['String']['output']>;
+  totalStock: Scalars['Int']['output'];
+  totalWonCost: Scalars['Int']['output'];
 };
 
 export type Storage = {
