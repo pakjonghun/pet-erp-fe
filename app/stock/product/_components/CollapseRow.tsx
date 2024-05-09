@@ -20,6 +20,7 @@ import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
 import ActionButton from '@/components/ui/button/ActionButton';
 import SubTableOrder from './SubTableOrder';
 import SubTableTotalProductStock from './SubTableTotalProductStock';
+import SubTableMove from './SubTableMove';
 
 interface Props {
   open: boolean;
@@ -62,12 +63,7 @@ const CollapseRow: FC<Props> = ({ open, productStock, onClickOption }) => {
               />
             )}
             {tabValue === 1 && <SubTableOrder productStock={productStock} />}
-            {tabValue === 2 && (
-              <SubTableTotalProductStock
-                onClickOption={onClickOption}
-                productStock={productStock}
-              />
-            )}
+            {tabValue === 2 && <SubTableMove productStock={productStock} />}
           </Box>
         </Collapse>
       </TableCell>

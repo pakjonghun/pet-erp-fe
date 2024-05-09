@@ -18,13 +18,12 @@ import { modalSizeProps } from '@/components/commonStyles';
 import { useCreateClient } from '@/http/graphql/hooks/client/useCreateClient';
 import { ClientType, Move } from '@/http/graphql/codegen/graphql';
 import { filterEmptyValues } from '@/utils/common';
-import { clientTypes } from '../constants';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { CLIENT_PREFIX } from '@/constants';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import MoveProduct from './MoveProduct';
 import { PlusOne } from '@mui/icons-material';
-import { CreateMoveForm, createMoveSchema } from '../_validations/createMoveValidation';
+import { CreateMoveForm, createMoveSchema } from '../_validation/createMoveValidation';
 import dayjs from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers';
 
@@ -135,10 +134,10 @@ const EditMoveModal: FC<Props> = ({ open, selectedMove, onClose }) => {
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        이동 등록
+        이동 편집
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Typography>새로운 이동을 등록합니다.</Typography>
+        <Typography>이동을 편집 합니다.</Typography>
 
         <FormGroup sx={modalSizeProps}>
           <Controller
@@ -253,7 +252,7 @@ const EditMoveModal: FC<Props> = ({ open, selectedMove, onClose }) => {
             취소
           </Button>
           <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
-            등록
+            편집
           </Button>
         </Stack>
       </form>

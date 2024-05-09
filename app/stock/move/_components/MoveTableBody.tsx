@@ -6,9 +6,9 @@ import OrderBodyRow from './MoveBodyRow';
 import LoadingRow from '@/components/table/LoadingRow';
 import { OrderHeaderList } from '../constants';
 import { CommonListProps } from '@/types';
-import RemoveOrderModal from './RemoveMoveModal';
+import RemoveMoveModal from '../../_components/RemoveMoveModal';
 import OrderDetailPopover from './MoveDetailPopover';
-import EditMoveModal from './EditMoveModal';
+import EditMoveModal from '../../_components/EditMoveModal';
 
 interface Props extends CommonListProps<Move> {}
 
@@ -49,7 +49,7 @@ const MoveTableBody: FC<Props> = ({ isLoading, isEmpty, data, scrollRef }) => {
       )}
 
       {selectedMove && (
-        <RemoveOrderModal
+        <RemoveMoveModal
           open={optionType === 'delete'}
           onClose={() => handleClickOption(null, null)}
           selectedMove={selectedMove}

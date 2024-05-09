@@ -18,13 +18,12 @@ import { modalSizeProps } from '@/components/commonStyles';
 import { useCreateClient } from '@/http/graphql/hooks/client/useCreateClient';
 import { ClientType } from '@/http/graphql/codegen/graphql';
 import { filterEmptyValues } from '@/utils/common';
-import { clientTypes } from '../constants';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { CLIENT_PREFIX } from '@/constants';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import MoveProduct from './MoveProduct';
 import { PlusOne } from '@mui/icons-material';
-import { CreateMoveForm, createMoveSchema } from '../_validations/createMoveValidation';
+import { CreateMoveForm, createMoveSchema } from '../_validation/createMoveValidation';
 import dayjs from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers';
 

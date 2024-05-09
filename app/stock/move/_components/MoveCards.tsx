@@ -6,10 +6,10 @@ import EmptyItem from '@/components/ui/listItem/EmptyItem';
 import MoveCard from './MoveCard';
 import LoadingCard from '../../../../components/ui/loading/LoadingCard';
 import { CommonListProps } from '@/types';
-import EditOrderModal from './EditMoveModal';
-import RemoveMoveModal from './RemoveMoveModal';
+import EditOrderModal from '../../_components/EditMoveModal';
+import RemoveMoveModal from '../../_components/RemoveMoveModal';
 import MoveDetailPopover from './MoveDetailPopover';
-import EditMoveModal from './EditMoveModal';
+import EditMoveModal from '../../_components/EditMoveModal';
 
 interface Props extends CommonListProps<Move> {
   sx?: SxProps;

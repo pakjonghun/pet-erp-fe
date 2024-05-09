@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { PlusOneOutlined, Search } from '@mui/icons-material';
 import { useState } from 'react';
-import AddMoveModal from './_components/AddMoveModal';
+import AddMoveModal from '../_components/AddMoveModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import MoveTableBody from './_components/MoveTableBody';
 import { LIMIT } from '@/constants';
@@ -104,19 +104,17 @@ const OrderPage = () => {
   const scrollRef = useInfinityScroll({ callback });
   const isEmpty = !isLoading && rows.length === 0;
 
-  const [openCreateClient, setOpenCreateClient] = useState(false);
+  const [openAddMove, setOpenAddModal] = useState(false);
   return (
     <TablePage sx={{ flex: 1 }}>
-      {openCreateClient && (
-        <AddMoveModal open={openCreateClient} onClose={() => setOpenCreateClient(false)} />
-      )}
+      {openAddMove && <AddMoveModal open={openAddMove} onClose={() => setOpenAddModal(false)} />}
       <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="이동" />
         <Stack direction="row" alignItems="center" gap={2}>
           <ActionButton
             icon={<PlusOneOutlined />}
             text="이동 등록"
-            onClick={() => setOpenCreateClient(true)}
+            onClick={() => setOpenAddModal(true)}
           />
         </Stack>
       </Stack>
