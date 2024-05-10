@@ -12,12 +12,23 @@ import OptionCell from './OptionCell';
 
 interface Props {
   productStock: TotalProductStockOutput;
-  onClickRow: (event: MouseEvent<HTMLTableCellElement>, stock: TotalProductStockOutput) => void;
-  onClickOption: (option: any | null, client: TotalProductStockOutput | null) => void;
+  onClickRow: (
+    event: MouseEvent<HTMLTableCellElement>,
+    stock: TotalProductStockOutput
+  ) => void;
+  onClickOption: (
+    option: any | null,
+    client: TotalProductStockOutput | null
+  ) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption, onClickRow }) => {
+const ProductStockBodyRow: FC<Props> = ({
+  productStock,
+  scrollRef,
+  onClickOption,
+  onClickRow,
+}) => {
   const [open, setOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
 
@@ -54,13 +65,19 @@ const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption
   return (
     <>
       <TableRow hover ref={scrollRef}>
-        <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
+        <Menu
+          anchorEl={menuAnchor}
+          open={!!menuAnchor}
+          onClose={() => setMenuAnchor(null)}
+        >
           {Object.entries(productOptionMenus).map(([option, menu]) => (
             <OptionMenu key={option} menu={menu} option={option} />
           ))}
         </Menu>
         <Cell onClick={() => setOpen((prev) => !prev)}>
-          <IconButton>{open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}</IconButton>
+          <IconButton>
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
         </Cell>
         {parsedClient.map((item, index) => (
           <Cell
@@ -77,7 +94,11 @@ const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption
 
         <OptionCell onClick={setMenuAnchor} />
       </TableRow>
-      <CollapseRow onClickOption={onClickOption} productStock={productStock} open={open} />
+      <CollapseRow
+        onClickOption={onClickOption}
+        productStock={productStock}
+        open={open}
+      />
     </>
   );
 };

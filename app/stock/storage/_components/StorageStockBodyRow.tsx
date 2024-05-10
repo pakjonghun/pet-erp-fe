@@ -1,30 +1,40 @@
+import { FC, MouseEvent, useState } from 'react';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import Cell from '@/components/table/Cell';
 import { IconButton, Menu, TableRow } from '@mui/material';
-import React, { FC, MouseEvent, useState } from 'react';
-import { SelectedOptionItem } from '@/constants';
-import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
+import { EMPTY, SelectedOptionItem } from '@/constants';
+import { StockStorageOutput } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import CollapseRow from './CollapseRow';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import OptionCell from './OptionCell';
 
 interface Props {
-  productStock: TotalProductStockOutput;
-  onClickRow: (event: MouseEvent<HTMLTableCellElement>, stock: TotalProductStockOutput) => void;
-  onClickOption: (option: any | null, client: TotalProductStockOutput | null) => void;
+  storageStock: StockStorageOutput;
+  onClickRow: (
+    event: MouseEvent<HTMLTableCellElement>,
+    stock: StockStorageOutput
+  ) => void;
+  onClickOption: (
+    option: any | null,
+    client: StockStorageOutput | null
+  ) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption, onClickRow }) => {
+const StorageStockBodyRow: FC<Props> = ({
+  storageStock,
+  scrollRef,
+  onClickOption,
+  onClickRow,
+}) => {
   const [open, setOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
 
   const productOptionMenus: Record<any, SelectedOptionItem> = {
     edit: {
       callback: () => {
-        onClickOption('add', productStock);
+        onClickOption('add', storageStock);
         setMenuAnchor(null);
       },
       label: '입고',
@@ -32,7 +42,7 @@ const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption
     },
     delete: {
       callback: () => {
-        onClickOption('out', productStock);
+        onClickOption('out', storageStock);
         setMenuAnchor(null);
       },
       label: '출고',
@@ -40,33 +50,41 @@ const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption
     },
   };
 
-  const createRow = (stock: TotalProductStockOutput) => {
+  const createRow = (stock: StockStorageOutput) => {
     return [
-      stock.product.name,
-      `${stock.storageCount}(${stock.orderCount})` ?? 0,
-      stock.recentSaleCount,
-      0,
+      stock.name,
+      stock.phoneNumber ?? EMPTY,
+      stock.address ?? EMPTY,
+      stock.note ?? EMPTY,
+      stock.totalStock ?? 0,
+      stock.totalWonCost ?? 0,
     ];
   };
 
-  const parsedClient = createRow(productStock);
+  const parsedClient = createRow(storageStock);
 
   return (
     <>
       <TableRow hover ref={scrollRef}>
-        <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
+        <Menu
+          anchorEl={menuAnchor}
+          open={!!menuAnchor}
+          onClose={() => setMenuAnchor(null)}
+        >
           {Object.entries(productOptionMenus).map(([option, menu]) => (
             <OptionMenu key={option} menu={menu} option={option} />
           ))}
         </Menu>
         <Cell onClick={() => setOpen((prev) => !prev)}>
-          <IconButton>{open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}</IconButton>
+          <IconButton>
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
         </Cell>
         {parsedClient.map((item, index) => (
           <Cell
-            key={`${productStock.__typename}_${index}`}
+            key={`${storageStock.__typename}_${index}`}
             onClick={(event) => {
-              onClickRow(event, productStock);
+              onClickRow(event, storageStock);
               setOpen((prev) => !prev);
             }}
             sx={{ minWidth: 200 }}
@@ -75,11 +93,15 @@ const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption
           </Cell>
         ))}
 
-        <OptionCell onClick={setMenuAnchor} />
+        {/* <OptionCell onClick={setMenuAnchor} /> */}
       </TableRow>
-      <CollapseRow onClickOption={onClickOption} productStock={productStock} open={open} />
+      <CollapseRow
+        onClickOption={onClickOption}
+        storageStock={storageStock}
+        open={open}
+      />
     </>
   );
 };
 
-export default ProductStockBodyRow;
+export default StorageStockBodyRow;

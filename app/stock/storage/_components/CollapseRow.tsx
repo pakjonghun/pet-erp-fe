@@ -1,22 +1,34 @@
-import { TableRow, TableCell, Collapse, Box, Tabs, alpha } from '@mui/material';
+import {
+  TableRow,
+  TableCell,
+  Collapse,
+  Box,
+  alpha,
+  FormControl,
+  InputAdornment,
+  TextField,
+} from '@mui/material';
 import React, { FC, useState } from 'react';
 import { StockStorageHeaderList } from '../constants';
-import { NormalTab } from '@/components/commonStyles';
-import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
-import SubTableOrder from './SubTableOrder';
-import SubTableTotalProductStock from './SubTableTotalProductStock';
-import SubTableMove from './SubTableMove';
+import { StockStorageOutput } from '@/http/graphql/codegen/graphql';
+import SubTableProductStock from './SubTableProductStock';
+import { Search } from '@mui/icons-material';
+import useTextDebounce from '@/hooks/useTextDebounce';
 
 interface Props {
   open: boolean;
-  productStock: TotalProductStockOutput;
-  onClickOption: (option: any | null, client: TotalProductStockOutput | null) => void;
+  storageStock: StockStorageOutput;
+  onClickOption: (
+    option: any | null,
+    client: StockStorageOutput | null
+  ) => void;
 }
 
 const CollapseTabs = ['총괄현황', '발주현황', '이동현황'];
 
-const CollapseRow: FC<Props> = ({ open, productStock, onClickOption }) => {
-  const [tabValue, setTabValue] = useState(0);
+const CollapseRow: FC<Props> = ({ open, storageStock, onClickOption }) => {
+  const [keyword, setKeyword] = useState('');
+  const delayedKeyword = useTextDebounce(keyword);
 
   return (
     <TableRow>
@@ -29,26 +41,26 @@ const CollapseRow: FC<Props> = ({ open, productStock, onClickOption }) => {
       >
         <Collapse in={open}>
           <Box sx={{ mt: 4, mb: 8, width: '90%', ml: 'auto' }}>
-            <Tabs value={tabValue} sx={{ borderBottom: '1px solid gray', mb: 3 }}>
-              {CollapseTabs.map((tab, index) => {
-                return (
-                  <NormalTab
-                    key={`${index}_${tab}`}
-                    fontSize={14}
-                    label={tab}
-                    onClick={() => setTabValue(index)}
-                  />
-                );
-              })}
-            </Tabs>
-            {tabValue === 0 && (
-              <SubTableTotalProductStock
-                onClickOption={onClickOption}
-                productStock={productStock}
+            <FormControl>
+              <TextField
+                value={keyword}
+                onChange={(event) => setKeyword(event.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Search />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{ width: 300, my: 2 }}
+                label="검색할 제품 이름을 입력하세요."
+                size="small"
               />
-            )}
-            {tabValue === 1 && <SubTableOrder productStock={productStock} />}
-            {tabValue === 2 && <SubTableMove productStock={productStock} />}
+            </FormControl>
+            <SubTableProductStock
+              storage={storageStock}
+              keyword={delayedKeyword}
+            />
           </Box>
         </Collapse>
       </TableCell>

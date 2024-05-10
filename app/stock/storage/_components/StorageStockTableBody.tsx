@@ -1,37 +1,51 @@
 import { FC, Fragment, useState } from 'react';
-import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
-import { Box, Collapse, Tab, TableBody, TableCell, TableRow, Tabs } from '@mui/material';
+import {
+  StockStorageOutput,
+  TotalProductStockOutput,
+} from '@/http/graphql/codegen/graphql';
+import {
+  Box,
+  Collapse,
+  Tab,
+  TableBody,
+  TableCell,
+  TableRow,
+  Tabs,
+} from '@mui/material';
 import EmptyRow from '@/components/table/EmptyRow';
-import ProductStockBodyRow from './ProductStockBodyRow';
+import StorageStockBodyRow from './StorageStockBodyRow';
 // import { SelectOption } from '../../types';
 import LoadingRow from '@/components/table/LoadingRow';
 import { StockStorageHeaderList } from '../constants';
 import { CommonListProps } from '@/types';
 
-interface Props extends CommonListProps<TotalProductStockOutput> {
+interface Props extends CommonListProps<StockStorageOutput> {
   openAddStock: () => void;
   openOutStock: () => void;
-  productStock: null | TotalProductStockOutput;
-  setProductStock: (item: null | TotalProductStockOutput) => void;
+  storageStock: null | StockStorageOutput;
+  setStorageStock: (item: null | StockStorageOutput) => void;
 }
 
-const ProductStockTableBody: FC<Props> = ({
+const StorageStockTableBody: FC<Props> = ({
   isLoading,
   isEmpty,
   data,
   scrollRef,
   openAddStock,
   openOutStock,
-  productStock,
-  setProductStock,
+  storageStock,
+  setStorageStock,
 }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
 
   const [optionType, setOptionType] = useState<null | string>(null);
 
-  const handleClickOption = (option: any | null, product: TotalProductStockOutput | null) => {
-    setProductStock(product);
+  const handleClickOption = (
+    option: any | null,
+    stock: StockStorageOutput | null
+  ) => {
+    setStorageStock(storageStock);
     if (option == 'add') {
       console.log('add');
       openAddStock();
@@ -55,43 +69,35 @@ const ProductStockTableBody: FC<Props> = ({
 
   const handleClosePopover = () => {
     setPopoverAnchor(null);
-    setProductStock(null);
+    setStorageStock(null);
   };
 
   return (
     <TableBody>
-      {/* {selectedClient && (
-        <ClientDetailPopover
-          onClose={handleClosePopover}
-          position={popoverPosition}
-          open={!!popoverAnchor}
-          anchorEl={popoverAnchor}
-          onClickDelete={handleClickDelete}
-          onClickEdit={handleClickEdit}
-          selectedClient={selectedClient}
-        />
-      )} */}
       <EmptyRow colSpan={StockStorageHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
-        const stock = item as unknown as TotalProductStockOutput;
+        const stock = item as unknown as StockStorageOutput;
         const isLast = index === data.length - 1;
         return (
-          <ProductStockBodyRow
-            onClickRow={(event, stock: TotalProductStockOutput) => {
+          <StorageStockBodyRow
+            onClickRow={(event, stock: StockStorageOutput) => {
               setPopoverPosition({ left: event.clientX, top: event.clientY });
               setPopoverAnchor(event.currentTarget);
-              setProductStock(stock);
+              setStorageStock(stock);
             }}
-            productStock={stock}
+            storageStock={stock}
             scrollRef={isLast ? scrollRef : null}
             onClickOption={handleClickOption}
             key={`${index}_${item._id}`}
           />
         );
       })}
-      <LoadingRow isLoading={isLoading} colSpan={StockStorageHeaderList.length} />
+      <LoadingRow
+        isLoading={isLoading}
+        colSpan={StockStorageHeaderList.length}
+      />
     </TableBody>
   );
 };
 
-export default ProductStockTableBody;
+export default StorageStockTableBody;

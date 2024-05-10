@@ -20,45 +20,14 @@ import { useState } from 'react';
 import AddProductStockModal from './_components/AddProductStockModal';
 import OutProductStockModal from './_components/OutProductStockModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
-import ProductStockTableBody from './_components/ProductStockTableBody';
+import StorageStockTableBody from './_components/StorageStockTableBody';
 import { LIMIT } from '@/constants';
-import ProductStockCards from './_components/ProductStockCards';
 import ActionButton from '@/components/ui/button/ActionButton';
 import { StockStorageHeaderList } from './constants';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { StockStorageOutput, TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
+import { StockStorageOutput } from '@/http/graphql/codegen/graphql';
 import InventoryIcon from '@mui/icons-material/Inventory';
-
-const totalProductStockOutputs: TotalProductStockOutput[] = [
-  {
-    _id: '123',
-    product: {
-      _id: 'prod1',
-      code: '123',
-      name: 'LED TV',
-    },
-    storage: {
-      _id: 'storage1',
-      name: 'Main Warehouse',
-    },
-    storageCount: 150,
-    orderCount: 25,
-    recentSaleCount: 30,
-  },
-  {
-    _id: '1234',
-    product: {
-      code: '1234',
-      _id: 'prod2',
-      name: 'Smartphone',
-    },
-    storage: null, // 예를 들어 이 제품은 현재 재고 위치가 없을 수 있습니다.
-    storageCount: null,
-    orderCount: 50,
-    recentSaleCount: 45,
-  },
-];
 
 const stockStorages: StockStorageOutput[] = [
   {
@@ -84,7 +53,9 @@ const stockStorages: StockStorageOutput[] = [
 const StorageStockPage = () => {
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
-  const [productStock, setProductStock] = useState<null | TotalProductStockOutput>(null);
+  const [storageStock, setStorageStock] = useState<null | StockStorageOutput>(
+    null
+  );
 
   const { data, networkStatus, fetchMore, refetch } = useClients({
     keyword: delayKeyword,
@@ -92,7 +63,7 @@ const StorageStockPage = () => {
     limit: LIMIT,
   });
 
-  const rows = totalProductStockOutputs ?? [];
+  const rows = stockStorages ?? [];
   const isLoading = networkStatus == 3 || networkStatus == 1;
 
   const callback: IntersectionObserverCallback = (entries) => {
@@ -120,7 +91,7 @@ const StorageStockPage = () => {
   const [openOutStock, setOpenOutStock] = useState(false);
   return (
     <TablePage sx={{ flex: 1 }}>
-      {openAddStock && (
+      {/* {openAddStock && (
         <AddProductStockModal
           productStock={productStock}
           open={openAddStock}
@@ -139,8 +110,13 @@ const StorageStockPage = () => {
             setProductStock(null);
           }}
         />
-      )}
-      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+      )} */}
+      <Stack
+        sx={{ px: 2 }}
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <TableTitle title="위치별 재고관리" />
         <Stack direction="row" alignItems="center" gap={2}>
           <ActionButton
@@ -155,38 +131,10 @@ const StorageStockPage = () => {
           />
         </Stack>
       </Stack>
-      <FormGroup sx={{ ml: 2 }}>
-        <FormControl>
-          <TextField
-            onChange={(event) => setKeyword(event.target.value)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Search />
-                </InputAdornment>
-              ),
-            }}
-            sx={{ width: 270, my: 2 }}
-            label="검색할 위치(창고) 이름을 입력하세요."
-            size="small"
-          />
-        </FormControl>
-      </FormGroup>
       <Typography sx={{ p: 3 }}>
         {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
       </Typography>
-      <ProductStockCards
-        sx={{
-          display: {
-            xs: 'block',
-            md: 'none',
-          },
-        }}
-        data={rows}
-        isEmpty={isEmpty}
-        isLoading={isLoading}
-        scrollRef={scrollRef}
-      />
+
       <ScrollTableContainer
         sx={{
           display: {
@@ -203,9 +151,9 @@ const StorageStockPage = () => {
               ))}
             </TableRow>
           </TableHead>
-          <ProductStockTableBody
-            productStock={productStock}
-            setProductStock={setProductStock}
+          <StorageStockTableBody
+            storageStock={storageStock}
+            setStorageStock={setStorageStock}
             openAddStock={() => setOpenAddStock(true)}
             openOutStock={() => setOpenOutStock(true)}
             data={rows}

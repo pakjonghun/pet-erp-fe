@@ -63,7 +63,8 @@ const totalProductStockOutputs: TotalProductStockOutput[] = [
 const ProductStockPage = () => {
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
-  const [productStock, setProductStock] = useState<null | TotalProductStockOutput>(null);
+  const [productStock, setProductStock] =
+    useState<null | TotalProductStockOutput>(null);
 
   const { data, networkStatus, fetchMore, refetch } = useClients({
     keyword: delayKeyword,
@@ -119,7 +120,12 @@ const ProductStockPage = () => {
           }}
         />
       )}
-      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+      <Stack
+        sx={{ px: 2 }}
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <TableTitle title="제품별 재고관리" />
         <Stack direction="row" alignItems="center" gap={2}>
           <ActionButton
@@ -145,7 +151,7 @@ const ProductStockPage = () => {
                 </InputAdornment>
               ),
             }}
-            sx={{ width: 270, my: 2 }}
+            sx={{ width: 300, my: 2 }}
             label="검색할 제품 이름을 입력하세요."
             size="small"
           />

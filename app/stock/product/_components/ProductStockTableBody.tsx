@@ -1,6 +1,14 @@
 import { FC, Fragment, useState } from 'react';
 import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
-import { Box, Collapse, Tab, TableBody, TableCell, TableRow, Tabs } from '@mui/material';
+import {
+  Box,
+  Collapse,
+  Tab,
+  TableBody,
+  TableCell,
+  TableRow,
+  Tabs,
+} from '@mui/material';
 import EmptyRow from '@/components/table/EmptyRow';
 import ProductStockBodyRow from './ProductStockBodyRow';
 // import { SelectOption } from '../../types';
@@ -30,15 +38,16 @@ const ProductStockTableBody: FC<Props> = ({
 
   const [optionType, setOptionType] = useState<null | string>(null);
 
-  const handleClickOption = (option: any | null, product: TotalProductStockOutput | null) => {
+  const handleClickOption = (
+    option: any | null,
+    product: TotalProductStockOutput | null
+  ) => {
     setProductStock(product);
     if (option == 'add') {
-      console.log('add');
       openAddStock();
     }
 
     if (option == 'out') {
-      console.log('out');
       openOutStock();
     }
   };
@@ -89,7 +98,10 @@ const ProductStockTableBody: FC<Props> = ({
           />
         );
       })}
-      <LoadingRow isLoading={isLoading} colSpan={ProductStockHeaderList.length} />
+      <LoadingRow
+        isLoading={isLoading}
+        colSpan={ProductStockHeaderList.length}
+      />
     </TableBody>
   );
 };

@@ -6,7 +6,6 @@ export const StockStorageHeaderList = [
   '비고',
   '총 재고수량',
   '총 재고원가',
-  '',
 ];
 
 export const initStock = {
