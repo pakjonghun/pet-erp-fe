@@ -14,10 +14,7 @@ import {
   createProductStockSchema,
 } from '../_validations/createProductStockList';
 import StockProduct from './StockProduct';
-import {
-  StockStorageOutput,
-  TotalProductStockOutput,
-} from '@/http/graphql/codegen/graphql';
+import { StockStorageOutput } from '@/http/graphql/codegen/graphql';
 
 interface Props {
   open: boolean;
@@ -56,10 +53,10 @@ const AddStorageStockModal: FC<Props> = ({ open, onClose, storageStock }) => {
   });
 
   const handleAppendProduct = () => {
-    // const newStock = productStock
-    //   ? { ...initStock, product: productStock?.product.name ?? '' }
-    //   : initStock;
-    // append(newStock);
+    const newStock = storageStock
+      ? { ...initStock, storage: storageStock?.name ?? '' }
+      : initStock;
+    append(newStock);
   };
 
   const currentProductList = watch('productList');
@@ -100,7 +97,7 @@ const AddStorageStockModal: FC<Props> = ({ open, onClose, storageStock }) => {
             {fields.map((product, index) => {
               return (
                 <StockProduct
-                  isProductFreeze={!!product}
+                  isStorageFreeze={!!product.storage}
                   index={index}
                   control={control}
                   error={errors.productList?.[index]}

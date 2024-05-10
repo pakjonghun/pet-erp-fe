@@ -1,3 +1,4 @@
+import { FC, useState } from 'react';
 import {
   TableRow,
   TableCell,
@@ -8,7 +9,6 @@ import {
   InputAdornment,
   TextField,
 } from '@mui/material';
-import React, { FC, useState } from 'react';
 import { StockStorageHeaderList } from '../constants';
 import { StockStorageOutput } from '@/http/graphql/codegen/graphql';
 import SubTableProductStock from './SubTableProductStock';
@@ -58,6 +58,7 @@ const CollapseRow: FC<Props> = ({ open, storageStock, onClickOption }) => {
               />
             </FormControl>
             <SubTableProductStock
+              onClickOption={onClickOption}
               storage={storageStock}
               keyword={delayedKeyword}
             />

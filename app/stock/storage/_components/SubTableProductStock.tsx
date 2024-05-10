@@ -22,17 +22,25 @@ import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import OptionCell from './OptionCell';
 
 interface Props {
-  storage: StockStorageOutput;
   keyword: string;
+  storage: StockStorageOutput;
+  onClickOption: (
+    option: any | null,
+    client: StockStorageOutput | null
+  ) => void;
 }
 
-const SubTableProductStock: FC<Props> = ({ keyword, storage }) => {
+const SubTableProductStock: FC<Props> = ({
+  keyword,
+  storage,
+  onClickOption,
+}) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
 
   const productOptionMenus: Record<any, SelectedOptionItem> = {
     edit: {
       callback: () => {
-        // onClickOption('add', productStock);
+        onClickOption('add', storage);
         setMenuAnchor(null);
       },
       label: '입고',
@@ -40,7 +48,7 @@ const SubTableProductStock: FC<Props> = ({ keyword, storage }) => {
     },
     delete: {
       callback: () => {
-        // onClickOption('out', productStock);
+        onClickOption('out', storage);
         setMenuAnchor(null);
       },
       label: '출고',

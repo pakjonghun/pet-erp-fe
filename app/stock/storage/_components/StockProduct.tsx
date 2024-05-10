@@ -5,9 +5,17 @@ import { LIMIT } from '@/constants';
 import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Autocomplete, Box, IconButton, Stack, TextField } from '@mui/material';
-import { Control, Controller, FieldArrayWithId, FieldErrors } from 'react-hook-form';
+import {
+  Control,
+  Controller,
+  FieldArrayWithId,
+  FieldErrors,
+} from 'react-hook-form';
 import NumberInput from '@/components/ui/input/NumberInput';
-import { CreateProductForm, CreateProductStockForm } from '../_validations/createProductStockList';
+import {
+  CreateProductForm,
+  CreateProductStockForm,
+} from '../_validations/createProductStockList';
 
 interface Props {
   index: number;
@@ -18,7 +26,7 @@ interface Props {
     newItem: FieldArrayWithId<CreateProductStockForm, 'productList', 'id'>
   ) => void;
   error?: FieldErrors<CreateProductForm>;
-  isProductFreeze?: boolean;
+  isStorageFreeze?: boolean;
 }
 
 const storages = [
@@ -44,7 +52,7 @@ const StockProduct: FC<Props> = ({
   remove,
   replace,
   error,
-  isProductFreeze = false,
+  isStorageFreeze = false,
 }) => {
   const [productKeyword, setProductKeyword] = useState('');
   const delayedProductKeyword = useTextDebounce(productKeyword ?? '');
@@ -56,7 +64,8 @@ const StockProduct: FC<Props> = ({
   });
 
   const rows = data?.products.data.map((item) => item.name) ?? [];
-  const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
+  const isLoading =
+    networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -95,6 +104,7 @@ const StockProduct: FC<Props> = ({
         render={({ field }) => {
           return (
             <Autocomplete
+              disabled={isStorageFreeze}
               value={field.value}
               onChange={(_, value) => field.onChange(value)}
               sx={{ width: 400 }}
@@ -108,7 +118,9 @@ const StockProduct: FC<Props> = ({
               loadingText="로딩중"
               noOptionsText="검색 결과가 없습니다."
               disablePortal
-              renderInput={(params) => <TextField {...params} label="창고" required />}
+              renderInput={(params) => (
+                <TextField {...params} label="창고" required />
+              )}
               renderOption={(props, item, state) => {
                 const { key, ...rest } = props as any;
                 const isLast = state.index === storages.length - 1;
@@ -128,7 +140,6 @@ const StockProduct: FC<Props> = ({
         render={({ field }) => {
           return (
             <Autocomplete
-              disabled={isProductFreeze}
               value={field.value}
               fullWidth
               filterSelectedOptions
@@ -157,7 +168,12 @@ const StockProduct: FC<Props> = ({
                 const { key, ...rest } = props as any;
                 const isLast = state.index === rows.length - 1;
                 return (
-                  <Box component="li" ref={isLast ? scrollRef : null} key={item} {...rest}>
+                  <Box
+                    component="li"
+                    ref={isLast ? scrollRef : null}
+                    key={item}
+                    {...rest}
+                  >
                     {item}
                   </Box>
                 );

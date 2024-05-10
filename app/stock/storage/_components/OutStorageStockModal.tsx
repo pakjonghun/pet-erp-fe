@@ -23,7 +23,6 @@ interface Props {
   open: boolean;
   onClose: () => void;
   storageStock: null | StockStorageOutput;
-  storage?: string;
 }
 
 const OutStorageStockModal: FC<Props> = ({ open, onClose, storageStock }) => {
@@ -57,11 +56,10 @@ const OutStorageStockModal: FC<Props> = ({ open, onClose, storageStock }) => {
   });
 
   const handleAppendProduct = () => {
-    // const newStock = storageStock
-    //   ? { ...initStock, product: storageStock.product.name ?? '' }
-    //   : initStock;
-    // console.log('newStock : ', newStock);
-    // append(newStock);
+    const newStock = storageStock
+      ? { ...initStock, storage: storageStock.name ?? '' }
+      : initStock;
+    append(newStock);
   };
 
   const currentProductList = watch('productList');
@@ -102,7 +100,7 @@ const OutStorageStockModal: FC<Props> = ({ open, onClose, storageStock }) => {
             {fields.map((product, index) => {
               return (
                 <StockProduct
-                  isProductFreeze={!!product}
+                  isStorageFreeze={!!product.storage}
                   index={index}
                   control={control}
                   error={errors.productList?.[index]}
