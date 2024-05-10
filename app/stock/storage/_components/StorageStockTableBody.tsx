@@ -19,14 +19,15 @@ import LoadingRow from '@/components/table/LoadingRow';
 import { StockStorageHeaderList } from '../constants';
 import { CommonListProps } from '@/types';
 import AddOrderModal from '../../_components/AddOrderModal';
+import AddMoveModal from '../../_components/AddMoveModal';
 
 interface Props extends CommonListProps<StockStorageOutput> {
   openAddStock: () => void;
   openOutStock: () => void;
   storageStock: null | StockStorageOutput;
+  productName: string;
   setStorageStock: (item: null | StockStorageOutput) => void;
   setProductName: (productName: string) => void;
-  productName: string;
 }
 
 const StorageStockTableBody: FC<Props> = ({
@@ -88,9 +89,6 @@ const StorageStockTableBody: FC<Props> = ({
 
   return (
     <TableBody>
-      {/* storageStock
-openOrderModal
-openMoveModal */}
       {openOrderModal && (
         <AddOrderModal
           product={productName}
@@ -98,6 +96,20 @@ openMoveModal */}
           onClose={() => {
             setOpenOrderModal(false);
             setStorageStock(null);
+            setProductName('');
+          }}
+        />
+      )}
+
+      {openMoveModal && (
+        <AddMoveModal
+          productName={productName}
+          storageStock={storageStock}
+          open={openMoveModal}
+          onClose={() => {
+            setOpenMoveModal(false);
+            setStorageStock(null);
+            setProductName('');
           }}
         />
       )}

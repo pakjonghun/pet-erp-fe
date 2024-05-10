@@ -113,7 +113,6 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
   };
 
   const handleAddProduct = () => {
-    console.log(product);
     const initProduct = {
       product: product ?? '',
       count: 0,

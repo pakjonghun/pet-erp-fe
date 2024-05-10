@@ -10,20 +10,28 @@ import {
   Typography,
 } from '@mui/material';
 import { FC, useState } from 'react';
-import { Controller, FieldArrayWithId, useFieldArray, useForm } from 'react-hook-form';
+import {
+  Controller,
+  FieldArrayWithId,
+  useFieldArray,
+  useForm,
+} from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { modalSizeProps } from '@/components/commonStyles';
 import { useCreateClient } from '@/http/graphql/hooks/client/useCreateClient';
-import { ClientType } from '@/http/graphql/codegen/graphql';
+import { ClientType, StockStorageOutput } from '@/http/graphql/codegen/graphql';
 import { filterEmptyValues } from '@/utils/common';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { CLIENT_PREFIX } from '@/constants';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import MoveProduct from './MoveProduct';
 import { PlusOne } from '@mui/icons-material';
-import { CreateMoveForm, createMoveSchema } from '../_validation/createMoveValidation';
+import {
+  CreateMoveForm,
+  createMoveSchema,
+} from '../_validation/createMoveValidation';
 import dayjs from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers';
 
@@ -47,9 +55,16 @@ const places = [
 interface Props {
   open: boolean;
   onClose: () => void;
+  storageStock: null | StockStorageOutput;
+  productName: string;
 }
 
-const AddMoveModal: FC<Props> = ({ open, onClose }) => {
+const AddMoveModal: FC<Props> = ({
+  open,
+  onClose,
+  storageStock,
+  productName,
+}) => {
   const [createClient, { loading }] = useCreateClient();
 
   const {
@@ -61,7 +76,7 @@ const AddMoveModal: FC<Props> = ({ open, onClose }) => {
   } = useForm<CreateMoveForm>({
     resolver: zodResolver(createMoveSchema),
     defaultValues: {
-      fromPlace: '',
+      fromPlace: storageStock?.name ?? '',
       toPlace: '',
       endDate: dayjs().endOf('date').toDate(),
       startDate: dayjs().startOf('date').toDate(),
@@ -107,7 +122,7 @@ const AddMoveModal: FC<Props> = ({ open, onClose }) => {
 
   const handleAddProduct = () => {
     const initProduct = {
-      product: '',
+      product: productName ?? '',
       count: 0,
     };
 
@@ -142,6 +157,7 @@ const AddMoveModal: FC<Props> = ({ open, onClose }) => {
             render={({ field }) => {
               return (
                 <Autocomplete
+                  disabled={!!storageStock}
                   groupBy={(item) => item[0]}
                   value={field.value}
                   onChange={(_, value) => field.onChange(value)}
@@ -156,7 +172,9 @@ const AddMoveModal: FC<Props> = ({ open, onClose }) => {
                   loadingText="로딩중"
                   noOptionsText="검색 결과가 없습니다."
                   disablePortal
-                  renderInput={(params) => <TextField {...params} label="출발장소" required />}
+                  renderInput={(params) => (
+                    <TextField {...params} label="출발장소" required />
+                  )}
                   renderOption={(props, item, state) => {
                     const { key, ...rest } = props as any;
                     const isLast = state.index === places.length - 1;
@@ -189,7 +207,9 @@ const AddMoveModal: FC<Props> = ({ open, onClose }) => {
                   loadingText="로딩중"
                   noOptionsText="검색 결과가 없습니다."
                   disablePortal
-                  renderInput={(params) => <TextField {...params} label="도착장소" required />}
+                  renderInput={(params) => (
+                    <TextField {...params} label="도착장소" required />
+                  )}
                   renderOption={(props, item, state) => {
                     const { key, ...rest } = props as any;
                     const isLast = state.index === places.length - 1;
@@ -233,6 +253,7 @@ const AddMoveModal: FC<Props> = ({ open, onClose }) => {
           {fields.map((field, index) => {
             return (
               <MoveProduct
+                isProductFreeze={!!productName}
                 key={`${index}_${field.id}`}
                 control={control}
                 index={index}
@@ -247,7 +268,11 @@ const AddMoveModal: FC<Props> = ({ open, onClose }) => {
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
-          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
+          <Button
+            type="submit"
+            endIcon={loading ? <CommonLoading /> : ''}
+            variant="contained"
+          >
             등록
           </Button>
         </Stack>
