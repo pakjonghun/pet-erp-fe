@@ -107,8 +107,20 @@ const OrderPage = () => {
   const [openAddMove, setOpenAddModal] = useState(false);
   return (
     <TablePage sx={{ flex: 1 }}>
-      {openAddMove && <AddMoveModal open={openAddMove} onClose={() => setOpenAddModal(false)} />}
-      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+      {openAddMove && (
+        <AddMoveModal
+          productName=""
+          storageStock={null}
+          open={openAddMove}
+          onClose={() => setOpenAddModal(false)}
+        />
+      )}
+      <Stack
+        sx={{ px: 2 }}
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <TableTitle title="이동" />
         <Stack direction="row" alignItems="center" gap={2}>
           <ActionButton

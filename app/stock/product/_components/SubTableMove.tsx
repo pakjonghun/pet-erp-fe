@@ -60,7 +60,12 @@ const SubTableMove: FC<Props> = ({ productStock }) => {
 
   return (
     <TableContainer sx={{ mt: 1 }}>
-      <AddMoveModal open={openAddModal} onClose={() => setOpenAddModal(false)} />
+      <AddMoveModal
+        productName=""
+        storageStock={null}
+        open={openAddModal}
+        onClose={() => setOpenAddModal(false)}
+      />
 
       {selectedMove && (
         <EditMoveModal
@@ -101,7 +106,11 @@ const SubTableMove: FC<Props> = ({ productStock }) => {
         </Stack>
       </Stack>
       <Table sx={{ mt: 2 }} size="small">
-        <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
+        <Menu
+          anchorEl={menuAnchor}
+          open={!!menuAnchor}
+          onClose={() => setMenuAnchor(null)}
+        >
           {Object.entries(productOptionMenus).map(([option, menu]) => (
             <OptionMenu key={option} menu={menu} option={option} />
           ))}
