@@ -53,10 +53,12 @@ const StorageStockTableBody: FC<Props> = ({
     setStorageStock(storageStock);
     if (option == 'add') {
       openAddStock();
+      setStorageStock(stock);
     }
 
     if (option == 'out') {
       openOutStock();
+      setStorageStock(stock);
     }
 
     if (option == 'order') {
@@ -65,6 +67,7 @@ const StorageStockTableBody: FC<Props> = ({
 
     if (option == 'move') {
       setOpenMoveModal(true);
+      setStorageStock(stock);
     }
   };
 

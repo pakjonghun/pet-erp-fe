@@ -94,21 +94,25 @@ const StorageStockPage = () => {
     <TablePage sx={{ flex: 1 }}>
       {openAddStock && (
         <AddStorageStockModal
+          productName={productName}
           storageStock={storageStock}
           open={openAddStock}
           onClose={() => {
             setOpenAddStock(false);
             setStorageStock(null);
+            setProductName('');
           }}
         />
       )}
       {openOutStock && (
         <OutStorageStockModal
+          productName={productName}
           storageStock={storageStock}
           open={openOutStock}
           onClose={() => {
             setOpenOutStock(false);
             setStorageStock(null);
+            setProductName('');
           }}
         />
       )}

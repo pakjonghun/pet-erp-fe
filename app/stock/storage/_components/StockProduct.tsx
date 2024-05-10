@@ -27,6 +27,7 @@ interface Props {
   ) => void;
   error?: FieldErrors<CreateProductForm>;
   isStorageFreeze?: boolean;
+  isProductFreeze?: boolean;
 }
 
 const storages = [
@@ -53,6 +54,7 @@ const StockProduct: FC<Props> = ({
   replace,
   error,
   isStorageFreeze = false,
+  isProductFreeze = false,
 }) => {
   const [productKeyword, setProductKeyword] = useState('');
   const delayedProductKeyword = useTextDebounce(productKeyword ?? '');
@@ -140,6 +142,7 @@ const StockProduct: FC<Props> = ({
         render={({ field }) => {
           return (
             <Autocomplete
+              disabled={isProductFreeze}
               value={field.value}
               fullWidth
               filterSelectedOptions
