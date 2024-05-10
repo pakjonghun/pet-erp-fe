@@ -14,15 +14,18 @@ import {
   createProductStockSchema,
 } from '../_validations/createProductStockList';
 import StockProduct from './StockProduct';
-import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
+import {
+  StockStorageOutput,
+  TotalProductStockOutput,
+} from '@/http/graphql/codegen/graphql';
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  productStock: null | TotalProductStockOutput;
+  storageStock: null | StockStorageOutput;
 }
 
-const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
+const AddStorageStockModal: FC<Props> = ({ open, onClose, storageStock }) => {
   const [createClient, { loading }] = useCreateClient();
 
   const {
@@ -53,21 +56,27 @@ const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
   });
 
   const handleAppendProduct = () => {
-    const newStock = productStock
-      ? { ...initStock, product: productStock?.product.name ?? '' }
-      : initStock;
-    append(newStock);
+    // const newStock = productStock
+    //   ? { ...initStock, product: productStock?.product.name ?? '' }
+    //   : initStock;
+    // append(newStock);
   };
 
   const currentProductList = watch('productList');
 
-  const handleReplaceProduct = (index: number, newProduct: CreateProductForm) => {
+  const handleReplaceProduct = (
+    index: number,
+    newProduct: CreateProductForm
+  ) => {
     const clonedFields = [...currentProductList];
     clonedFields[index] = newProduct;
     replace(clonedFields);
   };
 
-  const totalCount = currentProductList.reduce((acc, cur) => acc + cur.count, 0);
+  const totalCount = currentProductList.reduce(
+    (acc, cur) => acc + cur.count,
+    0
+  );
 
   return (
     <BaseModal open={open} onClose={handleClose}>
@@ -78,7 +87,11 @@ const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
         <FormGroup sx={{ mt: 4 }}>
           <Stack direction="row" alignItems="center" gap={3}>
             <FormLabel>입고 재고 목록</FormLabel>
-            <Button onClick={handleAppendProduct} variant="outlined" endIcon={<PlusOneIcon />}>
+            <Button
+              onClick={handleAppendProduct}
+              variant="outlined"
+              endIcon={<PlusOneIcon />}
+            >
               추가
             </Button>
             <Typography>{`총수량 : ${totalCount}EA`}</Typography>
@@ -104,7 +117,11 @@ const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
-          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
+          <Button
+            type="submit"
+            endIcon={loading ? <CommonLoading /> : ''}
+            variant="contained"
+          >
             입고
           </Button>
         </Stack>
@@ -113,4 +130,4 @@ const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
   );
 };
 
-export default AddProductStockModal;
+export default AddStorageStockModal;

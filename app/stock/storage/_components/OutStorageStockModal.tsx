@@ -14,16 +14,19 @@ import {
   createProductStockSchema,
 } from '../_validations/createProductStockList';
 import StockProduct from './StockProduct';
-import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
+import {
+  StockStorageOutput,
+  TotalProductStockOutput,
+} from '@/http/graphql/codegen/graphql';
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  productStock: null | TotalProductStockOutput;
-  product?: string;
+  storageStock: null | StockStorageOutput;
+  storage?: string;
 }
 
-const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
+const OutStorageStockModal: FC<Props> = ({ open, onClose, storageStock }) => {
   const [createClient, { loading }] = useCreateClient();
 
   const {
@@ -54,22 +57,28 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
   });
 
   const handleAppendProduct = () => {
-    const newStock = productStock
-      ? { ...initStock, product: productStock.product.name ?? '' }
-      : initStock;
-    console.log('newStock : ', newStock);
-    append(newStock);
+    // const newStock = storageStock
+    //   ? { ...initStock, product: storageStock.product.name ?? '' }
+    //   : initStock;
+    // console.log('newStock : ', newStock);
+    // append(newStock);
   };
 
   const currentProductList = watch('productList');
 
-  const handleReplaceProduct = (index: number, newProduct: CreateProductForm) => {
+  const handleReplaceProduct = (
+    index: number,
+    newProduct: CreateProductForm
+  ) => {
     const clonedFields = [...currentProductList];
     clonedFields[index] = newProduct;
     replace(clonedFields);
   };
 
-  const totalCount = currentProductList.reduce((acc, cur) => acc + cur.count, 0);
+  const totalCount = currentProductList.reduce(
+    (acc, cur) => acc + cur.count,
+    0
+  );
 
   return (
     <BaseModal open={open} onClose={handleClose}>
@@ -80,7 +89,11 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
         <FormGroup sx={{ mt: 4 }}>
           <Stack direction="row" alignItems="center" gap={3}>
             <FormLabel>출고 재고 목록</FormLabel>
-            <Button onClick={handleAppendProduct} variant="outlined" endIcon={<PlusOneIcon />}>
+            <Button
+              onClick={handleAppendProduct}
+              variant="outlined"
+              endIcon={<PlusOneIcon />}
+            >
               추가
             </Button>
             <Typography>{`총수량 : ${totalCount}EA`}</Typography>
@@ -106,7 +119,11 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
-          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
+          <Button
+            type="submit"
+            endIcon={loading ? <CommonLoading /> : ''}
+            variant="contained"
+          >
             출고
           </Button>
         </Stack>
@@ -115,4 +132,4 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
   );
 };
 
-export default OutProductStockModal;
+export default OutStorageStockModal;

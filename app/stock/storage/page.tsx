@@ -17,8 +17,8 @@ import {
 } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import { useState } from 'react';
-import AddProductStockModal from './_components/AddProductStockModal';
-import OutProductStockModal from './_components/OutProductStockModal';
+import AddStorageStockModal from './_components/AddStorageStockModal';
+import OutStorageStockModal from './_components/OutStorageStockModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import StorageStockTableBody from './_components/StorageStockTableBody';
 import { LIMIT } from '@/constants';
@@ -91,26 +91,26 @@ const StorageStockPage = () => {
   const [openOutStock, setOpenOutStock] = useState(false);
   return (
     <TablePage sx={{ flex: 1 }}>
-      {/* {openAddStock && (
-        <AddProductStockModal
-          productStock={productStock}
+      {openAddStock && (
+        <AddStorageStockModal
+          storageStock={storageStock}
           open={openAddStock}
           onClose={() => {
             setOpenAddStock(false);
-            setProductStock(null);
+            setStorageStock(null);
           }}
         />
       )}
       {openOutStock && (
-        <OutProductStockModal
-          productStock={productStock}
+        <OutStorageStockModal
+          storageStock={storageStock}
           open={openOutStock}
           onClose={() => {
             setOpenOutStock(false);
-            setProductStock(null);
+            setStorageStock(null);
           }}
         />
-      )} */}
+      )}
       <Stack
         sx={{ px: 2 }}
         direction="row"

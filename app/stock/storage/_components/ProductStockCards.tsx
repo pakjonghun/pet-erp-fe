@@ -7,20 +7,30 @@ import EmptyItem from '@/components/ui/listItem/EmptyItem';
 import ProductStockCard from './ProductStockCard';
 import LoadingCard from '../../../../components/ui/loading/LoadingCard';
 import { CommonListProps } from '@/types';
-import AddProductStockModal from './AddProductStockModal';
-import OutProductStockModal from './OutProductStockModal';
+import AddProductStockModal from './AddStorageStockModal';
+import OutProductStockModal from './OutStorageStockModal';
 
 interface Props extends CommonListProps<TotalProductStockOutput> {
   sx?: SxProps;
 }
 
-const ProductStockCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx }) => {
+const ProductStockCards: FC<Props> = ({
+  isLoading,
+  isEmpty,
+  data,
+  scrollRef,
+  sx,
+}) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  const [productStock, setProductStock] = useState<null | TotalProductStockOutput>(null);
+  const [productStock, setProductStock] =
+    useState<null | TotalProductStockOutput>(null);
   const [optionType, setOptionType] = useState<null | any>(null);
 
-  const handleClickOption = (option: any | null, client: TotalProductStockOutput | null) => {
+  const handleClickOption = (
+    option: any | null,
+    client: TotalProductStockOutput | null
+  ) => {
     setProductStock(client);
     if (option == 'add') {
       setOpenAddStock(true);
@@ -64,7 +74,7 @@ const ProductStockCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx 
 
       {productStock && (
         <AddProductStockModal
-          productStock={productStock}
+          storageStock={productStock}
           open={openAddStock}
           onClose={() => setOpenAddStock(false)}
         />
