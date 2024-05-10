@@ -1,7 +1,7 @@
+import { FC } from 'react';
 import PlusOneIcon from '@mui/icons-material/PlusOne';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import { Button, FormGroup, FormLabel, Stack, Typography } from '@mui/material';
-import { FC } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
@@ -14,10 +14,7 @@ import {
   createProductStockSchema,
 } from '../_validations/createProductStockList';
 import StockProduct from './StockProduct';
-import {
-  StockStorageOutput,
-  TotalProductStockOutput,
-} from '@/http/graphql/codegen/graphql';
+import { StockStorageOutput } from '@/http/graphql/codegen/graphql';
 
 interface Props {
   open: boolean;

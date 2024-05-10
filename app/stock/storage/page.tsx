@@ -51,6 +51,7 @@ const stockStorages: StockStorageOutput[] = [
 ];
 
 const StorageStockPage = () => {
+  const [productName, setProductName] = useState('');
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
   const [storageStock, setStorageStock] = useState<null | StockStorageOutput>(
@@ -152,6 +153,8 @@ const StorageStockPage = () => {
             </TableRow>
           </TableHead>
           <StorageStockTableBody
+            productName={productName}
+            setProductName={setProductName}
             storageStock={storageStock}
             setStorageStock={setStorageStock}
             openAddStock={() => setOpenAddStock(true)}

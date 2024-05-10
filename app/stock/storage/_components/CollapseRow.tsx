@@ -18,15 +18,16 @@ import useTextDebounce from '@/hooks/useTextDebounce';
 interface Props {
   open: boolean;
   storageStock: StockStorageOutput;
-  onClickOption: (
-    option: any | null,
-    client: StockStorageOutput | null
-  ) => void;
+  onClickOption: (option: any | null, storage: StockStorageOutput) => void;
+  setProductName: (productName: string) => void;
 }
 
-const CollapseTabs = ['총괄현황', '발주현황', '이동현황'];
-
-const CollapseRow: FC<Props> = ({ open, storageStock, onClickOption }) => {
+const CollapseRow: FC<Props> = ({
+  open,
+  storageStock,
+  onClickOption,
+  setProductName,
+}) => {
   const [keyword, setKeyword] = useState('');
   const delayedKeyword = useTextDebounce(keyword);
 
@@ -58,6 +59,7 @@ const CollapseRow: FC<Props> = ({ open, storageStock, onClickOption }) => {
               />
             </FormControl>
             <SubTableProductStock
+              setProductName={setProductName}
               onClickOption={onClickOption}
               storage={storageStock}
               keyword={delayedKeyword}

@@ -5,19 +5,38 @@ import { LIMIT } from '@/constants';
 import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Autocomplete, Box, IconButton, Stack, TextField } from '@mui/material';
-import { Control, Controller, FieldArrayWithId, FieldErrors } from 'react-hook-form';
+import {
+  Control,
+  Controller,
+  FieldArrayWithId,
+  FieldErrors,
+} from 'react-hook-form';
 import NumberInput from '@/components/ui/input/NumberInput';
-import { CreateOrderForm, CreateMoveProductForm } from '../_validation/createOrderValidation';
+import {
+  CreateOrderForm,
+  CreateMoveProductForm,
+} from '../_validation/createOrderValidation';
 
 interface Props {
   index: number;
   control: Control<any>;
   remove: (index: number) => void;
-  replace: (index: number, newItem: FieldArrayWithId<CreateOrderForm, 'products', 'id'>) => void;
+  replace: (
+    index: number,
+    newItem: FieldArrayWithId<CreateOrderForm, 'products', 'id'>
+  ) => void;
+  isProductFreeze?: boolean;
   error?: FieldErrors<CreateMoveProductForm>;
 }
 
-const OrderProduct: FC<Props> = ({ index, control, remove, replace, error }) => {
+const OrderProduct: FC<Props> = ({
+  index,
+  control,
+  remove,
+  replace,
+  error,
+  isProductFreeze = false,
+}) => {
   const [productKeyword, setProductKeyword] = useState('');
   const delayedProductKeyword = useTextDebounce(productKeyword ?? '');
 
@@ -28,7 +47,8 @@ const OrderProduct: FC<Props> = ({ index, control, remove, replace, error }) => 
   });
 
   const rows = data?.products.data ?? [];
-  const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
+  const isLoading =
+    networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -53,7 +73,9 @@ const OrderProduct: FC<Props> = ({ index, control, remove, replace, error }) => 
 
   const [storageKeyword, setStorageKeyword] = useState('');
 
-  const handleReplaceItem = (newItem: FieldArrayWithId<CreateOrderForm, 'products', 'id'>) => {
+  const handleReplaceItem = (
+    newItem: FieldArrayWithId<CreateOrderForm, 'products', 'id'>
+  ) => {
     replace(index, newItem);
   };
 
@@ -65,6 +87,7 @@ const OrderProduct: FC<Props> = ({ index, control, remove, replace, error }) => 
         render={({ field }) => {
           return (
             <Autocomplete
+              disabled={isProductFreeze}
               value={field.value}
               onChange={(_, value) => field.onChange(value)}
               sx={{ width: 400 }}
@@ -78,7 +101,9 @@ const OrderProduct: FC<Props> = ({ index, control, remove, replace, error }) => 
               loadingText="로딩중"
               noOptionsText="검색 결과가 없습니다."
               disablePortal
-              renderInput={(params) => <TextField {...params} label="제품" required />}
+              renderInput={(params) => (
+                <TextField {...params} label="제품" required />
+              )}
               renderOption={(props, item, state) => {
                 const { key, ...rest } = props as any;
                 const isLast = state.index === rows.length - 1;

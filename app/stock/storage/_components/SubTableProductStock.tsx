@@ -24,16 +24,15 @@ import OptionCell from './OptionCell';
 interface Props {
   keyword: string;
   storage: StockStorageOutput;
-  onClickOption: (
-    option: any | null,
-    client: StockStorageOutput | null
-  ) => void;
+  onClickOption: (option: any | null, storage: StockStorageOutput) => void;
+  setProductName: (productName: string) => void;
 }
 
 const SubTableProductStock: FC<Props> = ({
   keyword,
   storage,
   onClickOption,
+  setProductName,
 }) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
 
@@ -56,7 +55,7 @@ const SubTableProductStock: FC<Props> = ({
     },
     order: {
       callback: () => {
-        // onClickOption('out', productStock);
+        onClickOption('order', storage);
         setMenuAnchor(null);
       },
       label: '발주',
@@ -64,7 +63,7 @@ const SubTableProductStock: FC<Props> = ({
     },
     move: {
       callback: () => {
-        // onClickOption('out', productStock);
+        onClickOption('move', storage);
         setMenuAnchor(null);
       },
       label: '이동',
@@ -141,14 +140,24 @@ const SubTableProductStock: FC<Props> = ({
             <TableCell>100</TableCell>
             <TableCell>100</TableCell>
             <TableCell>10일</TableCell>
-            <OptionCell onClick={setMenuAnchor} />
+            <OptionCell
+              onClick={(event) => {
+                setMenuAnchor(event);
+                setProductName('제품 이름1');
+              }}
+            />
           </TableRow>
           <TableRow>
-            <TableCell>제품 이름1</TableCell>
+            <TableCell>제품 이름2</TableCell>
             <TableCell>100</TableCell>
             <TableCell>100</TableCell>
             <TableCell>10일</TableCell>
-            <OptionCell onClick={setMenuAnchor} />
+            <OptionCell
+              onClick={(event) => {
+                setMenuAnchor(event);
+                setProductName('제품 이름2');
+              }}
+            />
           </TableRow>
         </TableBody>
       </Table>

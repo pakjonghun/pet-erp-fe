@@ -18,12 +18,15 @@ import StorageStockBodyRow from './StorageStockBodyRow';
 import LoadingRow from '@/components/table/LoadingRow';
 import { StockStorageHeaderList } from '../constants';
 import { CommonListProps } from '@/types';
+import AddOrderModal from '../../_components/AddOrderModal';
 
 interface Props extends CommonListProps<StockStorageOutput> {
   openAddStock: () => void;
   openOutStock: () => void;
   storageStock: null | StockStorageOutput;
   setStorageStock: (item: null | StockStorageOutput) => void;
+  setProductName: (productName: string) => void;
+  productName: string;
 }
 
 const StorageStockTableBody: FC<Props> = ({
@@ -35,25 +38,33 @@ const StorageStockTableBody: FC<Props> = ({
   openOutStock,
   storageStock,
   setStorageStock,
+  setProductName,
+  productName,
 }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
 
   const [optionType, setOptionType] = useState<null | string>(null);
 
-  const handleClickOption = (
-    option: any | null,
-    stock: StockStorageOutput | null
-  ) => {
+  const [openOrderModal, setOpenOrderModal] = useState(false);
+  const [openMoveModal, setOpenMoveModal] = useState(false);
+
+  const handleClickOption = (option: any | null, stock: StockStorageOutput) => {
     setStorageStock(storageStock);
     if (option == 'add') {
-      console.log('add');
       openAddStock();
     }
 
     if (option == 'out') {
-      console.log('out');
       openOutStock();
+    }
+
+    if (option == 'order') {
+      setOpenOrderModal(true);
+    }
+
+    if (option == 'move') {
+      setOpenMoveModal(true);
     }
   };
 
@@ -74,12 +85,27 @@ const StorageStockTableBody: FC<Props> = ({
 
   return (
     <TableBody>
+      {/* storageStock
+openOrderModal
+openMoveModal */}
+      {openOrderModal && (
+        <AddOrderModal
+          product={productName}
+          open={openOrderModal}
+          onClose={() => {
+            setOpenOrderModal(false);
+            setStorageStock(null);
+          }}
+        />
+      )}
+
       <EmptyRow colSpan={StockStorageHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
         const stock = item as unknown as StockStorageOutput;
         const isLast = index === data.length - 1;
         return (
           <StorageStockBodyRow
+            setProductName={setProductName}
             onClickRow={(event, stock: StockStorageOutput) => {
               setPopoverPosition({ left: event.clientX, top: event.clientY });
               setPopoverAnchor(event.currentTarget);
