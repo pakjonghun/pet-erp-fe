@@ -5,15 +5,17 @@ import { NormalTab } from '@/components/commonStyles';
 import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
 import SubTableOrder from './SubTableOrder';
 import SubTableTotalProductStock from './SubTableTotalProductStock';
-import SubTableMove from './SubTableMove';
 
 interface Props {
   open: boolean;
   productStock: TotalProductStockOutput;
-  onClickOption: (option: any | null, client: TotalProductStockOutput | null) => void;
+  onClickOption: (
+    option: any | null,
+    client: TotalProductStockOutput | null
+  ) => void;
 }
 
-const CollapseTabs = ['총괄현황', '발주현황', '이동현황'];
+const CollapseTabs = ['총괄현황', '발주현황'];
 
 const CollapseRow: FC<Props> = ({ open, productStock, onClickOption }) => {
   const [tabValue, setTabValue] = useState(0);
@@ -29,7 +31,10 @@ const CollapseRow: FC<Props> = ({ open, productStock, onClickOption }) => {
       >
         <Collapse in={open}>
           <Box sx={{ mt: 4, mb: 8, width: '90%', ml: 'auto' }}>
-            <Tabs value={tabValue} sx={{ borderBottom: '1px solid gray', mb: 3 }}>
+            <Tabs
+              value={tabValue}
+              sx={{ borderBottom: '1px solid gray', mb: 3 }}
+            >
               {CollapseTabs.map((tab, index) => {
                 return (
                   <NormalTab
@@ -48,7 +53,6 @@ const CollapseRow: FC<Props> = ({ open, productStock, onClickOption }) => {
               />
             )}
             {tabValue === 1 && <SubTableOrder productStock={productStock} />}
-            {tabValue === 2 && <SubTableMove productStock={productStock} />}
           </Box>
         </Collapse>
       </TableCell>

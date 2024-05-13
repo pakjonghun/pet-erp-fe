@@ -100,11 +100,6 @@ export type CreateLogDto = {
   userId: Scalars['String']['input'];
 };
 
-export type CreateMoveInput = {
-  /** Example field (placeholder) */
-  exampleField: Scalars['Int']['input'];
-};
-
 export type CreateOrderInput = {
   /** Example field (placeholder) */
   exampleField: Scalars['Int']['input'];
@@ -212,31 +207,12 @@ export enum LogType {
   Upload = 'UPLOAD'
 }
 
-export type Move = {
-  __typename?: 'Move';
-  _id: Scalars['ID']['output'];
-  endDate?: Maybe<Scalars['Date']['output']>;
-  fromFactory?: Maybe<Factory>;
-  fromStorage?: Maybe<Storage>;
-  products: Array<MoveProduct>;
-  startDate: Scalars['Date']['output'];
-  toFactory?: Maybe<Factory>;
-  toStorage?: Maybe<Storage>;
-};
-
-export type MoveProduct = {
-  __typename?: 'MoveProduct';
-  count: Scalars['Int']['output'];
-  product: Product;
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   createCategory: ProductCategory;
   createClient: Client;
   createFactory: Factory;
   createLog: Log;
-  createMove: Move;
   createOrder: ProductOrder;
   createProduct: Product;
   createStock: Stock;
@@ -248,7 +224,6 @@ export type Mutation = {
   removeCategory: ProductCategory;
   removeClient: Client;
   removeFactory: Factory;
-  removeMove: Move;
   removeOrder: ProductOrder;
   removeProduct: Product;
   removeStock: Stock;
@@ -260,7 +235,6 @@ export type Mutation = {
   updateCategory: ProductCategory;
   updateClient: Client;
   updateFactory: Factory;
-  updateMove: Move;
   updateOrder: ProductOrder;
   updateProduct: Product;
   updateProfile: User;
@@ -290,11 +264,6 @@ export type MutationCreateFactoryArgs = {
 
 export type MutationCreateLogArgs = {
   createLogInput: CreateLogDto;
-};
-
-
-export type MutationCreateMoveArgs = {
-  createMoveInput: CreateMoveInput;
 };
 
 
@@ -353,11 +322,6 @@ export type MutationRemoveFactoryArgs = {
 };
 
 
-export type MutationRemoveMoveArgs = {
-  id: Scalars['Int']['input'];
-};
-
-
 export type MutationRemoveOrderArgs = {
   id: Scalars['Int']['input'];
 };
@@ -410,11 +374,6 @@ export type MutationUpdateClientArgs = {
 
 export type MutationUpdateFactoryArgs = {
   updateFactoryInput: UpdateFactoryInput;
-};
-
-
-export type MutationUpdateMoveArgs = {
-  updateMoveInput: UpdateMoveInput;
 };
 
 
@@ -574,7 +533,6 @@ export type Query = {
   findAll: Array<ProductOrder>;
   findOne: ProductOrder;
   logs: FindLogsResponseDto;
-  move: Move;
   myInfo: MyInfo;
   product: Product;
   productSale?: Maybe<Array<ProductSaleChartOutput>>;
@@ -638,11 +596,6 @@ export type QueryFindOneArgs = {
 
 export type QueryLogsArgs = {
   findLogsQuery: FindLogsDto;
-};
-
-
-export type QueryMoveArgs = {
-  id: Scalars['Int']['input'];
 };
 
 
@@ -850,12 +803,6 @@ export type UpdateClientInput = {
 };
 
 export type UpdateFactoryInput = {
-  /** Example field (placeholder) */
-  exampleField?: InputMaybe<Scalars['Int']['input']>;
-  id: Scalars['Int']['input'];
-};
-
-export type UpdateMoveInput = {
   /** Example field (placeholder) */
   exampleField?: InputMaybe<Scalars['Int']['input']>;
   id: Scalars['Int']['input'];

@@ -1,7 +1,7 @@
+import { FC, MouseEvent, useState } from 'react';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import Cell from '@/components/table/Cell';
 import { IconButton, Menu, TableRow } from '@mui/material';
-import React, { FC, MouseEvent, useState } from 'react';
 import { SelectedOptionItem } from '@/constants';
 import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
