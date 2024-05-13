@@ -1,17 +1,14 @@
+import { FC, useEffect } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import { Button, FormGroup, Stack, TextField, Typography } from '@mui/material';
-import { FC } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
-import {
-  CreateStorageForm,
-  createStorageSchema,
-} from '../_validations/createStorageValidation';
+import { CreateStorageForm, createStorageSchema } from '../_validations/createStorageValidation';
 import { modalSizeProps } from '@/components/commonStyles';
-import { useCreateSubsidiaryCategory } from '@/http/graphql/hooks/subsidiary-category/useCreateSubsidiaryCategory';
 import { Storage } from '@/http/graphql/codegen/graphql';
+import { useEditStorage } from '@/http/graphql/hooks/storage/useEditStorage';
 
 interface Props {
   open: boolean;
@@ -20,7 +17,7 @@ interface Props {
 }
 
 const EditStorageModal: FC<Props> = ({ open, storage, onClose }) => {
-  const [createCategory, { loading }] = useCreateSubsidiaryCategory();
+  const [editStorage, { loading }] = useEditStorage();
 
   const {
     reset,
@@ -38,16 +35,29 @@ const EditStorageModal: FC<Props> = ({ open, storage, onClose }) => {
     mode: 'onSubmit',
   });
 
+  useEffect(() => {
+    reset({
+      name: storage.name,
+      phoneNumber: storage.phoneNumber,
+      address: storage.address,
+      note: storage.note,
+    });
+  }, [storage, reset]);
+
   const onSubmit = (values: CreateStorageForm) => {
-    createCategory({
+    editStorage({
       variables: {
-        createSubsidiaryCategoryInput: {
+        updateStorageInput: {
+          _id: storage._id,
           name: values.name,
+          address: values.address,
+          phoneNumber: values.phoneNumber,
+          note: values.note,
         },
       },
       onCompleted: () => {
         snackMessage({
-          message: '창고 등록이 완료되었습니다.',
+          message: '창고 데이터 편집이 완료되었습니다.',
           severity: 'success',
         });
         handleClose();
@@ -55,7 +65,7 @@ const EditStorageModal: FC<Props> = ({ open, storage, onClose }) => {
       onError: (err) => {
         const message = err.message;
         snackMessage({
-          message: message ?? '창고 등록이 실패했습니다.',
+          message: message ?? '창고 편집이 실패했습니다.',
           severity: 'error',
         });
       },
@@ -70,9 +80,9 @@ const EditStorageModal: FC<Props> = ({ open, storage, onClose }) => {
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        창고 등록
+        창고 데이터 수정
       </Typography>
-      <Typography sx={{ mb: 3 }}>새로운 창고를 등록합니다.</Typography>
+      <Typography sx={{ mb: 3 }}>창고 데이터를 수정합니다.</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={modalSizeProps}>
           <Controller
@@ -128,21 +138,12 @@ const EditStorageModal: FC<Props> = ({ open, storage, onClose }) => {
               />
             )}
           />
-          <Stack
-            direction="row"
-            gap={1}
-            sx={{ mt: 3 }}
-            justifyContent="flex-end"
-          >
+          <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
             <Button type="button" variant="outlined" onClick={handleClose}>
               취소
             </Button>
-            <Button
-              type="submit"
-              endIcon={loading ? <CommonLoading /> : ''}
-              variant="contained"
-            >
-              등록
+            <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
+              수정
             </Button>
           </Stack>
         </FormGroup>

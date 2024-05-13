@@ -27,21 +27,21 @@ import { snackMessage } from '@/store/snackMessage';
 import ActionButton from '@/components/ui/button/ActionButton';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFile';
-import { useSubsidiaryCategories } from '@/http/graphql/hooks/subsidiary-category/useSubsidiaryCategories';
 import { Storage } from '@/http/graphql/codegen/graphql';
+import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 
 const StoragePage = () => {
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
 
-  const { data, networkStatus, refetch, fetchMore } = useSubsidiaryCategories({
+  const { data, networkStatus, refetch, fetchMore } = useStorages({
     keyword: delayKeyword,
     limit: LIMIT,
     skip: 0,
   });
 
-  const rows = (data?.subsidiaryCategories.data as unknown as Storage[]) ?? [];
-  const totalCount = data?.subsidiaryCategories.totalCount;
+  const rows = (data?.storages.data as unknown as Storage[]) ?? [];
+  const totalCount = data?.storages.totalCount;
   const hasNext = totalCount != null && totalCount > rows.length;
   const isLoading = networkStatus == 1 || networkStatus == 3;
   const isEmpty = !isLoading && rows.length === 0;
@@ -100,7 +100,7 @@ const StoragePage = () => {
   const { mutate: download, isPending: isDownloading } = useDownloadExcelFile();
 
   const handleDownload = () => {
-    download('subsidiary-category', {
+    download('storage', {
       onSuccess: () => {
         snackMessage({
           message: '창고 다운로드가 완료되었습니다.',

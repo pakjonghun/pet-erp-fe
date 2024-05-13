@@ -1,12 +1,12 @@
 'use client';
 
-import { Button, Stack, Typography } from '@mui/material';
 import { FC } from 'react';
+import { Button, Stack, Typography } from '@mui/material';
 import BaseModal from '../../../../components/ui/modal/BaseModal';
 import { snackMessage } from '@/store/snackMessage';
 import CommonLoading from '../../../../components/ui/loading/CommonLoading';
 import { SubsidiaryCategory } from '@/http/graphql/codegen/graphql';
-import { useRemoveSubsidiaryCategory } from '@/http/graphql/hooks/subsidiary-category/useRemoveSubsidiaryCategory';
+import { useRemoveStorage } from '@/http/graphql/hooks/storage/useRemoveStorage';
 
 interface Props {
   item: SubsidiaryCategory;
@@ -15,16 +15,16 @@ interface Props {
 }
 
 const DeleteStorageModal: FC<Props> = ({ item, open, onClose }) => {
-  const [deleteCategory, { loading }] = useRemoveSubsidiaryCategory();
+  const [removeStorage, { loading }] = useRemoveStorage();
 
   const handleDelete = () => {
-    deleteCategory({
+    removeStorage({
       variables: {
         _id: item._id as string,
       },
       onCompleted: (res) => {
         snackMessage({
-          message: `${res.removeSubsidiaryCategory.name} 삭제가 완료되었습니다.`,
+          message: `${(res.removeStorage as Storage).name ?? ''} 삭제가 완료되었습니다.`,
           severity: 'success',
         });
         onClose();
