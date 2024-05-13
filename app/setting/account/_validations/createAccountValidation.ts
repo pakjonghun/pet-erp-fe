@@ -1,6 +1,6 @@
 import z from 'zod';
 import { UserRole } from '@/http/graphql/codegen/graphql';
-import { passwordCheckSchema, checkPassword, editPasswordSchema } from './editPasswordValidation';
+import { passwordCheckSchema, checkPassword } from './editPasswordValidation';
 
 export const idValidateSchema = z.object({
   id: z

@@ -230,6 +230,7 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
           {fields.map((field, index) => {
             return (
               <OrderProduct
+                productList={currentProducts}
                 key={`${index}_${field.id}`}
                 control={control}
                 index={index}

@@ -104,18 +104,20 @@ const OrderPage = () => {
     if (entries[0].isIntersecting) {
       if (isLoading) return;
 
-      const totalCount = data?.clients.totalCount;
-      if (totalCount != null && totalCount > rows.length) {
-        // fetchMore({
-        //   variables: {
-        //     clientsInput: {
-        //       keyword,
-        //       skip: rows.length,
-        //       limit: LIMIT,
-        //     },
-        //   },
-        // });
-      }
+      // const totalCount = data!.clients.totalCount;
+      // const totalCount = data!.factories.totalCount;
+      // if (totalCount <= factories.length) return;
+      // if (totalCount != null && totalCount > rows.length) {
+      //   // fetchMore({
+      //   //   variables: {
+      //   //     clientsInput: {
+      //   //       keyword,
+      //   //       skip: rows.length,
+      //   //       limit: LIMIT,
+      //   //     },
+      //   //   },
+      //   // });
+      // }
     }
   };
   const scrollRef = useInfinityScroll({ callback });

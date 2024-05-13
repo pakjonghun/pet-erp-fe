@@ -10,45 +10,23 @@ import {
   Typography,
 } from '@mui/material';
 import { FC, useState } from 'react';
-import {
-  Controller,
-  FieldArrayWithId,
-  useFieldArray,
-  useForm,
-} from 'react-hook-form';
+import { Controller, FieldArrayWithId, useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { modalSizeProps } from '@/components/commonStyles';
 import { useCreateClient } from '@/http/graphql/hooks/client/useCreateClient';
-import { ClientType } from '@/http/graphql/codegen/graphql';
+import { Factory } from '@/http/graphql/codegen/graphql';
 import { filterEmptyValues } from '@/utils/common';
 import NumberInput from '@/components/ui/input/NumberInput';
-import { CLIENT_PREFIX } from '@/constants';
-import {
-  CreateOrderForm,
-  createOrderSchema,
-} from '../_validation/createOrderValidation';
+import { LIMIT } from '@/constants';
+import { CreateOrderForm, createOrderSchema } from '../_validation/createOrderValidation';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import OrderProduct from './OrderProduct';
 import { PlusOne } from '@mui/icons-material';
-
-const factories = [
-  {
-    _id: '123',
-    name: 'Central Warehouse',
-    phoneNumber: '123-456-7890',
-    address: '123 Central Ave, Big City',
-    note: 'Main distribution center',
-  },
-  {
-    _id: '1234',
-    name: 'East Side Storage',
-    phoneNumber: '987-654-3210',
-    address: '456 East St, Capital City',
-    note: 'Handles east region deliveries',
-  },
-];
+import { useFactories } from '@/http/graphql/hooks/factory/useFactories';
+import useInfinityScroll from '@/hooks/useInfinityScroll';
+import { useCreateProductOrder } from '@/http/graphql/hooks/productOrder/useCreateProductOrder';
 
 interface Props {
   open: boolean;
@@ -57,13 +35,14 @@ interface Props {
 }
 
 const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
-  const [createClient, { loading }] = useCreateClient();
+  const [createProductOrder, { loading }] = useCreateProductOrder();
 
   const {
     reset,
     watch,
     control,
     handleSubmit,
+    clearErrors,
     formState: { errors },
   } = useForm<CreateOrderForm>({
     resolver: zodResolver(createOrderSchema),
@@ -76,35 +55,32 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
     },
   });
 
-  const { replace, append, remove, fields } = useFieldArray({
+  const { append, remove, fields } = useFieldArray({
     control,
     name: 'products',
   });
 
   const onSubmit = (values: CreateOrderForm) => {
     const newValues = filterEmptyValues(values) as CreateOrderForm;
-    // createClient({
-    //   variables: {
-    //     createClientInput: {
-    //       ...newValues,
-    //       feeRate: values.feeRate == null ? null : values.feeRate / 100,
-    //     },
-    //   },
-    //   onCompleted: () => {
-    //     snackMessage({
-    //       message: '거래처등록이 완료되었습니다.',
-    //       severity: 'success',
-    //     });
-    //     handleClose();
-    //   },
-    //   onError: (err) => {
-    //     const message = err.message;
-    //     snackMessage({
-    //       message: message ?? '거래처등록이 실패했습니다.',
-    //       severity: 'error',
-    //     });
-    //   },
-    // });
+    createProductOrder({
+      variables: {
+        createOrderInput: newValues,
+      },
+      onCompleted: () => {
+        snackMessage({
+          message: '발주등록이 완료되었습니다.',
+          severity: 'success',
+        });
+        handleClose();
+      },
+      onError: (err) => {
+        const message = err.message;
+        snackMessage({
+          message: message ?? '발주등록이 실패했습니다.',
+          severity: 'error',
+        });
+      },
+    });
   };
 
   const handleClose = () => {
@@ -113,6 +89,7 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
   };
 
   const handleAddProduct = () => {
+    clearErrors('products');
     const initProduct = {
       product: product ?? '',
       count: 0,
@@ -123,6 +100,34 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
 
   const [factoryKeyword, setFactoryKeyword] = useState('');
   const delayedFactoryKeyword = useTextDebounce(factoryKeyword);
+  const { data, networkStatus, fetchMore } = useFactories({
+    keyword: delayedFactoryKeyword,
+    limit: LIMIT,
+    skip: 0,
+  });
+
+  const factories = (data?.factories.data as Factory[]) ?? [];
+  const isLoading = networkStatus === 2 || networkStatus === 3 || networkStatus === 1;
+
+  const callback: IntersectionObserverCallback = (entries) => {
+    if (entries[0].isIntersecting) {
+      if (isLoading) return;
+
+      const totalCount = data!.factories.totalCount;
+      if (totalCount <= factories.length) return;
+
+      fetchMore({
+        variables: {
+          factoriesInput: {
+            keyword: delayedFactoryKeyword,
+            limit: LIMIT,
+            skip: factories.length,
+          },
+        },
+      });
+    }
+  };
+  const factoryRef = useInfinityScroll({ callback });
 
   const handleReplace = (
     index: number,
@@ -162,14 +167,12 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
                   loadingText="로딩중"
                   noOptionsText="검색 결과가 없습니다."
                   disablePortal
-                  renderInput={(params) => (
-                    <TextField {...params} label="공장" required />
-                  )}
+                  renderInput={(params) => <TextField {...params} label="공장" required />}
                   renderOption={(props, item, state) => {
                     const { key, ...rest } = props as any;
                     const isLast = state.index === factories.length - 1;
                     return (
-                      <Box component="li" ref={null} key={item} {...rest}>
+                      <Box component="li" ref={isLast ? factoryRef : null} key={item} {...rest}>
                         {item}
                       </Box>
                     );
@@ -232,17 +235,20 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
               제품 추가
             </Button>
           </Stack>
+          <Typography sx={{ mt: -1 }} color="error" variant="caption">
+            {errors?.products?.message ?? ''}
+          </Typography>
 
           {fields.map((field, index) => {
             return (
               <OrderProduct
-                isProductFreeze={!!field.product}
+                productList={currentProducts}
                 key={`${index}_${field.id}`}
                 control={control}
                 index={index}
                 remove={remove}
                 replace={handleReplace}
-                error={errors.products}
+                error={errors.products?.[index]}
               />
             );
           })}
@@ -251,11 +257,7 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
-          <Button
-            type="submit"
-            endIcon={loading ? <CommonLoading /> : ''}
-            variant="contained"
-          >
+          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
             등록
           </Button>
         </Stack>
