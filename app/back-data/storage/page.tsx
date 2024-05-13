@@ -74,7 +74,7 @@ const StoragePage = () => {
     formBody.append('file', file);
 
     uploadFile(
-      { service: 'subsidiary-category', formBody },
+      { service: 'storage', formBody },
       {
         onSuccess: () => {
           snackMessage({
@@ -119,16 +119,8 @@ const StoragePage = () => {
 
   return (
     <TablePage sx={{ flex: 1 }}>
-      <CreateCategoryModal
-        open={openCreateCategory}
-        onClose={() => setOpenCreateCategory(false)}
-      />
-      <Stack
-        sx={{ px: 2 }}
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
+      <CreateCategoryModal open={openCreateCategory} onClose={() => setOpenCreateCategory(false)} />
+      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="창고 백데이터" />
 
         <Stack direction="row" alignItems="center" gap={2}>
@@ -169,9 +161,7 @@ const StoragePage = () => {
         </FormControl>
       </FormGroup>
       <Typography sx={{ p: 3, pt: 0 }} variant="body1">
-        {isEmpty
-          ? '검색결과가 없습니다.'
-          : `${searchCount}건의 데이터가 검색되었습니다.`}
+        {isEmpty ? '검색결과가 없습니다.' : `${searchCount}건의 데이터가 검색되었습니다.`}
       </Typography>
       <Grid
         container

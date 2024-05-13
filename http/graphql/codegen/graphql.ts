@@ -90,8 +90,10 @@ export type CreateClientInput = {
 };
 
 export type CreateFactoryInput = {
-  /** Example field (placeholder) */
-  exampleField: Scalars['Int']['input'];
+  address?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  note?: InputMaybe<Scalars['String']['input']>;
+  phoneNumber?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateLogDto = {
@@ -101,8 +103,16 @@ export type CreateLogDto = {
 };
 
 export type CreateOrderInput = {
-  /** Example field (placeholder) */
-  exampleField: Scalars['Int']['input'];
+  factory: Scalars['String']['input'];
+  notPayCost: Scalars['Int']['input'];
+  payCost: Scalars['Int']['input'];
+  products: Array<CreateOrderProductInput>;
+  totalPayCost: Scalars['Int']['input'];
+};
+
+export type CreateOrderProductInput = {
+  count: Scalars['Int']['input'];
+  product: Scalars['String']['input'];
 };
 
 export type CreateProductInput = {
@@ -116,13 +126,21 @@ export type CreateProductInput = {
   wonPrice?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type CreateSingleStockInput = {
+  count: Scalars['Int']['input'];
+  productId: Scalars['String']['input'];
+  storageId: Scalars['String']['input'];
+};
+
 export type CreateStockInput = {
-  /** Example field (placeholder) */
-  exampleField: Scalars['Int']['input'];
+  stocks: Array<CreateSingleStockInput>;
 };
 
 export type CreateStorageInput = {
-  exampleField: Scalars['Int']['input'];
+  address?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  note?: InputMaybe<Scalars['String']['input']>;
+  phoneNumber?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateSubsidiaryCategoryInput = {
@@ -157,6 +175,18 @@ export type CreateWholeSaleProductList = {
   code: Scalars['String']['input'];
   count?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
+};
+
+export type FactoriesInput = {
+  keyword: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
+  skip: Scalars['Int']['input'];
+};
+
+export type FactoriesOutput = {
+  __typename?: 'FactoriesOutput';
+  data: Array<Factory>;
+  totalCount: Scalars['Int']['output'];
 };
 
 export type Factory = {
@@ -209,18 +239,19 @@ export enum LogType {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addStock: Array<Stock>;
   createCategory: ProductCategory;
   createClient: Client;
   createFactory: Factory;
   createLog: Log;
   createOrder: ProductOrder;
   createProduct: Product;
-  createStock: Stock;
   createStorage: Storage;
   createSubsidiary: Subsidiary;
   createSubsidiaryCategory: SubsidiaryCategory;
   createUser: User;
   createWholeSale: Sale;
+  outStock: Array<Stock>;
   removeCategory: ProductCategory;
   removeClient: Client;
   removeFactory: Factory;
@@ -244,6 +275,11 @@ export type Mutation = {
   updateSubsidiaryCategory: SubsidiaryCategory;
   updateUser: User;
   updateWholeSale: WholeSaleOutput;
+};
+
+
+export type MutationAddStockArgs = {
+  addStocksInput: CreateStockInput;
 };
 
 
@@ -277,11 +313,6 @@ export type MutationCreateProductArgs = {
 };
 
 
-export type MutationCreateStockArgs = {
-  createStockInput: CreateStockInput;
-};
-
-
 export type MutationCreateStorageArgs = {
   createStorageInput: CreateStorageInput;
 };
@@ -307,6 +338,11 @@ export type MutationCreateWholeSaleArgs = {
 };
 
 
+export type MutationOutStockArgs = {
+  outStocksInput: CreateStockInput;
+};
+
+
 export type MutationRemoveCategoryArgs = {
   _id: Scalars['String']['input'];
 };
@@ -318,12 +354,12 @@ export type MutationRemoveClientArgs = {
 
 
 export type MutationRemoveFactoryArgs = {
-  id: Scalars['Int']['input'];
+  _id: Scalars['String']['input'];
 };
 
 
 export type MutationRemoveOrderArgs = {
-  id: Scalars['Int']['input'];
+  _id: Scalars['String']['input'];
 };
 
 
@@ -338,7 +374,7 @@ export type MutationRemoveStockArgs = {
 
 
 export type MutationRemoveStorageArgs = {
-  id: Scalars['Int']['input'];
+  _id: Scalars['String']['input'];
 };
 
 
@@ -439,6 +475,14 @@ export type OrderProduct = {
   product: Product;
 };
 
+export type OrdersInput = {
+  keyword: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
+  order?: InputMaybe<Order>;
+  skip: Scalars['Int']['input'];
+  sort?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Product = {
   __typename?: 'Product';
   _id: Scalars['ID']['output'];
@@ -461,11 +505,10 @@ export type ProductCategory = {
 export type ProductOrder = {
   __typename?: 'ProductOrder';
   _id: Scalars['ID']['output'];
-  factory: Factory;
+  factory?: Maybe<Factory>;
   notPayCost: Scalars['Int']['output'];
   payCost: Scalars['Int']['output'];
   products: Array<OrderProduct>;
-  storage: Storage;
   totalPayCost: Scalars['Int']['output'];
 };
 
@@ -529,18 +572,17 @@ export type Query = {
   dashboardClients?: Maybe<Array<SaleInfos>>;
   dashboardProduct?: Maybe<TotalSaleInfo>;
   dashboardProducts?: Maybe<Array<SaleInfos>>;
-  factory: Factory;
-  findAll: Array<ProductOrder>;
-  findOne: ProductOrder;
+  factories: FactoriesOutput;
   logs: FindLogsResponseDto;
   myInfo: MyInfo;
+  orders: Array<ProductOrder>;
   product: Product;
   productSale?: Maybe<Array<ProductSaleChartOutput>>;
   productSales?: Maybe<ProductSaleOutput>;
   products: ProductsOutput;
   stock: Stock;
   stockStorages: Array<StockStorageOutput>;
-  storage: Storage;
+  storages: Array<Storage>;
   subsidiaries: SubsidiariesOutput;
   subsidiaryCategories: SubsidiaryCategoriesOutput;
   user: User;
@@ -584,18 +626,18 @@ export type QueryDashboardProductsArgs = {
 };
 
 
-export type QueryFactoryArgs = {
-  id: Scalars['Int']['input'];
-};
-
-
-export type QueryFindOneArgs = {
-  id: Scalars['Int']['input'];
+export type QueryFactoriesArgs = {
+  factoriesInput: FactoriesInput;
 };
 
 
 export type QueryLogsArgs = {
   findLogsQuery: FindLogsDto;
+};
+
+
+export type QueryOrdersArgs = {
+  ordersInput: OrdersInput;
 };
 
 
@@ -620,12 +662,12 @@ export type QueryProductsArgs = {
 
 
 export type QueryStockArgs = {
-  id: Scalars['Int']['input'];
+  _id: Scalars['String']['input'];
 };
 
 
-export type QueryStorageArgs = {
-  id: Scalars['Int']['input'];
+export type QueryStoragesArgs = {
+  storageName: Scalars['String']['input'];
 };
 
 
@@ -803,15 +845,20 @@ export type UpdateClientInput = {
 };
 
 export type UpdateFactoryInput = {
-  /** Example field (placeholder) */
-  exampleField?: InputMaybe<Scalars['Int']['input']>;
-  id: Scalars['Int']['input'];
+  _id: Scalars['String']['input'];
+  address?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  note?: InputMaybe<Scalars['String']['input']>;
+  phoneNumber?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateOrderInput = {
-  /** Example field (placeholder) */
-  exampleField?: InputMaybe<Scalars['Int']['input']>;
-  id: Scalars['Int']['input'];
+  _id: Scalars['String']['input'];
+  factory?: InputMaybe<Scalars['String']['input']>;
+  notPayCost?: InputMaybe<Scalars['Int']['input']>;
+  payCost?: InputMaybe<Scalars['Int']['input']>;
+  products?: InputMaybe<Array<CreateOrderProductInput>>;
+  totalPayCost?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type UpdateProductInput = {
@@ -832,14 +879,16 @@ export type UpdateProfileDto = {
 };
 
 export type UpdateStockInput = {
-  /** Example field (placeholder) */
-  exampleField?: InputMaybe<Scalars['Int']['input']>;
   id: Scalars['Int']['input'];
+  stocks?: InputMaybe<Array<CreateSingleStockInput>>;
 };
 
 export type UpdateStorageInput = {
-  exampleField?: InputMaybe<Scalars['Int']['input']>;
-  id: Scalars['Int']['input'];
+  _id: Scalars['String']['input'];
+  address?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  note?: InputMaybe<Scalars['String']['input']>;
+  phoneNumber?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateSubsidiaryCategoryInput = {
@@ -922,6 +971,8 @@ export enum ClientType {
   WholeSale = 'wholeSale'
 }
 
+export type FactoryFragmentFragment = { __typename?: 'Factory', _id: string, name: string, address?: string | null, phoneNumber?: string | null, note?: string | null } & { ' $fragmentName'?: 'FactoryFragmentFragment' };
+
 export type SubsidiaryCategoryFragmentFragment = { __typename?: 'SubsidiaryCategory', _id?: string | null, name?: string | null } & { ' $fragmentName'?: 'SubsidiaryCategoryFragmentFragment' };
 
 export type SubsidiaryFragmentFragment = { __typename?: 'Subsidiary', _id: string, code: string, name: string, wonPrice?: number | null, leadTime?: number | null, productList?: Array<{ __typename?: 'Product', _id: string, name: string }> | null, category?: { __typename?: 'SubsidiaryCategory', _id?: string | null, name?: string | null } | null } & { ' $fragmentName'?: 'SubsidiaryFragmentFragment' };
@@ -992,6 +1043,46 @@ export type UpdateClientMutationVariables = Exact<{
 export type UpdateClientMutation = { __typename?: 'Mutation', updateClient: (
     { __typename?: 'Client' }
     & { ' $fragmentRefs'?: { 'ClientFragmentFragment': ClientFragmentFragment } }
+  ) };
+
+export type CreateFactoryMutationVariables = Exact<{
+  createFactoryInput: CreateFactoryInput;
+}>;
+
+
+export type CreateFactoryMutation = { __typename?: 'Mutation', createFactory: (
+    { __typename?: 'Factory' }
+    & { ' $fragmentRefs'?: { 'FactoryFragmentFragment': FactoryFragmentFragment } }
+  ) };
+
+export type UpdateFactoryMutationVariables = Exact<{
+  updateFactoryInput: UpdateFactoryInput;
+}>;
+
+
+export type UpdateFactoryMutation = { __typename?: 'Mutation', updateFactory: (
+    { __typename?: 'Factory' }
+    & { ' $fragmentRefs'?: { 'FactoryFragmentFragment': FactoryFragmentFragment } }
+  ) };
+
+export type FactoriesQueryVariables = Exact<{
+  factoriesInput: FactoriesInput;
+}>;
+
+
+export type FactoriesQuery = { __typename?: 'Query', factories: { __typename?: 'FactoriesOutput', totalCount: number, data: Array<(
+      { __typename?: 'Factory' }
+      & { ' $fragmentRefs'?: { 'FactoryFragmentFragment': FactoryFragmentFragment } }
+    )> } };
+
+export type RemoveFactoryMutationVariables = Exact<{
+  _id: Scalars['String']['input'];
+}>;
+
+
+export type RemoveFactoryMutation = { __typename?: 'Mutation', removeFactory: (
+    { __typename?: 'Factory' }
+    & { ' $fragmentRefs'?: { 'FactoryFragmentFragment': FactoryFragmentFragment } }
   ) };
 
 export type LogsQueryVariables = Exact<{
@@ -1209,6 +1300,7 @@ export type UpdateProfileMutationVariables = Exact<{
 
 export type UpdateProfileMutation = { __typename?: 'Mutation', updateProfile: { __typename?: 'User', id: string, role: UserRole } };
 
+export const FactoryFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FactoryFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Factory"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"note"}}]}}]} as unknown as DocumentNode<FactoryFragmentFragment, unknown>;
 export const SubsidiaryCategoryFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SubsidiaryCategoryFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SubsidiaryCategory"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]} as unknown as DocumentNode<SubsidiaryCategoryFragmentFragment, unknown>;
 export const SubsidiaryFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SubsidiaryFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Subsidiary"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"productList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"wonPrice"}},{"kind":"Field","name":{"kind":"Name","value":"leadTime"}}]}}]} as unknown as DocumentNode<SubsidiaryFragmentFragment, unknown>;
 export const LogFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"LogFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Log"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"logType"}}]}}]} as unknown as DocumentNode<LogFragmentFragment, unknown>;
@@ -1224,6 +1316,10 @@ export const DashboardClientDocument = {"kind":"Document","definitions":[{"kind"
 export const DashboardClientsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"dashboardClients"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"dashboardClientsInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"FindDateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"dashboardClients"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"dashboardClientsInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"dashboardClientsInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"accPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"accCount"}},{"kind":"Field","name":{"kind":"Name","value":"accProfit"}},{"kind":"Field","name":{"kind":"Name","value":"averagePayCost"}},{"kind":"Field","name":{"kind":"Name","value":"averagePayCost"}},{"kind":"Field","name":{"kind":"Name","value":"prevAccPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"prevAccCount"}},{"kind":"Field","name":{"kind":"Name","value":"prevAccProfit"}},{"kind":"Field","name":{"kind":"Name","value":"prevAveragePayCost"}}]}}]}}]} as unknown as DocumentNode<DashboardClientsQuery, DashboardClientsQueryVariables>;
 export const RemoveClientDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"removeClient"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeClient"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"_id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<RemoveClientMutation, RemoveClientMutationVariables>;
 export const UpdateClientDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateClient"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"updateClientInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateClientInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateClient"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"updateClientInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"updateClientInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ClientFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ClientFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Client"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"feeRate"}},{"kind":"Field","name":{"kind":"Name","value":"clientType"}},{"kind":"Field","name":{"kind":"Name","value":"businessName"}},{"kind":"Field","name":{"kind":"Name","value":"businessNumber"}},{"kind":"Field","name":{"kind":"Name","value":"payDate"}},{"kind":"Field","name":{"kind":"Name","value":"manager"}},{"kind":"Field","name":{"kind":"Name","value":"managerTel"}},{"kind":"Field","name":{"kind":"Name","value":"inActive"}}]}}]} as unknown as DocumentNode<UpdateClientMutation, UpdateClientMutationVariables>;
+export const CreateFactoryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createFactory"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"createFactoryInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateFactoryInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createFactory"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"createFactoryInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"createFactoryInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FactoryFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FactoryFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Factory"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"note"}}]}}]} as unknown as DocumentNode<CreateFactoryMutation, CreateFactoryMutationVariables>;
+export const UpdateFactoryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateFactory"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"updateFactoryInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateFactoryInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateFactory"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"updateFactoryInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"updateFactoryInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FactoryFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FactoryFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Factory"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"note"}}]}}]} as unknown as DocumentNode<UpdateFactoryMutation, UpdateFactoryMutationVariables>;
+export const FactoriesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"factories"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"factoriesInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"FactoriesInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"factories"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"factoriesInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"factoriesInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FactoryFragment"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FactoryFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Factory"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"note"}}]}}]} as unknown as DocumentNode<FactoriesQuery, FactoriesQueryVariables>;
+export const RemoveFactoryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"removeFactory"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeFactory"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"_id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FactoryFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FactoryFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Factory"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"note"}}]}}]} as unknown as DocumentNode<RemoveFactoryMutation, RemoveFactoryMutationVariables>;
 export const LogsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"logs"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"findLogsQuery"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"FindLogsDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"logs"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"findLogsQuery"},"value":{"kind":"Variable","name":{"kind":"Name","value":"findLogsQuery"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"LogFragment"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"LogFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Log"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"logType"}}]}}]} as unknown as DocumentNode<LogsQuery, LogsQueryVariables>;
 export const CreateCategoryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createCategory"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"createCategoryInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateCategoryInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createCategory"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"createCategoryInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"createCategoryInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<CreateCategoryMutation, CreateCategoryMutationVariables>;
 export const UpdateCategoryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateCategory"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"updateCategoryInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateCategoryInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateCategory"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"updateCategoryInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"updateCategoryInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<UpdateCategoryMutation, UpdateCategoryMutationVariables>;

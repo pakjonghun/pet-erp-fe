@@ -57,7 +57,6 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
     const newStock = productStock
       ? { ...initStock, product: productStock.product.name ?? '' }
       : initStock;
-    console.log('newStock : ', newStock);
     append(newStock);
   };
 

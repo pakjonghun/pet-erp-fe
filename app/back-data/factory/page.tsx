@@ -18,7 +18,7 @@ import {
 import { Search } from '@mui/icons-material';
 import { ChangeEvent, useState } from 'react';
 import useTextDebounce from '@/hooks/useTextDebounce';
-import CreateCategoryModal from './_components/AddFactoryModal';
+import CreateCategoryModal from './_components/CreateFactoryModal';
 import { LIMIT, TABLE_MAX_HEIGHT } from '@/constants';
 import CategoryCard from './_components/FactoryCard';
 import UploadButton from '@/components/ui/button/UploadButtont';
@@ -28,20 +28,21 @@ import ActionButton from '@/components/ui/button/ActionButton';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFile';
 import { useSubsidiaryCategories } from '@/http/graphql/hooks/subsidiary-category/useSubsidiaryCategories';
-import { Storage } from '@/http/graphql/codegen/graphql';
+import { Factory, Storage } from '@/http/graphql/codegen/graphql';
+import { useFactories } from '@/http/graphql/hooks/factory/useFactories';
 
 const FactoryPage = () => {
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
 
-  const { data, networkStatus, refetch, fetchMore } = useSubsidiaryCategories({
+  const { data, networkStatus, refetch, fetchMore } = useFactories({
     keyword: delayKeyword,
     limit: LIMIT,
     skip: 0,
   });
 
-  const rows = (data?.subsidiaryCategories.data as unknown as Storage[]) ?? [];
-  const totalCount = data?.subsidiaryCategories.totalCount;
+  const rows = (data?.factories.data as unknown as Factory[]) ?? [];
+  const totalCount = data?.factories.totalCount;
   const hasNext = totalCount != null && totalCount > rows.length;
   const isLoading = networkStatus == 1 || networkStatus == 3;
   const isEmpty = !isLoading && rows.length === 0;
@@ -74,7 +75,7 @@ const FactoryPage = () => {
     formBody.append('file', file);
 
     uploadFile(
-      { service: 'subsidiary-category', formBody },
+      { service: 'factory', formBody },
       {
         onSuccess: () => {
           snackMessage({
@@ -100,7 +101,7 @@ const FactoryPage = () => {
   const { mutate: download, isPending: isDownloading } = useDownloadExcelFile();
 
   const handleDownload = () => {
-    download('subsidiary-category', {
+    download('factory', {
       onSuccess: () => {
         snackMessage({
           message: '공장 다운로드가 완료되었습니다.',
@@ -119,16 +120,8 @@ const FactoryPage = () => {
 
   return (
     <TablePage sx={{ flex: 1 }}>
-      <CreateCategoryModal
-        open={openCreateCategory}
-        onClose={() => setOpenCreateCategory(false)}
-      />
-      <Stack
-        sx={{ px: 2 }}
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
+      <CreateCategoryModal open={openCreateCategory} onClose={() => setOpenCreateCategory(false)} />
+      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="공장 백데이터" />
 
         <Stack direction="row" alignItems="center" gap={2}>
@@ -169,9 +162,7 @@ const FactoryPage = () => {
         </FormControl>
       </FormGroup>
       <Typography sx={{ p: 3, pt: 0 }} variant="body1">
-        {isEmpty
-          ? '검색결과가 없습니다.'
-          : `${searchCount}건의 데이터가 검색되었습니다.`}
+        {isEmpty ? '검색결과가 없습니다.' : `${searchCount}건의 데이터가 검색되었습니다.`}
       </Typography>
       <Grid
         container

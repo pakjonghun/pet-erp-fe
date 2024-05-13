@@ -1,24 +1,22 @@
+import { FC } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import { Button, FormGroup, Stack, TextField, Typography } from '@mui/material';
-import { FC } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
-import {
-  CreateStorageForm,
-  createStorageSchema,
-} from '../_validations/createStorageValidation';
+import { CreateStorageForm, createStorageSchema } from '../_validations/createStorageValidation';
 import { modalSizeProps } from '@/components/commonStyles';
-import { useCreateSubsidiaryCategory } from '@/http/graphql/hooks/subsidiary-category/useCreateSubsidiaryCategory';
+import { useCreateFactory } from '@/http/graphql/hooks/factory/useCreateFactory';
+import { filterEmptyValues } from '@/utils/common';
 
 interface Props {
   open: boolean;
   onClose: () => void;
 }
 
-const AddFactoryModal: FC<Props> = ({ open, onClose }) => {
-  const [createCategory, { loading }] = useCreateSubsidiaryCategory();
+const CreateFactoryModal: FC<Props> = ({ open, onClose }) => {
+  const [createFactory, { loading }] = useCreateFactory();
 
   const {
     reset,
@@ -29,16 +27,18 @@ const AddFactoryModal: FC<Props> = ({ open, onClose }) => {
     resolver: zodResolver(createStorageSchema),
     defaultValues: {
       name: '',
+      address: '',
+      note: '',
+      phoneNumber: '',
     },
     mode: 'onSubmit',
   });
 
   const onSubmit = (values: CreateStorageForm) => {
-    createCategory({
+    const filterEmpty = filterEmptyValues(values) as CreateStorageForm;
+    createFactory({
       variables: {
-        createSubsidiaryCategoryInput: {
-          name: values.name,
-        },
+        createFactoryInput: filterEmpty,
       },
       onCompleted: () => {
         snackMessage({
@@ -123,20 +123,11 @@ const AddFactoryModal: FC<Props> = ({ open, onClose }) => {
               />
             )}
           />
-          <Stack
-            direction="row"
-            gap={1}
-            sx={{ mt: 3 }}
-            justifyContent="flex-end"
-          >
+          <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
             <Button type="button" variant="outlined" onClick={handleClose}>
               취소
             </Button>
-            <Button
-              type="submit"
-              endIcon={loading ? <CommonLoading /> : ''}
-              variant="contained"
-            >
+            <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
               등록
             </Button>
           </Stack>
@@ -146,4 +137,4 @@ const AddFactoryModal: FC<Props> = ({ open, onClose }) => {
   );
 };
 
-export default AddFactoryModal;
+export default CreateFactoryModal;

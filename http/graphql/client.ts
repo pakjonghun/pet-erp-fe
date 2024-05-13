@@ -1,3 +1,4 @@
+import { Factory } from './codegen/graphql';
 import { BASE_URL } from '@/http/constants';
 import { ApolloClient, InMemoryCache, createHttpLink, gql } from '@apollo/client';
 import { createFragmentRegistry } from '@apollo/client/cache';
@@ -11,6 +12,14 @@ const link = createHttpLink({
 export const client = new ApolloClient({
   cache: new InMemoryCache({
     fragments: createFragmentRegistry(gql`
+      fragment FactoryFragment on Factory {
+        _id
+        name
+        address
+        phoneNumber
+        note
+      }
+
       fragment SubsidiaryCategoryFragment on SubsidiaryCategory {
         _id
         name
@@ -126,6 +135,10 @@ export const client = new ApolloClient({
           },
           subsidiaryCategories: {
             keyArgs: ['categoriesInput', ['keyword']],
+            merge,
+          },
+          factories: {
+            keyArgs: ['factories', ['keyword']],
             merge,
           },
         },

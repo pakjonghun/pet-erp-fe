@@ -1,26 +1,23 @@
 import BaseModal from '@/components/ui/modal/BaseModal';
 import { Button, FormGroup, Stack, TextField, Typography } from '@mui/material';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
-import {
-  CreateStorageForm,
-  createStorageSchema,
-} from '../_validations/createStorageValidation';
+import { CreateStorageForm, createStorageSchema } from '../_validations/createStorageValidation';
 import { modalSizeProps } from '@/components/commonStyles';
-import { useCreateSubsidiaryCategory } from '@/http/graphql/hooks/subsidiary-category/useCreateSubsidiaryCategory';
-import { Storage } from '@/http/graphql/codegen/graphql';
+import { Factory } from '@/http/graphql/codegen/graphql';
+import { useEditFactory } from '@/http/graphql/hooks/factory/useEditFactory';
 
 interface Props {
   open: boolean;
-  storage: Storage;
+  factory: Factory;
   onClose: () => void;
 }
 
-const EditFactoryModal: FC<Props> = ({ open, storage, onClose }) => {
-  const [createCategory, { loading }] = useCreateSubsidiaryCategory();
+const EditFactoryModal: FC<Props> = ({ open, factory, onClose }) => {
+  const [editFactory, { loading }] = useEditFactory();
 
   const {
     reset,
@@ -30,19 +27,32 @@ const EditFactoryModal: FC<Props> = ({ open, storage, onClose }) => {
   } = useForm<CreateStorageForm>({
     resolver: zodResolver(createStorageSchema),
     defaultValues: {
-      name: storage.name,
-      phoneNumber: storage.phoneNumber,
-      address: storage.address,
-      note: storage.note,
+      name: factory.name,
+      phoneNumber: factory.phoneNumber,
+      address: factory.address,
+      note: factory.note,
     },
     mode: 'onSubmit',
   });
 
+  useEffect(() => {
+    reset({
+      name: factory.name,
+      phoneNumber: factory.phoneNumber,
+      address: factory.address,
+      note: factory.note,
+    });
+  }, [factory, reset]);
+
   const onSubmit = (values: CreateStorageForm) => {
-    createCategory({
+    editFactory({
       variables: {
-        createSubsidiaryCategoryInput: {
+        updateFactoryInput: {
+          _id: factory._id,
           name: values.name,
+          phoneNumber: values.phoneNumber,
+          address: values.address,
+          note: values.note,
         },
       },
       onCompleted: () => {
@@ -70,9 +80,9 @@ const EditFactoryModal: FC<Props> = ({ open, storage, onClose }) => {
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        공장 등록
+        공장 수정
       </Typography>
-      <Typography sx={{ mb: 3 }}>새로운 공장를 등록합니다.</Typography>
+      <Typography sx={{ mb: 3 }}>공장 데이터를 편집합니다.</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={modalSizeProps}>
           <Controller
@@ -128,21 +138,12 @@ const EditFactoryModal: FC<Props> = ({ open, storage, onClose }) => {
               />
             )}
           />
-          <Stack
-            direction="row"
-            gap={1}
-            sx={{ mt: 3 }}
-            justifyContent="flex-end"
-          >
+          <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
             <Button type="button" variant="outlined" onClick={handleClose}>
               취소
             </Button>
-            <Button
-              type="submit"
-              endIcon={loading ? <CommonLoading /> : ''}
-              variant="contained"
-            >
-              등록
+            <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
+              수정
             </Button>
           </Stack>
         </FormGroup>

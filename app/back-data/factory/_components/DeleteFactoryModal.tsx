@@ -5,8 +5,9 @@ import { FC } from 'react';
 import BaseModal from '../../../../components/ui/modal/BaseModal';
 import { snackMessage } from '@/store/snackMessage';
 import CommonLoading from '../../../../components/ui/loading/CommonLoading';
-import { SubsidiaryCategory } from '@/http/graphql/codegen/graphql';
+import { Factory, SubsidiaryCategory } from '@/http/graphql/codegen/graphql';
 import { useRemoveSubsidiaryCategory } from '@/http/graphql/hooks/subsidiary-category/useRemoveSubsidiaryCategory';
+import { useRemoveFactory } from '@/http/graphql/hooks/factory/useRemoveFactory';
 
 interface Props {
   item: SubsidiaryCategory;
@@ -15,16 +16,16 @@ interface Props {
 }
 
 const DeleteFactoryModal: FC<Props> = ({ item, open, onClose }) => {
-  const [deleteCategory, { loading }] = useRemoveSubsidiaryCategory();
+  const [removeFactory, { loading }] = useRemoveFactory();
 
   const handleDelete = () => {
-    deleteCategory({
+    removeFactory({
       variables: {
         _id: item._id as string,
       },
       onCompleted: (res) => {
         snackMessage({
-          message: `${res.removeSubsidiaryCategory.name} 삭제가 완료되었습니다.`,
+          message: `${(res.removeFactory as Factory).name} 삭제가 완료되었습니다.`,
           severity: 'success',
         });
         onClose();
