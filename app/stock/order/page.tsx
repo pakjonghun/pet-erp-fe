@@ -35,10 +35,6 @@ const productOrders: ProductOrder[] = [
       _id: '5f76fddc2fa9b89b77b8d1fa',
       name: 'Global Tech Factory',
     },
-    storage: {
-      _id: '5f76fddc2fa9b89b77b8d1fb',
-      name: 'Central Storage Facility',
-    },
     products: [
       {
         count: 100,
@@ -66,10 +62,6 @@ const productOrders: ProductOrder[] = [
     factory: {
       _id: '5f76fddc2fa9b89b77b8d2fa',
       name: 'HighTech Solutions Inc.',
-    },
-    storage: {
-      _id: '5f76fddc2fa9b89b77b8d2fb',
-      name: 'Secondary Storage Unit',
     },
     products: [
       {

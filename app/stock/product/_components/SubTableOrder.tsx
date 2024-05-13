@@ -33,10 +33,6 @@ const mockSelectedOrder: ProductOrder = {
   notPayCost: 10,
   payCost: 120,
   products: [],
-  storage: {
-    _id: '22',
-    name: 'pro2',
-  },
   totalPayCost: 100,
 };
 

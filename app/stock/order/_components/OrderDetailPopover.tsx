@@ -29,9 +29,9 @@ const OrderDetailPopover: FC<Props> = ({
     <BasePopover onClose={onClose} position={position} open={open} anchorEl={anchorEl}>
       <ModalTitle text="발주 세부내용" />
       <Stack>
-        <LabelText label="공장" text={selectedOrder.factory.name} />
-        <LabelText label="공장 연락처" text={selectedOrder.factory.phoneNumber ?? EMPTY} />
-        <LabelText label="공장 주소" text={selectedOrder.factory.address ?? EMPTY} />
+        <LabelText label="공장" text={selectedOrder?.factory?.name ?? ''} />
+        <LabelText label="공장 연락처" text={selectedOrder?.factory?.phoneNumber ?? '' ?? EMPTY} />
+        <LabelText label="공장 주소" text={selectedOrder?.factory?.address ?? EMPTY} />
         <LabelText
           label="제품 목록"
           text={selectedOrder.products.map((item) => `${item.product}(${item.count})`) ?? EMPTY}

@@ -39,7 +39,7 @@ const OrderBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow 
 
   const createRow = (order: ProductOrder) => {
     return [
-      order.factory.name,
+      order?.factory?.name??'',
       order.products.map((item) => `${item.product.name}(${item.count}EA), `),
       0,
       order.payCost,

@@ -55,10 +55,10 @@ const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) 
       <Box onClick={(event) => onClickRow(event, client)}>
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="공장" text={client.factory.name} />
+            <LabelText label="공장" text={client?.factory?.name ?? ''} />
           </Box>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="공장 연락처" text={client.factory.phoneNumber} />
+            <LabelText label="공장 연락처" text={client?.factory?.phoneNumber ?? ''} />
           </Box>
         </Stack>
         <Stack direction="row" justifyContent="space-between" gap={2}>

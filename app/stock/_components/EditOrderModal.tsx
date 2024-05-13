@@ -1,3 +1,4 @@
+import { FC, useState } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
   Autocomplete,
@@ -9,9 +10,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FC, useState } from 'react';
 import { Controller, FieldArrayWithId, useFieldArray, useForm } from 'react-hook-form';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
@@ -20,7 +19,6 @@ import { useCreateClient } from '@/http/graphql/hooks/client/useCreateClient';
 import { ClientType, ProductOrder } from '@/http/graphql/codegen/graphql';
 import { filterEmptyValues } from '@/utils/common';
 import NumberInput from '@/components/ui/input/NumberInput';
-import { CLIENT_PREFIX } from '@/constants';
 import { CreateOrderForm, createOrderSchema } from '../_validation/createOrderValidation';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import OrderProduct from './OrderProduct';
@@ -60,7 +58,7 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
   } = useForm<CreateOrderForm>({
     resolver: zodResolver(createOrderSchema),
     defaultValues: {
-      factory: selectedOrder.factory.name,
+      factory: selectedOrder?.factory?.name ?? '',
       notPayCost: selectedOrder.notPayCost,
       payCost: selectedOrder.payCost,
       products: selectedOrder.products.map((item) => ({

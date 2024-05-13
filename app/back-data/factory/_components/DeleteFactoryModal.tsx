@@ -1,16 +1,15 @@
 'use client';
 
-import { Button, Stack, Typography } from '@mui/material';
 import { FC } from 'react';
+import { Button, Stack, Typography } from '@mui/material';
 import BaseModal from '../../../../components/ui/modal/BaseModal';
 import { snackMessage } from '@/store/snackMessage';
 import CommonLoading from '../../../../components/ui/loading/CommonLoading';
-import { Factory, SubsidiaryCategory } from '@/http/graphql/codegen/graphql';
-import { useRemoveSubsidiaryCategory } from '@/http/graphql/hooks/subsidiary-category/useRemoveSubsidiaryCategory';
+import { Factory } from '@/http/graphql/codegen/graphql';
 import { useRemoveFactory } from '@/http/graphql/hooks/factory/useRemoveFactory';
 
 interface Props {
-  item: SubsidiaryCategory;
+  item: Factory;
   open: boolean;
   onClose: () => void;
 }
