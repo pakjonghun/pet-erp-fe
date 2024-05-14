@@ -45,10 +45,9 @@ const OrderPage = () => {
       if (isLoading) return;
 
       const totalPage = data?.orders.totalCount;
-      if (!totalPage) return;
+      if (totalPage == null) return;
 
       if (totalPage <= rows.length) return;
-
       fetchMore({
         variables: {
           ordersInput: {

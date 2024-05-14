@@ -13,7 +13,6 @@ interface Props {
   index: number;
   control: Control<any>;
   remove: (index: number) => void;
-  replace: (index: number, newItem: FieldArrayWithId<CreateOrderForm, 'products', 'id'>) => void;
   isProductFreeze?: boolean;
   error?: FieldErrors<CreateOrderProductForm>;
   productList: CreateOrderProductForm[];

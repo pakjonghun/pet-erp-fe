@@ -131,13 +131,6 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
   };
   const factoryRef = useInfinityScroll({ callback });
 
-  const handleReplace = (
-    index: number,
-    newItem: FieldArrayWithId<CreateOrderForm, 'products', 'id'>
-  ) => {
-    //
-  };
-
   const currentProducts = watch('products');
   const totalCount = currentProducts.reduce((acc, cur) => cur.count + acc, 0);
 
@@ -263,7 +256,6 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
                 control={control}
                 index={index}
                 remove={remove}
-                replace={handleReplace}
                 error={errors.products?.[index]}
               />
             );

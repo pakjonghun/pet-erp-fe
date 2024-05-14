@@ -38,7 +38,9 @@ const documents = {
     "\n  mutation removeProduct($_id: String!) {\n    removeProduct(_id: $_id) {\n      _id\n      name\n    }\n  }\n": types.RemoveProductDocument,
     "\n  mutation updateProduct($updateProductInput: UpdateProductInput!) {\n    updateProduct(updateProductInput: $updateProductInput) {\n      ...ProductFragment\n    }\n  }\n": types.UpdateProductDocument,
     "\n  mutation createOrder($createOrderInput: CreateOrderInput!) {\n    createOrder(createOrderInput: $createOrderInput) {\n      ...ProductOrderFragment\n    }\n  }\n": types.CreateOrderDocument,
+    "\n  mutation updateOrder($updateOrderInput: UpdateOrderInput!) {\n    updateOrder(updateOrderInput: $updateOrderInput) {\n      ...ProductOrderFragment\n    }\n  }\n": types.UpdateOrderDocument,
     "\n  query orders($ordersInput: OrdersInput!) {\n    orders(ordersInput: $ordersInput) {\n      totalCount\n      data {\n        ...ProductOrderFragment\n      }\n    }\n  }\n": types.OrdersDocument,
+    "\n  mutation removeOrder($_id: String!) {\n    removeOrder(_id: $_id) {\n      ...ProductOrderFragment\n    }\n  }\n": types.RemoveOrderDocument,
     "\n  mutation createStorage($createStorageInput: CreateStorageInput!) {\n    createStorage(createStorageInput: $createStorageInput) {\n      ...StorageFragment\n    }\n  }\n": types.CreateStorageDocument,
     "\n  mutation updateStorage($updateStorageInput: UpdateStorageInput!) {\n    updateStorage(updateStorageInput: $updateStorageInput) {\n      ...StorageFragment\n    }\n  }\n": types.UpdateStorageDocument,
     "\n  mutation removeStorage($_id: String!) {\n    removeStorage(_id: $_id) {\n      ...StorageFragment\n    }\n  }\n": types.RemoveStorageDocument,
@@ -176,7 +178,15 @@ export function graphql(source: "\n  mutation createOrder($createOrderInput: Cre
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  mutation updateOrder($updateOrderInput: UpdateOrderInput!) {\n    updateOrder(updateOrderInput: $updateOrderInput) {\n      ...ProductOrderFragment\n    }\n  }\n"): (typeof documents)["\n  mutation updateOrder($updateOrderInput: UpdateOrderInput!) {\n    updateOrder(updateOrderInput: $updateOrderInput) {\n      ...ProductOrderFragment\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  query orders($ordersInput: OrdersInput!) {\n    orders(ordersInput: $ordersInput) {\n      totalCount\n      data {\n        ...ProductOrderFragment\n      }\n    }\n  }\n"): (typeof documents)["\n  query orders($ordersInput: OrdersInput!) {\n    orders(ordersInput: $ordersInput) {\n      totalCount\n      data {\n        ...ProductOrderFragment\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation removeOrder($_id: String!) {\n    removeOrder(_id: $_id) {\n      ...ProductOrderFragment\n    }\n  }\n"): (typeof documents)["\n  mutation removeOrder($_id: String!) {\n    removeOrder(_id: $_id) {\n      ...ProductOrderFragment\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

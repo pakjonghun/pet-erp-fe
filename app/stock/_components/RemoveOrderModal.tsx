@@ -5,6 +5,7 @@ import BaseModal from '@/components/ui/modal/BaseModal';
 import { snackMessage } from '@/store/snackMessage';
 import { Typography, Stack, Button } from '@mui/material';
 import { useRemoveClient } from '@/http/graphql/hooks/client/useDeleteClient';
+import { useRemoveProductOrder } from '@/http/graphql/hooks/productOrder/useRemoveProductOrder';
 
 interface Props {
   open: boolean;
@@ -13,10 +14,10 @@ interface Props {
 }
 
 const RemoveOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
-  const [removeClient, { loading }] = useRemoveClient();
+  const [removeProductOrder, { loading }] = useRemoveProductOrder();
 
   const handleClickRemove = () => {
-    removeClient({
+    removeProductOrder({
       variables: {
         _id: selectedOrder._id,
       },

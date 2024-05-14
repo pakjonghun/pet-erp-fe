@@ -4,42 +4,30 @@ import {
   Autocomplete,
   Box,
   Button,
+  FormControlLabel,
   FormGroup,
   FormLabel,
   Stack,
+  Switch,
   TextField,
   Typography,
 } from '@mui/material';
-import { Controller, FieldArrayWithId, useFieldArray, useForm } from 'react-hook-form';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { modalSizeProps } from '@/components/commonStyles';
-import { useCreateClient } from '@/http/graphql/hooks/client/useCreateClient';
-import { ClientType, ProductOrder } from '@/http/graphql/codegen/graphql';
+import { Factory, ProductOrder } from '@/http/graphql/codegen/graphql';
 import { filterEmptyValues } from '@/utils/common';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { CreateOrderForm, createOrderSchema } from '../_validation/createOrderValidation';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import OrderProduct from './OrderProduct';
 import { PlusOne } from '@mui/icons-material';
-
-const factories = [
-  {
-    _id: '123',
-    name: 'Central Warehouse',
-    phoneNumber: '123-456-7890',
-    address: '123 Central Ave, Big City',
-    note: 'Main distribution center',
-  },
-  {
-    _id: '1234',
-    name: 'East Side Storage',
-    phoneNumber: '987-654-3210',
-    address: '456 East St, Capital City',
-    note: 'Handles east region deliveries',
-  },
-];
+import { useUpdateProductOrder } from '@/http/graphql/hooks/productOrder/useEditProductOrder';
+import { useFactories } from '@/http/graphql/hooks/factory/useFactories';
+import { LIMIT } from '@/constants';
+import useInfinityScroll from '@/hooks/useInfinityScroll';
 
 interface Props {
   selectedOrder: ProductOrder;
@@ -48,7 +36,7 @@ interface Props {
 }
 
 const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
-  const [createClient, { loading }] = useCreateClient();
+  const [updateProductOrder, { loading }] = useUpdateProductOrder();
   const {
     reset,
     watch,
@@ -66,38 +54,39 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
         count: item.count,
       })),
       totalPayCost: selectedOrder.totalPayCost,
+      isDone: selectedOrder.isDone,
     },
   });
 
-  const { replace, append, remove, fields } = useFieldArray({
+  const { append, remove, fields } = useFieldArray({
     control,
     name: 'products',
   });
 
   const onSubmit = (values: CreateOrderForm) => {
     const newValues = filterEmptyValues(values) as CreateOrderForm;
-    // createClient({
-    //   variables: {
-    //     createClientInput: {
-    //       ...newValues,
-    //       feeRate: values.feeRate == null ? null : values.feeRate / 100,
-    //     },
-    //   },
-    //   onCompleted: () => {
-    //     snackMessage({
-    //       message: '거래처등록이 완료되었습니다.',
-    //       severity: 'success',
-    //     });
-    //     handleClose();
-    //   },
-    //   onError: (err) => {
-    //     const message = err.message;
-    //     snackMessage({
-    //       message: message ?? '거래처등록이 실패했습니다.',
-    //       severity: 'error',
-    //     });
-    //   },
-    // });
+    updateProductOrder({
+      variables: {
+        updateOrderInput: {
+          _id: selectedOrder._id,
+          ...newValues,
+        },
+      },
+      onCompleted: () => {
+        snackMessage({
+          message: '발주데이터 편집이 완료되었습니다.',
+          severity: 'success',
+        });
+        handleClose();
+      },
+      onError: (err) => {
+        const message = err.message;
+        snackMessage({
+          message: message ?? '발주데이터 편집이 실패했습니다.',
+          severity: 'error',
+        });
+      },
+    });
   };
 
   const handleClose = () => {
@@ -116,13 +105,34 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
 
   const [factoryKeyword, setFactoryKeyword] = useState('');
   const delayedFactoryKeyword = useTextDebounce(factoryKeyword);
+  const { data, networkStatus, fetchMore } = useFactories({
+    keyword: delayedFactoryKeyword,
+    limit: LIMIT,
+    skip: 0,
+  });
 
-  const handleReplace = (
-    index: number,
-    newItem: FieldArrayWithId<CreateOrderForm, 'products', 'id'>
-  ) => {
-    //
+  const factories = (data?.factories.data as Factory[]) ?? [];
+  const isLoading = networkStatus === 2 || networkStatus === 3 || networkStatus === 1;
+
+  const callback: IntersectionObserverCallback = (entries) => {
+    if (entries[0].isIntersecting) {
+      if (isLoading) return;
+
+      const totalCount = data!.factories.totalCount;
+      if (totalCount <= factories.length) return;
+
+      fetchMore({
+        variables: {
+          factoriesInput: {
+            keyword: delayedFactoryKeyword,
+            limit: LIMIT,
+            skip: factories.length,
+          },
+        },
+      });
+    }
   };
+  const factoryRef = useInfinityScroll({ callback });
 
   const currentProducts = watch('products');
   const totalCount = currentProducts.reduce((acc, cur) => cur.count + acc, 0);
@@ -133,7 +143,21 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
         발주 편집
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Typography>새로운 발주를 등록합니다.</Typography>
+        <Stack direction="row" alignItems="center" gap={3}>
+          <Typography>발주 데이터를 편집합니다..</Typography>
+          <Controller
+            control={control}
+            name="isDone"
+            render={({ field }) => {
+              return (
+                <FormControlLabel
+                  label={field.value ? '잔금 지불완료' : '잔금 미지불'}
+                  control={<Switch {...field} />}
+                />
+              );
+            }}
+          />
+        </Stack>
 
         <FormGroup sx={modalSizeProps}>
           <Controller
@@ -160,7 +184,7 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
                     const { key, ...rest } = props as any;
                     const isLast = state.index === factories.length - 1;
                     return (
-                      <Box component="li" ref={null} key={item} {...rest}>
+                      <Box component="li" ref={isLast ? factoryRef : null} key={item} {...rest}>
                         {item}
                       </Box>
                     );
@@ -175,10 +199,9 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
             name="payCost"
             render={({ field }) => {
               return (
-                <TextField
-                  {...field}
+                <NumberInput
+                  field={field}
                   label="계약금"
-                  size="small"
                   error={!!errors.payCost?.message}
                   helperText={errors.payCost?.message ?? ''}
                 />
@@ -190,10 +213,9 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
             name="notPayCost"
             render={({ field }) => {
               return (
-                <TextField
-                  {...field}
+                <NumberInput
+                  field={field}
                   label="잔금"
-                  size="small"
                   error={!!errors.notPayCost?.message}
                   helperText={errors.notPayCost?.message ?? ''}
                 />
@@ -205,10 +227,9 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
             name="totalPayCost"
             render={({ field }) => {
               return (
-                <TextField
-                  {...field}
+                <NumberInput
+                  field={field}
                   label="총 금액"
-                  size="small"
                   error={!!errors.totalPayCost?.message}
                   helperText={errors.totalPayCost?.message ?? ''}
                 />
@@ -235,7 +256,6 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
                 control={control}
                 index={index}
                 remove={remove}
-                replace={handleReplace}
                 error={errors.products}
               />
             );
