@@ -27,79 +27,21 @@ import { OrderHeaderList } from './constants';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { ProductOrder } from '@/http/graphql/codegen/graphql';
-
-const productOrders: ProductOrder[] = [
-  {
-    _id: '5f76fddc2fa9b89b77b8d1fe',
-    factory: {
-      _id: '5f76fddc2fa9b89b77b8d1fa',
-      name: 'Global Tech Factory',
-    },
-    products: [
-      {
-        count: 100,
-        product: {
-          code: '1',
-          _id: '5f76fddc2fa9b89b77b8d1fc',
-          name: 'Laptop',
-        },
-      },
-      {
-        count: 50,
-        product: {
-          _id: '5f76fddc2fa9b89b77b8d1fd',
-          code: '2',
-          name: 'Desktop Computer',
-        },
-      },
-    ],
-    payCost: 30000,
-    notPayCost: 5000,
-    totalPayCost: 35000,
-  },
-  {
-    _id: '5f76fddc2fa9b89b77b8d2fe',
-    factory: {
-      _id: '5f76fddc2fa9b89b77b8d2fa',
-      name: 'HighTech Solutions Inc.',
-    },
-    products: [
-      {
-        count: 200,
-        product: {
-          code: '3',
-          _id: '5f76fddc2fa9b89b77b8d2fc',
-          name: 'Smartphone',
-        },
-      },
-      {
-        count: 150,
-        product: {
-          code: '4',
-          _id: '5f76fddc2fa9b89b77b8d2fd',
-          name: 'Tablet',
-        },
-      },
-    ],
-    payCost: 45000,
-    notPayCost: 7500,
-    totalPayCost: 52500,
-  },
-];
+import { useProductOrders } from '@/http/graphql/hooks/productOrder/useProductOrders';
 
 const OrderPage = () => {
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
 
-  const { data, networkStatus, fetchMore } = useClients({
+  const { data, networkStatus, fetchMore } = useProductOrders({
     keyword: delayKeyword,
     skip: 0,
     limit: LIMIT,
   });
 
-  const rows = productOrders ?? [];
+  const rows = data?.orders.data ?? [];
   const isLoading = networkStatus == 3 || networkStatus == 1;
-
+  console.log('rows', rows);
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
       if (isLoading) return;
@@ -127,9 +69,17 @@ const OrderPage = () => {
   return (
     <TablePage sx={{ flex: 1 }}>
       {openCreateClient && (
-        <AddOrderModal open={openCreateClient} onClose={() => setOpenCreateClient(false)} />
+        <AddOrderModal
+          open={openCreateClient}
+          onClose={() => setOpenCreateClient(false)}
+        />
       )}
-      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+      <Stack
+        sx={{ px: 2 }}
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <TableTitle title="발주" />
         <Stack direction="row" alignItems="center" gap={2}>
           <ActionButton
@@ -159,7 +109,7 @@ const OrderPage = () => {
       <Typography sx={{ p: 3 }}>
         {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
       </Typography>
-      <ClientCards
+      {/* <ClientCards
         sx={{
           display: {
             xs: 'block',
@@ -170,7 +120,7 @@ const OrderPage = () => {
         isEmpty={isEmpty}
         isLoading={isLoading}
         scrollRef={scrollRef}
-      />
+      /> */}
       <ScrollTableContainer
         sx={{
           display: {
@@ -187,12 +137,12 @@ const OrderPage = () => {
               ))}
             </TableRow>
           </TableHead>
-          <OrderTableBody
+          {/* <OrderTableBody
             data={rows}
             isEmpty={isEmpty}
             isLoading={isLoading}
             scrollRef={scrollRef}
-          />
+          /> */}
         </Table>
       </ScrollTableContainer>
     </TablePage>

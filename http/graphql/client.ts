@@ -1,5 +1,10 @@
 import { BASE_URL } from '@/http/constants';
-import { ApolloClient, InMemoryCache, createHttpLink, gql } from '@apollo/client';
+import {
+  ApolloClient,
+  InMemoryCache,
+  createHttpLink,
+  gql,
+} from '@apollo/client';
 import { createFragmentRegistry } from '@apollo/client/cache';
 import { merge } from '@/utils/common';
 
@@ -11,6 +16,25 @@ const link = createHttpLink({
 export const client = new ApolloClient({
   cache: new InMemoryCache({
     fragments: createFragmentRegistry(gql`
+      fragment ProductOrderFragment on ProductOrder {
+        _id
+        factory {
+          _id
+          name
+        }
+        products {
+          count
+          product {
+            _id
+            name
+          }
+        }
+        payCost
+        notPayCost
+        totalPayCost
+        isDone
+      }
+
       fragment FactoryFragment on Factory {
         _id
         name
@@ -117,7 +141,10 @@ export const client = new ApolloClient({
       Query: {
         fields: {
           logs: {
-            keyArgs: ['findLogsQuery', ['keyword', 'from', 'to', 'keywordTarget']],
+            keyArgs: [
+              'findLogsQuery',
+              ['keyword', 'from', 'to', 'keywordTarget'],
+            ],
             merge,
           },
           productSales: {
