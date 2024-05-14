@@ -165,7 +165,7 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
             render={({ field }) => {
               return (
                 <FormControlLabel
-                  label={field.value ? '결제완료' : '결제대기'}
+                  label={field.value ? '잔금 지불완료' : '잔금 미지불'}
                   control={<Switch {...field} />}
                 />
               );
