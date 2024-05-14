@@ -505,7 +505,7 @@ export type ProductCategory = {
 export type ProductOrder = {
   __typename?: 'ProductOrder';
   _id: Scalars['ID']['output'];
-  factory?: Maybe<Factory>;
+  factory: Factory;
   notPayCost: Scalars['Int']['output'];
   payCost: Scalars['Int']['output'];
   products: Array<OrderProduct>;

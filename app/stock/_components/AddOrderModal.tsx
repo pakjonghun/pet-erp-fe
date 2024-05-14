@@ -3,14 +3,21 @@ import {
   Autocomplete,
   Box,
   Button,
+  FormControlLabel,
   FormGroup,
   FormLabel,
   Stack,
+  Switch,
   TextField,
   Typography,
 } from '@mui/material';
 import { FC, useState } from 'react';
-import { Controller, FieldArrayWithId, useFieldArray, useForm } from 'react-hook-form';
+import {
+  Controller,
+  FieldArrayWithId,
+  useFieldArray,
+  useForm,
+} from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
@@ -20,7 +27,10 @@ import { Factory } from '@/http/graphql/codegen/graphql';
 import { filterEmptyValues } from '@/utils/common';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { LIMIT } from '@/constants';
-import { CreateOrderForm, createOrderSchema } from '../_validation/createOrderValidation';
+import {
+  CreateOrderForm,
+  createOrderSchema,
+} from '../_validation/createOrderValidation';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import OrderProduct from './OrderProduct';
 import { PlusOne } from '@mui/icons-material';
@@ -52,6 +62,7 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
       payCost: 0,
       notPayCost: 0,
       totalPayCost: 0,
+      isDone: false,
     },
   });
 
@@ -107,7 +118,8 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
   });
 
   const factories = (data?.factories.data as Factory[]) ?? [];
-  const isLoading = networkStatus === 2 || networkStatus === 3 || networkStatus === 1;
+  const isLoading =
+    networkStatus === 2 || networkStatus === 3 || networkStatus === 1;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -140,12 +152,26 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
   const totalCount = currentProducts.reduce((acc, cur) => cur.count + acc, 0);
 
   return (
-    <BaseModal open={open} onClose={handleClose}>
+    <BaseModal sx={{ width: 700 }} open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
         발주 등록
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Typography>새로운 발주를 등록합니다.</Typography>
+        <Stack direction="row" alignItems="center" gap={3}>
+          <Typography>새로운 발주를 등록합니다.</Typography>
+          <Controller
+            control={control}
+            name="isDone"
+            render={({ field }) => {
+              return (
+                <FormControlLabel
+                  label={field.value ? '결제완료' : '결제대기'}
+                  control={<Switch {...field} />}
+                />
+              );
+            }}
+          />
+        </Stack>
 
         <FormGroup sx={modalSizeProps}>
           <Controller
@@ -167,12 +193,19 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
                   loadingText="로딩중"
                   noOptionsText="검색 결과가 없습니다."
                   disablePortal
-                  renderInput={(params) => <TextField {...params} label="공장" required />}
+                  renderInput={(params) => (
+                    <TextField {...params} label="공장" required />
+                  )}
                   renderOption={(props, item, state) => {
                     const { key, ...rest } = props as any;
                     const isLast = state.index === factories.length - 1;
                     return (
-                      <Box component="li" ref={isLast ? factoryRef : null} key={item} {...rest}>
+                      <Box
+                        component="li"
+                        ref={isLast ? factoryRef : null}
+                        key={item}
+                        {...rest}
+                      >
                         {item}
                       </Box>
                     );
@@ -257,7 +290,11 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
-          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
+          <Button
+            type="submit"
+            endIcon={loading ? <CommonLoading /> : ''}
+            variant="contained"
+          >
             등록
           </Button>
         </Stack>
