@@ -34,7 +34,9 @@ const OrderDetailPopover: FC<Props> = ({
         <LabelText label="공장 주소" text={selectedOrder?.factory?.address ?? EMPTY} />
         <LabelText
           label="제품 목록"
-          text={selectedOrder.products.map((item) => `${item.product}(${item.count})`) ?? EMPTY}
+          text={
+            selectedOrder.products.map((item) => `${item.product.name}(${item.count})`) ?? EMPTY
+          }
         />
 
         <LabelText label="계약금" text={selectedOrder.payCost} />

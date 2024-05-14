@@ -24,7 +24,6 @@ import { LIMIT } from '@/constants';
 import ClientCards from './_components/OrderCards';
 import ActionButton from '@/components/ui/button/ActionButton';
 import { OrderHeaderList } from './constants';
-import { useClients } from '@/http/graphql/hooks/client/useClients';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { ProductOrder } from '@/http/graphql/codegen/graphql';
 import { useProductOrders } from '@/http/graphql/hooks/productOrder/useProductOrders';
@@ -36,30 +35,29 @@ const OrderPage = () => {
   const { data, networkStatus, fetchMore } = useProductOrders({
     keyword: delayKeyword,
     skip: 0,
-    limit: LIMIT,
+    limit: 10,
   });
 
   const rows = data?.orders.data ?? [];
-  const isLoading = networkStatus == 3 || networkStatus == 1;
-  console.log('rows', rows);
+  const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
       if (isLoading) return;
 
-      // const totalCount = data!.clients.totalCount;
-      // const totalCount = data!.factories.totalCount;
-      // if (totalCount <= factories.length) return;
-      // if (totalCount != null && totalCount > rows.length) {
-      //   // fetchMore({
-      //   //   variables: {
-      //   //     clientsInput: {
-      //   //       keyword,
-      //   //       skip: rows.length,
-      //   //       limit: LIMIT,
-      //   //     },
-      //   //   },
-      //   // });
-      // }
+      const totalPage = data?.orders.totalCount;
+      if (!totalPage) return;
+
+      if (totalPage <= rows.length) return;
+
+      fetchMore({
+        variables: {
+          ordersInput: {
+            keyword,
+            skip: rows.length,
+            limit: LIMIT,
+          },
+        },
+      });
     }
   };
   const scrollRef = useInfinityScroll({ callback });
@@ -69,17 +67,9 @@ const OrderPage = () => {
   return (
     <TablePage sx={{ flex: 1 }}>
       {openCreateClient && (
-        <AddOrderModal
-          open={openCreateClient}
-          onClose={() => setOpenCreateClient(false)}
-        />
+        <AddOrderModal open={openCreateClient} onClose={() => setOpenCreateClient(false)} />
       )}
-      <Stack
-        sx={{ px: 2 }}
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
+      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="발주" />
         <Stack direction="row" alignItems="center" gap={2}>
           <ActionButton
@@ -109,18 +99,18 @@ const OrderPage = () => {
       <Typography sx={{ p: 3 }}>
         {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
       </Typography>
-      {/* <ClientCards
+      <ClientCards
         sx={{
           display: {
             xs: 'block',
             md: 'none',
           },
         }}
-        data={rows}
+        data={rows as ProductOrder[]}
         isEmpty={isEmpty}
         isLoading={isLoading}
         scrollRef={scrollRef}
-      /> */}
+      />
       <ScrollTableContainer
         sx={{
           display: {
@@ -137,12 +127,12 @@ const OrderPage = () => {
               ))}
             </TableRow>
           </TableHead>
-          {/* <OrderTableBody
-            data={rows}
+          <OrderTableBody
+            data={rows as ProductOrder[]}
             isEmpty={isEmpty}
             isLoading={isLoading}
             scrollRef={scrollRef}
-          /> */}
+          />
         </Table>
       </ScrollTableContainer>
     </TablePage>

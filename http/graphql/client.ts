@@ -1,10 +1,5 @@
 import { BASE_URL } from '@/http/constants';
-import {
-  ApolloClient,
-  InMemoryCache,
-  createHttpLink,
-  gql,
-} from '@apollo/client';
+import { ApolloClient, InMemoryCache, createHttpLink, gql } from '@apollo/client';
 import { createFragmentRegistry } from '@apollo/client/cache';
 import { merge } from '@/utils/common';
 
@@ -141,10 +136,7 @@ export const client = new ApolloClient({
       Query: {
         fields: {
           logs: {
-            keyArgs: [
-              'findLogsQuery',
-              ['keyword', 'from', 'to', 'keywordTarget'],
-            ],
+            keyArgs: ['findLogsQuery', ['keyword', 'from', 'to', 'keywordTarget']],
             merge,
           },
           productSales: {
@@ -177,6 +169,10 @@ export const client = new ApolloClient({
           },
           storages: {
             keyArgs: ['storagesInput', ['keyword']],
+            merge,
+          },
+          orders: {
+            keyArgs: ['ordersInput', ['keyword']],
             merge,
           },
         },
