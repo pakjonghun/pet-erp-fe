@@ -2,33 +2,22 @@ import { FC, MouseEvent, useState } from 'react';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import Cell from '@/components/table/Cell';
 import { IconButton, Menu, TableRow } from '@mui/material';
-import { SelectedOptionItem } from '@/constants';
-import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
+import { EMPTY, SelectedOptionItem } from '@/constants';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import CollapseRow from './CollapseRow';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import OptionCell from './OptionCell';
+import { StockColumn } from '@/http/graphql/codegen/graphql';
 
 interface Props {
-  productStock: TotalProductStockOutput;
-  onClickRow: (
-    event: MouseEvent<HTMLTableCellElement>,
-    stock: TotalProductStockOutput
-  ) => void;
-  onClickOption: (
-    option: any | null,
-    client: TotalProductStockOutput | null
-  ) => void;
+  productStock: StockColumn;
+  onClickRow: (event: MouseEvent<HTMLTableCellElement>, stock: StockColumn) => void;
+  onClickOption: (option: any | null, client: StockColumn | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const ProductStockBodyRow: FC<Props> = ({
-  productStock,
-  scrollRef,
-  onClickOption,
-  onClickRow,
-}) => {
+const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption, onClickRow }) => {
   const [open, setOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
 
@@ -51,12 +40,13 @@ const ProductStockBodyRow: FC<Props> = ({
     },
   };
 
-  const createRow = (stock: TotalProductStockOutput) => {
+  const createRow = (stock: StockColumn) => {
     return [
-      stock.product.name,
-      `${stock.storageCount}(${stock.orderCount})` ?? 0,
-      stock.recentSaleCount,
-      0,
+      stock.productName,
+      stock.stockCount,
+      stock.monthSaleCount,
+      stock.leftDate,
+      stock.leadTime == null ? EMPTY : `${stock.leadTime}일`,
     ];
   };
 
@@ -65,19 +55,13 @@ const ProductStockBodyRow: FC<Props> = ({
   return (
     <>
       <TableRow hover ref={scrollRef}>
-        <Menu
-          anchorEl={menuAnchor}
-          open={!!menuAnchor}
-          onClose={() => setMenuAnchor(null)}
-        >
+        <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
           {Object.entries(productOptionMenus).map(([option, menu]) => (
             <OptionMenu key={option} menu={menu} option={option} />
           ))}
         </Menu>
         <Cell onClick={() => setOpen((prev) => !prev)}>
-          <IconButton>
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
+          <IconButton>{open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}</IconButton>
         </Cell>
         {parsedClient.map((item, index) => (
           <Cell
@@ -94,11 +78,7 @@ const ProductStockBodyRow: FC<Props> = ({
 
         <OptionCell onClick={setMenuAnchor} />
       </TableRow>
-      <CollapseRow
-        onClickOption={onClickOption}
-        productStock={productStock}
-        open={open}
-      />
+      {/* <CollapseRow onClickOption={onClickOption} productStock={productStock} open={open} /> */}
     </>
   );
 };

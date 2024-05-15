@@ -44,7 +44,7 @@ const AddPStockModal: FC<Props> = ({ open, onClose }) => {
   } = useForm<CreateProductStockForm>({
     resolver: zodResolver(createProductStockSchema),
     defaultValues: {
-      productList: [],
+      stocks: [],
     },
   });
 
@@ -81,14 +81,14 @@ const AddPStockModal: FC<Props> = ({ open, onClose }) => {
 
   const { append, remove, replace, fields } = useFieldArray({
     control,
-    name: 'productList',
+    name: 'stocks',
   });
 
   const handleAppendProduct = () => {
     append(initStock);
   };
 
-  const currentProductList = watch('productList');
+  const currentProductList = watch('stocks');
 
   const handleReplaceProduct = (index: number, newProduct: CreateProductForm) => {
     const clonedFields = [...currentProductList];
@@ -118,10 +118,9 @@ const AddPStockModal: FC<Props> = ({ open, onClose }) => {
                 <StockProduct
                   index={index}
                   control={control}
-                  error={errors.productList?.[index]}
+                  error={errors.stocks?.[index]}
                   key={`${product.id}_${index}_'autocomplete`}
                   remove={remove}
-                  replace={handleReplaceProduct}
                 />
               );
             })}

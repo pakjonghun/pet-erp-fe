@@ -27,69 +27,39 @@ import ActionButton from '@/components/ui/button/ActionButton';
 import { ProductStockHeaderList } from './constants';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
+import { StockColumn, TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
 import InventoryIcon from '@mui/icons-material/Inventory';
-
-const totalProductStockOutputs: TotalProductStockOutput[] = [
-  {
-    _id: '123',
-    product: {
-      _id: 'prod1',
-      code: '123',
-      name: 'LED TV',
-    },
-    storage: {
-      _id: 'storage1',
-      name: 'Main Warehouse',
-    },
-    storageCount: 150,
-    orderCount: 25,
-    recentSaleCount: 30,
-  },
-  {
-    _id: '1234',
-    product: {
-      code: '1234',
-      _id: 'prod2',
-      name: 'Smartphone',
-    },
-    storage: null, // 예를 들어 이 제품은 현재 재고 위치가 없을 수 있습니다.
-    storageCount: null,
-    orderCount: 50,
-    recentSaleCount: 45,
-  },
-];
+import { useStocks } from '@/http/graphql/hooks/stock/useStocks';
 
 const ProductStockPage = () => {
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
-  const [productStock, setProductStock] =
-    useState<null | TotalProductStockOutput>(null);
+  const [productStock, setProductStock] = useState<null | StockColumn>(null);
 
-  const { data, networkStatus, fetchMore, refetch } = useClients({
+  const { data, networkStatus, fetchMore, refetch } = useStocks({
     keyword: delayKeyword,
     skip: 0,
     limit: LIMIT,
   });
 
-  const rows = totalProductStockOutputs ?? [];
-  const isLoading = networkStatus == 3 || networkStatus == 1;
+  const rows = (data?.stocks.data as StockColumn[]) ?? [];
+  const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
       if (isLoading) return;
 
-      const totalCount = data?.clients.totalCount;
+      const totalCount = data?.stocks.totalCount;
       if (totalCount != null && totalCount > rows.length) {
-        // fetchMore({
-        //   variables: {
-        //     clientsInput: {
-        //       keyword,
-        //       skip: rows.length,
-        //       limit: LIMIT,
-        //     },
-        //   },
-        // });
+        fetchMore({
+          variables: {
+            stocksInput: {
+              keyword,
+              skip: rows.length,
+              limit: LIMIT,
+            },
+          },
+        });
       }
     }
   };
@@ -120,12 +90,7 @@ const ProductStockPage = () => {
           }}
         />
       )}
-      <Stack
-        sx={{ px: 2 }}
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
+      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="제품별 재고관리" />
         <Stack direction="row" alignItems="center" gap={2}>
           <ActionButton

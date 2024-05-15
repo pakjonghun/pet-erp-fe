@@ -1,9 +1,5 @@
 import { FC } from 'react';
-import {
-  Client,
-  TotalProductStockOutput,
-} from '@/http/graphql/codegen/graphql';
-import LabelText from '@/components/ui/typograph/LabelText';
+import { StockColumn } from '@/http/graphql/codegen/graphql';
 import ModalTitle from '@/components/ui/typograph/ModalTitle';
 import { Stack, Button } from '@mui/material';
 import BasePopover from '@/components/ui/modal/BasePopover';
@@ -13,7 +9,7 @@ interface Props {
   open: boolean;
   anchorEl: null | HTMLElement;
   position: { left: number; top: number };
-  productStock: TotalProductStockOutput;
+  productStock: StockColumn;
   onClose: () => void;
   onClickDelete: () => void;
   onClickEdit: () => void;
@@ -29,12 +25,7 @@ const ClientDetailPopover: FC<Props> = ({
   onClickEdit,
 }) => {
   return (
-    <BasePopover
-      onClose={onClose}
-      position={position}
-      open={open}
-      anchorEl={anchorEl}
-    >
+    <BasePopover onClose={onClose} position={position} open={open} anchorEl={anchorEl}>
       <ModalTitle text="거래처 세부내용" />
       {/* <Stack>
         <LabelText label="코드" text={selectedClient.code} />

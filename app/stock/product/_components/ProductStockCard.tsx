@@ -1,19 +1,16 @@
+import { FC, MouseEvent, useState } from 'react';
 import { Box, IconButton, Menu, Paper, Stack } from '@mui/material';
-import React, { FC, MouseEvent, useState } from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { EMPTY, SelectedOptionItem } from '@/constants';
-import { Edit } from '@mui/icons-material';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { Client, TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
+import { StockColumn } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
 import InventoryIcon from '@mui/icons-material/Inventory';
-// import { SelectOption } from '../../types';
 
 interface Props {
-  stock: TotalProductStockOutput;
-  onClickRow: (event: MouseEvent<HTMLSpanElement>, stock: TotalProductStockOutput) => void;
-  onClickOption: (option: any | null, stock: TotalProductStockOutput | null) => void;
+  stock: StockColumn;
+  onClickRow: (event: MouseEvent<HTMLSpanElement>, stock: StockColumn) => void;
+  onClickOption: (option: any | null, stock: StockColumn | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
@@ -56,22 +53,24 @@ const ProductStockCard: FC<Props> = ({ stock, scrollRef, onClickOption, onClickR
       <Box onClick={(event) => onClickRow(event, stock)}>
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="이름" text={stock.product.name} />
+            <LabelText label="이름" text={stock.productName} />
           </Box>
           <Box sx={{ flex: 1 }}>
-            <LabelText
-              label="재고수량"
-              text={`${stock.storageCount}(${stock.orderCount})` ?? EMPTY}
-            />
+            <LabelText label="재고수량" text={stock.stockCount} />
           </Box>
         </Stack>
 
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="최근 판매량" text={stock.recentSaleCount} />
+            <LabelText label="최근 1달 판매량" text={stock.monthSaleCount} />
           </Box>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="재고소진까지 남은 기간" text={'0'} />
+            <LabelText label="재고소진까지 남은 기간" text={`${stock.leftDate}일`} />
+          </Box>
+        </Stack>
+        <Stack direction="row" justifyContent="space-between" gap={2}>
+          <Box sx={{ flex: 1 }}>
+            <LabelText label="리드타임" text={stock.leadTime ?? EMPTY} />
           </Box>
         </Stack>
       </Box>

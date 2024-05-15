@@ -14,12 +14,12 @@ import {
   createProductStockSchema,
 } from '../_validations/createProductStockList';
 import StockProduct from './StockProduct';
-import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
+import { StockColumn, TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  productStock: null | TotalProductStockOutput;
+  productStock: null | StockColumn;
   product?: string;
 }
 
@@ -35,7 +35,7 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
   } = useForm<CreateProductStockForm>({
     resolver: zodResolver(createProductStockSchema),
     defaultValues: {
-      productList: [],
+      stocks: [],
     },
   });
 
@@ -50,17 +50,17 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
 
   const { append, remove, replace, fields } = useFieldArray({
     control,
-    name: 'productList',
+    name: 'stocks',
   });
 
   const handleAppendProduct = () => {
     const newStock = productStock
-      ? { ...initStock, product: productStock.product.name ?? '' }
+      ? { ...initStock, product: productStock.productName ?? '' }
       : initStock;
     append(newStock);
   };
 
-  const currentProductList = watch('productList');
+  const currentProductList = watch('stocks');
 
   const handleReplaceProduct = (index: number, newProduct: CreateProductForm) => {
     const clonedFields = [...currentProductList];
@@ -91,10 +91,9 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
                   isProductFreeze={!!product}
                   index={index}
                   control={control}
-                  error={errors.productList?.[index]}
+                  error={errors.stocks?.[index]}
                   key={`${product.id}_${index}_'autocomplete`}
                   remove={remove}
-                  replace={handleReplaceProduct}
                 />
               );
             })}

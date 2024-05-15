@@ -11,6 +11,14 @@ const link = createHttpLink({
 export const client = new ApolloClient({
   cache: new InMemoryCache({
     fragments: createFragmentRegistry(gql`
+      fragment StockColumnFragment on StockColumn {
+        stockCount
+        leadTime
+        leftDate
+        monthSaleCount
+        productName
+      }
+
       fragment ProductOrderFragment on ProductOrder {
         _id
         factory {
@@ -173,6 +181,10 @@ export const client = new ApolloClient({
           },
           orders: {
             keyArgs: ['ordersInput', ['keyword']],
+            merge,
+          },
+          stocks: {
+            keyArgs: ['stocksInput', ['keyword']],
             merge,
           },
         },

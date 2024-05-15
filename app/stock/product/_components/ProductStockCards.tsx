@@ -1,5 +1,4 @@
 import { FC, useState } from 'react';
-import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
 import { TABLE_MAX_HEIGHT } from '@/constants';
 import { Grid, SxProps } from '@mui/material';
 import ProductStockDetailPopover from './ClientDetailPopover';
@@ -9,18 +8,19 @@ import LoadingCard from '../../../../components/ui/loading/LoadingCard';
 import { CommonListProps } from '@/types';
 import AddProductStockModal from './AddProductStockModal';
 import OutProductStockModal from './OutProductStockModal';
+import { StockColumn } from '@/http/graphql/codegen/graphql';
 
-interface Props extends CommonListProps<TotalProductStockOutput> {
+interface Props extends CommonListProps<StockColumn> {
   sx?: SxProps;
 }
 
 const ProductStockCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  const [productStock, setProductStock] = useState<null | TotalProductStockOutput>(null);
+  const [productStock, setProductStock] = useState<null | StockColumn>(null);
   const [optionType, setOptionType] = useState<null | any>(null);
 
-  const handleClickOption = (option: any | null, client: TotalProductStockOutput | null) => {
+  const handleClickOption = (option: any | null, client: StockColumn | null) => {
     setProductStock(client);
     if (option == 'add') {
       setOpenAddStock(true);
@@ -69,7 +69,7 @@ const ProductStockCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx 
           onClose={() => setOpenAddStock(false)}
         />
       )}
-      {productStock?.product.name && (
+      {productStock?.productName && (
         <OutProductStockModal
           productStock={productStock}
           open={openOutStock}
@@ -90,12 +90,12 @@ const ProductStockCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx 
       )}
 
       {data.map((item, index) => {
-        const stock = item as unknown as TotalProductStockOutput;
+        const stock = item as unknown as StockColumn;
         const isLast = index === data.length - 1;
         return (
-          <Grid key={stock._id} item xs={12} lg={6}>
+          <Grid key={`${stock.__typename}_${index}`} item xs={12} lg={6}>
             <ProductStockCard
-              onClickRow={(event, stock: TotalProductStockOutput) => {
+              onClickRow={(event, stock: StockColumn) => {
                 setPopoverPosition({ left: event.clientX, top: event.clientY });
                 setPopoverAnchor(event.currentTarget);
                 setProductStock(stock);
