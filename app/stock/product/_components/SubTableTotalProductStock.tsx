@@ -12,6 +12,9 @@ import {
 } from '@mui/material';
 import { StockColumn } from '@/http/graphql/codegen/graphql';
 import ActionButton from '@/components/ui/button/ActionButton';
+import { useStocksState } from '@/http/graphql/hooks/stock/useStocksState';
+import { EMPTY } from '@/constants';
+import EmptyRow from '@/components/table/EmptyRow';
 
 interface Props {
   productStock: StockColumn;
@@ -19,6 +22,12 @@ interface Props {
 }
 
 const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) => {
+  const { fetchMore, networkStatus, data } = useStocksState(productStock.productName);
+
+  const rows = data?.stocksState ?? [];
+
+  const isLoading = networkStatus == 1 || networkStatus == 3 || networkStatus == 2;
+  const isEmpty = !isLoading && rows.length == 0;
   return (
     <TableContainer sx={{ mt: 1 }}>
       <Stack direction="row" alignItems="center" gap={2}>
@@ -52,20 +61,22 @@ const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) =
           <TableRow>
             <TableCell>구분</TableCell>
             <TableCell>위치</TableCell>
-            <TableCell>재고</TableCell>
+            <TableCell>수량</TableCell>
+            <TableCell>제작완료 예정일</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow>
-            <TableCell>제작중</TableCell>
-            <TableCell>1공장</TableCell>
-            <TableCell>3</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>보관중</TableCell>
-            <TableCell>1창고</TableCell>
-            <TableCell>3</TableCell>
-          </TableRow>
+          <EmptyRow colSpan={5} isEmpty={isEmpty} message="검색된 데이터가 없습니다." />
+          {rows.map((row, index) => {
+            return (
+              <TableRow key={`${row.__typename}_${index}`}>
+                <TableCell>{row.state}</TableCell>
+                <TableCell>{row.location}</TableCell>
+                <TableCell>{row.count}</TableCell>
+                <TableCell>{row.orderCompleteDate ?? EMPTY}</TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </TableContainer>

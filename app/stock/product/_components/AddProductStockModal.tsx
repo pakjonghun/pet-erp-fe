@@ -12,9 +12,10 @@ import {
   createProductStockSchema,
 } from '../_validations/createProductStockList';
 import StockProduct from './StockProduct';
-import { StockColumn, TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
+import { StockColumn } from '@/http/graphql/codegen/graphql';
 import { useAddStock } from '@/http/graphql/hooks/stock/uadAddStocks';
 import { snackMessage } from '@/store/snackMessage';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   open: boolean;
@@ -47,11 +48,12 @@ const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
       },
       onCompleted: (response) => {
         snackMessage({ message: '재고 입력이 완료되었습니다.', severity: 'success' });
+        client.refetchQueries({ include: 'active' });
+        onClose();
       },
       onError: (error) => {
         snackMessage({ message: '재고 입력이 완료되었습니다.', severity: 'success' });
       },
-      // refetchQueries: [{ query: stocks }],
     });
   };
 

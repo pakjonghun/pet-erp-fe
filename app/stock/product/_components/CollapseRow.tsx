@@ -16,7 +16,6 @@ const CollapseTabs = ['총괄현황', '발주현황'];
 
 const CollapseRow: FC<Props> = ({ open, productStock, onClickOption }) => {
   const [tabValue, setTabValue] = useState(0);
-
   return (
     <TableRow>
       <TableCell

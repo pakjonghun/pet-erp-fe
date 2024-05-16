@@ -43,12 +43,16 @@ const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption
   };
 
   const createRow = (stock: StockColumn) => {
+    const leftDate = stock.leftDate;
+    const leftDateDisplay =
+      leftDate === null ? '알수없음' : leftDate === -1 ? '재고없음' : leftDate;
+
     return [
       stock.productName,
       stock.stockCount,
       getNumberToString(stock.monthSaleCount, 'comma'),
       stock.wonPrice ? getKCWFormat(stock.wonPrice) : EMPTY,
-      stock.leftDate,
+      leftDateDisplay,
       stock.leadTime == null ? EMPTY : `${stock.leadTime}일`,
     ];
   };
@@ -81,7 +85,9 @@ const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption
 
         <OptionCell onClick={setMenuAnchor} />
       </TableRow>
-      <CollapseRow onClickOption={onClickOption} productStock={productStock} open={open} />
+      {open && (
+        <CollapseRow onClickOption={onClickOption} productStock={productStock} open={open} />
+      )}
     </>
   );
 };

@@ -31,6 +31,7 @@ export const client = new ApolloClient({
           product {
             _id
             name
+            leadTime
           }
         }
         payCost

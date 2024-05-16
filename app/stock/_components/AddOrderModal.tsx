@@ -60,8 +60,6 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
     },
   });
 
-  console.log('errors : ', watch('createdAt'));
-
   const { append, remove, fields } = useFieldArray({
     control,
     name: 'products',
