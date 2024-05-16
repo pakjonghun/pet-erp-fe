@@ -10,12 +10,12 @@ import {
   Typography,
   Stack,
 } from '@mui/material';
-import { TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
+import { StockColumn } from '@/http/graphql/codegen/graphql';
 import ActionButton from '@/components/ui/button/ActionButton';
 
 interface Props {
-  productStock: TotalProductStockOutput;
-  onClickOption: (option: any | null, client: TotalProductStockOutput | null) => void;
+  productStock: StockColumn;
+  onClickOption: (option: any | null, client: StockColumn | null) => void;
 }
 
 const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) => {
@@ -25,7 +25,7 @@ const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) =
         <Typography
           variant="subtitle1"
           sx={{ p: 2, pt: 0, display: 'inline-block' }}
-        >{`${productStock.product.name}(${productStock.storageCount}+${productStock.orderCount})`}</Typography>
+        >{`${productStock.productName}`}</Typography>
         <Stack direction="row" alignItems="center" gap={2} sx={{ ml: 'auto' }}>
           <ActionButton
             size="small"

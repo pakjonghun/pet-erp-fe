@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
   Autocomplete,
@@ -28,6 +28,8 @@ import { useUpdateProductOrder } from '@/http/graphql/hooks/productOrder/useEdit
 import { useFactories } from '@/http/graphql/hooks/factory/useFactories';
 import { LIMIT } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
 
 interface Props {
   selectedOrder: ProductOrder;
@@ -46,6 +48,7 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
   } = useForm<CreateOrderForm>({
     resolver: zodResolver(createOrderSchema),
     defaultValues: {
+      createdAt: selectedOrder.createdAt,
       factory: selectedOrder?.factory?.name ?? '',
       notPayCost: selectedOrder.notPayCost,
       payCost: selectedOrder.payCost,
@@ -57,6 +60,21 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
       isDone: selectedOrder.isDone,
     },
   });
+
+  useEffect(() => {
+    reset({
+      createdAt: selectedOrder.createdAt,
+      factory: selectedOrder?.factory?.name ?? '',
+      notPayCost: selectedOrder.notPayCost,
+      payCost: selectedOrder.payCost,
+      products: selectedOrder.products.map((item) => ({
+        product: item.product.name,
+        count: item.count,
+      })),
+      totalPayCost: selectedOrder.totalPayCost,
+      isDone: selectedOrder.isDone,
+    });
+  }, [selectedOrder, reset]);
 
   const { append, remove, fields } = useFieldArray({
     control,
@@ -136,7 +154,6 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
 
   const currentProducts = watch('products');
   const totalCount = currentProducts.reduce((acc, cur) => cur.count + acc, 0);
-
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
@@ -162,13 +179,36 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
         <FormGroup sx={modalSizeProps}>
           <Controller
             control={control}
+            name="createdAt"
+            render={({ field }) => {
+              return (
+                <DatePicker
+                  sx={{
+                    mt: 3,
+                    '& .MuiInputBase-input': {
+                      py: 1.2,
+                      pb: 1.2,
+                    },
+                  }}
+                  label="발주날짜"
+                  value={dayjs(field.value).subtract(9, 'hour')}
+                  onChange={(value) => {
+                    if (!value) return;
+                    const _value = value as any;
+                    field.onChange(new Date(_value));
+                  }}
+                />
+              );
+            }}
+          />
+          <Controller
+            control={control}
             name="factory"
             render={({ field }) => {
               return (
                 <Autocomplete
                   value={field.value}
                   onChange={(_, value) => field.onChange(value)}
-                  sx={{ mt: 3 }}
                   size="small"
                   options={factories.map((item) => item.name)}
                   isOptionEqualToValue={(item1, item2) => item1 === item2}

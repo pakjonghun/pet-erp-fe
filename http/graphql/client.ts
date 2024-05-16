@@ -17,6 +17,7 @@ export const client = new ApolloClient({
         leftDate
         monthSaleCount
         productName
+        wonPrice
       }
 
       fragment ProductOrderFragment on ProductOrder {
@@ -36,6 +37,7 @@ export const client = new ApolloClient({
         notPayCost
         totalPayCost
         isDone
+        createdAt
       }
 
       fragment FactoryFragment on Factory {

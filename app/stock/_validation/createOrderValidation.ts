@@ -20,6 +20,7 @@ export const createOrderProductSchema = z.object({
 
 export const createOrderSchema = z
   .object({
+    createdAt: z.date(),
     isDone: z.boolean(),
     factory: z.string().min(1, { message: '발주할 공장을 선택하세요.' }),
     products: z

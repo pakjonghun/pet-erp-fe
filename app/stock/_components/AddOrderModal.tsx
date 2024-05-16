@@ -28,6 +28,8 @@ import { PlusOne } from '@mui/icons-material';
 import { useFactories } from '@/http/graphql/hooks/factory/useFactories';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { useCreateProductOrder } from '@/http/graphql/hooks/productOrder/useCreateProductOrder';
+import dayjs from 'dayjs';
+import { DatePicker } from '@mui/x-date-pickers';
 
 interface Props {
   open: boolean;
@@ -48,6 +50,7 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
   } = useForm<CreateOrderForm>({
     resolver: zodResolver(createOrderSchema),
     defaultValues: {
+      createdAt: dayjs().startOf('date').toDate(),
       factory: '',
       products: [],
       payCost: 0,
@@ -56,6 +59,8 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
       isDone: false,
     },
   });
+
+  console.log('errors : ', watch('createdAt'));
 
   const { append, remove, fields } = useFieldArray({
     control,
@@ -159,13 +164,35 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
         <FormGroup sx={modalSizeProps}>
           <Controller
             control={control}
+            name="createdAt"
+            render={({ field }) => {
+              return (
+                <DatePicker
+                  sx={{
+                    mt: 3,
+                    '& input': {
+                      py: 1.2,
+                    },
+                  }}
+                  label="발주날짜"
+                  value={dayjs(field.value)}
+                  onChange={(value) => {
+                    if (!value) return;
+                    const _value = value as any;
+                    field.onChange(new Date(_value));
+                  }}
+                />
+              );
+            }}
+          />
+          <Controller
+            control={control}
             name="factory"
             render={({ field }) => {
               return (
                 <Autocomplete
                   value={field.value}
                   onChange={(_, value) => field.onChange(value)}
-                  sx={{ mt: 3 }}
                   size="small"
                   options={factories.map((item) => item.name)}
                   isOptionEqualToValue={(item1, item2) => item1 === item2}

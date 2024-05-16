@@ -7,6 +7,7 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { ProductOrder } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
+import dayjs from 'dayjs';
 // import { SelectOption } from '../../types';
 
 interface Props {
@@ -80,6 +81,16 @@ const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) 
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Box sx={{ flex: 1 }}>
             <LabelText label="총 금액" text={client.totalPayCost} />
+          </Box>
+          <Box sx={{ flex: 1 }}>
+            <LabelText
+              label="발주 날짜"
+              text={
+                client?.createdAt
+                  ? dayjs(client.createdAt).subtract(9, 'hour').format('YYYY.MM.DD')
+                  : EMPTY
+              }
+            />
           </Box>
         </Stack>
 

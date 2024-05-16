@@ -5,6 +5,7 @@ import ModalTitle from '@/components/ui/typograph/ModalTitle';
 import { Stack, Button } from '@mui/material';
 import BasePopover from '@/components/ui/modal/BasePopover';
 import { EMPTY } from '@/constants';
+import dayjs from 'dayjs';
 
 interface Props {
   open: boolean;
@@ -29,6 +30,14 @@ const OrderDetailPopover: FC<Props> = ({
     <BasePopover onClose={onClose} position={position} open={open} anchorEl={anchorEl}>
       <ModalTitle text="발주 세부내용" />
       <Stack>
+        <LabelText
+          label="발주 날짜"
+          text={
+            selectedOrder?.createdAt
+              ? dayjs(selectedOrder.createdAt).subtract(9, 'hour').format('YYYY.MM.DD')
+              : EMPTY
+          }
+        />
         <LabelText label="공장" text={selectedOrder?.factory?.name ?? ''} />
         <LabelText label="공장 연락처" text={selectedOrder?.factory?.phoneNumber ?? '' ?? EMPTY} />
         <LabelText label="공장 주소" text={selectedOrder?.factory?.address ?? EMPTY} />

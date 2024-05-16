@@ -2,11 +2,12 @@ import Cell from '@/components/table/Cell';
 import { IconButton, Menu, TableRow } from '@mui/material';
 import React, { FC, MouseEvent, useState } from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { SelectedOptionItem } from '@/constants';
+import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { ProductOrder } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
+import dayjs from 'dayjs';
 // import { SelectOption } from '../../types';
 
 interface Props {
@@ -39,7 +40,8 @@ const OrderBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow 
 
   const createRow = (order: ProductOrder) => {
     return [
-      order?.factory?.name??'',
+      order?.createdAt ? dayjs(order?.createdAt).subtract(9, 'hour').format('YYYY-MM-DD') : EMPTY,
+      order?.factory?.name ?? '',
       order.products.map((item) => `${item.product.name}(${item.count}EA), `),
       0,
       order.payCost,

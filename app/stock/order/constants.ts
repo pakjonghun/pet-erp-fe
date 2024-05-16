@@ -1,4 +1,5 @@
 export const OrderHeaderList = [
+  '발주 날짜',
   '공장',
   '제품목록',
   '총 수량',

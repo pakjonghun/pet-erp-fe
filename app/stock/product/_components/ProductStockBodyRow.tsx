@@ -9,6 +9,8 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import OptionCell from './OptionCell';
 import { StockColumn } from '@/http/graphql/codegen/graphql';
+import { getNumberToString } from '@/utils/sale';
+import { getKCWFormat } from '@/utils/common';
 
 interface Props {
   productStock: StockColumn;
@@ -44,7 +46,8 @@ const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption
     return [
       stock.productName,
       stock.stockCount,
-      stock.monthSaleCount,
+      getNumberToString(stock.monthSaleCount, 'comma'),
+      stock.wonPrice ? getKCWFormat(stock.wonPrice) : EMPTY,
       stock.leftDate,
       stock.leadTime == null ? EMPTY : `${stock.leadTime}일`,
     ];
@@ -78,7 +81,7 @@ const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption
 
         <OptionCell onClick={setMenuAnchor} />
       </TableRow>
-      {/* <CollapseRow onClickOption={onClickOption} productStock={productStock} open={open} /> */}
+      <CollapseRow onClickOption={onClickOption} productStock={productStock} open={open} />
     </>
   );
 };

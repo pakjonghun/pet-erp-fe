@@ -4,6 +4,8 @@ import { FC, ReactNode } from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'dayjs/locale/ko';
+import dayjs from 'dayjs';
+dayjs.locale('ko');
 
 interface Props {
   children: ReactNode;

@@ -11,10 +11,7 @@ import {
   Stack,
   Menu,
 } from '@mui/material';
-import {
-  ProductOrder,
-  TotalProductStockOutput,
-} from '@/http/graphql/codegen/graphql';
+import { ProductOrder, StockColumn, TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
 import ActionButton from '@/components/ui/button/ActionButton';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import OptionCell from './OptionCell';
@@ -24,7 +21,7 @@ import EditOrderModal from '../../_components/EditOrderModal';
 import RemoveOrderModal from '../../_components/RemoveOrderModal';
 
 interface Props {
-  productStock: TotalProductStockOutput;
+  productStock: StockColumn;
 }
 
 const mockSelectedOrder: ProductOrder = {
@@ -70,12 +67,7 @@ const SubTableOrder: FC<Props> = ({ productStock }) => {
 
   return (
     <TableContainer sx={{ mt: 1 }}>
-      {openAddModal && (
-        <AddOrderModal
-          open={openAddModal}
-          onClose={() => setOpenAddModal(false)}
-        />
-      )}
+      {openAddModal && <AddOrderModal open={openAddModal} onClose={() => setOpenAddModal(false)} />}
 
       {selectedOrder && (
         <EditOrderModal
@@ -103,7 +95,7 @@ const SubTableOrder: FC<Props> = ({ productStock }) => {
         <Typography
           variant="subtitle1"
           sx={{ p: 2, pt: 0, display: 'inline-block' }}
-        >{`${productStock.product.name}(${productStock.storageCount}+${productStock.orderCount})`}</Typography>
+        >{`${productStock.productName}`}</Typography>
         <Stack direction="row" alignItems="center" gap={2} sx={{ ml: 'auto' }}>
           <ActionButton
             size="small"
@@ -116,11 +108,7 @@ const SubTableOrder: FC<Props> = ({ productStock }) => {
         </Stack>
       </Stack>
       <Table sx={{ mt: 2 }} size="small">
-        <Menu
-          anchorEl={menuAnchor}
-          open={!!menuAnchor}
-          onClose={() => setMenuAnchor(null)}
-        >
+        <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
           {Object.entries(productOptionMenus).map(([option, menu]) => (
             <OptionMenu key={option} menu={menu} option={option} />
           ))}
