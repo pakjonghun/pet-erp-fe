@@ -26,7 +26,8 @@ import WholeSaleCards from './_components/WholeSaleCards';
 import ActionButton from '@/components/ui/button/ActionButton';
 import { WholeSaleHeaderList } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { WholeSaleOutput } from '@/http/graphql/codegen/graphql';
+import { ClientType, WholeSaleOutput } from '@/http/graphql/codegen/graphql';
+import { useClients } from '@/http/graphql/hooks/client/useClients';
 
 const rows: WholeSaleOutput[] = [
   {
@@ -118,17 +119,9 @@ const ProductPage = () => {
   return (
     <TablePage sx={{ flex: 1 }}>
       {openCreateProduct && (
-        <AddWholeSaleModal
-          open={openCreateProduct}
-          onClose={() => setOpenCreateProduct(false)}
-        />
+        <AddWholeSaleModal open={openCreateProduct} onClose={() => setOpenCreateProduct(false)} />
       )}
-      <Stack
-        sx={{ px: 2 }}
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
+      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="도매 판매" />
         <Stack direction="row" alignItems="center" gap={2}>
           <ActionButton

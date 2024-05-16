@@ -9,14 +9,11 @@ import { LIMIT } from '@/constants';
 import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Autocomplete, Box, IconButton, Stack, TextField } from '@mui/material';
-import {
-  Control,
-  Controller,
-  FieldArrayWithId,
-  FieldErrors,
-} from 'react-hook-form';
+import { Control, Controller, FieldArrayWithId, FieldErrors } from 'react-hook-form';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { initProductItem } from './AddWholeSaleModal';
+import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
+import { Storage } from '@/http/graphql/codegen/graphql';
 
 interface Props {
   index: number;
@@ -66,8 +63,7 @@ const WholeSaleProductSearch: FC<Props> = ({
   });
 
   const rows = data?.products.data ?? [];
-  const isLoading =
-    networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
+  const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -91,6 +87,15 @@ const WholeSaleProductSearch: FC<Props> = ({
   const scrollRef = useInfinityScroll({ callback });
 
   const [storageKeyword, setStorageKeyword] = useState('');
+  const debouncedStorageKeyword = useTextDebounce(storageKeyword);
+  const { data: storageData, networkStatus: storageNetwork } = useStorages({
+    keyword: debouncedStorageKeyword,
+    limit: LIMIT,
+    skip: 0,
+  });
+
+  const storageRows = (storageData?.storages.data as Storage[]) ?? [];
+  const isStorageLoading = storageNetwork == 1 || storageNetwork == 2 || storageNetwork == 3;
 
   const handleReplaceItem = (
     newItem: FieldArrayWithId<CreateWholeSaleForm, 'productList', 'id'>
@@ -102,7 +107,7 @@ const WholeSaleProductSearch: FC<Props> = ({
     <Stack direction="row" justifyContent="space-between" gap={2}>
       <Controller
         control={control}
-        name={`productList.${index}.storage`}
+        name={`productList.${index}.storageName`}
         render={({ field }) => {
           return (
             <Autocomplete
@@ -110,23 +115,20 @@ const WholeSaleProductSearch: FC<Props> = ({
               onChange={(_, value) => field.onChange(value)}
               sx={{ width: 400 }}
               size="small"
-              options={storages.map((storage) => storage.name)}
+              options={storageRows.map((storage) => storage.name)}
               isOptionEqualToValue={(item1, item2) => item1 === item2}
               defaultValue={null}
               inputValue={storageKeyword}
               onInputChange={(_, value) => setStorageKeyword(value)}
-              loading={isLoading}
+              loading={isStorageLoading}
               loadingText="로딩중"
               noOptionsText="검색 결과가 없습니다."
               disablePortal
-              renderInput={(params) => (
-                <TextField {...params} label="창고" required />
-              )}
+              renderInput={(params) => <TextField {...params} label="창고" required />}
               renderOption={(props, item, state) => {
                 const { key, ...rest } = props as any;
-                const isLast = state.index === storages.length - 1;
                 return (
-                  <Box component="li" ref={null} key={item} {...rest}>
+                  <Box component="li" key={item} {...rest}>
                     {item}
                   </Box>
                 );
@@ -143,9 +145,7 @@ const WholeSaleProductSearch: FC<Props> = ({
             <Autocomplete
               value={field.value}
               getOptionDisabled={(option) => {
-                return selectedProductList.some(
-                  (item) => item.code === option.code
-                );
+                return selectedProductList.some((item) => item.productCode === option.code);
               }}
               fullWidth
               filterSelectedOptions
@@ -165,7 +165,7 @@ const WholeSaleProductSearch: FC<Props> = ({
                     ? {
                         ...prev,
                         ...initProductItem,
-                        storage: currentProduct.storage,
+                        storage: currentProduct.storageName,
                       }
                     : { ...prev, ...currentProduct, ...value };
                 handleReplaceItem(newField);
@@ -175,20 +175,15 @@ const WholeSaleProductSearch: FC<Props> = ({
                 <TextField
                   {...params}
                   label="제품 이름"
-                  error={!!error?.name?.message}
-                  helperText={error?.name?.message ?? ''}
+                  error={!!error?.productName?.message}
+                  helperText={error?.productName?.message ?? ''}
                 />
               )}
               renderOption={(props, item, state) => {
                 const { key, ...rest } = props as any;
                 const isLast = state.index === rows.length - 1;
                 return (
-                  <Box
-                    component="li"
-                    ref={isLast ? scrollRef : null}
-                    key={item._id}
-                    {...rest}
-                  >
+                  <Box component="li" ref={isLast ? scrollRef : null} key={item._id} {...rest}>
                     {item.name}
                   </Box>
                 );
@@ -213,7 +208,7 @@ const WholeSaleProductSearch: FC<Props> = ({
       />
       <Controller
         control={control}
-        name={`productList.${index}.salePrice`}
+        name={`productList.${index}.payCost`}
         render={({ field }) => {
           return (
             <NumberInput

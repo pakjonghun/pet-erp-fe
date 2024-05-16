@@ -61,7 +61,7 @@ export type ClientInfo = {
 };
 
 export type ClientsInput = {
-  clientType?: InputMaybe<ClientType>;
+  clientType?: InputMaybe<Array<ClientType>>;
   keyword: Scalars['String']['input'];
   limit: Scalars['Int']['input'];
   skip: Scalars['Int']['input'];
