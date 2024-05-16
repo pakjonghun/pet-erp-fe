@@ -15,6 +15,7 @@ import ActionButton from '@/components/ui/button/ActionButton';
 import { useStocksState } from '@/http/graphql/hooks/stock/useStocksState';
 import { EMPTY } from '@/constants';
 import EmptyRow from '@/components/table/EmptyRow';
+import LabelText from '@/components/ui/typograph/LabelText';
 
 interface Props {
   productStock: StockColumn;
@@ -22,7 +23,7 @@ interface Props {
 }
 
 const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) => {
-  const { fetchMore, networkStatus, data } = useStocksState(productStock.productName);
+  const { networkStatus, data } = useStocksState(productStock.productName);
 
   const rows = data?.stocksState ?? [];
 
@@ -30,11 +31,15 @@ const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) =
   const isEmpty = !isLoading && rows.length == 0;
   return (
     <TableContainer sx={{ mt: 1 }}>
-      <Stack direction="row" alignItems="center" gap={2}>
-        <Typography
-          variant="subtitle1"
-          sx={{ p: 2, pt: 0, display: 'inline-block' }}
-        >{`${productStock.productName}`}</Typography>
+      <Stack
+        sx={{ ml: 2 }}
+        direction="row"
+        alignItems="center"
+        gap={2}
+        justifyContent="space-between"
+      >
+        <LabelText label="제품이름" text={productStock.productName} />
+
         <Stack direction="row" alignItems="center" gap={2} sx={{ ml: 'auto' }}>
           <ActionButton
             size="small"
@@ -50,6 +55,9 @@ const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) =
           />
         </Stack>
       </Stack>
+      <Typography variant="caption" sx={{ ml: 2, display: 'inline-block' }}>
+        모든 창고 및 공장에서 생산중인 현황입니다.
+      </Typography>
       <Table sx={{ mt: 2 }} size="small">
         <TableHead
           sx={{

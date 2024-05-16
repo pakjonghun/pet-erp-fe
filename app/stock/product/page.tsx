@@ -8,6 +8,8 @@ import {
   FormControl,
   FormGroup,
   InputAdornment,
+  MenuItem,
+  Select,
   Stack,
   Table,
   TableHead,
@@ -26,19 +28,25 @@ import ProductStockCards from './_components/ProductStockCards';
 import ActionButton from '@/components/ui/button/ActionButton';
 import { ProductStockHeaderList } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { StockColumn, TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
+import { StockColumn, Storage } from '@/http/graphql/codegen/graphql';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import { useStocks } from '@/http/graphql/hooks/stock/useStocks';
+import BaseSelect from '@/components/ui/select/BaseSelect';
+import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 
 const ProductStockPage = () => {
+  const { data: storageData } = useStorages({ keyword: '', limit: 100, skip: 0 });
+  const [storageOption, setStorageOption] = useState('모두선택');
+
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
   const [productStock, setProductStock] = useState<null | StockColumn>(null);
 
-  const { data, networkStatus, fetchMore, refetch } = useStocks({
+  const { data, networkStatus, fetchMore } = useStocks({
     keyword: delayKeyword,
     skip: 0,
     limit: LIMIT,
+    storageName: storageOption == '모두선택' ? undefined : storageOption,
   });
 
   const rows = (data?.stocks.data as StockColumn[]) ?? [];
@@ -67,6 +75,11 @@ const ProductStockPage = () => {
 
   const [openAddStock, setOpenAddStock] = useState(false);
   const [openOutStock, setOpenOutStock] = useState(false);
+
+  const storageOptions = ['모두선택'].concat(
+    ((storageData?.storages.data as Storage[]) ?? []).map((item) => item.name)
+  );
+
   return (
     <TablePage sx={{ flex: 1 }}>
       {openAddStock && (
@@ -90,7 +103,7 @@ const ProductStockPage = () => {
         />
       )}
       <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
-        <TableTitle title="제품별 재고관리" />
+        <TableTitle title="재고관리" />
         <Stack direction="row" alignItems="center" gap={2}>
           <ActionButton
             icon={<InventoryIcon />}
@@ -105,21 +118,34 @@ const ProductStockPage = () => {
         </Stack>
       </Stack>
       <FormGroup sx={{ ml: 2 }}>
-        <FormControl>
-          <TextField
-            onChange={(event) => setKeyword(event.target.value)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Search />
-                </InputAdornment>
-              ),
-            }}
-            sx={{ width: 300, my: 2 }}
-            label="검색할 제품 이름을 입력하세요."
-            size="small"
-          />
-        </FormControl>
+        <Stack direction="row" alignItems="center" gap={3}>
+          <FormControl>
+            <TextField
+              onChange={(event) => setKeyword(event.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Search />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{ width: 300, my: 2 }}
+              label="검색할 제품 이름을 입력하세요."
+              size="small"
+            />
+          </FormControl>
+          <FormControl sx={{ width: 120 }}>
+            <BaseSelect
+              defaultValue={storageOption}
+              label="창고 선택"
+              onChangeValue={(event) => {
+                setStorageOption(event.target.value);
+              }}
+              optionItems={storageOptions}
+              value={storageOption}
+            />
+          </FormControl>
+        </Stack>
       </FormGroup>
       <Typography sx={{ p: 3 }}>
         {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}

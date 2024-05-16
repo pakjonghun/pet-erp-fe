@@ -187,7 +187,7 @@ export const client = new ApolloClient({
             merge,
           },
           stocks: {
-            keyArgs: ['stocksInput', ['keyword']],
+            keyArgs: ['stocksInput', ['keyword', 'storageName']],
             merge,
           },
         },

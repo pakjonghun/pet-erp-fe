@@ -61,6 +61,7 @@ export type ClientInfo = {
 };
 
 export type ClientsInput = {
+  clientType?: InputMaybe<ClientType>;
   keyword: Scalars['String']['input'];
   limit: Scalars['Int']['input'];
   skip: Scalars['Int']['input'];
@@ -784,6 +785,7 @@ export type StocksInput = {
   order?: InputMaybe<Order>;
   skip: Scalars['Int']['input'];
   sort?: InputMaybe<Scalars['String']['input']>;
+  storageName?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type StocksOutput = {

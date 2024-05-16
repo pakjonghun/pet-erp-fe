@@ -14,7 +14,6 @@ import {
 import { ProductOrder, StockColumn, TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
 import ActionButton from '@/components/ui/button/ActionButton';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
-import OptionCell from './OptionCell';
 import { SelectedOptionItem } from '@/constants';
 import AddOrderModal from '../../_components/AddOrderModal';
 import EditOrderModal from '../../_components/EditOrderModal';
@@ -22,6 +21,7 @@ import RemoveOrderModal from '../../_components/RemoveOrderModal';
 import { useStocksOrder } from '@/http/graphql/hooks/stock/useStocksOrder';
 import dayjs from 'dayjs';
 import { getNumberWithComma } from '@/utils/common';
+import EmptyRow from '@/components/table/EmptyRow';
 
 interface Props {
   productStock: StockColumn;
@@ -50,6 +50,7 @@ const SubTableOrder: FC<Props> = ({ productStock }) => {
   const { data, networkStatus } = useStocksOrder(productStock.productName);
   const isLoading = networkStatus == 1 || networkStatus == 3 || networkStatus == 2;
   const rows = (data?.stocksOrder as ProductOrder[]) ?? [];
+  const isEmpty = !isLoading && rows.length == 0;
 
   const productOptionMenus: Record<any, SelectedOptionItem> = {
     edit: {
@@ -136,10 +137,10 @@ const SubTableOrder: FC<Props> = ({ productStock }) => {
             <TableCell>총 금액</TableCell>
             <TableCell>지불여부</TableCell>
             <TableCell>생산완료 예정일</TableCell>
-            <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
+          <EmptyRow colSpan={8} isEmpty={isEmpty} message="검색결과가 없습니다." />
           {rows?.map((row) => {
             const allEmptyLeadTime = row.products.every((item) => item.product.leadTime == null);
             const largestLeadTime = allEmptyLeadTime
