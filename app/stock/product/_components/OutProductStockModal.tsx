@@ -1,35 +1,36 @@
+import { FC } from 'react';
 import PlusOneIcon from '@mui/icons-material/PlusOne';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import { Button, FormGroup, FormLabel, Stack, Typography } from '@mui/material';
-import { FC } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
-import { useCreateClient } from '@/http/graphql/hooks/client/useCreateClient';
 import { filterEmptyValues } from '@/utils/common';
 import { initStock } from '../constants';
 import {
-  CreateProductForm,
   CreateProductStockForm,
   createProductStockSchema,
 } from '../_validations/createProductStockList';
 import StockProduct from './StockProduct';
-import { StockColumn, TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
+import { StockColumn } from '@/http/graphql/codegen/graphql';
+import { snackMessage } from '@/store/snackMessage';
+import { client } from '@/http/graphql/client';
+import { useOutStocks } from '@/http/graphql/hooks/stock/useOutStocks';
 
 interface Props {
   open: boolean;
   onClose: () => void;
   productStock: null | StockColumn;
-  product?: string;
 }
 
 const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
-  const [createClient, { loading }] = useCreateClient();
+  const [outStocks, { loading }] = useOutStocks();
 
   const {
     watch,
     reset,
     control,
+    clearErrors,
     handleSubmit,
     formState: { errors },
   } = useForm<CreateProductStockForm>({
@@ -41,6 +42,20 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
 
   const onSubmit = (values: CreateProductStockForm) => {
     const newValues = filterEmptyValues(values) as CreateProductStockForm;
+    outStocks({
+      variables: {
+        outStocksInput: newValues,
+      },
+      onCompleted: () => {
+        snackMessage({ message: '출고재고 입력이 완료되었습니다.', severity: 'success' });
+        client.refetchQueries({ include: 'active' });
+        onClose();
+      },
+      onError: (error) => {
+        const message = error.message ?? '출고재고 입력이 실패 했습니다.';
+        snackMessage({ message, severity: 'error' });
+      },
+    });
   };
 
   const handleClose = () => {
@@ -48,30 +63,28 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
     onClose();
   };
 
-  const { append, remove, replace, fields } = useFieldArray({
+  const { append, remove, fields } = useFieldArray({
     control,
     name: 'stocks',
   });
 
   const handleAppendProduct = () => {
+    clearErrors('stocks');
     const newStock = productStock
-      ? { ...initStock, product: productStock.productName ?? '' }
+      ? {
+          ...initStock,
+          productName: productStock?.productName ?? '',
+          storageName: '',
+        }
       : initStock;
     append(newStock);
   };
 
   const currentProductList = watch('stocks');
-
-  const handleReplaceProduct = (index: number, newProduct: CreateProductForm) => {
-    const clonedFields = [...currentProductList];
-    clonedFields[index] = newProduct;
-    replace(clonedFields);
-  };
-
   const totalCount = currentProductList.reduce((acc, cur) => acc + cur.count, 0);
 
   return (
-    <BaseModal open={open} onClose={handleClose}>
+    <BaseModal sx={{ width: 800 }} open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
         출고 재고 입력
       </Typography>
@@ -84,11 +97,14 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
             </Button>
             <Typography>{`총수량 : ${totalCount}EA`}</Typography>
           </Stack>
+          <Typography sx={{ mt: 1 }} color="error" variant="caption">
+            {errors?.stocks?.message ?? ''}
+          </Typography>
           <Stack sx={{ mt: 2 }} gap={2}>
             {fields.map((product, index) => {
               return (
                 <StockProduct
-                  isProductFreeze={!!product}
+                  isProductFreeze={productStock != null}
                   index={index}
                   control={control}
                   error={errors.stocks?.[index]}

@@ -13,7 +13,7 @@ import {
 } from '../_validations/createProductStockList';
 import StockProduct from './StockProduct';
 import { StockColumn } from '@/http/graphql/codegen/graphql';
-import { useAddStock } from '@/http/graphql/hooks/stock/uadAddStocks';
+import { useAddStock } from '@/http/graphql/hooks/stock/useAddStocks';
 import { snackMessage } from '@/store/snackMessage';
 import { client } from '@/http/graphql/client';
 
@@ -46,13 +46,14 @@ const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
       variables: {
         addStocksInput: newValues,
       },
-      onCompleted: (response) => {
+      onCompleted: () => {
         snackMessage({ message: '재고 입력이 완료되었습니다.', severity: 'success' });
         client.refetchQueries({ include: 'active' });
         onClose();
       },
       onError: (error) => {
-        snackMessage({ message: '재고 입력이 완료되었습니다.', severity: 'success' });
+        const message = error.message ?? '출고 재고 입력이 실패했습니다.';
+        snackMessage({ message, severity: 'error' });
       },
     });
   };

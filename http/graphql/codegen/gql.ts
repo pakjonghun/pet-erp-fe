@@ -42,6 +42,7 @@ const documents = {
     "\n  query orders($ordersInput: OrdersInput!) {\n    orders(ordersInput: $ordersInput) {\n      totalCount\n      data {\n        ...ProductOrderFragment\n      }\n    }\n  }\n": types.OrdersDocument,
     "\n  mutation removeOrder($_id: String!) {\n    removeOrder(_id: $_id) {\n      ...ProductOrderFragment\n    }\n  }\n": types.RemoveOrderDocument,
     "\n  mutation addStock($addStocksInput: CreateStockInput!) {\n    addStock(addStocksInput: $addStocksInput) {\n      _id\n    }\n  }\n": types.AddStockDocument,
+    "\n  mutation outStock($outStocksInput: CreateStockInput!) {\n    outStock(outStocksInput: $outStocksInput) {\n      _id\n    }\n  }\n": types.OutStockDocument,
     "\n  query stocks($stocksInput: StocksInput!) {\n    stocks(stocksInput: $stocksInput) {\n      totalCount\n      data {\n        ...StockColumnFragment\n      }\n    }\n  }\n": types.StocksDocument,
     "\n  query stocksOrder($productName: String!) {\n    stocksOrder(productName: $productName) {\n      ...ProductOrderFragment\n    }\n  }\n": types.StocksOrderDocument,
     "\n  query stocksState($productName: String!) {\n    stocksState(productName: $productName) {\n      productName\n      count\n      location\n      orderCompleteDate\n      state\n    }\n  }\n": types.StocksStateDocument,
@@ -195,6 +196,10 @@ export function graphql(source: "\n  mutation removeOrder($_id: String!) {\n    
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation addStock($addStocksInput: CreateStockInput!) {\n    addStock(addStocksInput: $addStocksInput) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation addStock($addStocksInput: CreateStockInput!) {\n    addStock(addStocksInput: $addStocksInput) {\n      _id\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation outStock($outStocksInput: CreateStockInput!) {\n    outStock(outStocksInput: $outStocksInput) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation outStock($outStocksInput: CreateStockInput!) {\n    outStock(outStocksInput: $outStocksInput) {\n      _id\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

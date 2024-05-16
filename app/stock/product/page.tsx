@@ -25,7 +25,6 @@ import { LIMIT } from '@/constants';
 import ProductStockCards from './_components/ProductStockCards';
 import ActionButton from '@/components/ui/button/ActionButton';
 import { ProductStockHeaderList } from './constants';
-import { useClients } from '@/http/graphql/hooks/client/useClients';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { StockColumn, TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
 import InventoryIcon from '@mui/icons-material/Inventory';
