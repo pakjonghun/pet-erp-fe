@@ -25,9 +25,10 @@ import { snackMessage } from '@/store/snackMessage';
 import { useCreateProduct } from '@/http/graphql/hooks/product/useCreateProduct';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { modalSizeProps } from '@/components/commonStyles';
-import { filterEmptyValues } from '@/utils/common';
+import { filterEmptyValues, getKCWFormat } from '@/utils/common';
 import {
   CreateWholeSaleForm,
+  CreateWholeSaleProductForm,
   createWholeSaleSchema,
 } from '../_validations/createWholeSaleValidation';
 import dayjs from 'dayjs';
@@ -39,56 +40,69 @@ import {
 import { PlusOne } from '@mui/icons-material';
 import WholeSaleProductSearch from './WholeSaleProductSearch';
 import LabelText from '@/components/ui/typograph/LabelText';
-import { EMPTY } from '@/constants';
+import { EMPTY, LIMIT } from '@/constants';
 import { FormControl } from '@mui/base';
 import { getProfitRate } from '@/utils/sale';
+import { useClients } from '@/http/graphql/hooks/client/useClients';
+import useInfinityScroll from '@/hooks/useInfinityScroll';
 
-export const initProductItem = {
-  name: '',
-  code: '',
+export const initProductItem: CreateWholeSaleProductForm = {
+  productName: '',
+  productCode: '',
   count: 0,
-  salePrice: 0,
-  storage: '',
+  payCost: 0,
+  storageName: '',
 };
-
-export const clients: Client[] = [
-  {
-    _id: '123123',
-    code: 'CL001',
-    name: '동부 도매',
-    clientType: ClientType.WholeSale,
-    feeRate: 2.5,
-    businessName: '동부 도매 주식회사',
-    businessNumber: '123-45-67890',
-    payDate: 15,
-    manager: '홍길동',
-    managerTel: '010-1234-5678',
-    inActive: true,
-  },
-  {
-    _id: '1231234',
-    code: 'CL002',
-    name: '서부 도매',
-    clientType: ClientType.WholeSale,
-    feeRate: 3.0,
-    businessName: '서부 도매 기술',
-    businessNumber: '987-65-43210',
-    payDate: 20,
-    manager: '김서방',
-    managerTel: '010-9876-5432',
-    inActive: true,
-  },
-];
 
 interface Props {
   open: boolean;
-  wholeSale: WholeSaleOutput;
   onClose: () => void;
+  wholeSale: WholeSaleOutput | null;
 }
 
-const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
+const EditWholeSaleModal: FC<Props> = ({ wholeSale, open, onClose }) => {
   const [isManualChangePrice, setIsManualChangePrice] = useState(false);
   const [createProduct, { loading }] = useCreateProduct();
+
+  const [clientKeyword, setClientKeyword] = useState('');
+  const delayedClientKeyword = useTextDebounce(clientKeyword);
+
+  const {
+    data: clientData,
+    networkStatus: clientNetwork,
+    fetchMore: clientFetchMore,
+  } = useClients({
+    keyword: delayedClientKeyword,
+    limit: LIMIT,
+    skip: 0,
+    clientType: [ClientType.WholeSale, ClientType.Offline],
+  });
+
+  const isClientLoading =
+    clientNetwork === 1 || clientNetwork === 2 || clientNetwork === 3;
+  const clientRows = (clientData?.clients.data as Client[]) ?? [];
+
+  const clientCallback: IntersectionObserverCallback = (entries) => {
+    if (entries[0].isIntersecting) {
+      if (isClientLoading) return;
+
+      const totalCount = clientData?.clients.totalCount;
+      if (!totalCount || totalCount <= clientRows.length) return;
+
+      clientFetchMore({
+        variables: {
+          clientsInput: {
+            keyword: delayedClientKeyword,
+            limit: LIMIT,
+            skip: 0,
+            clientType: [ClientType.WholeSale, ClientType.Offline],
+          },
+        },
+      });
+    }
+  };
+
+  const clientScrollRef = useInfinityScroll({ callback: clientCallback });
 
   const {
     reset,
@@ -100,18 +114,20 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
   } = useForm<CreateWholeSaleForm>({
     resolver: zodResolver(createWholeSaleSchema),
     defaultValues: {
-      ...wholeSale,
-      // mallId: '',
-      // saleAt: dayjs().toDate(),
-      // productList: [],
+      mallId: wholeSale?.mallId ?? '',
+      productList: wholeSale?.productList ?? [],
+      saleAt: wholeSale?.saleAt ?? new Date(),
+      telephoneNumber1: wholeSale?.telephoneNumber1 ?? '',
     },
   });
+
   const { fields, append, remove, replace } = useFieldArray({
     control,
     name: 'productList',
   });
 
   const onSubmit = (createProductInput: CreateWholeSaleForm) => {
+    console.log('createProductInput : ', createProductInput);
     const newValues = filterEmptyValues(
       createProductInput
     ) as CreateProductForm;
@@ -141,10 +157,6 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
     onClose();
   };
 
-  const [mallIdKeyword, setMallIdKeyword] = useState('');
-  const delayedMallIdKeyword = useTextDebounce(mallIdKeyword);
-  const isLoading = false;
-
   const handleAddProduct = () => {
     append(initProductItem);
   };
@@ -160,19 +172,14 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
 
   const productList = watch('productList');
 
-  const { payCost, wonCost } = productList.reduce(
+  const { totalPayCost, totalWonCost } = productList.reduce(
     (acc, cur) => {
-      const newPayCost =
-        (cur?.count ?? 0) * (cur?.salePrice ?? 0) + acc.payCost;
-      const newWonCost = (cur?.count ?? 0) * (cur?.wonPrice ?? 0) + acc.wonCost;
-      return { payCost: newPayCost, wonCost: newWonCost };
+      const newPayCost = cur.count * cur.payCost + acc.totalPayCost;
+      const newWonCost = cur.count * (cur.wonPrice ?? 0) + acc.totalWonCost;
+      return { totalPayCost: newPayCost, totalWonCost: newWonCost };
     },
-    { payCost: 0, wonCost: 0 }
+    { totalPayCost: 0, totalWonCost: 0 }
   );
-
-  const totalWonCost = wonCost;
-  const totalPayCost = isManualChangePrice ? watch('payCost') ?? 0 : payCost;
-
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
@@ -194,28 +201,29 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
                   flexWrap="wrap"
                 >
                   <Autocomplete
-                    value={
-                      clients.find((item) => item.name === field.value) ?? {
-                        _id: '',
-                        name: '',
-                        code: '',
-                        clientType: ClientType.WholeSale,
-                      }
-                    }
+                    value={clientRows.find(
+                      (client) => client.name === field.value
+                    )}
                     onChange={(_, value) => {
-                      field.onChange(value?.name);
-                      setValue('telephoneNumber1', value?.managerTel);
+                      field.onChange(value?.name ?? '');
+                      setValue('telephoneNumber1', value?.managerTel ?? EMPTY);
                     }}
                     getOptionLabel={(item) => item.name}
                     size="small"
-                    options={clients}
+                    options={clientRows as Client[]}
                     isOptionEqualToValue={(item1, item2) =>
                       item1.name == item2.name
                     }
-                    defaultValue={null}
-                    inputValue={mallIdKeyword}
-                    onInputChange={(_, value) => setMallIdKeyword(value)}
-                    loading={isLoading}
+                    defaultValue={{
+                      _id: '',
+                      name: '',
+                      code: '',
+                      clientType: ClientType.WholeSale,
+                      managerTel: EMPTY,
+                    }}
+                    inputValue={clientKeyword}
+                    onInputChange={(_, value) => setClientKeyword(value)}
+                    loading={isClientLoading}
                     loadingText="로딩중"
                     noOptionsText="검색 결과가 없습니다."
                     disablePortal
@@ -229,11 +237,11 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
                     )}
                     renderOption={(props, item, state) => {
                       const { key, ...rest } = props as any;
-                      const isLast = state.index === clients.length - 1;
+                      const isLast = state.index === clientRows.length - 1;
                       return (
                         <Box
                           component="li"
-                          ref={null}
+                          ref={isLast ? clientScrollRef : null}
                           key={item.name}
                           {...rest}
                         >
@@ -255,33 +263,7 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
         </FormGroup>
         {productList.length > 0 && (
           <Stack direction="row" sx={{ mt: 2 }} gap={3} alignItems="center">
-            <Controller
-              control={control}
-              name="payCost"
-              render={({ field }) => {
-                return (
-                  <FormControl>
-                    <TextField
-                      label="판매가 합계"
-                      {...field}
-                      value={totalPayCost}
-                      size="small"
-                      disabled={!isManualChangePrice}
-                    />
-                  </FormControl>
-                );
-              }}
-            />
-            {/* 
-            <FormControlLabel
-              label={isManualChangePrice ? '수동 입력' : '자동 계산'}
-              control={
-                <Switch
-                  checked={isManualChangePrice}
-                  onChange={(_, checked) => setIsManualChangePrice(checked)}
-                />
-              }
-            /> */}
+            <LabelText label="판매가" text={totalPayCost} />
             <LabelText label="원가" text={totalWonCost} />
             <LabelText label="수익" text={totalPayCost - totalWonCost} />
             <LabelText
@@ -311,7 +293,7 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
                   index={index}
                   control={control}
                   error={errors.productList?.[index]}
-                  key={`${product.code}_${index}_'autocomplete`}
+                  key={`${product.productCode}_${index}_'autocomplete`}
                   remove={remove}
                   replace={handleReplace}
                 />

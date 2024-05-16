@@ -166,18 +166,19 @@ export type CreateUserDto = {
 };
 
 export type CreateWholeSaleInput = {
-  mallId?: InputMaybe<Scalars['String']['input']>;
-  payCost?: InputMaybe<Scalars['Int']['input']>;
+  mallId: Scalars['String']['input'];
   productList: Array<CreateWholeSaleProductList>;
-  saleAt?: InputMaybe<Scalars['Date']['input']>;
-  storage: Scalars['String']['input'];
-  wonCost?: InputMaybe<Scalars['Int']['input']>;
+  saleAt: Scalars['Date']['input'];
+  telephoneNumber1?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateWholeSaleProductList = {
-  code: Scalars['String']['input'];
-  count?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
+  count: Scalars['Int']['input'];
+  payCost: Scalars['Int']['input'];
+  productCode: Scalars['String']['input'];
+  productName: Scalars['String']['input'];
+  storageName: Scalars['String']['input'];
+  wonCost?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type FactoriesInput = {
@@ -959,11 +960,9 @@ export type UpdateUserDto = {
 export type UpdateWholeSaleInput = {
   _id: Scalars['String']['input'];
   mallId?: InputMaybe<Scalars['String']['input']>;
-  payCost?: InputMaybe<Scalars['Int']['input']>;
   productList?: InputMaybe<Array<CreateWholeSaleProductList>>;
   saleAt?: InputMaybe<Scalars['Date']['input']>;
-  storage?: InputMaybe<Scalars['String']['input']>;
-  wonCost?: InputMaybe<Scalars['Int']['input']>;
+  telephoneNumber1?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type User = {
