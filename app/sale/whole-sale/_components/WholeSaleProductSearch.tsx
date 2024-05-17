@@ -6,7 +6,6 @@ import {
 } from '../_validations/createWholeSaleValidation';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT } from '@/constants';
-import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Autocomplete, Box, IconButton, Stack, TextField } from '@mui/material';
 import {
@@ -14,13 +13,18 @@ import {
   Controller,
   FieldArrayWithId,
   FieldErrors,
+  UseFormClearErrors,
+  UseFormSetError,
 } from 'react-hook-form';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { initProductItem } from './AddWholeSaleModal';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 import { Storage } from '@/http/graphql/codegen/graphql';
+import { useProductCountStocks } from '@/http/graphql/hooks/stock/useProductCountStocks';
 
 interface Props {
+  clearError: UseFormClearErrors<CreateWholeSaleForm>;
+  setError: UseFormSetError<CreateWholeSaleForm>;
   productId: string;
   index: number;
   control: Control<any>;
@@ -41,26 +45,29 @@ const WholeSaleProductSearch: FC<Props> = ({
   remove,
   replace,
   error,
+  clearError,
+  setError,
 }) => {
   const currentProduct = selectedProductList[index];
   const [productKeyword, setProductKeyword] = useState('');
   const delayedProductKeyword = useTextDebounce(productKeyword ?? '');
-
-  const { data, networkStatus, fetchMore } = useProducts({
+  const { data, networkStatus, fetchMore } = useProductCountStocks({
+    storageName: currentProduct.storageName,
     keyword: delayedProductKeyword,
     limit: LIMIT,
     skip: 0,
   });
 
-  const rows = data?.products.data ?? [];
-  const isLoading =
-    networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
+  const rows = data?.productCountStocks?.data ?? [];
+  const currentOriginProduct = rows.find((item) => item.code === currentProduct.productCode);
+
+  const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
       if (isLoading) return;
 
-      const totalCount = data?.products.totalCount;
+      const totalCount = data?.productCountStocks?.totalCount;
       if (totalCount != null && totalCount > rows.length) {
         fetchMore({
           variables: {
@@ -86,8 +93,7 @@ const WholeSaleProductSearch: FC<Props> = ({
   });
 
   const storageRows = (storageData?.storages.data as Storage[]) ?? [];
-  const isStorageLoading =
-    storageNetwork == 1 || storageNetwork == 2 || storageNetwork == 3;
+  const isStorageLoading = storageNetwork == 1 || storageNetwork == 2 || storageNetwork == 3;
 
   const handleReplaceItem = (
     newItem: FieldArrayWithId<CreateWholeSaleForm, 'productList', 'id'>
@@ -116,9 +122,7 @@ const WholeSaleProductSearch: FC<Props> = ({
               loadingText="로딩중"
               noOptionsText="검색 결과가 없습니다."
               disablePortal
-              renderInput={(params) => (
-                <TextField {...params} label="창고" required />
-              )}
+              renderInput={(params) => <TextField {...params} label="창고" required />}
               renderOption={(props, item, state) => {
                 const { key, ...rest } = props as any;
                 return (
@@ -137,11 +141,10 @@ const WholeSaleProductSearch: FC<Props> = ({
         render={({ field }) => {
           return (
             <Autocomplete
+              disabled={!currentProduct.storageName}
               value={field.value}
               getOptionDisabled={(option) => {
-                return selectedProductList.some(
-                  (item) => item.productName === option
-                );
+                return selectedProductList.some((item) => item.productName === option);
               }}
               fullWidth
               filterSelectedOptions
@@ -157,20 +160,14 @@ const WholeSaleProductSearch: FC<Props> = ({
                 field.onChange(value);
                 if (!currentProduct) return;
 
-                let newField: FieldArrayWithId<
-                  CreateWholeSaleForm,
-                  'productList',
-                  'id'
-                > = {
+                let newField: FieldArrayWithId<CreateWholeSaleForm, 'productList', 'id'> = {
                   ...initProductItem,
                   id: productId,
                   storageName: currentProduct.storageName,
                 };
 
                 if (value != null) {
-                  const selectedProduct = rows.find(
-                    (item) => item.name === value
-                  );
+                  const selectedProduct = rows.find((item) => item.name === value);
 
                   if (!selectedProduct) return;
 
@@ -199,12 +196,7 @@ const WholeSaleProductSearch: FC<Props> = ({
                 const { key, ...rest } = props as any;
                 const isLast = state.index === rows.length - 1;
                 return (
-                  <Box
-                    component="li"
-                    ref={isLast ? scrollRef : null}
-                    key={item}
-                    {...rest}
-                  >
+                  <Box component="li" ref={isLast ? scrollRef : null} key={item} {...rest}>
                     {item}
                   </Box>
                 );
@@ -220,6 +212,19 @@ const WholeSaleProductSearch: FC<Props> = ({
           return (
             <NumberInput
               field={field}
+              onChange={(value) => {
+                if (!currentOriginProduct) return;
+
+                if (value != null && value > currentOriginProduct.count) {
+                  setError(`productList.${index}.count`, {
+                    message: `제품 재고가 ${currentOriginProduct.count}EA 남아 있습니다.`,
+                  });
+                } else {
+                  console.log('clear error', value, currentOriginProduct.count);
+                  clearError(`productList.${index}.count`);
+                }
+                field.onChange(value);
+              }}
               label="판매수량"
               error={!!error?.count?.message}
               helperText={error?.count?.message ?? ''}
