@@ -9,13 +9,19 @@ import { LIMIT } from '@/constants';
 import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Autocomplete, Box, IconButton, Stack, TextField } from '@mui/material';
-import { Control, Controller, FieldArrayWithId, FieldErrors } from 'react-hook-form';
+import {
+  Control,
+  Controller,
+  FieldArrayWithId,
+  FieldErrors,
+} from 'react-hook-form';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { initProductItem } from './AddWholeSaleModal';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 import { Storage } from '@/http/graphql/codegen/graphql';
 
 interface Props {
+  productId: string;
   index: number;
   control: Control<any>;
   remove: (index: number) => void;
@@ -27,24 +33,8 @@ interface Props {
   error?: FieldErrors<CreateWholeSaleProductForm>;
 }
 
-const storages = [
-  {
-    _id: '123',
-    name: 'Central Warehouse',
-    phoneNumber: '123-456-7890',
-    address: '123 Central Ave, Big City',
-    note: 'Main distribution center',
-  },
-  {
-    _id: '1234',
-    name: 'East Side Storage',
-    phoneNumber: '987-654-3210',
-    address: '456 East St, Capital City',
-    note: 'Handles east region deliveries',
-  },
-];
-
 const WholeSaleProductSearch: FC<Props> = ({
+  productId,
   selectedProductList,
   index,
   control,
@@ -63,7 +53,8 @@ const WholeSaleProductSearch: FC<Props> = ({
   });
 
   const rows = data?.products.data ?? [];
-  const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
+  const isLoading =
+    networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -95,7 +86,8 @@ const WholeSaleProductSearch: FC<Props> = ({
   });
 
   const storageRows = (storageData?.storages.data as Storage[]) ?? [];
-  const isStorageLoading = storageNetwork == 1 || storageNetwork == 2 || storageNetwork == 3;
+  const isStorageLoading =
+    storageNetwork == 1 || storageNetwork == 2 || storageNetwork == 3;
 
   const handleReplaceItem = (
     newItem: FieldArrayWithId<CreateWholeSaleForm, 'productList', 'id'>
@@ -124,7 +116,9 @@ const WholeSaleProductSearch: FC<Props> = ({
               loadingText="로딩중"
               noOptionsText="검색 결과가 없습니다."
               disablePortal
-              renderInput={(params) => <TextField {...params} label="창고" required />}
+              renderInput={(params) => (
+                <TextField {...params} label="창고" required />
+              )}
               renderOption={(props, item, state) => {
                 const { key, ...rest } = props as any;
                 return (
@@ -139,35 +133,57 @@ const WholeSaleProductSearch: FC<Props> = ({
       />
       <Controller
         control={control}
-        name={`productList.${index}`}
+        name={`productList.${index}.productName`}
         render={({ field }) => {
           return (
             <Autocomplete
               value={field.value}
               getOptionDisabled={(option) => {
-                return selectedProductList.some((item) => item.productCode === option.code);
+                return selectedProductList.some(
+                  (item) => item.productName === option
+                );
               }}
               fullWidth
               filterSelectedOptions
               size="small"
-              options={rows}
-              getOptionLabel={(option) => option.name ?? ''}
-              isOptionEqualToValue={(item1, item2) => item1._id === item2._id}
+              options={rows.map((item) => item.name)}
+              isOptionEqualToValue={(item1, item2) => item1 === item2}
               inputValue={productKeyword}
               onInputChange={(_, value) => setProductKeyword(value)}
               loading={isLoading}
               loadingText="로딩중"
               noOptionsText="검색 결과가 없습니다."
               onChange={(_, value) => {
-                const prev = field.value;
-                const newField =
-                  value == null
-                    ? {
-                        ...prev,
-                        ...initProductItem,
-                        storage: currentProduct.storageName,
-                      }
-                    : { ...prev, ...currentProduct, ...value };
+                field.onChange(value);
+                if (!currentProduct) return;
+
+                let newField: FieldArrayWithId<
+                  CreateWholeSaleForm,
+                  'productList',
+                  'id'
+                > = {
+                  ...initProductItem,
+                  id: productId,
+                  storageName: currentProduct.storageName,
+                };
+
+                if (value != null) {
+                  const selectedProduct = rows.find(
+                    (item) => item.name === value
+                  );
+
+                  if (!selectedProduct) return;
+
+                  newField = {
+                    ...currentProduct,
+                    id: productId,
+                    productName: selectedProduct.name,
+                    productCode: selectedProduct.code,
+                    payCost: selectedProduct.salePrice ?? 0,
+                    wonCost: selectedProduct.wonPrice,
+                  };
+                }
+
                 handleReplaceItem(newField);
               }}
               disablePortal
@@ -183,8 +199,13 @@ const WholeSaleProductSearch: FC<Props> = ({
                 const { key, ...rest } = props as any;
                 const isLast = state.index === rows.length - 1;
                 return (
-                  <Box component="li" ref={isLast ? scrollRef : null} key={item._id} {...rest}>
-                    {item.name}
+                  <Box
+                    component="li"
+                    ref={isLast ? scrollRef : null}
+                    key={item}
+                    {...rest}
+                  >
+                    {item}
                   </Box>
                 );
               }}
@@ -212,8 +233,8 @@ const WholeSaleProductSearch: FC<Props> = ({
         render={({ field }) => {
           return (
             <NumberInput
-              helperText={error?.salePrice?.message ?? ''}
-              error={!!error?.salePrice?.message}
+              helperText={error?.payCost?.message ?? ''}
+              error={!!error?.payCost?.message}
               label="판매가"
               field={field}
             />

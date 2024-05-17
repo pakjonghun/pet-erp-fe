@@ -175,7 +175,7 @@ const EditWholeSaleModal: FC<Props> = ({ wholeSale, open, onClose }) => {
   const { totalPayCost, totalWonCost } = productList.reduce(
     (acc, cur) => {
       const newPayCost = cur.count * cur.payCost + acc.totalPayCost;
-      const newWonCost = cur.count * (cur.wonPrice ?? 0) + acc.totalWonCost;
+      const newWonCost = cur.count * (cur.wonCost ?? 0) + acc.totalWonCost;
       return { totalPayCost: newPayCost, totalWonCost: newWonCost };
     },
     { totalPayCost: 0, totalWonCost: 0 }
