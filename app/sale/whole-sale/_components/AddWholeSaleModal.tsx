@@ -176,6 +176,7 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
     },
     { totalPayCost: 0, totalWonCost: 0 }
   );
+
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
@@ -229,6 +230,8 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
                         sx={{ minWidth: 400 }}
                         label="도매 거래처"
                         required
+                        error={!!errors.mallId?.message}
+                        helperText={errors.mallId?.message ?? ''}
                       />
                     )}
                     renderOption={(props, item, state) => {
@@ -282,6 +285,11 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
             </Button>
           </Stack>
           <Stack sx={{ mt: 2 }} gap={2}>
+            <Typography sx={{ mt: 1 }} color="error" variant="caption">
+              {errors?.productList?.message ??
+                errors?.productList?.root?.message ??
+                ''}
+            </Typography>
             {fields.map((product, index) => {
               return (
                 <WholeSaleProductSearch

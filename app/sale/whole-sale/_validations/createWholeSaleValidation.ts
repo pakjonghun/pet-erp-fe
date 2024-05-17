@@ -6,7 +6,7 @@ export const createWholeSaleProductSchema = z.object({
   productCode: z.string().min(1, { message: '제품 코드를 입력하세요.' }),
   count: z
     .number()
-    .min(1, { message: '재품 수량은 1 이상의 숫자를 입력하세요.' }),
+    .min(1, { message: '판매 수량은 1 이상의 숫자를 입력하세요.' }),
   payCost: z
     .number()
     .min(0, { message: '판매가는 0 이상의 숫자를 입력하세요.' }),
@@ -21,7 +21,9 @@ export const createWholeSaleSchema = z.object({
   mallId: z.string().min(1, { message: '거래처 이름을 입력하세요.' }),
   saleAt: z.date(),
   telephoneNumber1: z.string().optional().nullable(),
-  productList: z.array(createWholeSaleProductSchema),
+  productList: z
+    .array(createWholeSaleProductSchema)
+    .nonempty({ message: '1개 이상의 제품을 입력하세요.' }),
 });
 
 export type CreateWholeSaleForm = z.infer<typeof createWholeSaleSchema>;

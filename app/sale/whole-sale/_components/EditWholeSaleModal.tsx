@@ -289,6 +289,7 @@ const EditWholeSaleModal: FC<Props> = ({ wholeSale, open, onClose }) => {
             {fields.map((product, index) => {
               return (
                 <WholeSaleProductSearch
+                  productId={product.id}
                   selectedProductList={productList}
                   index={index}
                   control={control}

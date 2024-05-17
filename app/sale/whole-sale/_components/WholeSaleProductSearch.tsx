@@ -241,7 +241,7 @@ const WholeSaleProductSearch: FC<Props> = ({
           );
         }}
       />
-      <IconButton onClick={() => remove(index)}>
+      <IconButton sx={{ height: 40, width: 40 }} onClick={() => remove(index)}>
         <CloseIcon />
       </IconButton>
     </Stack>

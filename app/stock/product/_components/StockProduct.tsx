@@ -19,7 +19,13 @@ interface Props {
   isProductFreeze?: boolean;
 }
 
-const StockProduct: FC<Props> = ({ index, control, remove, error, isProductFreeze = false }) => {
+const StockProduct: FC<Props> = ({
+  index,
+  control,
+  remove,
+  error,
+  isProductFreeze = false,
+}) => {
   const [productKeyword, setProductKeyword] = useState('');
   const delayedProductKeyword = useTextDebounce(productKeyword ?? '');
 
@@ -30,7 +36,8 @@ const StockProduct: FC<Props> = ({ index, control, remove, error, isProductFreez
   });
 
   const rows = data?.products.data.map((item) => item.name) ?? [];
-  const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
+  const isLoading =
+    networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -66,8 +73,11 @@ const StockProduct: FC<Props> = ({ index, control, remove, error, isProductFreez
     skip: 0,
   });
 
-  const storageRows = ((storageData?.storages.data as Storage[]) ?? []).map((item) => item.name);
-  const isStorageLoading = storageStatus == 1 || storageStatus == 2 || storageStatus == 3;
+  const storageRows = ((storageData?.storages.data as Storage[]) ?? []).map(
+    (item) => item.name
+  );
+  const isStorageLoading =
+    storageStatus == 1 || storageStatus == 2 || storageStatus == 3;
 
   const getStorageCallback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -110,12 +120,19 @@ const StockProduct: FC<Props> = ({ index, control, remove, error, isProductFreez
               loadingText="로딩중"
               noOptionsText="검색 결과가 없습니다."
               disablePortal
-              renderInput={(params) => <TextField {...params} label="창고" required />}
+              renderInput={(params) => (
+                <TextField {...params} label="창고" required />
+              )}
               renderOption={(props, item, state) => {
                 const { key, ...rest } = props as any;
                 const isLast = state.index === storageRows.length - 1;
                 return (
-                  <Box component="li" ref={isLast ? storageScrollRef : null} key={item} {...rest}>
+                  <Box
+                    component="li"
+                    ref={isLast ? storageScrollRef : null}
+                    key={item}
+                    {...rest}
+                  >
                     {item}
                   </Box>
                 );
@@ -158,7 +175,12 @@ const StockProduct: FC<Props> = ({ index, control, remove, error, isProductFreez
                 const { key, ...rest } = props as any;
                 const isLast = state.index === rows.length - 1;
                 return (
-                  <Box component="li" ref={isLast ? scrollRef : null} key={item} {...rest}>
+                  <Box
+                    component="li"
+                    ref={isLast ? scrollRef : null}
+                    key={item}
+                    {...rest}
+                  >
                     {item}
                   </Box>
                 );
@@ -182,7 +204,7 @@ const StockProduct: FC<Props> = ({ index, control, remove, error, isProductFreez
         }}
       />
 
-      <IconButton onClick={() => remove(index)}>
+      <IconButton sx={{ width: 40, height: 40 }} onClick={() => remove(index)}>
         <CloseIcon />
       </IconButton>
     </Stack>
