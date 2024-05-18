@@ -48,7 +48,15 @@ const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
       },
       onCompleted: () => {
         snackMessage({ message: '재고 입력이 완료되었습니다.', severity: 'success' });
-        client.refetchQueries({ include: 'active' });
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'stocks' });
+            cache.evict({ fieldName: 'productCountStocks' });
+            cache.evict({ fieldName: 'stocksState' });
+          },
+          optimistic: true,
+        });
+
         onClose();
       },
       onError: (error) => {

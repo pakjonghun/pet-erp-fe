@@ -33,6 +33,7 @@ import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { DatePicker } from '@mui/x-date-pickers';
 import { useCreateWholeSale } from '@/http/graphql/hooks/wholeSale/useCreateWholeSale';
 import dayjs from 'dayjs';
+import { client } from '@/http/graphql/client';
 
 export const initProductItem: CreateWholeSaleProductForm = {
   storageName: '',
@@ -125,6 +126,17 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
           message: '도매 판매등록이 완료되었습니다.',
           severity: 'success',
         });
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'wholeSales' });
+            cache.evict({ fieldName: 'stocks' });
+            cache.evict({ fieldName: 'productCountStocks' });
+            cache.evict({ fieldName: 'productSales' });
+            cache.evict({ fieldName: 'topClients' });
+          },
+          optimistic: true,
+        });
+
         handleClose();
       },
       onError: (err) => {
@@ -167,14 +179,13 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
   );
 
   const telNumber = watch('telephoneNumber1');
-  console.log('errors', errors);
 
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
         도매 판매 등록
       </Typography>
-      <Typography sx={{ mb: 3 }}>새로운 도매 판매를 등록합니다.</Typography>
+      고<Typography sx={{ mb: 3 }}>새로운 도매 판매를 등록합니다.</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={{ ...modalSizeProps, width: 800, mb: 2 }}>
           <FormLabel>도매 거래처 정보 입력</FormLabel>

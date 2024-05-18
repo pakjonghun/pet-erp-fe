@@ -151,10 +151,7 @@ export const client = new ApolloClient({
             keyArgs: ['findLogsQuery', ['keyword', 'from', 'to', 'keywordTarget']],
             merge,
           },
-          productSales: {
-            keyArgs: ['productSalesInput', ['keyword', 'from', 'to']],
-            merge,
-          },
+
           topClients: {
             keyArgs: ['topClientInput', ['from', 'to']],
             merge,
@@ -197,6 +194,10 @@ export const client = new ApolloClient({
           },
           wholeSales: {
             keyArgs: ['wholeSalesInput', ['keyword', 'from', 'to']],
+            merge,
+          },
+          productSales: {
+            keyArgs: ['productSalesInput', ['keyword', 'from', 'to']],
             merge,
           },
         },
