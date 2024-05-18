@@ -11,6 +11,9 @@ const wholeSales = graphql(`
         mallId
         saleAt
         telephoneNumber1
+        totalPayCost
+        totalWonCost
+        totalCount
         productList {
           productName
           productCode

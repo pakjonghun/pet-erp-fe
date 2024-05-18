@@ -104,7 +104,7 @@ const WholeSalePage = () => {
       <Typography sx={{ p: 3 }}>
         {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
       </Typography>
-      {/* <WholeSaleCards
+      <WholeSaleCards
         sx={{
           display: {
             xs: 'block',
@@ -115,7 +115,7 @@ const WholeSalePage = () => {
         data={rows}
         isEmpty={isEmpty}
         scrollRef={scrollRef}
-      /> */}
+      />
       <ScrollTableContainer
         sx={{
           display: {

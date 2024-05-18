@@ -2,10 +2,11 @@ import { FC } from 'react';
 import { WholeSaleItem } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
 import ModalTitle from '@/components/ui/typograph/ModalTitle';
-import { getKCWFormat } from '@/utils/common';
+import { getKCWFormat, getNumberWithComma } from '@/utils/common';
 import { Stack, Button, Chip } from '@mui/material';
 import BasePopover from '@/components/ui/modal/BasePopover';
-import { EMPTY } from '@/constants';
+import dayjs from 'dayjs';
+import { getProfitRate } from '@/utils/sale';
 
 interface Props {
   open: boolean;
@@ -21,44 +22,31 @@ const WholeSaleDetailPopover: FC<Props> = ({
   open,
   anchorEl,
   position,
-  selectedWholeSale,
+  selectedWholeSale: sale,
   onClose,
   onClickDelete,
   onClickEdit,
 }) => {
+  const profit = sale.totalPayCost - sale.totalWonCost;
+  const profitRate = getProfitRate(profit, sale.totalPayCost);
+
   return (
     <BasePopover onClose={onClose} position={position} open={open} anchorEl={anchorEl}>
       <ModalTitle text="제품 세부내용" />
-      <Stack>
-        <LabelText label="거래처" text={selectedWholeSale.mallId} />
-        <LabelText label="연락처" text={selectedWholeSale.telephoneNumber1 ?? EMPTY} />
+      <Stack gap={2}>
+        <LabelText label="거래처" text={sale.mallId} />
+        <LabelText label="판매날짜" text={dayjs(sale.saleAt).format('YYYY-MM-DD')} />
         <LabelText
           label="제품목록"
-          text={selectedWholeSale.productList.map((product) => (
+          text={sale.productList.map((product) => (
             <Chip key={product.productCode} label={product.productName} />
           ))}
         />
-
-        {/* <LabelText label="원가" text={selectedWholeSale.wonCost ?? EMPTY} /> */}
-        {/* <LabelText
-          label="판매가"
-          text={
-            selectedWholeSale. == null
-              ? EMPTY
-              : getKCWFormat(selectedWholeSale.payCost) ?? EMPTY
-          }
-        /> */}
-        {/* <LabelText
-          label="원가"
-          text={
-            selectedWholeSale. == null
-              ? EMPTY
-              : getKCWFormat(selectedWholeSale.wonCost) ?? EMPTY
-          }
-        /> */}
-        <LabelText label="수익" text={EMPTY} />
-        <LabelText label="수익율" text={EMPTY} />
-        <LabelText label="판매수량" text={EMPTY} />
+        <LabelText label="판매수량 합계" text={getNumberWithComma(sale.totalCount)} />
+        <LabelText label="원가 합계" text={getKCWFormat(sale.totalWonCost)} />
+        <LabelText label="판매가 합계" text={getKCWFormat(sale.totalPayCost)} />
+        <LabelText label="수익" text={getKCWFormat(profit)} />
+        <LabelText label="수익율" text={`${profitRate}%`} />
       </Stack>
       <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
         <Button color="error" variant="outlined" onClick={onClickDelete}>

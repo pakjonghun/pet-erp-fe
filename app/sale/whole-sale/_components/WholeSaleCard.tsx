@@ -1,13 +1,16 @@
 import { FC, MouseEvent, useState } from 'react';
-import { Box, IconButton, Menu, Paper, Stack } from '@mui/material';
+import { Chip, IconButton, Menu, Paper, Stack } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { EMPTY, SelectedOptionItem } from '@/constants';
+import { SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { WholeSaleItem } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
 import { SelectOption } from '@/app/back-data/types';
+import { getKCWFormat, getNumberWithComma } from '@/utils/common';
+import { getProfitRate } from '@/utils/sale';
+import dayjs from 'dayjs';
 
 interface Props {
   sale: WholeSaleItem;
@@ -37,6 +40,9 @@ const WholeSaleCard: FC<Props> = ({ sale, scrollRef, onClickOption, onClickRow }
     },
   };
 
+  const profit = sale.totalPayCost - sale.totalWonCost;
+  const profitRate = getProfitRate(profit, sale.totalPayCost);
+
   return (
     <Paper ref={scrollRef} sx={{ position: 'relative', py: 3, px: 4 }}>
       <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
@@ -52,41 +58,37 @@ const WholeSaleCard: FC<Props> = ({ sale, scrollRef, onClickOption, onClickRow }
       >
         <MoreHorizIcon />
       </IconButton>
-      <Box onClick={(event) => onClickRow(event, sale)}>
+
+      <Stack gap={2}>
         <Stack direction="row" justifyContent="space-between" gap={2}>
-          <Box sx={{ flex: 1 }}>
-            <LabelText label="이름" text={sale.mallId} />
-          </Box>
-          <Box sx={{ flex: 1 }}>
-            <LabelText label="연락처" text={sale.telephoneNumber1 ?? EMPTY} />
-          </Box>
-        </Stack>
-        <Stack direction="row" justifyContent="space-between" gap={2}>
-          <Box sx={{ flex: 1 }}>
-            <LabelText
-              label="제품 이름"
-              text={sale.productList.map((item) => item.productName).join(', ') ?? EMPTY}
-            />
-          </Box>
-        </Stack>
-        <Stack direction="row" justifyContent="space-between" gap={2}>
-          {/* <Box sx={{ flex: 1 }}>
-            <LabelText label="원가" text={sale.wonCost ?? EMPTY} />
-          </Box>
-          <Box sx={{ flex: 1 }}>
-            <LabelText label="판매가" text={sale.payCost ?? EMPTY} />
-          </Box> */}
+          <LabelText sx={{ flex: 1 }} label="거래처" text={sale.mallId} />
+          <LabelText
+            sx={{ flex: 1 }}
+            label="판매날짜"
+            text={dayjs(sale.saleAt).format('YYYY-MM-DD')}
+          />
         </Stack>
 
         <Stack direction="row" justifyContent="space-between" gap={2}>
-          <Box sx={{ flex: 1 }}>
-            <LabelText label="수익" text={EMPTY} />
-          </Box>
-          <Box sx={{ flex: 1 }}>
-            <LabelText label="수익율" text={EMPTY} />
-          </Box>
+          <LabelText
+            sx={{ flex: 1 }}
+            label="판매수량 합계"
+            text={getNumberWithComma(sale.totalCount)}
+          />
+          <LabelText sx={{ flex: 1 }} label="원가 합계" text={getKCWFormat(sale.totalWonCost)} />
         </Stack>
-      </Box>
+        <Stack direction="row" justifyContent="space-between" gap={2}>
+          <LabelText sx={{ flex: 1 }} label="판매가 합계" text={getKCWFormat(sale.totalPayCost)} />
+          <LabelText sx={{ flex: 1 }} label="수익" text={getKCWFormat(profit)} />
+        </Stack>
+        <LabelText label="수익율" text={`${profitRate}%`} />
+        <LabelText
+          label="제품목록"
+          text={sale.productList.map((product) => (
+            <Chip key={product.productCode} label={product.productName} />
+          ))}
+        />
+      </Stack>
     </Paper>
   );
 };

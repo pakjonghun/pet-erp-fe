@@ -41,18 +41,16 @@ const WholeSaleBodyRow: FC<Props> = ({ wholeSale, scrollRef, onClickOption, onCl
   };
 
   const createRow = (sale: WholeSaleItem) => {
-    const saleCount = sale.productList.reduce((acc, cur) => acc + cur.count, 0);
-    const totalWonPrice = sale.productList.reduce((acc, cur) => acc + (cur.wonCost ?? 0), 0);
-    const totalSalePrice = sale.productList.reduce((acc, cur) => acc + cur.payCost, 0);
-    const profitRate = getProfitRate(totalSalePrice - totalWonPrice, totalSalePrice);
+    const profit = sale.totalPayCost - sale.totalWonCost;
+    const profitRate = getProfitRate(sale.totalPayCost - sale.totalWonCost, sale.totalPayCost);
     return [
       sale.mallId,
       dayjs(sale.saleAt).format('YYYY-MM-DD'),
       sale.productList.map((item) => item.productName).join(', '),
-      getNumberWithComma(saleCount),
-      getKCWFormat(totalWonPrice),
-      getKCWFormat(totalSalePrice),
-      getKCWFormat(totalSalePrice - totalWonPrice),
+      getNumberWithComma(sale.totalCount),
+      getKCWFormat(sale.totalWonCost),
+      getKCWFormat(sale.totalPayCost),
+      getKCWFormat(profit),
       `${profitRate}%`,
     ];
   };
