@@ -5,6 +5,8 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import { snackMessage } from '@/store/snackMessage';
 import { Typography, Stack, Button } from '@mui/material';
+import { useRemoveWholeSale } from '@/http/graphql/hooks/wholeSale/useRemoveWholeSale';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   open: boolean;
@@ -13,18 +15,28 @@ interface Props {
 }
 
 const RemoveWholeSaleModal: FC<Props> = ({ open, selectedWholeSale, onClose }) => {
-  const [removeWholeSale, { loading }] = useRemoveProduct();
+  const [removeWholeSale, { loading }] = useRemoveWholeSale();
 
   const handleClickRemove = () => {
     removeWholeSale({
       variables: {
         _id: selectedWholeSale._id,
       },
-      onCompleted: (res) => {
+      onCompleted: () => {
         snackMessage({
           message: `${selectedWholeSale.mallId}거래처와 도매 거래 삭제되었습니다.`,
           severity: 'success',
         });
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'stocks' });
+            cache.evict({ fieldName: 'dashboardClients' });
+            cache.evict({ fieldName: 'productCountStocks' });
+            cache.evict({ fieldName: 'productSales' });
+            cache.evict({ fieldName: 'topClients' });
+          },
+        });
+
         onClose();
       },
       onError: (err) => {

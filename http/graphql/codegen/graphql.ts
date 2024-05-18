@@ -265,7 +265,7 @@ export type Mutation = {
   removeSubsidiary: Subsidiary;
   removeSubsidiaryCategory: SubsidiaryCategory;
   removeUser: User;
-  removeWholeSale: Sale;
+  removeWholeSale?: Maybe<WholeSaleItem>;
   updateCategory: ProductCategory;
   updateClient: Client;
   updateFactory: Factory;
@@ -391,7 +391,7 @@ export type MutationRemoveUserArgs = {
 
 
 export type MutationRemoveWholeSaleArgs = {
-  wholeSaleId: Scalars['String']['input'];
+  _id: Scalars['String']['input'];
 };
 
 
@@ -1529,6 +1529,13 @@ export type CreateWholeSaleMutationVariables = Exact<{
 
 export type CreateWholeSaleMutation = { __typename?: 'Mutation', createWholeSale?: { __typename?: 'Sale', mallId?: string | null } | null };
 
+export type RemoveWholeSaleMutationVariables = Exact<{
+  _id: Scalars['String']['input'];
+}>;
+
+
+export type RemoveWholeSaleMutation = { __typename?: 'Mutation', removeWholeSale?: { __typename?: 'WholeSaleItem', _id: string } | null };
+
 export type WholeSalesQueryVariables = Exact<{
   wholeSalesInput: WholeSalesInput;
 }>;
@@ -1601,4 +1608,5 @@ export const UsersDocument = {"kind":"Document","definitions":[{"kind":"Operatio
 export const MyInfoDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"myInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"myInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<MyInfoQuery, MyInfoQueryVariables>;
 export const UpdateProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateProfile"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"updateProfileInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateProfileDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateProfile"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"updateProfileInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"updateProfileInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]}}]} as unknown as DocumentNode<UpdateProfileMutation, UpdateProfileMutationVariables>;
 export const CreateWholeSaleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createWholeSale"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"createWholeSaleInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateWholeSaleInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createWholeSale"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"createWholeSaleInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"createWholeSaleInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mallId"}}]}}]}}]} as unknown as DocumentNode<CreateWholeSaleMutation, CreateWholeSaleMutationVariables>;
+export const RemoveWholeSaleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"removeWholeSale"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeWholeSale"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"_id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}}]}}]}}]} as unknown as DocumentNode<RemoveWholeSaleMutation, RemoveWholeSaleMutationVariables>;
 export const WholeSalesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"wholeSales"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"wholeSalesInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"WholeSalesInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"wholeSales"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"wholeSalesInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"wholeSalesInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"mallId"}},{"kind":"Field","name":{"kind":"Name","value":"saleAt"}},{"kind":"Field","name":{"kind":"Name","value":"telephoneNumber1"}},{"kind":"Field","name":{"kind":"Name","value":"totalPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"totalWonCost"}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"productList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"productName"}},{"kind":"Field","name":{"kind":"Name","value":"productCode"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"payCost"}},{"kind":"Field","name":{"kind":"Name","value":"wonCost"}}]}}]}}]}}]}}]} as unknown as DocumentNode<WholeSalesQuery, WholeSalesQueryVariables>;

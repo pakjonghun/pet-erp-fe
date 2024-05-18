@@ -66,6 +66,7 @@ const documents = {
     "\n  query myInfo {\n    myInfo {\n      id\n      role\n      createdAt\n    }\n  }\n": types.MyInfoDocument,
     "\n  mutation UpdateProfile($updateProfileInput: UpdateProfileDTO!) {\n    updateProfile(updateProfileInput: $updateProfileInput) {\n      id\n      role\n    }\n  }\n": types.UpdateProfileDocument,
     "\n  mutation createWholeSale($createWholeSaleInput: CreateWholeSaleInput!) {\n    createWholeSale(createWholeSaleInput: $createWholeSaleInput) {\n      mallId\n    }\n  }\n": types.CreateWholeSaleDocument,
+    "\n  mutation removeWholeSale($_id: String!) {\n    removeWholeSale(_id: $_id) {\n      _id\n    }\n  }\n": types.RemoveWholeSaleDocument,
     "\n  query wholeSales($wholeSalesInput: WholeSalesInput!) {\n    wholeSales(wholeSalesInput: $wholeSalesInput) {\n      totalCount\n      data {\n        _id\n        mallId\n        saleAt\n        telephoneNumber1\n        totalPayCost\n        totalWonCost\n        totalCount\n        productList {\n          productName\n          productCode\n          count\n          payCost\n          wonCost\n        }\n      }\n    }\n  }\n": types.WholeSalesDocument,
 };
 
@@ -295,6 +296,10 @@ export function graphql(source: "\n  mutation UpdateProfile($updateProfileInput:
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation createWholeSale($createWholeSaleInput: CreateWholeSaleInput!) {\n    createWholeSale(createWholeSaleInput: $createWholeSaleInput) {\n      mallId\n    }\n  }\n"): (typeof documents)["\n  mutation createWholeSale($createWholeSaleInput: CreateWholeSaleInput!) {\n    createWholeSale(createWholeSaleInput: $createWholeSaleInput) {\n      mallId\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation removeWholeSale($_id: String!) {\n    removeWholeSale(_id: $_id) {\n      _id\n    }\n  }\n"): (typeof documents)["\n  mutation removeWholeSale($_id: String!) {\n    removeWholeSale(_id: $_id) {\n      _id\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

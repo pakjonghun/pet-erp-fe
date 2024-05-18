@@ -94,7 +94,6 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
   const {
     clearErrors,
     setError,
-    reset,
     control,
     handleSubmit,
     setValue,
@@ -129,12 +128,12 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
         client.refetchQueries({
           updateCache(cache) {
             cache.evict({ fieldName: 'wholeSales' });
+            cache.evict({ fieldName: 'dashboardClients' });
             cache.evict({ fieldName: 'stocks' });
             cache.evict({ fieldName: 'productCountStocks' });
             cache.evict({ fieldName: 'productSales' });
             cache.evict({ fieldName: 'topClients' });
           },
-          optimistic: true,
         });
 
         handleClose();
