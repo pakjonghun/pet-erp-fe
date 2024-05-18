@@ -52,7 +52,6 @@ interface Props {
 
 const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
   const [updateWholeSale, { loading }] = useUpdateWholeSale();
-  console.log(wholeSale);
   const [clientKeyword, setClientKeyword] = useState('');
   const delayedClientKeyword = useTextDebounce(clientKeyword);
 
@@ -188,8 +187,6 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
   );
 
   const telNumber = watch('telephoneNumber1');
-
-  console.log(errors);
 
   return (
     <BaseModal open={open} onClose={handleClose}>

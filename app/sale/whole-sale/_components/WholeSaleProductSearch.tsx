@@ -220,7 +220,6 @@ const WholeSaleProductSearch: FC<Props> = ({
                     message: `제품 재고가 ${currentOriginProduct.count}EA 남아 있습니다.`,
                   });
                 } else {
-                  console.log('clear error', value, currentOriginProduct.count);
                   clearError(`productList.${index}.count`);
                 }
                 field.onChange(value);
