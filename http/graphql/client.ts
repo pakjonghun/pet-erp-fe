@@ -12,6 +12,12 @@ const link = createHttpLink({
 export const client = new ApolloClient({
   cache: new InMemoryCache({
     fragments: createFragmentRegistry(gql`
+      fragment DeliveryCostFragment on DeliveryCost {
+        deliveryCost
+        year
+        month
+      }
+
       fragment StockColumnFragment on StockColumn {
         stockCount
         leadTime

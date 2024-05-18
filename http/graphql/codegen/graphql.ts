@@ -181,6 +181,13 @@ export type CreateWholeSaleProduct = {
   wonCost?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type DeliveryCost = {
+  __typename?: 'DeliveryCost';
+  deliveryCost: Scalars['Float']['output'];
+  month: Scalars['Int']['output'];
+  year: Scalars['Int']['output'];
+};
+
 export type FactoriesInput = {
   keyword: Scalars['String']['input'];
   limit: Scalars['Int']['input'];
@@ -254,7 +261,7 @@ export type Mutation = {
   createSubsidiary: Subsidiary;
   createSubsidiaryCategory: SubsidiaryCategory;
   createUser: User;
-  createWholeSale?: Maybe<Sale>;
+  createWholeSale?: Maybe<Array<Sale>>;
   outStock?: Maybe<Array<Stock>>;
   removeCategory: ProductCategory;
   removeClient: Client;
@@ -266,6 +273,7 @@ export type Mutation = {
   removeSubsidiaryCategory: SubsidiaryCategory;
   removeUser: User;
   removeWholeSale?: Maybe<WholeSaleItem>;
+  setDeliveryCost: DeliveryCost;
   updateCategory: ProductCategory;
   updateClient: Client;
   updateFactory: Factory;
@@ -392,6 +400,11 @@ export type MutationRemoveUserArgs = {
 
 export type MutationRemoveWholeSaleArgs = {
   _id: Scalars['String']['input'];
+};
+
+
+export type MutationSetDeliveryCostArgs = {
+  setDeliveryCostInput: SetDeliveryCostInput;
 };
 
 
@@ -597,6 +610,7 @@ export type Query = {
   dashboardClients?: Maybe<Array<SaleInfos>>;
   dashboardProduct?: Maybe<TotalSaleInfo>;
   dashboardProducts?: Maybe<Array<SaleInfos>>;
+  deliveryCost?: Maybe<DeliveryCost>;
   factories: FactoriesOutput;
   logs: FindLogsResponseDto;
   myInfo: MyInfo;
@@ -781,6 +795,12 @@ export type SaleInfos = {
   prevAccPayCost?: Maybe<Scalars['Int']['output']>;
   prevAccProfit?: Maybe<Scalars['Float']['output']>;
   prevAveragePayCost?: Maybe<Scalars['Float']['output']>;
+};
+
+export type SetDeliveryCostInput = {
+  month: Scalars['Int']['input'];
+  monthDeliveryPayCost: Scalars['Float']['input'];
+  year: Scalars['Int']['input'];
 };
 
 export type Stock = {
@@ -1059,6 +1079,8 @@ export enum ClientType {
   WholeSale = 'wholeSale'
 }
 
+export type DeliveryCostFragmentFragment = { __typename?: 'DeliveryCost', deliveryCost: number, year: number, month: number } & { ' $fragmentName'?: 'DeliveryCostFragmentFragment' };
+
 export type StockColumnFragmentFragment = { __typename?: 'StockColumn', stockCount: string, leadTime?: number | null, leftDate?: number | null, monthSaleCount: number, productName: string, wonPrice?: number | null } & { ' $fragmentName'?: 'StockColumnFragmentFragment' };
 
 export type ProductOrderFragmentFragment = { __typename?: 'ProductOrder', _id: string, payCost: number, notPayCost: number, totalPayCost: number, isDone: boolean, createdAt: any, factory: { __typename?: 'Factory', _id: string, name: string }, products: Array<{ __typename?: 'OrderProduct', count: number, product: { __typename?: 'Product', _id: string, name: string, leadTime?: number | null } }> } & { ' $fragmentName'?: 'ProductOrderFragmentFragment' };
@@ -1138,6 +1160,18 @@ export type UpdateClientMutation = { __typename?: 'Mutation', updateClient: (
     { __typename?: 'Client' }
     & { ' $fragmentRefs'?: { 'ClientFragmentFragment': ClientFragmentFragment } }
   ) };
+
+export type DeliveryCostQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DeliveryCostQuery = { __typename?: 'Query', deliveryCost?: { __typename?: 'DeliveryCost', deliveryCost: number, year: number, month: number } | null };
+
+export type SetDeliveryCostMutationVariables = Exact<{
+  setDeliveryCostInput: SetDeliveryCostInput;
+}>;
+
+
+export type SetDeliveryCostMutation = { __typename?: 'Mutation', setDeliveryCost: { __typename?: 'DeliveryCost', deliveryCost: number, year: number, month: number } };
 
 export type CreateFactoryMutationVariables = Exact<{
   createFactoryInput: CreateFactoryInput;
@@ -1527,7 +1561,7 @@ export type CreateWholeSaleMutationVariables = Exact<{
 }>;
 
 
-export type CreateWholeSaleMutation = { __typename?: 'Mutation', createWholeSale?: { __typename?: 'Sale', mallId?: string | null } | null };
+export type CreateWholeSaleMutation = { __typename?: 'Mutation', createWholeSale?: Array<{ __typename?: 'Sale', mallId?: string | null }> | null };
 
 export type RemoveWholeSaleMutationVariables = Exact<{
   _id: Scalars['String']['input'];
@@ -1550,6 +1584,7 @@ export type WholeSalesQueryVariables = Exact<{
 
 export type WholeSalesQuery = { __typename?: 'Query', wholeSales: { __typename?: 'WholeSaleOutput', totalCount: number, data: Array<{ __typename?: 'WholeSaleItem', _id: string, mallId: string, saleAt: any, telephoneNumber1?: string | null, totalPayCost: number, totalWonCost: number, totalCount: number, productList: Array<{ __typename?: 'WholeSaleProduct', storageName: string, productName: string, productCode: string, count: number, payCost: number, wonCost?: number | null }> }> } };
 
+export const DeliveryCostFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"DeliveryCostFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"DeliveryCost"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deliveryCost"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"month"}}]}}]} as unknown as DocumentNode<DeliveryCostFragmentFragment, unknown>;
 export const StockColumnFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"StockColumnFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"StockColumn"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"stockCount"}},{"kind":"Field","name":{"kind":"Name","value":"leadTime"}},{"kind":"Field","name":{"kind":"Name","value":"leftDate"}},{"kind":"Field","name":{"kind":"Name","value":"monthSaleCount"}},{"kind":"Field","name":{"kind":"Name","value":"productName"}},{"kind":"Field","name":{"kind":"Name","value":"wonPrice"}}]}}]} as unknown as DocumentNode<StockColumnFragmentFragment, unknown>;
 export const ProductOrderFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductOrderFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ProductOrder"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"factory"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"products"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"leadTime"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"payCost"}},{"kind":"Field","name":{"kind":"Name","value":"notPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"totalPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"isDone"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]} as unknown as DocumentNode<ProductOrderFragmentFragment, unknown>;
 export const FactoryFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FactoryFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Factory"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"note"}}]}}]} as unknown as DocumentNode<FactoryFragmentFragment, unknown>;
@@ -1569,6 +1604,8 @@ export const DashboardClientDocument = {"kind":"Document","definitions":[{"kind"
 export const DashboardClientsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"dashboardClients"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"dashboardClientsInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"FindDateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"dashboardClients"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"dashboardClientsInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"dashboardClientsInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"accPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"accCount"}},{"kind":"Field","name":{"kind":"Name","value":"accProfit"}},{"kind":"Field","name":{"kind":"Name","value":"averagePayCost"}},{"kind":"Field","name":{"kind":"Name","value":"averagePayCost"}},{"kind":"Field","name":{"kind":"Name","value":"prevAccPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"prevAccCount"}},{"kind":"Field","name":{"kind":"Name","value":"prevAccProfit"}},{"kind":"Field","name":{"kind":"Name","value":"prevAveragePayCost"}}]}}]}}]} as unknown as DocumentNode<DashboardClientsQuery, DashboardClientsQueryVariables>;
 export const RemoveClientDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"removeClient"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeClient"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"_id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<RemoveClientMutation, RemoveClientMutationVariables>;
 export const UpdateClientDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateClient"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"updateClientInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateClientInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateClient"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"updateClientInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"updateClientInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ClientFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ClientFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Client"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"feeRate"}},{"kind":"Field","name":{"kind":"Name","value":"clientType"}},{"kind":"Field","name":{"kind":"Name","value":"businessName"}},{"kind":"Field","name":{"kind":"Name","value":"businessNumber"}},{"kind":"Field","name":{"kind":"Name","value":"payDate"}},{"kind":"Field","name":{"kind":"Name","value":"manager"}},{"kind":"Field","name":{"kind":"Name","value":"managerTel"}},{"kind":"Field","name":{"kind":"Name","value":"inActive"}}]}}]} as unknown as DocumentNode<UpdateClientMutation, UpdateClientMutationVariables>;
+export const DeliveryCostDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"deliveryCost"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deliveryCost"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deliveryCost"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"month"}}]}}]}}]} as unknown as DocumentNode<DeliveryCostQuery, DeliveryCostQueryVariables>;
+export const SetDeliveryCostDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setDeliveryCost"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"setDeliveryCostInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SetDeliveryCostInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setDeliveryCost"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"setDeliveryCostInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"setDeliveryCostInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deliveryCost"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"month"}}]}}]}}]} as unknown as DocumentNode<SetDeliveryCostMutation, SetDeliveryCostMutationVariables>;
 export const CreateFactoryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createFactory"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"createFactoryInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateFactoryInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createFactory"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"createFactoryInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"createFactoryInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FactoryFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FactoryFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Factory"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"note"}}]}}]} as unknown as DocumentNode<CreateFactoryMutation, CreateFactoryMutationVariables>;
 export const UpdateFactoryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateFactory"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"updateFactoryInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateFactoryInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateFactory"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"updateFactoryInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"updateFactoryInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FactoryFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FactoryFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Factory"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"note"}}]}}]} as unknown as DocumentNode<UpdateFactoryMutation, UpdateFactoryMutationVariables>;
 export const FactoriesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"factories"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"factoriesInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"FactoriesInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"factories"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"factoriesInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"factoriesInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FactoryFragment"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FactoryFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Factory"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"note"}}]}}]} as unknown as DocumentNode<FactoriesQuery, FactoriesQueryVariables>;
