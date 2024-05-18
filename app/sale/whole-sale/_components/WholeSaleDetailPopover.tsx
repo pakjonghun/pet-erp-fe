@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { WholeSaleOutput } from '@/http/graphql/codegen/graphql';
+import { WholeSaleItem } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
 import ModalTitle from '@/components/ui/typograph/ModalTitle';
 import { getKCWFormat } from '@/utils/common';
@@ -11,7 +11,7 @@ interface Props {
   open: boolean;
   anchorEl: null | HTMLElement;
   position: { left: number; top: number };
-  selectedWholeSale: WholeSaleOutput;
+  selectedWholeSale: WholeSaleItem;
   onClose: () => void;
   onClickDelete: () => void;
   onClickEdit: () => void;
@@ -27,42 +27,35 @@ const WholeSaleDetailPopover: FC<Props> = ({
   onClickEdit,
 }) => {
   return (
-    <BasePopover
-      onClose={onClose}
-      position={position}
-      open={open}
-      anchorEl={anchorEl}
-    >
+    <BasePopover onClose={onClose} position={position} open={open} anchorEl={anchorEl}>
       <ModalTitle text="제품 세부내용" />
       <Stack>
         <LabelText label="거래처" text={selectedWholeSale.mallId} />
+        <LabelText label="연락처" text={selectedWholeSale.telephoneNumber1 ?? EMPTY} />
         <LabelText
           label="제품목록"
           text={selectedWholeSale.productList.map((product) => (
-            <Chip key={product.code} label={product.productName} />
+            <Chip key={product.productCode} label={product.productName} />
           ))}
         />
-        <LabelText
-          label="연락처"
-          text={selectedWholeSale.telephoneNumber1 ?? EMPTY}
-        />
-        <LabelText label="원가" text={selectedWholeSale.wonCost ?? EMPTY} />
-        <LabelText
+
+        {/* <LabelText label="원가" text={selectedWholeSale.wonCost ?? EMPTY} /> */}
+        {/* <LabelText
           label="판매가"
           text={
-            selectedWholeSale.payCost == null
+            selectedWholeSale. == null
               ? EMPTY
               : getKCWFormat(selectedWholeSale.payCost) ?? EMPTY
           }
-        />
-        <LabelText
+        /> */}
+        {/* <LabelText
           label="원가"
           text={
-            selectedWholeSale.wonCost == null
+            selectedWholeSale. == null
               ? EMPTY
               : getKCWFormat(selectedWholeSale.wonCost) ?? EMPTY
           }
-        />
+        /> */}
         <LabelText label="수익" text={EMPTY} />
         <LabelText label="수익율" text={EMPTY} />
         <LabelText label="판매수량" text={EMPTY} />

@@ -27,15 +27,14 @@ import {
   createWholeSaleSchema,
 } from '../_validations/createWholeSaleValidation';
 import dayjs from 'dayjs';
-import { Client, ClientType, WholeSaleOutput } from '@/http/graphql/codegen/graphql';
+import { Client, ClientType, WholeSaleItem, WholeSaleOutput } from '@/http/graphql/codegen/graphql';
 import { PlusOne } from '@mui/icons-material';
 import WholeSaleProductSearch from './WholeSaleProductSearch';
 import LabelText from '@/components/ui/typograph/LabelText';
 import { EMPTY, LIMIT } from '@/constants';
-import { FormControl } from '@mui/base';
-import { getProfitRate } from '@/utils/sale';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
+import { getProfitRate } from '@/utils/sale';
 
 export const initProductItem: CreateWholeSaleProductForm = {
   productName: '',
@@ -48,7 +47,7 @@ export const initProductItem: CreateWholeSaleProductForm = {
 interface Props {
   open: boolean;
   onClose: () => void;
-  wholeSale: WholeSaleOutput | null;
+  wholeSale: WholeSaleItem | null;
 }
 
 const EditWholeSaleModal: FC<Props> = ({ wholeSale, open, onClose }) => {

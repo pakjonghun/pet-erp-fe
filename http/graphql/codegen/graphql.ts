@@ -276,7 +276,7 @@ export type Mutation = {
   updateSubsidiary: Subsidiary;
   updateSubsidiaryCategory: SubsidiaryCategory;
   updateUser: User;
-  updateWholeSale: WholeSaleOutput;
+  updateWholeSale?: Maybe<Array<Sale>>;
 };
 
 
@@ -615,7 +615,7 @@ export type Query = {
   subsidiaryCategories: SubsidiaryCategoriesOutput;
   user: User;
   users: Array<User>;
-  wholeSales: Array<Sale>;
+  wholeSales: WholeSaleOutput;
 };
 
 
@@ -755,6 +755,7 @@ export type Sale = {
   productName?: Maybe<Scalars['String']['output']>;
   saleAt?: Maybe<Scalars['Date']['output']>;
   shoppingMall?: Maybe<Scalars['String']['output']>;
+  storageName?: Maybe<Scalars['String']['output']>;
   telephoneNumber1?: Maybe<Scalars['String']['output']>;
   wholeSaleId?: Maybe<Scalars['String']['output']>;
   wonCost?: Maybe<Scalars['Int']['output']>;
@@ -1010,26 +1011,29 @@ export enum UserRole {
   Staff = 'STAFF'
 }
 
+export type WholeSaleItem = {
+  __typename?: 'WholeSaleItem';
+  _id: Scalars['String']['output'];
+  mallId: Scalars['String']['output'];
+  productList: Array<WholeSaleProduct>;
+  saleAt: Scalars['Date']['output'];
+  telephoneNumber1?: Maybe<Scalars['String']['output']>;
+};
+
 export type WholeSaleOutput = {
   __typename?: 'WholeSaleOutput';
-  _id: Scalars['String']['output'];
-  address1?: Maybe<Scalars['String']['output']>;
-  count: Scalars['Int']['output'];
-  deliveryCost?: Maybe<Scalars['Int']['output']>;
-  mallId?: Maybe<Scalars['String']['output']>;
-  payCost?: Maybe<Scalars['Int']['output']>;
-  productList: Array<WholeSaleProduct>;
-  saleAt?: Maybe<Scalars['Date']['output']>;
-  telephoneNumber1?: Maybe<Scalars['String']['output']>;
-  wonCost?: Maybe<Scalars['Int']['output']>;
+  data: Array<WholeSaleItem>;
+  totalCount: Scalars['Int']['output'];
 };
 
 export type WholeSaleProduct = {
   __typename?: 'WholeSaleProduct';
-  code: Scalars['String']['output'];
   count: Scalars['Int']['output'];
+  payCost: Scalars['Int']['output'];
   productCode: Scalars['String']['output'];
   productName: Scalars['String']['output'];
+  storageName: Scalars['String']['output'];
+  wonCost?: Maybe<Scalars['Int']['output']>;
 };
 
 export type WholeSalesInput = {
@@ -1522,6 +1526,13 @@ export type CreateWholeSaleMutationVariables = Exact<{
 
 export type CreateWholeSaleMutation = { __typename?: 'Mutation', createWholeSale?: { __typename?: 'Sale', mallId?: string | null } | null };
 
+export type WholeSalesQueryVariables = Exact<{
+  wholeSalesInput: WholeSalesInput;
+}>;
+
+
+export type WholeSalesQuery = { __typename?: 'Query', wholeSales: { __typename?: 'WholeSaleOutput', totalCount: number, data: Array<{ __typename?: 'WholeSaleItem', _id: string, mallId: string, saleAt: any, telephoneNumber1?: string | null, productList: Array<{ __typename?: 'WholeSaleProduct', productName: string, productCode: string, count: number, payCost: number, wonCost?: number | null }> }> } };
+
 export const StockColumnFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"StockColumnFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"StockColumn"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"stockCount"}},{"kind":"Field","name":{"kind":"Name","value":"leadTime"}},{"kind":"Field","name":{"kind":"Name","value":"leftDate"}},{"kind":"Field","name":{"kind":"Name","value":"monthSaleCount"}},{"kind":"Field","name":{"kind":"Name","value":"productName"}},{"kind":"Field","name":{"kind":"Name","value":"wonPrice"}}]}}]} as unknown as DocumentNode<StockColumnFragmentFragment, unknown>;
 export const ProductOrderFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductOrderFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ProductOrder"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"factory"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"products"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"leadTime"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"payCost"}},{"kind":"Field","name":{"kind":"Name","value":"notPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"totalPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"isDone"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]} as unknown as DocumentNode<ProductOrderFragmentFragment, unknown>;
 export const FactoryFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FactoryFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Factory"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"note"}}]}}]} as unknown as DocumentNode<FactoryFragmentFragment, unknown>;
@@ -1587,3 +1598,4 @@ export const UsersDocument = {"kind":"Document","definitions":[{"kind":"Operatio
 export const MyInfoDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"myInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"myInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<MyInfoQuery, MyInfoQueryVariables>;
 export const UpdateProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateProfile"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"updateProfileInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateProfileDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateProfile"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"updateProfileInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"updateProfileInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]}}]} as unknown as DocumentNode<UpdateProfileMutation, UpdateProfileMutationVariables>;
 export const CreateWholeSaleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createWholeSale"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"createWholeSaleInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateWholeSaleInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createWholeSale"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"createWholeSaleInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"createWholeSaleInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mallId"}}]}}]}}]} as unknown as DocumentNode<CreateWholeSaleMutation, CreateWholeSaleMutationVariables>;
+export const WholeSalesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"wholeSales"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"wholeSalesInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"WholeSalesInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"wholeSales"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"wholeSalesInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"wholeSalesInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"mallId"}},{"kind":"Field","name":{"kind":"Name","value":"saleAt"}},{"kind":"Field","name":{"kind":"Name","value":"telephoneNumber1"}},{"kind":"Field","name":{"kind":"Name","value":"productList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"productName"}},{"kind":"Field","name":{"kind":"Name","value":"productCode"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"payCost"}},{"kind":"Field","name":{"kind":"Name","value":"wonCost"}}]}}]}}]}}]}}]} as unknown as DocumentNode<WholeSalesQuery, WholeSalesQueryVariables>;

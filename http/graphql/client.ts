@@ -1,3 +1,4 @@
+import { Sale } from './codegen/graphql';
 import { BASE_URL } from '@/http/constants';
 import { ApolloClient, InMemoryCache, createHttpLink, gql } from '@apollo/client';
 import { createFragmentRegistry } from '@apollo/client/cache';
@@ -192,6 +193,10 @@ export const client = new ApolloClient({
           },
           productCountStocks: {
             keyArgs: ['productCountStocksInput', ['keyword', 'storageName']],
+            merge,
+          },
+          wholeSales: {
+            keyArgs: ['wholeSalesInput', ['keyword', 'from', 'to']],
             merge,
           },
         },

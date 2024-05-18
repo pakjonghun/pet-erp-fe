@@ -20,78 +20,29 @@ import { useState } from 'react';
 import AddWholeSaleModal from './_components/AddWholeSaleModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import WholeSaleTableBody from './_components/WholeSaleTableBody';
-import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import { LIMIT } from '@/constants';
 import WholeSaleCards from './_components/WholeSaleCards';
 import ActionButton from '@/components/ui/button/ActionButton';
 import { WholeSaleHeaderList } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { ClientType, WholeSaleOutput } from '@/http/graphql/codegen/graphql';
-import { useClients } from '@/http/graphql/hooks/client/useClients';
+import { useWholeSales } from '@/http/graphql/hooks/wholeSale/useWholeSales';
+import { useReactiveVar } from '@apollo/client';
+import { saleRange } from '@/store/saleStore';
+import { WholeSaleItem } from '@/http/graphql/codegen/graphql';
 
-const rows: WholeSaleOutput[] = [
-  {
-    _id: '12334',
-    count: 12,
-    address1: '456 Elm St, Greendale',
-    telephoneNumber1: '555-6789',
-    saleAt: new Date('2023-01-20'),
-    payCost: 49.99,
-    mallId: 'MALL1002',
-    wonCost: 20.0,
-    deliveryCost: 3.5,
-    productList: [
-      {
-        code: '123_123_!233',
-        productName: 'Wirel3ess M2ouse',
-        productCode: 'PRD441001',
-        count: 1,
-      },
-      {
-        code: '123_123_!4323',
-        productName: 'Wi223reless M4ouse',
-        productCode: 'PRD130302',
-        count: 11,
-      },
-    ],
-  },
-  {
-    _id: '1234',
-    count: 2,
-    address1: '456 Elm St, Greendale',
-    telephoneNumber1: '555-6789',
-    saleAt: new Date('2023-01-20'),
-    payCost: 49.99,
-    mallId: 'MALL1002',
-    wonCost: 20.0,
-    deliveryCost: 3.5,
-    productList: [
-      {
-        code: '123_123_!23',
-        productName: 'Wireless M2ouse',
-        productCode: 'PRD41001',
-        count: 1,
-      },
-      {
-        code: '123_123_!423',
-        productName: 'Wi22reless M4ouse',
-        productCode: 'PRD10302',
-        count: 1,
-      },
-    ],
-  },
-];
-
-const ProductPage = () => {
+const WholeSalePage = () => {
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
+  const { from, to } = useReactiveVar(saleRange);
 
-  const { data, networkStatus, fetchMore, refetch } = useProducts({
+  const { data, networkStatus, fetchMore } = useWholeSales({
     keyword: delayKeyword,
-    skip: 0,
     limit: LIMIT,
+    skip: 0,
+    from,
+    to,
   });
-  // const rows = (data?.products.data as Product[]) ?? [];
+  const rows = (data?.wholeSales.data as WholeSaleItem[]) ?? [];
   const isLoading = networkStatus == 3 || networkStatus == 1;
   const isEmpty = !isLoading && rows.length === 0;
 
@@ -99,17 +50,19 @@ const ProductPage = () => {
     if (entries[0].isIntersecting) {
       if (isLoading) return;
 
-      const totalCount = data?.products.totalCount;
+      const totalCount = data?.wholeSales.totalCount;
       if (totalCount != null && totalCount > rows.length) {
-        // fetchMore({
-        //   variables: {
-        //     productsInput: {
-        //       keyword,
-        //       skip: rows.length,
-        //       limit: LIMIT,
-        //     },
-        //   },
-        // });
+        fetchMore({
+          variables: {
+            wholeSalesInput: {
+              keyword: delayKeyword,
+              skip: rows.length,
+              limit: LIMIT,
+              from,
+              to,
+            },
+          },
+        });
       }
     }
   };
@@ -151,7 +104,7 @@ const ProductPage = () => {
       <Typography sx={{ p: 3 }}>
         {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
       </Typography>
-      <WholeSaleCards
+      {/* <WholeSaleCards
         sx={{
           display: {
             xs: 'block',
@@ -162,7 +115,7 @@ const ProductPage = () => {
         data={rows}
         isEmpty={isEmpty}
         scrollRef={scrollRef}
-      />
+      /> */}
       <ScrollTableContainer
         sx={{
           display: {
@@ -191,4 +144,4 @@ const ProductPage = () => {
   );
 };
 
-export default ProductPage;
+export default WholeSalePage;

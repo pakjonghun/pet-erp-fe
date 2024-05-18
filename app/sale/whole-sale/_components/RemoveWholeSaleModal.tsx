@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { WholeSaleOutput } from '@/http/graphql/codegen/graphql';
+import { WholeSaleItem } from '@/http/graphql/codegen/graphql';
 import { useRemoveProduct } from '@/http/graphql/hooks/product/useRemoveProduct';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import BaseModal from '@/components/ui/modal/BaseModal';
@@ -8,7 +8,7 @@ import { Typography, Stack, Button } from '@mui/material';
 
 interface Props {
   open: boolean;
-  selectedWholeSale: WholeSaleOutput;
+  selectedWholeSale: WholeSaleItem;
   onClose: () => void;
 }
 
