@@ -5,3 +5,4 @@ import { makeVar } from '@apollo/client';
 export const saleRange = makeVar<DateRange>(getToday());
 export const clientTotal = makeVar({ totalCount: 0, totalPayCost: 0, totalProfit: 0 });
 export const saleTotal = makeVar({ totalCount: 0, totalPayCost: 0, totalProfit: 0 });
+export const showPrevData = makeVar(false);

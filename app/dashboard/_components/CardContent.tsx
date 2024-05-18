@@ -3,6 +3,8 @@ import Typography from '@mui/material/Typography';
 import { Stack } from '@mui/material';
 import { NumberType } from '@/types';
 import { getArrow, getColor, getFixedTwo, getNumberToString } from '@/utils/sale';
+import { useReactiveVar } from '@apollo/client';
+import { showPrevData } from '@/store/saleStore';
 
 interface Props {
   label: string;
@@ -12,6 +14,7 @@ interface Props {
 }
 
 const DashboardCardContent: FC<Props> = ({ label, current, previous, numberType = 'currency' }) => {
+  const isShowPrevData = useReactiveVar(showPrevData);
   const currentNumberString = getNumberToString(current, numberType);
   const compareNumber = getFixedTwo(current - previous);
   const compareNumberString = getNumberToString(compareNumber, numberType);
@@ -25,7 +28,13 @@ const DashboardCardContent: FC<Props> = ({ label, current, previous, numberType 
         <Typography component="div" variant="h6">
           {currentNumberString}
         </Typography>
-        <Typography sx={{ display: 'flex', alignItems: 'center', color: getColor(compareNumber) }}>
+        <Typography
+          sx={{
+            display: isShowPrevData ? 'flex' : 'none',
+            alignItems: 'center',
+            color: getColor(compareNumber),
+          }}
+        >
           {getArrow(compareNumber)}
           {compareNumberString}
         </Typography>

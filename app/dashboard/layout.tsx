@@ -2,13 +2,13 @@
 
 import { FC, ReactNode, useEffect, useState } from 'react';
 import SubHeader from '@/components/layout/header/SubHeader';
-import { Box, Tabs, Tab } from '@mui/material';
+import { Box, Tabs, Tab, Stack, FormControlLabel, Switch } from '@mui/material';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { getOriginPath } from '@/utils/common';
 import SwitchDate from '@/components/calendar/dateSwitch/SwitchDate';
 import { useReactiveVar } from '@apollo/client';
-import { saleRange } from '@/store/saleStore';
+import { saleRange, showPrevData } from '@/store/saleStore';
 import { SearchStandard } from '@/components/calendar/dateSwitch/types';
 import { DateRange } from '@/components/calendar/dateFilter/type';
 import { DashboardTabs } from './constants';
@@ -19,6 +19,8 @@ interface Props {
 }
 
 const DashboardLayout: FC<Props> = ({ children }) => {
+  const isShowPrevData = useReactiveVar(showPrevData);
+
   const pathname = usePathname();
   const tabs = Object.keys(DashboardTabs) as (keyof typeof DashboardTabs)[];
   const currentTabIndex = tabs.findIndex((item) => {
@@ -70,12 +72,24 @@ const DashboardLayout: FC<Props> = ({ children }) => {
         </Tabs>
       </SubHeader>
       <Box sx={{ p: 3 }}>
-        <SwitchDate
-          range={{ from, to }}
-          setRange={setRange}
-          searchStandard={searchStandard}
-          setSearchStandard={setSearchStandard}
-        />
+        <Stack direction="row" justifyContent="space-between">
+          <SwitchDate
+            range={{ from, to }}
+            setRange={setRange}
+            searchStandard={searchStandard}
+            setSearchStandard={setSearchStandard}
+          />
+          <FormControlLabel
+            label={isShowPrevData ? '수익 비교 끄기' : '수익 비교 켜기'}
+            control={
+              <Switch
+                size="small"
+                value={isShowPrevData}
+                onChange={(_, checked) => showPrevData(checked)}
+              />
+            }
+          />
+        </Stack>
         {children}
       </Box>
     </Box>
