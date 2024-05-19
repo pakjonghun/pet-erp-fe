@@ -7,8 +7,12 @@ const productSales = graphql(`
     productSales(productSalesInput: $productSalesInput) {
       totalCount
       data {
+        stock
+        recentCreateDate
         code
         name
+        leadTime
+        wonPrice
         clients {
           ...ClientInfo
         }

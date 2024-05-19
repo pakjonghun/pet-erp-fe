@@ -10,6 +10,7 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import dayjs from 'dayjs';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { getKCWFormat, getNumberWithComma } from '@/utils/common';
+import { EMPTY } from '@/constants';
 
 interface Props {
   selectedProductSale: ProductSaleData;
@@ -18,7 +19,7 @@ interface Props {
 }
 
 const ProductSaleModal: FC<Props> = ({
-  selectedProductSale: { clients, name, leadTime, barCode, code, sales },
+  selectedProductSale: { clients, name, leadTime, wonPrice, code, sales, stock, recentCreateDate },
   open,
   onClose,
 }) => {
@@ -41,10 +42,15 @@ const ProductSaleModal: FC<Props> = ({
       <Stack direction="row" flexWrap="wrap" gap={3} mb={2}>
         <LabelText label="이름" text={name} />
         <LabelText label="코드" text={code} />
-        <LabelText label="바코드" text={barCode ?? ''} />
-        <LabelText label="리드타임" text={leadTime ?? ''} />
+        <LabelText label="원가" text={wonPrice ? getKCWFormat(wonPrice) : EMPTY} />
+        <LabelText label="리드타임" text={leadTime ?? EMPTY} />
+        <LabelText label="재고합계" text={stock} />
+        <LabelText
+          label="최근 제작완료 예정일"
+          text={recentCreateDate == null ? '알수없음' : recentCreateDate}
+        />
       </Stack>
-      <LabelText label="채널별 판매수량" text={''} />
+      <LabelText label="거래처별 판매수량" text={''} />
       <Stack direction="row" flexWrap="wrap" rowGap={1} columnGap={2} mt={1}>
         {(clonedClients ?? []).map((client) => {
           return (
