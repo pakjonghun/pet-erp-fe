@@ -7,11 +7,12 @@ import { useReactiveVar } from '@apollo/client';
 import { Skeleton } from '@mui/material';
 
 const DateSaleInfoPage = () => {
-  const { from } = useReactiveVar(saleRange);
+  const { from, to } = useReactiveVar(saleRange);
+  const range = `${from.format('YYYY.MM.DD')} ~ ${to.format('YYYY.MM.DD.')}`;
 
-  const { data: todayDatas, networkStatus } = useDashboardProducts({
+  const { data: monthDatas, networkStatus } = useDashboardProducts({
     from: from.toISOString(),
-    to: from.endOf('day').toISOString(),
+    to: to.toISOString(),
   });
 
   const isLoading = networkStatus === 2 || networkStatus === 3 || networkStatus === 1;
@@ -20,10 +21,12 @@ const DateSaleInfoPage = () => {
     return <Skeleton variant="rounded" width="100%" height={'100%'} sx={{ minHeight: '958px' }} />;
   }
   return (
-    <DashboardTable
-      title={`${from.format('MM월 DD일')} BEST 제품`}
-      saleInfos={todayDatas?.dashboardProducts ?? []}
-    />
+    <>
+      <DashboardTable
+        title={`${range} BEST 제품`}
+        saleInfos={monthDatas?.dashboardProducts ?? []}
+      />
+    </>
   );
 };
 

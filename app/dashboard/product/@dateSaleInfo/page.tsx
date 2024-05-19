@@ -9,13 +9,14 @@ import { useReactiveVar } from '@apollo/client';
 import { Grid, Skeleton } from '@mui/material';
 
 const DateSaleInfoPage = () => {
-  const { from, to } = useReactiveVar(saleRange);
+  const { from } = useReactiveVar(saleRange);
+  const date = from.format('MM월 DD일');
 
   const { data: todayData, networkStatus } = useDashboardProduct({
     from: from.toISOString(),
-    to: to.toISOString(),
+    to: from.endOf('day').toISOString(),
   });
-  const date = from.format('MM월 DD일');
+
   const isLoading = networkStatus === 2 || networkStatus === 3 || networkStatus === 1;
 
   if (isLoading) {
