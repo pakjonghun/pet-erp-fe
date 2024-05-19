@@ -30,6 +30,7 @@ import { LIMIT } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   selectedOrder: ProductOrder;
@@ -38,6 +39,7 @@ interface Props {
 }
 
 const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
+  console.log('selectedOrder : ', selectedOrder);
   const [updateProductOrder, { loading }] = useUpdateProductOrder();
   const {
     reset,
@@ -48,7 +50,7 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
   } = useForm<CreateOrderForm>({
     resolver: zodResolver(createOrderSchema),
     defaultValues: {
-      createdAt: selectedOrder.createdAt,
+      createdAt: new Date(selectedOrder.createdAt),
       factory: selectedOrder?.factory?.name ?? '',
       notPayCost: selectedOrder.notPayCost,
       payCost: selectedOrder.payCost,
@@ -63,7 +65,7 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
 
   useEffect(() => {
     reset({
-      createdAt: selectedOrder.createdAt,
+      createdAt: new Date(selectedOrder.createdAt),
       factory: selectedOrder?.factory?.name ?? '',
       notPayCost: selectedOrder.notPayCost,
       payCost: selectedOrder.payCost,
@@ -83,6 +85,8 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
 
   const onSubmit = (values: CreateOrderForm) => {
     const newValues = filterEmptyValues(values) as CreateOrderForm;
+    console.log('newValues : ', newValues);
+
     updateProductOrder({
       variables: {
         updateOrderInput: {
@@ -95,6 +99,15 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
           message: '발주데이터 편집이 완료되었습니다.',
           severity: 'success',
         });
+
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'stocks' });
+            cache.evict({ fieldName: 'stocksState' });
+            cache.evict({ fieldName: 'stocksOrder' });
+          },
+        });
+
         handleClose();
       },
       onError: (err) => {
@@ -106,7 +119,7 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
       },
     });
   };
-
+  console.log(errors);
   const handleClose = () => {
     reset();
     onClose();

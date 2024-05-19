@@ -6,6 +6,7 @@ import { snackMessage } from '@/store/snackMessage';
 import { Typography, Stack, Button } from '@mui/material';
 import { useRemoveClient } from '@/http/graphql/hooks/client/useDeleteClient';
 import { useRemoveProductOrder } from '@/http/graphql/hooks/productOrder/useRemoveProductOrder';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   open: boolean;
@@ -26,6 +27,15 @@ const RemoveOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
           message: '발주가 삭제되었습니다.',
           severity: 'success',
         });
+
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'stocks' });
+            cache.evict({ fieldName: 'stocksState' });
+            cache.evict({ fieldName: 'stocksOrder' });
+          },
+        });
+
         onClose();
       },
       onError: (err) => {

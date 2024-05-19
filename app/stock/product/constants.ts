@@ -1,5 +1,3 @@
-import { ClientType } from '@/http/graphql/codegen/graphql';
-
 export const ProductStockHeaderList = [
   '',
   '제품이름',
@@ -8,6 +6,7 @@ export const ProductStockHeaderList = [
   '원가',
   '재고 소진까지 남은기간',
   '리드타임',
+  '리드타임 고려 재고 건전성',
   '',
 ];
 

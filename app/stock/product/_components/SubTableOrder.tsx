@@ -75,7 +75,13 @@ const SubTableOrder: FC<Props> = ({ productStock }) => {
 
   return (
     <TableContainer sx={{ mt: 1 }}>
-      {openAddModal && <AddOrderModal open={openAddModal} onClose={() => setOpenAddModal(false)} />}
+      {openAddModal && (
+        <AddOrderModal
+          product={productStock.productName}
+          open={openAddModal}
+          onClose={() => setOpenAddModal(false)}
+        />
+      )}
 
       {selectedOrder && (
         <EditOrderModal
@@ -153,7 +159,7 @@ const SubTableOrder: FC<Props> = ({ productStock }) => {
 
             const completeDate =
               largestLeadTime == null
-                ? '알수없음'
+                ? '제품 리드타임 미입력'
                 : dayjs(row.createdAt).add(largestLeadTime, 'day').format('YYYY-MM-DD');
 
             return (

@@ -5,6 +5,7 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import { snackMessage } from '@/store/snackMessage';
 import { Typography, Stack, Button } from '@mui/material';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   open: boolean;
@@ -25,6 +26,7 @@ const RemoveProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
           message: `${res.removeProduct.name}제품이 삭제되었습니다.`,
           severity: 'success',
         });
+
         onClose();
       },
       onError: (err) => {

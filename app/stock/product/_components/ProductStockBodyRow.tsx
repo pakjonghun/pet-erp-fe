@@ -1,7 +1,7 @@
 import { FC, MouseEvent, useState } from 'react';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import Cell from '@/components/table/Cell';
-import { IconButton, Menu, TableRow } from '@mui/material';
+import { Chip, IconButton, Menu, TableRow } from '@mui/material';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import CollapseRow from './CollapseRow';
@@ -42,10 +42,44 @@ const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption
     },
   };
 
+  const chip = {
+    success: <Chip label="1달이상" color="success" />,
+    warning: <Chip label="15일이하" color="warning" />,
+    danger: <Chip label="10일이하" color="error" />,
+    noon: <Chip label="알수없음" />,
+  };
+
   const createRow = (stock: StockColumn) => {
     const leftDate = stock.leftDate;
     const leftDateDisplay =
-      leftDate === null ? '알수없음' : leftDate === -1 ? '재고없음' : leftDate;
+      leftDate === null ? '알수없음' : leftDate === -1 ? '재고없음' : `${leftDate}일`;
+
+    let stockHealthy = chip.noon;
+
+    const getStockHealthy = () => {
+      if (leftDate == null) return;
+      if (leftDate == -1) {
+        stockHealthy = chip.danger;
+        return;
+      }
+      const leadTime = stock.leadTime ?? 0;
+      if (leftDate + leadTime > 30) {
+        stockHealthy = chip.success;
+        return;
+      }
+
+      if (leftDate + leadTime <= 30 && leftDate + leadTime > 15) {
+        stockHealthy = chip.warning;
+        return;
+      }
+
+      if (leftDate + leadTime <= 10) {
+        stockHealthy = chip.danger;
+        return;
+      }
+    };
+
+    getStockHealthy();
 
     return [
       stock.productName,
@@ -54,6 +88,7 @@ const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption
       stock.wonPrice ? getKCWFormat(stock.wonPrice) : EMPTY,
       leftDateDisplay,
       stock.leadTime == null ? EMPTY : `${stock.leadTime}일`,
+      stockHealthy,
     ];
   };
 

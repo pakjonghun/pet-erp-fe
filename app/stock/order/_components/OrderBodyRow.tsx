@@ -8,7 +8,6 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { ProductOrder } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import dayjs from 'dayjs';
-// import { SelectOption } from '../../types';
 
 interface Props {
   client: ProductOrder;
@@ -61,7 +60,7 @@ const OrderBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow 
       order.isDone ? '지불 완료' : '미지불',
       order?.createdAt
         ? leadTime == null
-          ? '알수없음'
+          ? '제품 리드타임 미입력'
           : dayjs(order?.createdAt).subtract(9, 'hour').add(leadTime, 'day').format('YYYY-MM-DD')
         : EMPTY,
     ];

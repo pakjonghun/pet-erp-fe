@@ -13,7 +13,6 @@ import {
 import { StockColumn } from '@/http/graphql/codegen/graphql';
 import ActionButton from '@/components/ui/button/ActionButton';
 import { useStocksState } from '@/http/graphql/hooks/stock/useStocksState';
-import { EMPTY } from '@/constants';
 import EmptyRow from '@/components/table/EmptyRow';
 import LabelText from '@/components/ui/typograph/LabelText';
 
@@ -70,7 +69,7 @@ const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) =
             <TableCell>구분</TableCell>
             <TableCell>위치</TableCell>
             <TableCell>수량</TableCell>
-            <TableCell>제작완료 예정일</TableCell>
+            <TableCell>생산완료 예정일</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -81,7 +80,7 @@ const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) =
                 <TableCell>{row.state}</TableCell>
                 <TableCell>{row.location}</TableCell>
                 <TableCell>{row.count}</TableCell>
-                <TableCell>{row.orderCompleteDate ?? EMPTY}</TableCell>
+                <TableCell>{row.orderCompleteDate ?? '제품 리드타임 미입력'}</TableCell>
               </TableRow>
             );
           })}

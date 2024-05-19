@@ -30,6 +30,7 @@ import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { useCreateProductOrder } from '@/http/graphql/hooks/productOrder/useCreateProductOrder';
 import dayjs from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   open: boolean;
@@ -76,6 +77,15 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
           message: '발주등록이 완료되었습니다.',
           severity: 'success',
         });
+
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'stocks' });
+            cache.evict({ fieldName: 'stocksState' });
+            cache.evict({ fieldName: 'stocksOrder' });
+          },
+        });
+
         handleClose();
       },
       onError: (err) => {

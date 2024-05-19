@@ -19,6 +19,7 @@ export const useCreateProductOrder = () => {
               data: data?.createOrder as ProductOrder,
               fragment: ProductOrderFragmentFragmentDoc,
             });
+
             return {
               totalCount: existingOrders.totalCount + 1,
               data: [newOrder, ...existingOrders.data],
