@@ -17,7 +17,6 @@ export const useSetDeliveryCost = () => {
       cache.modify({
         fields: {
           deliveryCost: (existingData) => {
-            console.log('exist : ', existingData);
             return data?.setDeliveryCost ?? existingData;
           },
         },

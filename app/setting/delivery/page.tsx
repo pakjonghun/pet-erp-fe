@@ -13,7 +13,6 @@ import { SetDeliveryForm, setDeliveryCostSchema } from './_validations/setDelive
 import { useSetDeliveryCost } from '@/http/graphql/hooks/delivery/useSetDeliveryCost';
 import { snackMessage } from '@/store/snackMessage';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
-import { getFixedTwo } from '@/utils/sale';
 import { getKCWFormat } from '@/utils/common';
 
 const ProfilePage = () => {
