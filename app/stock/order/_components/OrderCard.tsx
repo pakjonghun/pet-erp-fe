@@ -4,10 +4,12 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { ProductOrder } from '@/http/graphql/codegen/graphql';
+import { ProductOrder, UserRole } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
 import dayjs from 'dayjs';
+import { useReactiveVar } from '@apollo/client';
+import { authState } from '@/store/isLogin';
 // import { SelectOption } from '../../types';
 
 interface Props {
@@ -18,6 +20,8 @@ interface Props {
 }
 
 const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) => {
+  const { role } = useReactiveVar(authState);
+  const cannotModify = role == UserRole.Staff;
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<any, SelectedOptionItem> = {
     edit: {
@@ -45,14 +49,16 @@ const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) 
           <OptionMenu key={option} menu={menu} option={option} />
         ))}
       </Menu>
-      <IconButton
-        sx={{ position: 'absolute', right: 3, top: 3 }}
-        onClick={(event) => {
-          setMenuAnchor(event.currentTarget);
-        }}
-      >
-        <MoreHorizIcon />
-      </IconButton>
+      {!cannotModify && (
+        <IconButton
+          sx={{ position: 'absolute', right: 3, top: 3 }}
+          onClick={(event) => {
+            setMenuAnchor(event.currentTarget);
+          }}
+        >
+          <MoreHorizIcon />
+        </IconButton>
+      )}
       <Box onClick={(event) => onClickRow(event, client)}>
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Box sx={{ flex: 1 }}>
@@ -93,44 +99,6 @@ const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) 
             />
           </Box>
         </Stack>
-
-        {/* <Stack direction="row" justifyContent="space-between" gap={2}>
-          <Box sx={{ flex: 1 }}>
-            <LabelText label="이름" text={client.name} />
-          </Box>
-          <Box sx={{ flex: 1 }}>
-            <LabelText label="상호" text={client.businessName ?? EMPTY} />
-          </Box>
-        </Stack>
-
-        <Stack direction="row" justifyContent="space-between" gap={2}>
-          <Box sx={{ flex: 1 }}>
-            <LabelText label="코드" text={client.code} />
-          </Box>
-          <Box sx={{ flex: 1 }}>
-            <LabelText label="거래여부" text={client.inActive ? '거래중' : '거래종료'} />
-          </Box>
-        </Stack>
-        <Stack direction="row" justifyContent="space-between" gap={2}>
-          <Box sx={{ flex: 1 }}>
-            <LabelText
-              label="수수료율"
-              text={client.feeRate == null ? EMPTY : client.feeRate * 100 + '%'}
-            />
-          </Box>
-          <Box sx={{ flex: 1 }}>
-            <LabelText label="분류" text={ClientTypeToHangle[client.clientType] ?? EMPTY} />
-          </Box>
-        </Stack>
-
-        <Stack direction="row" justifyContent="space-between" gap={2}>
-          <Box sx={{ flex: 1 }}>
-            <LabelText label="담당자" text={client.manager ?? EMPTY} />
-          </Box>
-          <Box sx={{ flex: 1 }}>
-            <LabelText label="연락처" text={client.managerTel ?? EMPTY} />
-          </Box>
-        </Stack> */}
       </Box>
     </Paper>
   );

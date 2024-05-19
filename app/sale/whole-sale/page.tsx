@@ -28,9 +28,13 @@ import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { useWholeSales } from '@/http/graphql/hooks/wholeSale/useWholeSales';
 import { useReactiveVar } from '@apollo/client';
 import { saleRange } from '@/store/saleStore';
-import { WholeSaleItem } from '@/http/graphql/codegen/graphql';
+import { UserRole, WholeSaleItem } from '@/http/graphql/codegen/graphql';
+import { authState } from '@/store/isLogin';
 
 const WholeSalePage = () => {
+  const { role } = useReactiveVar(authState);
+  console.log('role : ', role);
+  const cannotModify = role == UserRole.Staff;
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
   const { from, to } = useReactiveVar(saleRange);
@@ -76,13 +80,15 @@ const WholeSalePage = () => {
       )}
       <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="도매 판매" />
-        <Stack direction="row" alignItems="center" gap={2}>
-          <ActionButton
-            icon={<PlusOneOutlined />}
-            text="도매 판매 등록"
-            onClick={() => setOpenCreateProduct(true)}
-          />
-        </Stack>
+        {!cannotModify && (
+          <Stack direction="row" alignItems="center" gap={2}>
+            <ActionButton
+              icon={<PlusOneOutlined />}
+              text="도매 판매 등록"
+              onClick={() => setOpenCreateProduct(true)}
+            />
+          </Stack>
+        )}
       </Stack>
       <FormGroup sx={{ ml: 2 }}>
         <FormControl>

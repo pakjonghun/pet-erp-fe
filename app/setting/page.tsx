@@ -7,8 +7,13 @@ import { Box, Button, Stack } from '@mui/material';
 import { useState } from 'react';
 import EditSelfRoleModal from './account/_components/EditSelfRoleModal';
 import EditPasswordModal from './account/_components/EditPasswordModal';
+import { useReactiveVar } from '@apollo/client';
+import { authState } from '@/store/isLogin';
+import { UserRole } from '@/http/graphql/codegen/graphql';
 
 const ProfilePage = () => {
+  const { role } = useReactiveVar(authState);
+  const canModifyRole = role == UserRole.Admin;
   const { data: myInfo } = useGetMyInfo();
 
   const [openEditRoleModal, setOpenEditRoleModal] = useState(false);
@@ -44,14 +49,16 @@ const ProfilePage = () => {
 
       <Stack direction="row" alignItems="flex-end">
         <LabelText label="권한 : " text={myInfo?.myInfo.role ?? ''} />
-        <Button
-          onClick={() => setOpenEditRoleModal(true)}
-          startIcon={<Edit />}
-          sx={{ ml: 2 }}
-          variant="contained"
-        >
-          권한수정
-        </Button>
+        {canModifyRole && (
+          <Button
+            onClick={() => setOpenEditRoleModal(true)}
+            startIcon={<Edit />}
+            sx={{ ml: 2 }}
+            variant="contained"
+          >
+            권한수정
+          </Button>
+        )}
       </Stack>
     </Box>
   );

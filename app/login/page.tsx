@@ -40,7 +40,7 @@ const LoginPage = () => {
     }
   }, [isLogin, loading, router]);
 
-  const submit = (values: LoginForm) => {
+  const onSubmit = (values: LoginForm) => {
     login(values, {
       onSuccess: async () => {
         snackMessage({ message: '환영합니다.', severity: 'success' });
@@ -57,7 +57,7 @@ const LoginPage = () => {
 
   return (
     <Box>
-      <form onSubmit={handleSubmit(submit)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Stack sx={{ mx: 'auto', pt: '20%', px: 3 }} maxWidth="sm" direction="column" gap={2}>
           <Controller
             name="id"

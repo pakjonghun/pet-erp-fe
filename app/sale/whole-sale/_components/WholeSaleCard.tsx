@@ -4,13 +4,15 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { WholeSaleItem } from '@/http/graphql/codegen/graphql';
+import { UserRole, WholeSaleItem } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
 import { SelectOption } from '@/app/back-data/types';
 import { getKCWFormat, getNumberWithComma } from '@/utils/common';
 import { getProfitRate } from '@/utils/sale';
 import dayjs from 'dayjs';
+import { useReactiveVar } from '@apollo/client';
+import { authState } from '@/store/isLogin';
 
 interface Props {
   sale: WholeSaleItem;
@@ -20,6 +22,8 @@ interface Props {
 }
 
 const WholeSaleCard: FC<Props> = ({ sale, scrollRef, onClickOption, onClickRow }) => {
+  const { role } = useReactiveVar(authState);
+  const cannotModify = role == UserRole.Staff;
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<SelectOption, SelectedOptionItem> = {
     edit: {
@@ -50,14 +54,16 @@ const WholeSaleCard: FC<Props> = ({ sale, scrollRef, onClickOption, onClickRow }
           <OptionMenu key={option} menu={menu} option={option} />
         ))}
       </Menu>
-      <IconButton
-        sx={{ position: 'absolute', right: 3, top: 3 }}
-        onClick={(event) => {
-          setMenuAnchor(event.currentTarget);
-        }}
-      >
-        <MoreHorizIcon />
-      </IconButton>
+      {!cannotModify && (
+        <IconButton
+          sx={{ position: 'absolute', right: 3, top: 3 }}
+          onClick={(event) => {
+            setMenuAnchor(event.currentTarget);
+          }}
+        >
+          <MoreHorizIcon />
+        </IconButton>
+      )}
 
       <Stack gap={2}>
         <Stack direction="row" justifyContent="space-between" gap={2}>

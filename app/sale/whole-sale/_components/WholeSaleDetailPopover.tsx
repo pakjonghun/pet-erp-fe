@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { WholeSaleItem } from '@/http/graphql/codegen/graphql';
+import { UserRole, WholeSaleItem } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
 import ModalTitle from '@/components/ui/typograph/ModalTitle';
 import { getKCWFormat, getNumberWithComma } from '@/utils/common';
@@ -7,6 +7,8 @@ import { Stack, Button, Chip } from '@mui/material';
 import BasePopover from '@/components/ui/modal/BasePopover';
 import dayjs from 'dayjs';
 import { getProfitRate } from '@/utils/sale';
+import { useReactiveVar } from '@apollo/client';
+import { authState } from '@/store/isLogin';
 
 interface Props {
   open: boolean;
@@ -27,6 +29,8 @@ const WholeSaleDetailPopover: FC<Props> = ({
   onClickDelete,
   onClickEdit,
 }) => {
+  const { role } = useReactiveVar(authState);
+  const cannotModify = role == UserRole.Staff;
   const profit = sale.totalPayCost - sale.totalWonCost;
   const profitRate = getProfitRate(profit, sale.totalPayCost);
 
@@ -49,14 +53,16 @@ const WholeSaleDetailPopover: FC<Props> = ({
         <LabelText label="수익" text={getKCWFormat(profit)} />
         <LabelText label="수익율" text={`${profitRate}%`} />
       </Stack>
-      <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
-        <Button color="error" variant="outlined" onClick={onClickDelete}>
-          삭제
-        </Button>
-        <Button variant="contained" onClick={onClickEdit}>
-          편집
-        </Button>
-      </Stack>
+      {!cannotModify && (
+        <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
+          <Button color="error" variant="outlined" onClick={onClickDelete}>
+            삭제
+          </Button>
+          <Button variant="contained" onClick={onClickEdit}>
+            편집
+          </Button>
+        </Stack>
+      )}
     </BasePopover>
   );
 };
