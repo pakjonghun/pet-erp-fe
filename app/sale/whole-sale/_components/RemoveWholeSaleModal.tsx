@@ -32,6 +32,7 @@ const RemoveWholeSaleModal: FC<Props> = ({ open, selectedWholeSale, onClose }) =
             cache.evict({ fieldName: 'dashboardClients' });
             cache.evict({ fieldName: 'productCountStocks' });
             cache.evict({ fieldName: 'productSales' });
+            cache.evict({ fieldName: 'productSale' });
             cache.evict({ fieldName: 'topClients' });
           },
         });

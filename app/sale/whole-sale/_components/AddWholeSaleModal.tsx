@@ -135,6 +135,7 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
             cache.evict({ fieldName: 'stocks' });
             cache.evict({ fieldName: 'productCountStocks' });
             cache.evict({ fieldName: 'productSales' });
+            cache.evict({ fieldName: 'productSale' });
             cache.evict({ fieldName: 'topClients' });
           },
         });

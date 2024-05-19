@@ -83,6 +83,7 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
             cache.evict({ fieldName: 'stocks' });
             cache.evict({ fieldName: 'stocksState' });
             cache.evict({ fieldName: 'stocksOrder' });
+            cache.evict({ fieldName: 'productSales' });
           },
         });
 

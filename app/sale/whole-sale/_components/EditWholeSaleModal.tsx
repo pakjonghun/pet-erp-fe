@@ -145,6 +145,7 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
             cache.evict({ fieldName: 'stocks' });
             cache.evict({ fieldName: 'productCountStocks' });
             cache.evict({ fieldName: 'productSales' });
+            cache.evict({ fieldName: 'productSale' });
             cache.evict({ fieldName: 'topClients' });
           },
         });
