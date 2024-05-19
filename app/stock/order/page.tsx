@@ -25,10 +25,14 @@ import ClientCards from './_components/OrderCards';
 import ActionButton from '@/components/ui/button/ActionButton';
 import { OrderHeaderList } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { ProductOrder } from '@/http/graphql/codegen/graphql';
+import { ProductOrder, UserRole } from '@/http/graphql/codegen/graphql';
 import { useProductOrders } from '@/http/graphql/hooks/productOrder/useProductOrders';
+import { useReactiveVar } from '@apollo/client';
+import { authState } from '@/store/isLogin';
 
 const OrderPage = () => {
+  const { role } = useReactiveVar(authState);
+  const cannotModify = role === UserRole.Staff;
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
 
@@ -70,13 +74,15 @@ const OrderPage = () => {
       )}
       <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="발주" />
-        <Stack direction="row" alignItems="center" gap={2}>
-          <ActionButton
-            icon={<PlusOneOutlined />}
-            text="발주 등록"
-            onClick={() => setOpenCreateClient(true)}
-          />
-        </Stack>
+        {!cannotModify && (
+          <Stack direction="row" alignItems="center" gap={2}>
+            <ActionButton
+              icon={<PlusOneOutlined />}
+              text="발주 등록"
+              onClick={() => setOpenCreateClient(true)}
+            />
+          </Stack>
+        )}
       </Stack>
       <FormGroup sx={{ ml: 2 }}>
         <FormControl>

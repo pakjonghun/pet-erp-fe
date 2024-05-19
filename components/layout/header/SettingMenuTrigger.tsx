@@ -15,8 +15,11 @@ import { useRouter } from 'next/navigation';
 import { client } from '@/http/graphql/client';
 import { snackMessage } from '@/store/snackMessage';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
+import { useReactiveVar } from '@apollo/client';
+import { authState } from '@/store/isLogin';
 
 const SettingMenuTrigger = () => {
+  const { role } = useReactiveVar(authState);
   const router = useRouter();
   const [settingMenuAnchor, setSettingMenuAnchor] = useState<null | HTMLElement>(null);
   const handleClickSetting = (event: MouseEvent<HTMLElement>) => {
@@ -45,11 +48,13 @@ const SettingMenuTrigger = () => {
 
   const SettingMenus = {
     logout: {
+      role: [] as string[],
       callback: handleClickLogout,
       label: '로그아웃',
       icon: <LogoutOutlinedIcon />,
     },
     profile: {
+      role: [] as string[],
       callback: () => {
         router.push('/setting');
         setSettingMenuAnchor(null);
@@ -62,7 +67,7 @@ const SettingMenuTrigger = () => {
         router.push('/setting/delivery');
         setSettingMenuAnchor(null);
       },
-      role: [UserRole.Admin, UserRole.Manager],
+      role: [UserRole.Admin, UserRole.Manager] as string[],
       label: '택배비용 관리',
       icon: <LocalShippingOutlinedIcon />,
     },
@@ -71,7 +76,7 @@ const SettingMenuTrigger = () => {
         router.push('/setting/account');
         setSettingMenuAnchor(null);
       },
-      role: [UserRole.Admin],
+      role: [UserRole.Admin] as string[],
       label: '계정 관리',
       icon: <PeopleOutlineOutlinedIcon />,
     },
@@ -109,6 +114,8 @@ const SettingMenuTrigger = () => {
       >
         {settingMenuKeys.map((item) => {
           const menu = SettingMenus[item];
+          const canDisplay = menu.role.length == 0 || menu.role.includes(role);
+          if (!canDisplay) return <></>;
           return (
             <BaseListItem disablePadding key={menu.label}>
               <ListMenu menu={menu} />

@@ -11,7 +11,12 @@ import {
   Stack,
   Menu,
 } from '@mui/material';
-import { ProductOrder, StockColumn, TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
+import {
+  ProductOrder,
+  StockColumn,
+  TotalProductStockOutput,
+  UserRole,
+} from '@/http/graphql/codegen/graphql';
 import ActionButton from '@/components/ui/button/ActionButton';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import { SelectedOptionItem } from '@/constants';
@@ -22,6 +27,8 @@ import { useStocksOrder } from '@/http/graphql/hooks/stock/useStocksOrder';
 import dayjs from 'dayjs';
 import { getNumberWithComma } from '@/utils/common';
 import EmptyRow from '@/components/table/EmptyRow';
+import { useReactiveVar } from '@apollo/client';
+import { authState } from '@/store/isLogin';
 
 interface Props {
   productStock: StockColumn;
@@ -42,6 +49,8 @@ const mockSelectedOrder: ProductOrder = {
 };
 
 const SubTableOrder: FC<Props> = ({ productStock }) => {
+  const { role } = useReactiveVar(authState);
+  const cannotModify = role === UserRole.Staff;
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -110,16 +119,18 @@ const SubTableOrder: FC<Props> = ({ productStock }) => {
           variant="subtitle1"
           sx={{ p: 2, pt: 0, display: 'inline-block' }}
         >{`${productStock.productName}`}</Typography>
-        <Stack direction="row" alignItems="center" gap={2} sx={{ ml: 'auto' }}>
-          <ActionButton
-            size="small"
-            icon={<InventoryIcon />}
-            text="발주등록"
-            onClick={() => {
-              setOpenAddModal(true);
-            }}
-          />
-        </Stack>
+        {!cannotModify && (
+          <Stack direction="row" alignItems="center" gap={2} sx={{ ml: 'auto' }}>
+            <ActionButton
+              size="small"
+              icon={<InventoryIcon />}
+              text="발주 등록"
+              onClick={() => {
+                setOpenAddModal(true);
+              }}
+            />
+          </Stack>
+        )}
       </Stack>
       <Table sx={{ mt: 2 }} size="small">
         <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>

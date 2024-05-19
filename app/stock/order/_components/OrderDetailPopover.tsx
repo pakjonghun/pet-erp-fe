@@ -1,11 +1,13 @@
 import { FC } from 'react';
-import { ProductOrder } from '@/http/graphql/codegen/graphql';
+import { ProductOrder, UserRole } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
 import ModalTitle from '@/components/ui/typograph/ModalTitle';
 import { Stack, Button } from '@mui/material';
 import BasePopover from '@/components/ui/modal/BasePopover';
 import { EMPTY } from '@/constants';
 import dayjs from 'dayjs';
+import { authState } from '@/store/isLogin';
+import { useReactiveVar } from '@apollo/client';
 
 interface Props {
   open: boolean;
@@ -26,6 +28,9 @@ const OrderDetailPopover: FC<Props> = ({
   onClickDelete,
   onClickEdit,
 }) => {
+  const { role } = useReactiveVar(authState);
+  const cannotModify = role === UserRole.Staff;
+
   return (
     <BasePopover onClose={onClose} position={position} open={open} anchorEl={anchorEl}>
       <ModalTitle text="발주 세부내용" />
@@ -52,14 +57,16 @@ const OrderDetailPopover: FC<Props> = ({
         <LabelText label="잔금" text={selectedOrder.notPayCost} />
         <LabelText label="전체금액" text={selectedOrder.totalPayCost} />
       </Stack>
-      <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
-        <Button color="error" variant="outlined" onClick={onClickDelete}>
-          삭제
-        </Button>
-        <Button variant="contained" onClick={onClickEdit}>
-          편집
-        </Button>
-      </Stack>
+      {!cannotModify && (
+        <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
+          <Button color="error" variant="outlined" onClick={onClickDelete}>
+            삭제
+          </Button>
+          <Button variant="contained" onClick={onClickEdit}>
+            편집
+          </Button>
+        </Stack>
+      )}
     </BasePopover>
   );
 };

@@ -4,10 +4,11 @@ import { FC } from 'react';
 import { ProductSaleData } from '@/http/graphql/codegen/graphql';
 import Cell from '@/components/table/Cell';
 import EmptyRow from '@/components/table/EmptyRow';
-import { TableBody, TableRow, Stack, Chip, SxProps } from '@mui/material';
+import { TableBody, TableRow, Stack, Chip } from '@mui/material';
 import SaleTableCell from '@/components/table/SaleTableCell';
 import { getProfitRate } from '@/utils/sale';
 import { CommonListProps } from '@/types';
+import LoadingRow from '@/components/table/LoadingRow';
 
 interface Props extends CommonListProps<ProductSaleData> {
   setSelectedProductSale: (product: ProductSaleData | null) => void;
@@ -26,11 +27,13 @@ const TableBodySection: FC<Props> = ({
       {data.map((item, index) => {
         const row = item as unknown as ProductSaleData;
         const isLast = index === data.length - 1;
+
         return (
+          //@ts-ignore
           <TableRow
             onClick={() => setSelectedProductSale(row)}
             hover
-            // ref={isLast ? scrollRef : null}
+            ref={isLast ? scrollRef : null}
             key={index}
           >
             <Cell sx={{ minWidth: 200 }}>{row.name}</Cell>
@@ -74,6 +77,7 @@ const TableBodySection: FC<Props> = ({
           </TableRow>
         );
       })}
+      <LoadingRow colSpan={6} isLoading={isLoading} />
     </TableBody>
   );
 };

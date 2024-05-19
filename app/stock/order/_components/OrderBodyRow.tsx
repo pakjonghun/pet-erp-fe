@@ -5,9 +5,11 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { ProductOrder } from '@/http/graphql/codegen/graphql';
+import { ProductOrder, UserRole } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import dayjs from 'dayjs';
+import { useReactiveVar } from '@apollo/client';
+import { authState } from '@/store/isLogin';
 
 interface Props {
   client: ProductOrder;
@@ -17,6 +19,9 @@ interface Props {
 }
 
 const OrderBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) => {
+  const { role } = useReactiveVar(authState);
+  const cannotModify = role === UserRole.Staff;
+
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<any, SelectedOptionItem> = {
     edit: {
@@ -86,13 +91,15 @@ const OrderBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow 
       ))}
 
       <Cell sx={{ minWidth: 50 }}>
-        <IconButton
-          onClick={(event) => {
-            setMenuAnchor(event.currentTarget);
-          }}
-        >
-          <MoreHorizIcon />
-        </IconButton>
+        {!cannotModify && (
+          <IconButton
+            onClick={(event) => {
+              setMenuAnchor(event.currentTarget);
+            }}
+          >
+            <MoreHorizIcon />
+          </IconButton>
+        )}
       </Cell>
     </TableRow>
   );

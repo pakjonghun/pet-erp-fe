@@ -6,7 +6,7 @@ import { Box, Tabs, Tab } from '@mui/material';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { getOriginPath } from '@/utils/common';
-import { DashboardTabs } from './constants';
+import { StockTabs } from './constants';
 
 interface Props {
   children: ReactNode;
@@ -14,15 +14,13 @@ interface Props {
 
 const StockLayout: FC<Props> = ({ children }) => {
   const pathname = usePathname();
-  const tabs = Object.keys(DashboardTabs) as (keyof typeof DashboardTabs)[];
+  const tabs = Object.keys(StockTabs) as (keyof typeof StockTabs)[];
   const currentTabIndex = tabs.findIndex((item) => {
     return item === getOriginPath(pathname);
   });
 
   return (
-    <Box
-      sx={{ height: '100%', bgcolor: (theme) => theme.palette.primary.light }}
-    >
+    <Box sx={{ height: '100%', bgcolor: (theme) => theme.palette.primary.light }}>
       <SubHeader title="재고">
         <Tabs
           sx={{ mt: 2 }}
@@ -30,7 +28,8 @@ const StockLayout: FC<Props> = ({ children }) => {
           indicatorColor="primary"
         >
           {tabs.map((tab) => {
-            const tabItem = DashboardTabs[tab];
+            const tabItem = StockTabs[tab];
+
             return (
               <Tab
                 sx={{

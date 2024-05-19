@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { getOriginPath } from '@/utils/common';
 import SubHeader from '@/components/layout/header/SubHeader';
+import { useReactiveVar } from '@apollo/client';
+import { authState } from '@/store/isLogin';
 
 interface Props {
   children: ReactNode;
@@ -16,6 +18,7 @@ const SettingLayout: FC<Props> = ({ children }) => {
   const pathname = usePathname();
   const tabs = Object.keys(SettingTabs) as (keyof typeof SettingTabs)[];
   const currentTabIndex = tabs.findIndex((item) => item === getOriginPath(pathname));
+  const { role } = useReactiveVar(authState);
 
   return (
     <>
@@ -23,6 +26,8 @@ const SettingLayout: FC<Props> = ({ children }) => {
         <Tabs value={currentTabIndex == -1 ? 0 : currentTabIndex} indicatorColor="primary">
           {tabs.map((tab) => {
             const tabItem = SettingTabs[tab];
+            const canDisplay = tabItem.role.length == 0 || tabItem.role.includes(role);
+            if (!canDisplay) return <></>;
             return (
               <Tab
                 sx={{

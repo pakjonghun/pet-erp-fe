@@ -1,4 +1,4 @@
-export const DashboardTabs = {
+export const StockTabs = {
   'stock/product': {
     label: '재고 관리',
   },
