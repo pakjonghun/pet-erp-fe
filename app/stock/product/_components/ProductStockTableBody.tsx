@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
-import { StockColumn, TotalProductStockOutput } from '@/http/graphql/codegen/graphql';
-import { TableBody, TableRow, Tabs } from '@mui/material';
+import { StockColumn } from '@/http/graphql/codegen/graphql';
+import { TableBody } from '@mui/material';
 import EmptyRow from '@/components/table/EmptyRow';
 import ProductStockBodyRow from './ProductStockBodyRow';
 // import { SelectOption } from '../../types';

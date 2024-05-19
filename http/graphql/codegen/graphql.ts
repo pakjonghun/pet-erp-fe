@@ -623,7 +623,6 @@ export type Query = {
   productSale?: Maybe<Array<ProductSaleChartOutput>>;
   productSales?: Maybe<ProductSaleOutput>;
   products: ProductsOutput;
-  stock: Array<TotalProductStockOutput>;
   stocks: StocksOutput;
   stocksOrder: Array<ProductOrder>;
   stocksState: Array<StockStateOutput>;
@@ -910,16 +909,6 @@ export type SubsidiaryCategory = {
   __typename?: 'SubsidiaryCategory';
   _id?: Maybe<Scalars['ID']['output']>;
   name?: Maybe<Scalars['String']['output']>;
-};
-
-export type TotalProductStockOutput = {
-  __typename?: 'TotalProductStockOutput';
-  _id: Scalars['String']['output'];
-  orderCount?: Maybe<Scalars['Int']['output']>;
-  product: Product;
-  recentSaleCount?: Maybe<Scalars['Int']['output']>;
-  storage?: Maybe<Storage>;
-  storageCount?: Maybe<Scalars['Int']['output']>;
 };
 
 export type TotalSaleInfo = {

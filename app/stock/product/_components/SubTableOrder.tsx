@@ -11,12 +11,7 @@ import {
   Stack,
   Menu,
 } from '@mui/material';
-import {
-  ProductOrder,
-  StockColumn,
-  TotalProductStockOutput,
-  UserRole,
-} from '@/http/graphql/codegen/graphql';
+import { ProductOrder, StockColumn, UserRole } from '@/http/graphql/codegen/graphql';
 import ActionButton from '@/components/ui/button/ActionButton';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import { SelectedOptionItem } from '@/constants';
