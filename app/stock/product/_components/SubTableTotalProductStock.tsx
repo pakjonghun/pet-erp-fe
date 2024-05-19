@@ -15,6 +15,7 @@ import ActionButton from '@/components/ui/button/ActionButton';
 import { useStocksState } from '@/http/graphql/hooks/stock/useStocksState';
 import EmptyRow from '@/components/table/EmptyRow';
 import LabelText from '@/components/ui/typograph/LabelText';
+import dayjs from 'dayjs';
 
 interface Props {
   productStock: StockColumn;
@@ -28,6 +29,25 @@ const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) =
 
   const isLoading = networkStatus == 1 || networkStatus == 3 || networkStatus == 2;
   const isEmpty = !isLoading && rows.length == 0;
+
+  const today = dayjs();
+  const recentCreateCompleteDiff = rows
+    .filter((row) => row.state === '제조중')
+    .reduce((acc, cur) => {
+      if (!cur.orderCompleteDate) return acc;
+
+      const diff = dayjs(cur.orderCompleteDate).diff(today, 'day');
+
+      return diff < acc //
+        ? diff
+        : acc;
+    }, Infinity);
+
+  const recentCompleteDate =
+    recentCreateCompleteDiff == Infinity
+      ? ''
+      : today.add(recentCreateCompleteDiff + 1, 'day').format('YYYY-MM-DD');
+
   return (
     <TableContainer sx={{ mt: 1 }}>
       <Stack
@@ -38,6 +58,7 @@ const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) =
         justifyContent="space-between"
       >
         <LabelText label="제품이름" text={productStock.productName} />
+        {!!recentCompleteDate && <LabelText label="최근생산 완료예정" text={recentCompleteDate} />}
 
         <Stack direction="row" alignItems="center" gap={2} sx={{ ml: 'auto' }}>
           <ActionButton
@@ -80,7 +101,9 @@ const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) =
                 <TableCell>{row.state}</TableCell>
                 <TableCell>{row.location}</TableCell>
                 <TableCell>{row.count}</TableCell>
-                <TableCell>{row.orderCompleteDate ?? '제품 리드타임 미입력'}</TableCell>
+                <TableCell>
+                  {row.state == '보관중' ? '' : row.orderCompleteDate ?? '제품 리드타임 미입력'}
+                </TableCell>
               </TableRow>
             );
           })}
