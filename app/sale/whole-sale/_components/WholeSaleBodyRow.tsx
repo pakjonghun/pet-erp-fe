@@ -52,6 +52,7 @@ const WholeSaleBodyRow: FC<Props> = ({ wholeSale, scrollRef, onClickOption, onCl
       getKCWFormat(sale.totalPayCost),
       getKCWFormat(profit),
       `${profitRate}%`,
+      sale.isDone ? '정산완료' : '정산중',
     ];
   };
 

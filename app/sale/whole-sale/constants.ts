@@ -7,5 +7,6 @@ export const WholeSaleHeaderList = [
   '판매가 합계',
   '수익',
   '수익율',
+  '정산여부',
   '',
 ];

@@ -4,9 +4,11 @@ import {
   Autocomplete,
   Box,
   Button,
+  FormControlLabel,
   FormGroup,
   FormLabel,
   Stack,
+  Switch,
   TextField,
   Typography,
 } from '@mui/material';
@@ -104,6 +106,7 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
     resolver: zodResolver(createWholeSaleSchema),
     defaultValues: {
       ...wholeSale,
+      isDone: !!wholeSale.isDone,
       saleAt: new Date(wholeSale.saleAt),
     },
   });
@@ -111,6 +114,7 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
   useEffect(() => {
     reset({
       ...wholeSale,
+      isDone: !!wholeSale.isDone,
       saleAt: new Date(wholeSale.saleAt),
     });
   }, [wholeSale, reset]);
@@ -196,7 +200,21 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
       <Typography sx={{ mb: 3 }}>도매 판매를 편집합니다.</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={{ ...modalSizeProps, width: 800, mb: 2 }}>
-          <FormLabel>도매 거래처 정보 입력</FormLabel>
+          <Stack direction="row" gap={3} alignItems="center">
+            <FormLabel>도매 거래처 정보 입력</FormLabel>
+            <Controller
+              control={control}
+              name="isDone"
+              render={({ field }) => {
+                return (
+                  <FormControlLabel
+                    label={field.value ? '정산완료' : '정산중'}
+                    control={<Switch checked={field.value} {...field} />}
+                  />
+                );
+              }}
+            />
+          </Stack>
           <Stack direction="row" alignItems="center" gap={3}>
             <Controller
               name="mallId"

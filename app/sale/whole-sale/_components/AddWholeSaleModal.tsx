@@ -4,9 +4,11 @@ import {
   Autocomplete,
   Box,
   Button,
+  FormControlLabel,
   FormGroup,
   FormLabel,
   Stack,
+  Switch,
   TextField,
   Typography,
 } from '@mui/material';
@@ -106,6 +108,7 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
       saleAt: dayjs().toDate(),
       telephoneNumber1: '',
       productList: [],
+      isDone: false,
     },
   });
 
@@ -184,10 +187,26 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
         도매 판매 등록
       </Typography>
+
       <Typography sx={{ mb: 3 }}>새로운 도매 판매를 등록합니다.</Typography>
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={{ ...modalSizeProps, width: 800, mb: 2 }}>
-          <FormLabel>도매 거래처 정보 입력</FormLabel>
+          <Stack direction="row" gap={3} alignItems="center">
+            <FormLabel>도매 거래처 정보 입력</FormLabel>
+            <Controller
+              control={control}
+              name="isDone"
+              render={({ field }) => {
+                return (
+                  <FormControlLabel
+                    label={field.value ? '정산완료' : '정산중'}
+                    control={<Switch checked={field.value} {...field} />}
+                  />
+                );
+              }}
+            />
+          </Stack>
           <Stack direction="row" alignItems="center" gap={3}>
             <Controller
               name="mallId"

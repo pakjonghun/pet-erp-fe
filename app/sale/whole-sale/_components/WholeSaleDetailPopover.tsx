@@ -34,6 +34,7 @@ const WholeSaleDetailPopover: FC<Props> = ({
     <BasePopover onClose={onClose} position={position} open={open} anchorEl={anchorEl}>
       <ModalTitle text="제품 세부내용" />
       <Stack gap={2}>
+        <LabelText label="정산여부" text={sale.isDone ? '정산완료' : '정산중'} />
         <LabelText label="거래처" text={sale.mallId} />
         <LabelText label="판매날짜" text={dayjs(sale.saleAt).format('YYYY-MM-DD')} />
         <LabelText

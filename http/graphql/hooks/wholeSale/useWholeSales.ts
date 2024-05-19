@@ -14,6 +14,7 @@ const wholeSales = graphql(`
         totalPayCost
         totalWonCost
         totalCount
+        isDone
         productList {
           storageName
           productName

@@ -21,6 +21,7 @@ export const createWholeSaleSchema = z.object({
   mallId: z.string().min(1, { message: '거래처 이름을 입력하세요.' }),
   saleAt: z.date(),
   telephoneNumber1: z.string().optional().nullable(),
+  isDone: z.boolean(),
   productList: z
     .array(createWholeSaleProductSchema)
     .nonempty({ message: '1개 이상의 제품을 입력하세요.' }),
