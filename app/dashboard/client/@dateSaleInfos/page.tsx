@@ -7,11 +7,11 @@ import { useReactiveVar } from '@apollo/client';
 import { Skeleton } from '@mui/material';
 
 const DateSaleInfoPage = () => {
-  const { from, to } = useReactiveVar(saleRange);
+  const { from } = useReactiveVar(saleRange);
 
   const { data: todayDatas, networkStatus } = useDashboardClients({
     from: from.toISOString(),
-    to: to.toISOString(),
+    to: from.endOf('day').toISOString(),
   });
 
   const isLoading = networkStatus === 2 || networkStatus === 3 || networkStatus === 1;

@@ -1,19 +1,20 @@
 'use client';
 
 import DashboardTable from '@/app/dashboard/_components/Table';
-import { useDashboardProducts } from '@/http/graphql/hooks/product/useDashboardProducts';
+import { useDashboardClients } from '@/http/graphql/hooks/client/useDashboardClients';
 import { saleRange } from '@/store/saleStore';
 import { useReactiveVar } from '@apollo/client';
 import { Skeleton } from '@mui/material';
 
 const DateSaleInfoPage = () => {
-  const { from } = useReactiveVar(saleRange);
+  const { from, to } = useReactiveVar(saleRange);
 
-  const { data: monthDatas, networkStatus } = useDashboardProducts({
-    from: from.startOf('month').toISOString(),
-    to: from.endOf('month').toISOString(),
+  const { data: monthDatas, networkStatus } = useDashboardClients({
+    from: from.toISOString(),
+    to: to.toISOString(),
   });
 
+  const range = `${from.format('YYYY-MM-DD')}~${to.format('YYYY-MM-DD')}`;
   const isLoading = networkStatus === 2 || networkStatus === 3 || networkStatus === 1;
 
   if (isLoading) {
@@ -22,8 +23,8 @@ const DateSaleInfoPage = () => {
   return (
     <>
       <DashboardTable
-        title={`${from.format('MM월')} BEST 제품`}
-        saleInfos={monthDatas?.dashboardProducts ?? []}
+        title={`${range} BEST 거래처`}
+        saleInfos={monthDatas?.dashboardClients ?? []}
       />
     </>
   );

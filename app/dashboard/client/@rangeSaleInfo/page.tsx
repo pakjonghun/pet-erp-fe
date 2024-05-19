@@ -8,14 +8,14 @@ import { useReactiveVar } from '@apollo/client';
 import { Grid, Skeleton } from '@mui/material';
 
 const DateSaleInfoPage = () => {
-  const { from } = useReactiveVar(saleRange);
+  const { from, to } = useReactiveVar(saleRange);
 
   const { data: monthData, networkStatus } = useDashboardClient({
-    from: from.startOf('month').toISOString(),
-    to: from.endOf('month').toISOString(),
+    from: from.toISOString(),
+    to: to.toISOString(),
   });
 
-  const month = from.format('MM월');
+  const range = `${from.format('YYYY-MM-DD')}~${to.format('YYYY-MM-DD')}`;
   const isLoading = networkStatus === 2 || networkStatus === 3 || networkStatus === 1;
 
   if (isLoading) {
@@ -26,7 +26,7 @@ const DateSaleInfoPage = () => {
       <Grid rowSpacing={3} container>
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
           <DashboardCardContent
-            label={`${month} 매출`}
+            label={`${range} 매출`}
             current={monthData?.dashboardClient?.current?.accPayCost ?? 0}
             previous={monthData?.dashboardClient?.previous?.accPayCost ?? 0}
           />
@@ -34,7 +34,7 @@ const DateSaleInfoPage = () => {
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
           <DashboardCardContent
             numberType="comma"
-            label={`${month} 판매량`}
+            label={`${range} 판매량`}
             current={monthData?.dashboardClient?.current?.accCount ?? 0}
             previous={monthData?.dashboardClient?.previous?.accCount ?? 0}
           />
@@ -42,7 +42,7 @@ const DateSaleInfoPage = () => {
 
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
           <DashboardCardContent
-            label={`${month} 수익`}
+            label={`${range} 수익`}
             current={monthData?.dashboardClient?.current?.accProfit ?? 0}
             previous={monthData?.dashboardClient?.previous?.accProfit ?? 0}
           />
@@ -50,7 +50,7 @@ const DateSaleInfoPage = () => {
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
           <DashboardCardContent
             numberType="percent"
-            label={`${month} 수익율`}
+            label={`${range} 수익율`}
             current={getProfitRate(
               monthData?.dashboardClient?.current?.accProfit ?? 0,
               monthData?.dashboardClient?.current?.accPayCost ?? 0
