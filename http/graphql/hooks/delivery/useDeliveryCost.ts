@@ -12,5 +12,5 @@ const deliveryCost = graphql(`
 `);
 
 export const useDeliveryCost = () => {
-  return useQuery(deliveryCost);
+  return useQuery(deliveryCost, { notifyOnNetworkStatusChange: true });
 };

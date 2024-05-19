@@ -12,5 +12,16 @@ const setDeliveryCost = graphql(`
 `);
 
 export const useSetDeliveryCost = () => {
-  return useMutation(setDeliveryCost);
+  return useMutation(setDeliveryCost, {
+    update(cache, { data }) {
+      cache.modify({
+        fields: {
+          deliveryCost: (existingData) => {
+            console.log('exist : ', existingData);
+            return data?.setDeliveryCost ?? existingData;
+          },
+        },
+      });
+    },
+  });
 };
