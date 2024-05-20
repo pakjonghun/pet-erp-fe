@@ -92,8 +92,8 @@ const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) 
             <LabelText
               label="발주 날짜"
               text={
-                client?.createdAt
-                  ? dayjs(client.createdAt).subtract(9, 'hour').format('YYYY.MM.DD')
+                client?.orderDate
+                  ? dayjs(client.orderDate).subtract(9, 'hour').format('YYYY.MM.DD')
                   : EMPTY
               }
             />

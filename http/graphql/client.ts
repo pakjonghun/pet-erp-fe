@@ -45,7 +45,7 @@ export const client = new ApolloClient({
         notPayCost
         totalPayCost
         isDone
-        createdAt
+        orderDate
       }
 
       fragment FactoryFragment on Factory {
@@ -203,7 +203,7 @@ export const client = new ApolloClient({
             merge,
           },
           productSales: {
-            keyArgs: ['productSalesInput', ['keyword', 'from', 'to']],
+            keyArgs: ['productSalesInput', ['keyword', 'from', 'to', 'sort', 'order']],
             merge,
           },
         },

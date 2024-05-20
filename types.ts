@@ -6,3 +6,11 @@ export type CommonListProps<D> = {
   isLoading: boolean;
   scrollRef: null | ((elem: HTMLElement) => void);
 };
+
+export type OrderValue = 1 | -1;
+
+export type SortController = {
+  order: OrderValue;
+  sort: string;
+  handleSort: (sort: string, order: OrderValue) => void;
+};

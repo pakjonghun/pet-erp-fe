@@ -1,7 +1,7 @@
 'use client';
 
 import TableTitle from '@/components/ui/typograph/TableTitle';
-import { FormControl, FormGroup, TextField, InputAdornment } from '@mui/material';
+import { FormControl, FormGroup, TextField, InputAdornment, Button, Stack } from '@mui/material';
 import { ProductSaleData } from '@/http/graphql/codegen/graphql';
 import { Search } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
@@ -15,20 +15,30 @@ import { useProductSales } from '@/http/graphql/hooks/product/useProductSaleList
 import { LIMIT } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { saleRange, saleTotal } from '@/store/saleStore';
+import { OrderValue } from '@/types';
+import HeaderSortButton from '@/components/ui/button/HeaderSortButton';
 
 const ProductSales = () => {
+  const [sort, setSort] = useState('createdAt');
+  const [order, setOrder] = useState<OrderValue>(1);
   const [keyword, setKeyword] = useState('');
   const delayedKeyword = useTextDebounce(keyword);
   const [selectedProductSale, setSelectedProductSale] = useState<null | ProductSaleData>(null);
   const { from, to } = useReactiveVar(saleRange);
   const { data, networkStatus, fetchMore } = useProductSales({
-    keywordTarget: 'name',
     keyword: delayedKeyword,
     limit: LIMIT,
     skip: 0,
     from: from.toISOString(),
     to: to.toISOString(),
+    sort,
+    order,
   });
+
+  const handleSort = (sortValue: string, orderValue: OrderValue) => {
+    setOrder(orderValue);
+    setSort(sortValue);
+  };
 
   const rows = (data?.productSales?.data as ProductSaleData[]) ?? [];
   const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
@@ -43,12 +53,13 @@ const ProductSales = () => {
         fetchMore({
           variables: {
             productSalesInput: {
-              keywordTarget: 'name',
-              keyword,
+              keyword: delayedKeyword,
               limit: LIMIT,
               skip: rows.length,
               from: from.toISOString(),
               to: to.toISOString(),
+              sort,
+              order,
             },
           },
         });
@@ -56,6 +67,12 @@ const ProductSales = () => {
     }
   };
   const scrollRef = useInfinityScroll({ callback });
+
+  const sortController = {
+    order,
+    sort,
+    handleSort,
+  };
 
   useEffect(() => {
     const totalData = rows.reduce(
@@ -81,7 +98,16 @@ const ProductSales = () => {
           onClose={() => setSelectedProductSale(null)}
         />
       )}
-      <TableTitle title="판매 매출현황" />
+      <Stack direction="row" alignItems="center">
+        <TableTitle title="판매 매출현황" />
+        <HeaderSortButton
+          sx={{ mt: 1 }}
+          text="자산순"
+          textValue="totalAssetCost"
+          sortController={sortController}
+        />
+      </Stack>
+
       <FormGroup sx={{ ml: 2 }}>
         <FormControl>
           <TextField
@@ -111,11 +137,11 @@ const ProductSales = () => {
         scrollRef={scrollRef}
       />
       <ProductSaleTable
+        setSelectedProductSale={setSelectedProductSale}
         data={rows}
         isEmpty={isEmpty}
         isLoading={isLoading}
         scrollRef={scrollRef}
-        setSelectedProductSale={setSelectedProductSale}
       />
     </TablePage>
   );

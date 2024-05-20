@@ -55,7 +55,7 @@ const OrderBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow 
     const leadTime = biggestLeadTime < 0 ? null : biggestLeadTime;
 
     return [
-      order?.createdAt ? dayjs(order?.createdAt).subtract(9, 'hour').format('YYYY-MM-DD') : EMPTY,
+      order?.orderDate ? dayjs(order?.orderDate).subtract(9, 'hour').format('YYYY-MM-DD') : EMPTY,
       order?.factory?.name ?? '',
       order.products.map((item) => `${item.product.name}(${item.count}EA), `),
       order.products.reduce((acc, cur) => acc + cur.count, 0),
@@ -63,10 +63,12 @@ const OrderBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow 
       order.notPayCost,
       order.totalPayCost,
       order.isDone ? '지불 완료' : '미지불',
-      order?.createdAt
+      order?.orderDate
         ? leadTime == null
           ? '제품 리드타임 미입력'
-          : dayjs(order?.createdAt).subtract(9, 'hour').add(leadTime, 'day').format('YYYY-MM-DD')
+          : dayjs(order?.orderDate)
+              .add(leadTime * 24, 'hour')
+              .format('YYYY-MM-DD')
         : EMPTY,
     ];
   };

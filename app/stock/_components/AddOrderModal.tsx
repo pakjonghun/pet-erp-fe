@@ -51,7 +51,7 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
   } = useForm<CreateOrderForm>({
     resolver: zodResolver(createOrderSchema),
     defaultValues: {
-      createdAt: dayjs().startOf('date').toDate(),
+      orderDate: dayjs().startOf('date').toDate(),
       factory: '',
       products: [],
       payCost: 0,
@@ -173,7 +173,7 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
         <FormGroup sx={modalSizeProps}>
           <Controller
             control={control}
-            name="createdAt"
+            name="orderDate"
             render={({ field }) => {
               return (
                 <DatePicker

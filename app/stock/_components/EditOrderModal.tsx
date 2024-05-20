@@ -50,7 +50,7 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
   } = useForm<CreateOrderForm>({
     resolver: zodResolver(createOrderSchema),
     defaultValues: {
-      createdAt: new Date(selectedOrder.createdAt),
+      orderDate: new Date(selectedOrder.orderDate),
       factory: selectedOrder?.factory?.name ?? '',
       notPayCost: selectedOrder.notPayCost,
       payCost: selectedOrder.payCost,
@@ -65,7 +65,7 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
 
   useEffect(() => {
     reset({
-      createdAt: new Date(selectedOrder.createdAt),
+      orderDate: new Date(selectedOrder.orderDate),
       factory: selectedOrder?.factory?.name ?? '',
       notPayCost: selectedOrder.notPayCost,
       payCost: selectedOrder.payCost,
@@ -193,7 +193,7 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
         <FormGroup sx={modalSizeProps}>
           <Controller
             control={control}
-            name="createdAt"
+            name="orderDate"
             render={({ field }) => {
               return (
                 <DatePicker

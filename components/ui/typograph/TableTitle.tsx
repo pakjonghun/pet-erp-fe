@@ -7,7 +7,7 @@ interface Props {
 
 const TableTitle: FC<Props> = ({ title }) => {
   return (
-    <Typography sx={{ p: 2, pt: 3 }} variant="h6">
+    <Typography noWrap sx={{ p: 2, pt: 3 }} variant="h6">
       {title}
     </Typography>
   );
