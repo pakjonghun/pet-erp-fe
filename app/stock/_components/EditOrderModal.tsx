@@ -39,7 +39,6 @@ interface Props {
 }
 
 const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
-  console.log('selectedOrder : ', selectedOrder);
   const [updateProductOrder, { loading }] = useUpdateProductOrder();
   const {
     reset,
@@ -85,7 +84,6 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
 
   const onSubmit = (values: CreateOrderForm) => {
     const newValues = filterEmptyValues(values) as CreateOrderForm;
-    console.log('newValues : ', newValues);
 
     updateProductOrder({
       variables: {
@@ -120,7 +118,6 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
       },
     });
   };
-  console.log(errors);
   const handleClose = () => {
     reset();
     onClose();

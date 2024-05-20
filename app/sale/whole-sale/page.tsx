@@ -33,7 +33,6 @@ import { authState } from '@/store/isLogin';
 
 const WholeSalePage = () => {
   const { role } = useReactiveVar(authState);
-  console.log('role : ', role);
   const cannotModify = role == UserRole.Staff;
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
@@ -56,17 +55,17 @@ const WholeSalePage = () => {
 
       const totalCount = data?.wholeSales.totalCount;
       if (totalCount != null && totalCount > rows.length) {
-        fetchMore({
-          variables: {
-            wholeSalesInput: {
-              keyword: delayKeyword,
-              skip: rows.length,
-              limit: LIMIT,
-              from,
-              to,
-            },
-          },
-        });
+        // fetchMore({
+        //   variables: {
+        //     wholeSalesInput: {
+        //       keyword: delayKeyword,
+        //       skip: rows.length,
+        //       limit: LIMIT,
+        //       from,
+        //       to,
+        //     },
+        //   },
+        // });
       }
     }
   };

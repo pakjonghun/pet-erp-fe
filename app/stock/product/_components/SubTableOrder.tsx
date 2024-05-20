@@ -29,20 +29,6 @@ interface Props {
   productStock: StockColumn;
 }
 
-const mockSelectedOrder: ProductOrder = {
-  isDone: false,
-  _id: '1',
-  factory: {
-    _id: '2',
-    name: 'fac2',
-  },
-  notPayCost: 10,
-  payCost: 120,
-  products: [],
-  totalPayCost: 100,
-  createdAt: new Date(),
-};
-
 const SubTableOrder: FC<Props> = ({ productStock }) => {
   const { role } = useReactiveVar(authState);
   const cannotModify = role === UserRole.Staff;
@@ -56,27 +42,6 @@ const SubTableOrder: FC<Props> = ({ productStock }) => {
   const rows = (data?.stocksOrder as ProductOrder[]) ?? [];
   const isEmpty = !isLoading && rows.length == 0;
 
-  const productOptionMenus: Record<any, SelectedOptionItem> = {
-    edit: {
-      callback: () => {
-        setSelectedOrder(mockSelectedOrder);
-        setOpenEditModal(true);
-        setMenuAnchor(null);
-      },
-      label: '편집',
-      icon: <InventoryIcon />,
-    },
-    delete: {
-      callback: () => {
-        setSelectedOrder(mockSelectedOrder);
-        setOpenRemoveModal(true);
-        setMenuAnchor(null);
-      },
-      label: '삭제',
-      icon: <InventoryIcon />,
-    },
-  };
-
   return (
     <TableContainer sx={{ mt: 1 }}>
       {openAddModal && (
@@ -84,28 +49,6 @@ const SubTableOrder: FC<Props> = ({ productStock }) => {
           product={productStock.productName}
           open={openAddModal}
           onClose={() => setOpenAddModal(false)}
-        />
-      )}
-
-      {selectedOrder && (
-        <EditOrderModal
-          open={openEditModal}
-          onClose={() => {
-            setOpenEditModal(false);
-            setSelectedOrder(null);
-          }}
-          selectedOrder={selectedOrder}
-        />
-      )}
-
-      {selectedOrder && (
-        <RemoveOrderModal
-          open={openRemoveModal}
-          onClose={() => {
-            setOpenRemoveModal(false);
-            setSelectedOrder(null);
-          }}
-          selectedOrder={selectedOrder}
         />
       )}
 
@@ -128,11 +71,6 @@ const SubTableOrder: FC<Props> = ({ productStock }) => {
         )}
       </Stack>
       <Table sx={{ mt: 2 }} size="small">
-        <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
-          {Object.entries(productOptionMenus).map(([option, menu]) => (
-            <OptionMenu key={option} menu={menu} option={option} />
-          ))}
-        </Menu>
         <TableHead
           sx={{
             '.MuiTableCell-root': {

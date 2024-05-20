@@ -10,7 +10,7 @@ interface Props {
 
 const SaleLayout: FC<Props> = ({ productSales, topClients }) => {
   return (
-    <Box sx={{ height: '100%' }}>
+    <Box sx={{ height: '100%', width: '100%' }}>
       <Stack
         sx={{
           flexDirection: {
