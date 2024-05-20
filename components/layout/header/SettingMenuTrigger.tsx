@@ -112,16 +112,18 @@ const SettingMenuTrigger = () => {
         open={Boolean(settingMenuAnchor)}
         onClose={handleCloseSettingMenu}
       >
-        {settingMenuKeys.map((item) => {
-          const menu = SettingMenus[item];
-          const canDisplay = menu.role.length == 0 || menu.role.includes(role);
-          if (!canDisplay) return <></>;
-          return (
-            <BaseListItem disablePadding key={menu.label}>
-              <ListMenu menu={menu} />
-            </BaseListItem>
-          );
-        })}
+        {[
+          settingMenuKeys.map((item) => {
+            const menu = SettingMenus[item];
+            const canDisplay = menu.role.length == 0 || menu.role.includes(role);
+            if (!canDisplay) return <></>;
+            return (
+              <BaseListItem disablePadding key={menu.label}>
+                <ListMenu menu={menu} />
+              </BaseListItem>
+            );
+          }),
+        ]}
       </Menu>
     </Box>
   );

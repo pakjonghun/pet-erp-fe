@@ -41,17 +41,22 @@ const WholeSaleDetailPopover: FC<Props> = ({
         <LabelText label="정산여부" text={sale.isDone ? '정산완료' : '정산중'} />
         <LabelText label="거래처" text={sale.mallId} />
         <LabelText label="판매날짜" text={dayjs(sale.saleAt).format('YYYY-MM-DD')} />
-        <LabelText
-          label="제품목록"
-          text={sale.productList.map((product) => (
-            <Chip key={product.productCode} label={product.productName} />
-          ))}
-        />
+
         <LabelText label="판매수량 합계" text={getNumberWithComma(sale.totalCount)} />
         <LabelText label="원가 합계" text={getKCWFormat(sale.totalWonCost)} />
         <LabelText label="판매가 합계" text={getKCWFormat(sale.totalPayCost)} />
         <LabelText label="수익" text={getKCWFormat(profit)} />
         <LabelText label="수익율" text={`${profitRate}%`} />
+        <LabelText
+          label="제품목록"
+          text={
+            <Stack gap={1} direction="row" flexWrap={'wrap'}>
+              {sale.productList.map((product) => (
+                <Chip key={product.productCode} label={product.productName} />
+              ))}
+            </Stack>
+          }
+        />
       </Stack>
       {!cannotModify && (
         <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">

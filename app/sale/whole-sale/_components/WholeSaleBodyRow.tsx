@@ -1,6 +1,6 @@
 import { FC, MouseEvent, useState } from 'react';
 import Cell from '@/components/table/Cell';
-import { IconButton, Menu, TableRow } from '@mui/material';
+import { Chip, IconButton, Menu, Stack, TableRow } from '@mui/material';
 import { getKCWFormat, getNumberWithComma } from '@/utils/common';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { SelectedOptionItem } from '@/constants';
@@ -51,7 +51,14 @@ const WholeSaleBodyRow: FC<Props> = ({ wholeSale, scrollRef, onClickOption, onCl
     return [
       sale.mallId,
       dayjs(sale.saleAt).format('YYYY-MM-DD'),
-      sale.productList.map((item) => item.productName).join(', '),
+      <Stack key={Math.random()} direction="column" gap={1}>
+        {sale.productList.map((item) => (
+          <Chip
+            key={`${item.__typename}_${Math.random()}`}
+            label={`${item.productName}(${item.count})`}
+          />
+        ))}
+      </Stack>,
       getNumberWithComma(sale.totalCount),
       getKCWFormat(sale.totalWonCost),
       getKCWFormat(sale.totalPayCost),

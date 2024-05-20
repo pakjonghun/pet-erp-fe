@@ -20,12 +20,10 @@ const DateSaleInfoPage = () => {
     return <Skeleton variant="rounded" width="100%" height={'100%'} sx={{ minHeight: '958px' }} />;
   }
   return (
-    <>
-      <DashboardTable
-        title={`${from.format('MM월')} BEST 거래처`}
-        saleInfos={monthDatas?.dashboardClients ?? []}
-      />
-    </>
+    <DashboardTable
+      title={`${from.format('MM월')} BEST 거래처`}
+      saleInfos={monthDatas?.dashboardClients ?? []}
+    />
   );
 };
 

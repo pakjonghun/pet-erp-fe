@@ -9,13 +9,11 @@ interface Props {
 
 const OptionCell: FC<Props> = ({ onClick }) => {
   return (
-    <>
-      <Cell sx={{ minWidth: 50 }}>
-        <IconButton onClick={(event) => onClick(event.currentTarget)}>
-          <MoreHorizIcon />
-        </IconButton>
-      </Cell>
-    </>
+    <Cell sx={{ minWidth: 50 }}>
+      <IconButton onClick={(event) => onClick(event.currentTarget)}>
+        <MoreHorizIcon />
+      </IconButton>
+    </Cell>
   );
 };
 

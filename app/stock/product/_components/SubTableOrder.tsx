@@ -9,15 +9,10 @@ import {
   TableBody,
   Typography,
   Stack,
-  Menu,
 } from '@mui/material';
 import { ProductOrder, StockColumn, UserRole } from '@/http/graphql/codegen/graphql';
 import ActionButton from '@/components/ui/button/ActionButton';
-import OptionMenu from '@/components/ui/listItem/OptionMenu';
-import { SelectedOptionItem } from '@/constants';
 import AddOrderModal from '../../_components/AddOrderModal';
-import EditOrderModal from '../../_components/EditOrderModal';
-import RemoveOrderModal from '../../_components/RemoveOrderModal';
 import { useStocksOrder } from '@/http/graphql/hooks/stock/useStocksOrder';
 import dayjs from 'dayjs';
 import { getNumberWithComma } from '@/utils/common';
@@ -32,11 +27,7 @@ interface Props {
 const SubTableOrder: FC<Props> = ({ productStock }) => {
   const { role } = useReactiveVar(authState);
   const cannotModify = role === UserRole.Staff;
-  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [openAddModal, setOpenAddModal] = useState(false);
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [openRemoveModal, setOpenRemoveModal] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState<null | ProductOrder>(null);
   const { data, networkStatus } = useStocksOrder(productStock.productName);
   const isLoading = networkStatus == 1 || networkStatus == 3 || networkStatus == 2;
   const rows = (data?.stocksOrder as ProductOrder[]) ?? [];

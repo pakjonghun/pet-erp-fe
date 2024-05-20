@@ -69,19 +69,21 @@ const CommonDateFilter: FC<Props> = ({ anchor, date }) => {
           >
             날짜 조회
           </Typography>
-          {dateFilterOptions.map(({ callback, title }) => (
-            <MenuItem
-              selected={title === selectedDateOption}
-              onClick={() => {
-                if (callback) setRange(callback);
-                if (!callback) setCanDateControl(true);
-                setSelectedDateOption(title);
-              }}
-              key={title}
-            >
-              {title}
-            </MenuItem>
-          ))}
+          {[
+            dateFilterOptions.map(({ callback, title }) => (
+              <MenuItem
+                selected={title === selectedDateOption}
+                onClick={() => {
+                  if (callback) setRange(callback);
+                  if (!callback) setCanDateControl(true);
+                  setSelectedDateOption(title);
+                }}
+                key={title}
+              >
+                {title}
+              </MenuItem>
+            )),
+          ]}
         </Box>
         <Stack direction="column" justifyContent="center" alignItems="center">
           <Typography

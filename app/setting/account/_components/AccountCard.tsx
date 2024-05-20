@@ -66,10 +66,12 @@ const AccountCard: FC<Props> = ({ user, onSelectUser }) => {
         open={Boolean(optionAnchor)}
         onClose={() => setOptionAnchor(null)}
       >
-        {options.map((option) => {
-          const menu = accountOptionMenus[option];
-          return <OptionMenu key={option} menu={menu} option={option} />;
-        })}
+        {[
+          options.map((option) => {
+            const menu = accountOptionMenus[option];
+            return <OptionMenu key={option} menu={menu} option={option} />;
+          }),
+        ]}
       </Menu>
       <Stack gap={2}>
         <LabelText label="생성일 : " text={getDateFormat(user.createdAt)} />

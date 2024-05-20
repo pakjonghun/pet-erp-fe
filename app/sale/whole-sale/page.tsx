@@ -46,7 +46,7 @@ const WholeSalePage = () => {
     to,
   });
   const rows = (data?.wholeSales.data as WholeSaleItem[]) ?? [];
-  const isLoading = networkStatus == 3 || networkStatus == 1;
+  const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
   const isEmpty = !isLoading && rows.length === 0;
 
   const callback: IntersectionObserverCallback = (entries) => {
@@ -54,19 +54,20 @@ const WholeSalePage = () => {
       if (isLoading) return;
 
       const totalCount = data?.wholeSales.totalCount;
-      if (totalCount != null && totalCount > rows.length) {
-        // fetchMore({
-        //   variables: {
-        //     wholeSalesInput: {
-        //       keyword: delayKeyword,
-        //       skip: rows.length,
-        //       limit: LIMIT,
-        //       from,
-        //       to,
-        //     },
-        //   },
-        // });
-      }
+      if (totalCount == null) return;
+
+      if (totalCount <= rows.length) return;
+      fetchMore({
+        variables: {
+          wholeSalesInput: {
+            keyword: delayKeyword,
+            skip: rows.length,
+            limit: LIMIT,
+            from,
+            to,
+          },
+        },
+      });
     }
   };
   const scrollRef = useInfinityScroll({ callback });

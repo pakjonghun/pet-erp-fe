@@ -90,9 +90,13 @@ const WholeSaleCard: FC<Props> = ({ sale, scrollRef, onClickOption, onClickRow }
         <LabelText label="수익율" text={`${profitRate}%`} />
         <LabelText
           label="제품목록"
-          text={sale.productList.map((product) => (
-            <Chip key={product.productCode} label={product.productName} />
-          ))}
+          text={
+            <Stack flexWrap="wrap" direction="row" gap={1}>
+              {sale.productList.map((product) => (
+                <Chip key={product.productCode} label={product.productName} />
+              ))}
+            </Stack>
+          }
         />
       </Stack>
     </Paper>
