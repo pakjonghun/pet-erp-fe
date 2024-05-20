@@ -1,4 +1,4 @@
-import { Box, IconButton, Menu, Paper, Stack } from '@mui/material';
+import { Box, Chip, IconButton, Menu, Paper, Stack } from '@mui/material';
 import React, { FC, MouseEvent, useState } from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { EMPTY, SelectedOptionItem } from '@/constants';
@@ -10,7 +10,6 @@ import LabelText from '@/components/ui/typograph/LabelText';
 import dayjs from 'dayjs';
 import { useReactiveVar } from '@apollo/client';
 import { authState } from '@/store/isLogin';
-// import { SelectOption } from '../../types';
 
 interface Props {
   client: ProductOrder;
@@ -42,6 +41,15 @@ const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) 
     },
   };
 
+  const allHasNoLeadTime = client.products.every((item) => item.product.leadTime == null);
+  const biggestLeadTime = allHasNoLeadTime
+    ? -1
+    : client.products.reduce(
+        (acc, cur) => ((cur.product.leadTime ?? 0) > acc ? cur.product.leadTime ?? 0 : acc),
+        -Infinity
+      );
+  const leadTime = biggestLeadTime < 0 ? null : biggestLeadTime;
+
   return (
     <Paper ref={scrollRef} sx={{ position: 'relative', py: 3, px: 4 }}>
       <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
@@ -59,7 +67,10 @@ const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) 
           <MoreHorizIcon />
         </IconButton>
       )}
-      <Box onClick={(event) => onClickRow(event, client)}>
+      <Box
+        onClick={(event) => onClickRow(event, client)}
+        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+      >
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Box sx={{ flex: 1 }}>
             <LabelText label="공장" text={client?.factory?.name ?? ''} />
@@ -68,14 +79,7 @@ const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) 
             <LabelText label="공장 연락처" text={client?.factory?.phoneNumber ?? ''} />
           </Box>
         </Stack>
-        <Stack direction="row" justifyContent="space-between" gap={2}>
-          <Box sx={{ flex: 1 }}>
-            <LabelText
-              label="제품"
-              text={client.products.map((item) => `${item.product.name}(${item.count}EA)`)}
-            />
-          </Box>
-        </Stack>
+
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Box sx={{ flex: 1 }}>
             <LabelText label="계약금" text={client.payCost} />
@@ -99,7 +103,29 @@ const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) 
             />
           </Box>
         </Stack>
+        <LabelText
+          label="생산완료 예정일"
+          text={
+            client?.orderDate
+              ? leadTime == null
+                ? '제품 리드타임 미입력'
+                : dayjs(client?.orderDate)
+                    .add(leadTime * 24, 'hour')
+                    .format('YYYY-MM-DD')
+              : EMPTY
+          }
+        />
       </Box>
+      <LabelText
+        label="제품목록"
+        text={
+          <Stack direction="row" gap={1} flexWrap="wrap">
+            {client.products.map((item) => {
+              return <Chip key={Math.random()} label={`${item.product.name}(${item.count})`} />;
+            })}
+          </Stack>
+        }
+      />
     </Paper>
   );
 };

@@ -60,7 +60,7 @@ const TableBodySection: FC<Props> = ({
             />
             <Cell sx={{ width: '30%' }}>
               <Stack direction="row" flexWrap="wrap" gap={1}>
-                {row.clients.slice(0, 5).map((client) => {
+                {row.clients.map((client) => {
                   if (!!client._id?.mallId) {
                     return (
                       <Chip

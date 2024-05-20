@@ -75,7 +75,7 @@ const ProductSaleTable: FC<Props> = ({
                 </>
               }
             />
-            <HeadCell text="TOP5 거래처" />
+            <HeadCell text="거래처" />
           </TableRow>
         </TableHead>
         <TableBodySection

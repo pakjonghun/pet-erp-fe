@@ -1,5 +1,5 @@
 import Cell from '@/components/table/Cell';
-import { IconButton, Menu, TableRow } from '@mui/material';
+import { Chip, IconButton, Menu, Stack, TableRow } from '@mui/material';
 import React, { FC, MouseEvent, useState } from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { EMPTY, SelectedOptionItem } from '@/constants';
@@ -55,9 +55,18 @@ const OrderBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow 
     const leadTime = biggestLeadTime < 0 ? null : biggestLeadTime;
 
     return [
-      order?.orderDate ? dayjs(order?.orderDate).subtract(9, 'hour').format('YYYY-MM-DD') : EMPTY,
+      order?.orderDate ? dayjs(order?.orderDate).format('YYYY-MM-DD') : EMPTY,
       order?.factory?.name ?? '',
-      order.products.map((item) => `${item.product.name}(${item.count}EA), `),
+      <Stack key={Math.random()} direction="column" gap={1}>
+        {order.products.map((item, index) => {
+          return (
+            <Chip
+              key={`${item.__typename}_${index}`}
+              label={`${item.product.name}(${item.count})`}
+            />
+          );
+        })}
+      </Stack>,
       order.products.reduce((acc, cur) => acc + cur.count, 0),
       order.payCost,
       order.notPayCost,
