@@ -153,7 +153,7 @@ const SubsidiaryStockPage = () => {
                 ),
               }}
               sx={{ my: 2 }}
-              label="검색할 제품 이름을 입력하세요."
+              label="검색할 부자재 이름을 입력하세요."
               size="small"
             />
           </FormControl>

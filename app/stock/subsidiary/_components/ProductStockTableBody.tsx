@@ -27,8 +27,6 @@ const ProductStockTableBody: FC<Props> = ({
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
 
-  const [optionType, setOptionType] = useState<null | string>(null);
-
   const handleClickOption = (option: any | null, product: StockColumn | null) => {
     setProductStock(product);
     if (option == 'add') {
@@ -38,21 +36,6 @@ const ProductStockTableBody: FC<Props> = ({
     if (option == 'out') {
       openOutStock();
     }
-  };
-
-  const handleClickEdit = () => {
-    handleClosePopover();
-    // handleClickOption('edit', selectedClient);
-  };
-
-  const handleClickDelete = () => {
-    handleClosePopover();
-    // handleClickOption('delete', selectedClient);
-  };
-
-  const handleClosePopover = () => {
-    setPopoverAnchor(null);
-    setProductStock(null);
   };
 
   return (
