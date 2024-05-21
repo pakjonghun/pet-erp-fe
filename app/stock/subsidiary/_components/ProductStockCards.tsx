@@ -17,6 +17,7 @@ const ProductStockCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx 
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
   const [productStock, setProductStock] = useState<null | StockColumn>(null);
+  const [optionType, setOptionType] = useState<null | any>(null);
 
   const handleClickOption = (option: any | null, client: StockColumn | null) => {
     setProductStock(client);
@@ -27,6 +28,16 @@ const ProductStockCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx 
     if (option == 'out') {
       setOpenOutStock(true);
     }
+  };
+
+  const handleClickEdit = () => {
+    handleClosePopover();
+    handleClickOption('edit', productStock);
+  };
+
+  const handleClickDelete = () => {
+    handleClosePopover();
+    handleClickOption('delete', productStock);
   };
 
   const handleClosePopover = () => {

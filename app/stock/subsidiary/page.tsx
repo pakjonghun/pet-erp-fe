@@ -33,7 +33,7 @@ import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
-const ProductStockPage = () => {
+const SubsidiaryStockPage = () => {
   const { data: storageData } = useStorages({
     keyword: '',
     limit: 100,
@@ -106,7 +106,7 @@ const ProductStockPage = () => {
         />
       )}
       <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
-        <TableTitle title="제품 재고관리" />
+        <TableTitle title="부자재 재고관리" />
         <Stack direction="row" alignItems="center" gap={2}>
           <ActionButton
             icon={<AddCircleOutlineIcon />}
@@ -197,4 +197,4 @@ const ProductStockPage = () => {
   );
 };
 
-export default ProductStockPage;
+export default SubsidiaryStockPage;
