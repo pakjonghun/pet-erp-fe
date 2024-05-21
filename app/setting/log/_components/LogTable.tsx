@@ -57,14 +57,22 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
         </TableHead>
         <TableBody>
           <EmptyRow colSpan={4} isEmpty={isEmpty} />
-          {rows.map((row, index) => (
-            <TableRow hover key={row._id} ref={index === rows.length - 1 ? scrollRef : null}>
-              <Cell sx={{ whiteSpace: 'nowrap' }}>{row.createdAt}</Cell>
-              <Cell>{row.userId}</Cell>
-              <Cell>{row.description}</Cell>
-              <Cell>{row.logType}</Cell>
-            </TableRow>
-          ))}
+          {rows.map((row, index) => {
+            const result = parseToJSON(row.description);
+
+            return (
+              <TableRow
+                hover
+                key={row._id}
+                ref={index === rows.length - 1 ? scrollRef : null}
+              >
+                <Cell sx={{ whiteSpace: 'nowrap' }}>{row.createdAt}</Cell>
+                <Cell>{row.userId}</Cell>
+                <Cell sx={{ whiteSpace: 'nowrap' }}>{result}</Cell>
+                <Cell>{row.logType}</Cell>
+              </TableRow>
+            );
+          })}
           <LoadingRow isLoading={isLoading} colSpan={4} />
         </TableBody>
       </Table>
@@ -73,3 +81,27 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
 };
 
 export default LogTable;
+
+function parseToJSON(data: string) {
+  try {
+    const jsonData = JSON.parse(data);
+    let description = '';
+    const entries = Object.entries(jsonData);
+    entries.forEach(([k, v], index) => {
+      const suffix =
+        index === entries.length - 1 //
+          ? ''
+          : ', ';
+      let value = v;
+      if (k.includes('at')) {
+        value = dayjs(new Date(v as string)).format('YYYY-MM-DD');
+      }
+      description += `${k} : ${value}` + suffix;
+    });
+    return description;
+  } catch (err) {
+    const _err = err as { message: string };
+    console.log(_err.message);
+    return '';
+  }
+}
