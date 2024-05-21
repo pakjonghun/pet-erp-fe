@@ -53,8 +53,7 @@ const ProductStockPage = () => {
   });
 
   const rows = (data?.stocks.data as StockColumn[]) ?? [];
-  const isLoading =
-    networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
+  const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -106,12 +105,7 @@ const ProductStockPage = () => {
           }}
         />
       )}
-      <Stack
-        sx={{ px: 2 }}
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
+      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="재고관리" />
         <Stack direction="row" alignItems="center" gap={2}>
           <ActionButton

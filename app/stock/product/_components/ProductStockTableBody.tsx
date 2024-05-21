@@ -3,7 +3,6 @@ import { StockColumn } from '@/http/graphql/codegen/graphql';
 import { TableBody } from '@mui/material';
 import EmptyRow from '@/components/table/EmptyRow';
 import ProductStockBodyRow from './ProductStockBodyRow';
-// import { SelectOption } from '../../types';
 import LoadingRow from '@/components/table/LoadingRow';
 import { ProductStockHeaderList } from '../constants';
 import { CommonListProps } from '@/types';
@@ -58,17 +57,6 @@ const ProductStockTableBody: FC<Props> = ({
 
   return (
     <TableBody>
-      {/* {selectedClient && (
-        <ClientDetailPopover
-          onClose={handleClosePopover}
-          position={popoverPosition}
-          open={!!popoverAnchor}
-          anchorEl={popoverAnchor}
-          onClickDelete={handleClickDelete}
-          onClickEdit={handleClickEdit}
-          selectedClient={selectedClient}
-        />
-      )} */}
       <EmptyRow colSpan={ProductStockHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
         const stock = item as unknown as StockColumn;

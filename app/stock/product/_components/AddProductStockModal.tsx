@@ -1,16 +1,7 @@
-import { FC,  useState } from 'react';
+import { FC, useState } from 'react';
 import PlusOneIcon from '@mui/icons-material/PlusOne';
 import BaseModal from '@/components/ui/modal/BaseModal';
-import {
-  Box,
-  Button,
-  FormGroup,
-  FormLabel,
-  Stack,
-  Tab,
-  Tabs,
-  Typography,
-} from '@mui/material';
+import { Box, Button, FormGroup, FormLabel, Stack, Tab, Tabs, Typography } from '@mui/material';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
@@ -21,10 +12,7 @@ import {
   createProductStockSchema,
 } from '../_validations/createProductStockList';
 import StockProduct from './StockProduct';
-import {
-  CreateStockInput,
-  StockColumn,
-} from '@/http/graphql/codegen/graphql';
+import { CreateStockInput, StockColumn } from '@/http/graphql/codegen/graphql';
 import { useAddStock } from '@/http/graphql/hooks/stock/useAddStocks';
 import { snackMessage } from '@/store/snackMessage';
 import { client } from '@/http/graphql/client';
@@ -53,7 +41,7 @@ const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
     },
   });
 
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue, setTabValue] = useState<number>(productStock == null ? 0 : 1);
   const handleClickTab = (value: number) => () => {
     setTabValue(value);
     setValue('stocks', [] as unknown as any);
@@ -125,12 +113,14 @@ const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
         입고 재고 입력
       </Typography>
 
-      <Box sx={{ mt: 1, borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={tabValue}>
-          <Tab sx={{ fontSize: 14 }} onClick={handleClickTab(0)} label="제품" />
-          <Tab sx={{ fontSize: 14 }} onClick={handleClickTab(1)} label="부자재" />
-        </Tabs>
-      </Box>
+      {productStock == null && (
+        <Box sx={{ mt: 1, borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs value={tabValue}>
+            <Tab sx={{ fontSize: 14 }} onClick={handleClickTab(0)} label="제품" />
+            <Tab sx={{ fontSize: 14 }} onClick={handleClickTab(1)} label="부자재" />
+          </Tabs>
+        </Box>
+      )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={{ mt: 4 }}>
           <Stack

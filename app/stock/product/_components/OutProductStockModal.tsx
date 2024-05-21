@@ -41,7 +41,7 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
     },
   });
 
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue, setTabValue] = useState(productStock == null ? 0 : 1);
   const handleClickTab = (value: number) => () => {
     setTabValue(value);
     setValue('stocks', [] as unknown as any);
@@ -113,12 +113,14 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
         출고 재고 입력
       </Typography>
-      <Box sx={{ mt: 1, borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={tabValue}>
-          <Tab sx={{ fontSize: 14 }} onClick={handleClickTab(0)} label="제품" />
-          <Tab sx={{ fontSize: 14 }} onClick={handleClickTab(1)} label="부자재" />
-        </Tabs>
-      </Box>
+      {productStock == null && (
+        <Box sx={{ mt: 1, borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs value={tabValue}>
+            <Tab sx={{ fontSize: 14 }} onClick={handleClickTab(0)} label="제품" />
+            <Tab sx={{ fontSize: 14 }} onClick={handleClickTab(1)} label="부자재" />
+          </Tabs>
+        </Box>
+      )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={{ mt: 4 }}>
           <Stack
