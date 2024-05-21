@@ -19,5 +19,6 @@ export const useFindLogs = (findLogsQuery: FindLogsDto) => {
       findLogsQuery,
     },
     notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'network-only',
   });
 };
