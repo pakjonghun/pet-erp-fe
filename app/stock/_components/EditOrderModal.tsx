@@ -175,7 +175,19 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
         발주 편집
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack direction="row" alignItems="center" gap={3}>
+        <Stack
+          sx={{
+            flexDirection: {
+              xs: 'column',
+              md: 'row',
+            },
+            alignItems: {
+              xs: 'flex-start',
+              md: 'center',
+            },
+          }}
+          gap={3}
+        >
           <Typography>발주 데이터를 편집합니다..</Typography>
           <Controller
             control={control}
