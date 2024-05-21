@@ -85,6 +85,8 @@ const OrderProduct: FC<Props> = ({
               getOptionDisabled={(option) =>
                 productList.some((item) => item.product === option)
               }
+              fullWidth
+              sx={{ minWidth: 180 }}
               disabled={isProductFreeze}
               value={field.value}
               onChange={(_, value) => field.onChange(value)}
