@@ -213,7 +213,7 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
       </Typography>
       <Typography sx={{ mb: 3 }}>도매 판매를 편집합니다.</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FormGroup sx={{ ...modalSizeProps, width: 800, mb: 2 }}>
+        <FormGroup sx={{ ...modalSizeProps, mb: 2 }}>
           <Stack direction="row" gap={3} alignItems="center">
             <FormLabel>도매 거래처 정보 입력</FormLabel>
             <Controller
@@ -229,73 +229,76 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
               }}
             />
           </Stack>
-          <Stack direction="row" alignItems="center" gap={3}>
+          <Stack
+            sx={{
+              flexDirection: {
+                xs: 'column',
+                md: 'row',
+              },
+              alignItems: {
+                xs: 'flex-start',
+                md: 'center',
+              },
+            }}
+            gap={3}
+          >
             <Controller
               name="mallId"
               control={control}
               render={({ field }) => {
                 return (
-                  <Stack
-                    direction="row"
-                    alignItems="center"
-                    gap={5}
-                    flexWrap="wrap"
-                  >
-                    <Autocomplete
-                      value={clientRows.find(
-                        (client) => client.name === field.value
-                      )}
-                      onChange={(_, value) => {
-                        field.onChange(value?.name ?? '');
-                        setValue(
-                          'telephoneNumber1',
-                          value?.managerTel ?? EMPTY
-                        );
-                      }}
-                      getOptionLabel={(item) => item.name}
-                      size="small"
-                      options={clientRows as Client[]}
-                      isOptionEqualToValue={(item1, item2) => item1 == item2}
-                      defaultValue={{
-                        _id: '',
-                        name: field.value,
-                        code: '',
-                        clientType: ClientType.WholeSale,
-                        managerTel: EMPTY,
-                      }}
-                      inputValue={clientKeyword}
-                      onInputChange={(_, value) => setClientKeyword(value)}
-                      loading={isClientLoading}
-                      loadingText="로딩중"
-                      noOptionsText="검색 결과가 없습니다."
-                      disablePortal
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          value={field.value}
-                          sx={{ minWidth: 400 }}
-                          label="도매 거래처"
-                          required
-                          error={!!errors.mallId?.message}
-                          helperText={errors.mallId?.message ?? ''}
-                        />
-                      )}
-                      renderOption={(props, item, state) => {
-                        const { key, ...rest } = props as any;
-                        const isLast = state.index === clientRows.length - 1;
-                        return (
-                          <Box
-                            component="li"
-                            ref={isLast ? clientScrollRef : null}
-                            key={item.name}
-                            {...rest}
-                          >
-                            {item.name}
-                          </Box>
-                        );
-                      }}
-                    />
-                  </Stack>
+                  <Autocomplete
+                    fullWidth
+                    sx={{ minWidth: 300 }}
+                    value={clientRows.find(
+                      (client) => client.name === field.value
+                    )}
+                    onChange={(_, value) => {
+                      field.onChange(value?.name ?? '');
+                      setValue('telephoneNumber1', value?.managerTel ?? EMPTY);
+                    }}
+                    getOptionLabel={(item) => item.name}
+                    size="small"
+                    options={clientRows as Client[]}
+                    isOptionEqualToValue={(item1, item2) => item1 == item2}
+                    defaultValue={{
+                      _id: '',
+                      name: field.value,
+                      code: '',
+                      clientType: ClientType.WholeSale,
+                      managerTel: EMPTY,
+                    }}
+                    inputValue={clientKeyword}
+                    onInputChange={(_, value) => setClientKeyword(value)}
+                    loading={isClientLoading}
+                    loadingText="로딩중"
+                    noOptionsText="검색 결과가 없습니다."
+                    disablePortal
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        value={field.value}
+                        label="도매 거래처"
+                        required
+                        error={!!errors.mallId?.message}
+                        helperText={errors.mallId?.message ?? ''}
+                      />
+                    )}
+                    renderOption={(props, item, state) => {
+                      const { key, ...rest } = props as any;
+                      const isLast = state.index === clientRows.length - 1;
+                      return (
+                        <Box
+                          component="li"
+                          ref={isLast ? clientScrollRef : null}
+                          key={item.name}
+                          {...rest}
+                        >
+                          {item.name}
+                        </Box>
+                      );
+                    }}
+                  />
                 );
               }}
             />
@@ -309,6 +312,8 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
                       '& input': {
                         py: 1.2,
                       },
+                      width: '100%',
+                      minWidth: 160,
                     }}
                     label="판매날짜"
                     value={dayjs(field.value)}

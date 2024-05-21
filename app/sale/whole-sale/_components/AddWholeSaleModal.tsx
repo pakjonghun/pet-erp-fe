@@ -192,11 +192,7 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
   const telNumber = watch('telephoneNumber1');
 
   return (
-    <BaseModal
-      sx={{ overflow: 'auto', maxHeight: '90vh' }}
-      open={open}
-      onClose={handleClose}
-    >
+    <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
         도매 판매 등록
       </Typography>
