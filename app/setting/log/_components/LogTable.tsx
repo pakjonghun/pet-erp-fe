@@ -61,11 +61,7 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
             const result = parseToJSON(row.description);
 
             return (
-              <TableRow
-                hover
-                key={row._id}
-                ref={index === rows.length - 1 ? scrollRef : null}
-              >
+              <TableRow hover key={row._id} ref={index === rows.length - 1 ? scrollRef : null}>
                 <Cell sx={{ whiteSpace: 'nowrap' }}>{row.createdAt}</Cell>
                 <Cell>{row.userId}</Cell>
                 <Cell sx={{ whiteSpace: 'nowrap' }}>{result}</Cell>
@@ -83,6 +79,8 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
 export default LogTable;
 
 function parseToJSON(data: string) {
+  const blackListTypeList = ['array', 'object'];
+
   try {
     const jsonData = JSON.parse(data);
     let description = '';
@@ -92,6 +90,11 @@ function parseToJSON(data: string) {
         index === entries.length - 1 //
           ? ''
           : ', ';
+
+      const valueType = typeof v;
+      const isBannedType = blackListTypeList.includes(valueType);
+      if (isBannedType) return;
+
       let value = v;
       if (k.includes('at')) {
         value = dayjs(new Date(v as string)).format('YYYY-MM-DD');
