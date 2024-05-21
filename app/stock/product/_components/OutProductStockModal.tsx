@@ -1,7 +1,7 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import PlusOneIcon from '@mui/icons-material/PlusOne';
 import BaseModal from '@/components/ui/modal/BaseModal';
-import { Button, FormGroup, FormLabel, Stack, Typography } from '@mui/material';
+import { Box, Button, FormGroup, FormLabel, Stack, Tab, Tabs, Typography } from '@mui/material';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
@@ -30,6 +30,7 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
     watch,
     reset,
     control,
+    setValue,
     clearErrors,
     handleSubmit,
     formState: { errors },
@@ -40,12 +41,18 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
     },
   });
 
+  const [tabValue, setTabValue] = useState(0);
+  const handleClickTab = (value: number) => () => {
+    setTabValue(value);
+    setValue('stocks', [] as unknown as any);
+  };
+
   const onSubmit = (values: CreateProductStockForm) => {
     const newValues = filterEmptyValues(values) as CreateStockInput;
     const newStock = newValues.stocks.map((stock) => {
       return {
         ...stock,
-        isSubsidiary: true,
+        isSubsidiary: !!tabValue,
       };
     });
     newValues.stocks = newStock;
@@ -106,6 +113,12 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
         출고 재고 입력
       </Typography>
+      <Box sx={{ mt: 1, borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs value={tabValue}>
+          <Tab sx={{ fontSize: 14 }} onClick={handleClickTab(0)} label="제품" />
+          <Tab sx={{ fontSize: 14 }} onClick={handleClickTab(1)} label="부자재" />
+        </Tabs>
+      </Box>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={{ mt: 4 }}>
           <Stack
@@ -134,7 +147,7 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
             {fields.map((product, index) => {
               return (
                 <StockProduct
-                  isSubsidiary={true}
+                  isSubsidiary={!!tabValue}
                   isProductFreeze={productStock != null}
                   index={index}
                   control={control}

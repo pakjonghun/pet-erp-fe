@@ -1,8 +1,7 @@
-import { FC, useEffect, useState } from 'react';
+import { FC,  useState } from 'react';
 import PlusOneIcon from '@mui/icons-material/PlusOne';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
-  AppBar,
   Box,
   Button,
   FormGroup,
@@ -23,7 +22,6 @@ import {
 } from '../_validations/createProductStockList';
 import StockProduct from './StockProduct';
 import {
-  CreateSingleStockInput,
   CreateStockInput,
   StockColumn,
 } from '@/http/graphql/codegen/graphql';

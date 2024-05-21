@@ -44,7 +44,7 @@ const StockProduct: FC<Props> = ({
     },
     !isSubsidiary
   );
-  const subsidiaryRows = subsidiaryData?.subsidiaries.data ?? [];
+  const subsidiaryRows = subsidiaryData?.subsidiaries.data.map((item) => item.name) ?? [];
   const isLoadingSubsidiary =
     subsidiaryNetwork == 3 || subsidiaryNetwork == 1 || subsidiaryNetwork == 2;
 
@@ -54,7 +54,7 @@ const StockProduct: FC<Props> = ({
 
       const totalCount = subsidiaryData?.subsidiaries.totalCount;
       if (totalCount != null && totalCount > rows.length) {
-        fetchMore({
+        fetchMoreSubsidiary({
           variables: {
             subsidiariesInput: {
               keyword: delayedProductKeyword,
@@ -197,7 +197,7 @@ const StockProduct: FC<Props> = ({
               sx={{ minWidth: 200 }}
               filterSelectedOptions
               size="small"
-              options={rows}
+              options={isSubsidiary ? subsidiaryRows : rows}
               isOptionEqualToValue={(item1, item2) => item1 === item2}
               inputValue={productKeyword}
               onInputChange={(_, value) => setProductKeyword(value)}
