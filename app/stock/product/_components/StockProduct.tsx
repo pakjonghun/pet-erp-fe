@@ -100,16 +100,26 @@ const StockProduct: FC<Props> = ({
   const storageScrollRef = useInfinityScroll({ callback: getStorageCallback });
 
   return (
-    <Stack direction="row" justifyContent="space-between" gap={2}>
+    <Stack
+      sx={{
+        flexDirection: {
+          xs: 'column',
+          md: 'row',
+        },
+      }}
+      justifyContent="space-between"
+      gap={2}
+    >
       <Controller
         control={control}
         name={`stocks.${index}.storageName`}
         render={({ field }) => {
           return (
             <Autocomplete
+              fullWidth
+              sx={{ minWidth: 200 }}
               value={field.value}
               onChange={(_, value) => field.onChange(value)}
-              sx={{ width: 400 }}
               size="small"
               options={storageRows}
               isOptionEqualToValue={(item1, item2) => item1 === item2}
@@ -150,6 +160,7 @@ const StockProduct: FC<Props> = ({
               disabled={isProductFreeze}
               value={field.value}
               fullWidth
+              sx={{ minWidth: 200 }}
               filterSelectedOptions
               size="small"
               options={rows}
@@ -195,6 +206,7 @@ const StockProduct: FC<Props> = ({
         render={({ field }) => {
           return (
             <NumberInput
+              sx={{ minWidth: 80 }}
               field={field}
               label="수량"
               error={!!error?.count?.message}

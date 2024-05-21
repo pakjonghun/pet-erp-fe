@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import InventoryIcon from '@mui/icons-material/Inventory';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import {
   TableRow,
   TableCell,
@@ -22,12 +23,16 @@ interface Props {
   onClickOption: (option: any | null, client: StockColumn | null) => void;
 }
 
-const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) => {
+const SubTableTotalProductStock: FC<Props> = ({
+  productStock,
+  onClickOption,
+}) => {
   const { networkStatus, data } = useStocksState(productStock.productName);
 
   const rows = data?.stocksState ?? [];
 
-  const isLoading = networkStatus == 1 || networkStatus == 3 || networkStatus == 2;
+  const isLoading =
+    networkStatus == 1 || networkStatus == 3 || networkStatus == 2;
   const isEmpty = !isLoading && rows.length == 0;
 
   const today = dayjs();
@@ -58,18 +63,20 @@ const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) =
         justifyContent="space-between"
       >
         <LabelText label="제품이름" text={productStock.productName} />
-        {!!recentCompleteDate && <LabelText label="최근생산 완료예정" text={recentCompleteDate} />}
+        {!!recentCompleteDate && (
+          <LabelText label="최근생산 완료예정" text={recentCompleteDate} />
+        )}
 
         <Stack direction="row" alignItems="center" gap={2} sx={{ ml: 'auto' }}>
           <ActionButton
             size="small"
-            icon={<InventoryIcon />}
+            icon={<AddCircleOutlineIcon />}
             text="입고"
             onClick={() => onClickOption('add', productStock)}
           />
           <ActionButton
             size="small"
-            icon={<InventoryIcon />}
+            icon={<RemoveCircleOutlineIcon />}
             text="출고"
             onClick={() => onClickOption('out', productStock)}
           />
@@ -94,7 +101,11 @@ const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) =
           </TableRow>
         </TableHead>
         <TableBody>
-          <EmptyRow colSpan={5} isEmpty={isEmpty} message="검색된 데이터가 없습니다." />
+          <EmptyRow
+            colSpan={5}
+            isEmpty={isEmpty}
+            message="검색된 데이터가 없습니다."
+          />
           {rows.map((row, index) => {
             return (
               <TableRow key={`${row.__typename}_${index}`}>
@@ -102,7 +113,9 @@ const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) =
                 <TableCell>{row.location}</TableCell>
                 <TableCell>{row.count}</TableCell>
                 <TableCell>
-                  {row.state == '보관중' ? '' : row.orderCompleteDate ?? '제품 리드타임 미입력'}
+                  {row.state == '보관중'
+                    ? ''
+                    : row.orderCompleteDate ?? '제품 리드타임 미입력'}
                 </TableCell>
               </TableRow>
             );

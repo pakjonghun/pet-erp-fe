@@ -8,8 +8,6 @@ import {
   FormControl,
   FormGroup,
   InputAdornment,
-  MenuItem,
-  Select,
   Stack,
   Table,
   TableHead,
@@ -29,13 +27,18 @@ import ActionButton from '@/components/ui/button/ActionButton';
 import { ProductStockHeaderList } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { StockColumn, Storage } from '@/http/graphql/codegen/graphql';
-import InventoryIcon from '@mui/icons-material/Inventory';
 import { useStocks } from '@/http/graphql/hooks/stock/useStocks';
 import BaseSelect from '@/components/ui/select/BaseSelect';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const ProductStockPage = () => {
-  const { data: storageData } = useStorages({ keyword: '', limit: 100, skip: 0 });
+  const { data: storageData } = useStorages({
+    keyword: '',
+    limit: 100,
+    skip: 0,
+  });
   const [storageOption, setStorageOption] = useState('모두선택');
 
   const [keyword, setKeyword] = useState('');
@@ -50,7 +53,8 @@ const ProductStockPage = () => {
   });
 
   const rows = (data?.stocks.data as StockColumn[]) ?? [];
-  const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
+  const isLoading =
+    networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -102,16 +106,21 @@ const ProductStockPage = () => {
           }}
         />
       )}
-      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+      <Stack
+        sx={{ px: 2 }}
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <TableTitle title="재고관리" />
         <Stack direction="row" alignItems="center" gap={2}>
           <ActionButton
-            icon={<InventoryIcon />}
+            icon={<AddCircleOutlineIcon />}
             text="입고"
             onClick={() => setOpenAddStock(true)}
           />
           <ActionButton
-            icon={<InventoryIcon />}
+            icon={<RemoveCircleOutlineIcon />}
             text="출고"
             onClick={() => setOpenOutStock(true)}
           />

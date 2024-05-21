@@ -5,9 +5,9 @@ import { LIMIT } from '@/constants';
 import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Autocomplete, Box, IconButton, Stack, TextField } from '@mui/material';
-import { Control, Controller, FieldArrayWithId, FieldErrors } from 'react-hook-form';
+import { Control, Controller, FieldErrors } from 'react-hook-form';
 import NumberInput from '@/components/ui/input/NumberInput';
-import { CreateOrderForm, CreateOrderProductForm } from '../_validation/createOrderValidation';
+import { CreateOrderProductForm } from '../_validation/createOrderValidation';
 
 interface Props {
   index: number;
@@ -36,7 +36,8 @@ const OrderProduct: FC<Props> = ({
   });
 
   const rows = data?.products.data ?? [];
-  const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
+  const isLoading =
+    networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -59,21 +60,34 @@ const OrderProduct: FC<Props> = ({
 
   const scrollRef = useInfinityScroll({ callback });
 
-  const cachedOptions = useMemo(() => rows.map((item) => item.name), [data?.products.data]);
+  const cachedOptions = useMemo(
+    () => rows.map((item) => item.name),
+    [data?.products.data]
+  );
 
   return (
-    <Stack direction="row" justifyContent="space-between" gap={2}>
+    <Stack
+      sx={{
+        flexDirection: {
+          xs: 'column',
+          md: 'row',
+        },
+      }}
+      justifyContent="space-between"
+      gap={2}
+    >
       <Controller
         control={control}
         name={`products.${index}.product`}
         render={({ field }) => {
           return (
             <Autocomplete
-              getOptionDisabled={(option) => productList.some((item) => item.product === option)}
+              getOptionDisabled={(option) =>
+                productList.some((item) => item.product === option)
+              }
               disabled={isProductFreeze}
               value={field.value}
               onChange={(_, value) => field.onChange(value)}
-              sx={{ width: 400 }}
               size="small"
               options={cachedOptions}
               isOptionEqualToValue={(item1, item2) => item1 === item2}
@@ -84,12 +98,19 @@ const OrderProduct: FC<Props> = ({
               loadingText="로딩중"
               noOptionsText="검색 결과가 없습니다."
               disablePortal
-              renderInput={(params) => <TextField {...params} label="제품" required />}
+              renderInput={(params) => (
+                <TextField {...params} label="제품" required />
+              )}
               renderOption={(props, item, state) => {
                 const { key, ...rest } = props as any;
                 const isLast = state.index === rows.length - 1;
                 return (
-                  <Box component="li" ref={isLast ? scrollRef : null} key={item} {...rest}>
+                  <Box
+                    component="li"
+                    ref={isLast ? scrollRef : null}
+                    key={item}
+                    {...rest}
+                  >
                     {item}
                   </Box>
                 );
@@ -113,7 +134,7 @@ const OrderProduct: FC<Props> = ({
           );
         }}
       />
-      <IconButton onClick={() => remove(index)}>
+      <IconButton sx={{ width: 40, height: 40 }} onClick={() => remove(index)}>
         <CloseIcon />
       </IconButton>
     </Stack>

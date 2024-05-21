@@ -47,7 +47,10 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
         outStocksInput: newValues,
       },
       onCompleted: () => {
-        snackMessage({ message: '출고재고 입력이 완료되었습니다.', severity: 'success' });
+        snackMessage({
+          message: '출고재고 입력이 완료되었습니다.',
+          severity: 'success',
+        });
         client.refetchQueries({
           updateCache(cache) {
             cache.evict({ fieldName: 'stocks' });
@@ -89,18 +92,37 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
   };
 
   const currentProductList = watch('stocks');
-  const totalCount = currentProductList.reduce((acc, cur) => acc + cur.count, 0);
+  const totalCount = currentProductList.reduce(
+    (acc, cur) => acc + cur.count,
+    0
+  );
 
   return (
-    <BaseModal sx={{ width: 800 }} open={open} onClose={handleClose}>
+    <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
         출고 재고 입력
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={{ mt: 4 }}>
-          <Stack direction="row" alignItems="center" gap={3}>
+          <Stack
+            sx={{
+              flexDirection: {
+                xs: 'column',
+                md: 'row',
+              },
+              alignItems: {
+                xs: 'flex-start',
+                md: 'center',
+              },
+            }}
+            gap={3}
+          >
             <FormLabel>출고 재고 목록</FormLabel>
-            <Button onClick={handleAppendProduct} variant="outlined" endIcon={<PlusOneIcon />}>
+            <Button
+              onClick={handleAppendProduct}
+              variant="outlined"
+              endIcon={<PlusOneIcon />}
+            >
               추가
             </Button>
             <Typography>{`총수량 : ${totalCount}EA`}</Typography>
@@ -128,7 +150,11 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
-          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
+          <Button
+            type="submit"
+            endIcon={loading ? <CommonLoading /> : ''}
+            variant="contained"
+          >
             출고
           </Button>
         </Stack>
