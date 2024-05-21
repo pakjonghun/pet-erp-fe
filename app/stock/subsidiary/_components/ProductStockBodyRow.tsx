@@ -7,16 +7,16 @@ import CollapseRow from './CollapseRow';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import OptionCell from './OptionCell';
-import { StockColumn } from '@/http/graphql/codegen/graphql';
+import { StockColumn, SubsidiaryStockColumn } from '@/http/graphql/codegen/graphql';
 import { getNumberToString } from '@/utils/sale';
 import { getKCWFormat } from '@/utils/common';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 interface Props {
-  productStock: StockColumn;
-  onClickRow: (event: MouseEvent<HTMLTableCellElement>, stock: StockColumn) => void;
-  onClickOption: (option: any | null, client: StockColumn | null) => void;
+  productStock: SubsidiaryStockColumn;
+  onClickRow: (event: MouseEvent<HTMLTableCellElement>, stock: SubsidiaryStockColumn) => void;
+  onClickOption: (option: any | null, client: SubsidiaryStockColumn | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
@@ -43,7 +43,7 @@ const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption
     },
   };
 
-  const createRow = (stock: StockColumn) => {
+  const createRow = (stock: SubsidiaryStockColumn) => {
     return [
       stock.productName,
       stock.stockCount,

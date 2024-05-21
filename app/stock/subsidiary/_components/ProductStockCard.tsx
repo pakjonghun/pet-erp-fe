@@ -2,16 +2,16 @@ import { FC, MouseEvent, useState } from 'react';
 import { Box, IconButton, Menu, Paper, Stack } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { EMPTY, SelectedOptionItem } from '@/constants';
-import { StockColumn } from '@/http/graphql/codegen/graphql';
+import { StockColumn, SubsidiaryStockColumn } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 interface Props {
-  stock: StockColumn;
-  onClickRow: (event: MouseEvent<HTMLSpanElement>, stock: StockColumn) => void;
-  onClickOption: (option: any | null, stock: StockColumn | null) => void;
+  stock: SubsidiaryStockColumn;
+  onClickRow: (event: MouseEvent<HTMLSpanElement>, stock: SubsidiaryStockColumn) => void;
+  onClickOption: (option: any | null, stock: SubsidiaryStockColumn | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
@@ -61,14 +61,6 @@ const ProductStockCard: FC<Props> = ({ stock, scrollRef, onClickOption, onClickR
           </Box>
         </Stack>
 
-        <Stack direction="row" justifyContent="space-between" gap={2}>
-          <Box sx={{ flex: 1 }}>
-            <LabelText label="최근 1달 판매량" text={stock.monthSaleCount} />
-          </Box>
-          <Box sx={{ flex: 1 }}>
-            <LabelText label="재고소진까지 남은 기간" text={`${stock.leftDate}일`} />
-          </Box>
-        </Stack>
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Box sx={{ flex: 1 }}>
             <LabelText label="리드타임" text={stock.leadTime ?? EMPTY} />

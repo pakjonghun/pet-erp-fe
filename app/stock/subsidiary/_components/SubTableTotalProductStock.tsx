@@ -11,7 +11,7 @@ import {
   Typography,
   Stack,
 } from '@mui/material';
-import { StockColumn } from '@/http/graphql/codegen/graphql';
+import { StockColumn, SubsidiaryStockColumn } from '@/http/graphql/codegen/graphql';
 import ActionButton from '@/components/ui/button/ActionButton';
 import { useStocksState } from '@/http/graphql/hooks/stock/useStocksState';
 import EmptyRow from '@/components/table/EmptyRow';
@@ -19,8 +19,8 @@ import LabelText from '@/components/ui/typograph/LabelText';
 import dayjs from 'dayjs';
 
 interface Props {
-  productStock: StockColumn;
-  onClickOption: (option: any | null, client: StockColumn | null) => void;
+  productStock: SubsidiaryStockColumn;
+  onClickOption: (option: any | null, client: SubsidiaryStockColumn | null) => void;
 }
 
 const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) => {

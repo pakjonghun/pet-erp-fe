@@ -27,6 +27,14 @@ export const client = new ApolloClient({
         wonPrice
       }
 
+      fragment SubsidiaryStockColumnFragment on SubsidiaryStockColumn {
+        stockCount
+        leadTime
+        productList
+        productName
+        wonPrice
+      }
+
       fragment ProductOrderFragment on ProductOrder {
         _id
         factory {

@@ -26,12 +26,12 @@ import ProductStockCards from './_components/ProductStockCards';
 import ActionButton from '@/components/ui/button/ActionButton';
 import { ProductStockHeaderList } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { StockColumn, Storage } from '@/http/graphql/codegen/graphql';
-import { useStocks } from '@/http/graphql/hooks/stock/useStocks';
+import { Storage, SubsidiaryStockColumn } from '@/http/graphql/codegen/graphql';
 import BaseSelect from '@/components/ui/select/BaseSelect';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { useSubsidiaryStocks } from '@/http/graphql/hooks/stock/useSubsidiaryStocks';
 
 const SubsidiaryStockPage = () => {
   const { data: storageData } = useStorages({
@@ -43,23 +43,23 @@ const SubsidiaryStockPage = () => {
 
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
-  const [productStock, setProductStock] = useState<null | StockColumn>(null);
+  const [productStock, setProductStock] = useState<null | SubsidiaryStockColumn>(null);
 
-  const { data, networkStatus, fetchMore } = useStocks({
+  const { data, networkStatus, fetchMore } = useSubsidiaryStocks({
     keyword: delayKeyword,
     skip: 0,
     limit: LIMIT,
     storageName: storageOption == '모두선택' ? undefined : storageOption,
   });
 
-  const rows = (data?.stocks.data as StockColumn[]) ?? [];
+  const rows = (data?.subsidiaryStocks.data as SubsidiaryStockColumn[]) ?? [];
   const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
       if (isLoading) return;
 
-      const totalCount = data?.stocks.totalCount;
+      const totalCount = data?.subsidiaryStocks.totalCount;
       if (totalCount != null && totalCount > rows.length) {
         fetchMore({
           variables: {

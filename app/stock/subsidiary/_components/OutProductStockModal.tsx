@@ -12,7 +12,11 @@ import {
   createProductStockSchema,
 } from '../_validations/createProductStockList';
 import StockProduct from './StockProduct';
-import { CreateStockInput, StockColumn } from '@/http/graphql/codegen/graphql';
+import {
+  CreateStockInput,
+  StockColumn,
+  SubsidiaryStockColumn,
+} from '@/http/graphql/codegen/graphql';
 import { snackMessage } from '@/store/snackMessage';
 import { client } from '@/http/graphql/client';
 import { useOutStocks } from '@/http/graphql/hooks/stock/useOutStocks';
@@ -20,7 +24,7 @@ import { useOutStocks } from '@/http/graphql/hooks/stock/useOutStocks';
 interface Props {
   open: boolean;
   onClose: () => void;
-  productStock: null | StockColumn;
+  productStock: null | SubsidiaryStockColumn;
 }
 
 const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {

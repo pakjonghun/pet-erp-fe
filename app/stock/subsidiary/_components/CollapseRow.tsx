@@ -1,13 +1,13 @@
 import { FC } from 'react';
 import { TableRow, TableCell, Collapse, Box, Tabs, alpha } from '@mui/material';
 import { ProductStockHeaderList } from '../constants';
-import { StockColumn } from '@/http/graphql/codegen/graphql';
+import { StockColumn, SubsidiaryStockColumn } from '@/http/graphql/codegen/graphql';
 import SubTableTotalProductStock from './SubTableTotalProductStock';
 
 interface Props {
   open: boolean;
-  productStock: StockColumn;
-  onClickOption: (option: any | null, client: StockColumn | null) => void;
+  productStock: SubsidiaryStockColumn;
+  onClickOption: (option: any | null, client: SubsidiaryStockColumn | null) => void;
 }
 
 const CollapseRow: FC<Props> = ({ open, productStock, onClickOption }) => {
