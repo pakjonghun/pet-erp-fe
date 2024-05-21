@@ -13,12 +13,20 @@ import { authState } from '@/store/isLogin';
 
 interface Props {
   client: ProductOrder;
-  onClickRow: (event: MouseEvent<HTMLTableCellElement>, client: ProductOrder) => void;
+  onClickRow: (
+    event: MouseEvent<HTMLTableCellElement>,
+    client: ProductOrder
+  ) => void;
   onClickOption: (option: any | null, client: ProductOrder | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const OrderBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) => {
+const OrderBodyRow: FC<Props> = ({
+  client,
+  scrollRef,
+  onClickOption,
+  onClickRow,
+}) => {
   const { role } = useReactiveVar(authState);
   const cannotModify = role === UserRole.Staff;
 
@@ -43,12 +51,15 @@ const OrderBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow 
   };
 
   const createRow = (order: ProductOrder) => {
-    const allHasNoLeadTime = order.products.every((item) => item.product.leadTime == null);
+    const allHasNoLeadTime = order.products.every(
+      (item) => item.product.leadTime == null
+    );
 
     const biggestLeadTime = allHasNoLeadTime
       ? -1
       : order.products.reduce(
-          (acc, cur) => ((cur.product.leadTime ?? 0) > acc ? cur.product.leadTime ?? 0 : acc),
+          (acc, cur) =>
+            (cur.product.leadTime ?? 0) > acc ? cur.product.leadTime ?? 0 : acc,
           -Infinity
         );
 
@@ -57,17 +68,6 @@ const OrderBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow 
     return [
       order?.orderDate ? dayjs(order?.orderDate).format('YYYY-MM-DD') : EMPTY,
       order?.factory?.name ?? '',
-      <Stack key={Math.random()} direction="column" gap={1}>
-        {order.products.map((item, index) => {
-          return (
-            <Chip
-              key={`${item.__typename}_${index}`}
-              label={`${item.product.name}(${item.count})`}
-            />
-          );
-        })}
-      </Stack>,
-      order.products.reduce((acc, cur) => acc + cur.count, 0),
       order.payCost,
       order.notPayCost,
       order.totalPayCost,
@@ -79,6 +79,17 @@ const OrderBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow 
               .add(leadTime * 24, 'hour')
               .format('YYYY-MM-DD')
         : EMPTY,
+      order.products.reduce((acc, cur) => acc + cur.count, 0),
+      <Stack key={Math.random()} direction="column" gap={1}>
+        {order.products.map((item, index) => {
+          return (
+            <Chip
+              key={`${item.__typename}_${index}`}
+              label={`${item.product.name}(${item.count})`}
+            />
+          );
+        })}
+      </Stack>,
     ];
   };
 
@@ -86,7 +97,11 @@ const OrderBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow 
 
   return (
     <TableRow hover ref={scrollRef}>
-      <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
+      <Menu
+        anchorEl={menuAnchor}
+        open={!!menuAnchor}
+        onClose={() => setMenuAnchor(null)}
+      >
         {Object.entries(productOptionMenus).map(([option, menu]) => (
           <OptionMenu key={option} menu={menu} option={option} />
         ))}

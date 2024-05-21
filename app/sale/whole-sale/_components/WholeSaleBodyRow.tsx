@@ -16,12 +16,23 @@ import { authState } from '@/store/isLogin';
 
 interface Props {
   wholeSale: WholeSaleItem;
-  onClickRow: (event: MouseEvent<HTMLTableCellElement>, sale: WholeSaleItem) => void;
-  onClickOption: (option: SelectOption | null, sale: WholeSaleItem | null) => void;
+  onClickRow: (
+    event: MouseEvent<HTMLTableCellElement>,
+    sale: WholeSaleItem
+  ) => void;
+  onClickOption: (
+    option: SelectOption | null,
+    sale: WholeSaleItem | null
+  ) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const WholeSaleBodyRow: FC<Props> = ({ wholeSale, scrollRef, onClickOption, onClickRow }) => {
+const WholeSaleBodyRow: FC<Props> = ({
+  wholeSale,
+  scrollRef,
+  onClickOption,
+  onClickRow,
+}) => {
   const { role } = useReactiveVar(authState);
   const cannotModify = role == UserRole.Staff;
 
@@ -47,10 +58,19 @@ const WholeSaleBodyRow: FC<Props> = ({ wholeSale, scrollRef, onClickOption, onCl
 
   const createRow = (sale: WholeSaleItem) => {
     const profit = sale.totalPayCost - sale.totalWonCost;
-    const profitRate = getProfitRate(sale.totalPayCost - sale.totalWonCost, sale.totalPayCost);
+    const profitRate = getProfitRate(
+      sale.totalPayCost - sale.totalWonCost,
+      sale.totalPayCost
+    );
     return [
       sale.mallId,
       dayjs(sale.saleAt).format('YYYY-MM-DD'),
+      getNumberWithComma(sale.totalCount),
+      getKCWFormat(sale.totalWonCost),
+      getKCWFormat(sale.totalPayCost),
+      getKCWFormat(profit),
+      `${profitRate}%`,
+      sale.isDone ? '정산완료' : '정산중',
       <Stack key={Math.random()} direction="column" gap={1}>
         {sale.productList.map((item) => (
           <Chip
@@ -59,12 +79,6 @@ const WholeSaleBodyRow: FC<Props> = ({ wholeSale, scrollRef, onClickOption, onCl
           />
         ))}
       </Stack>,
-      getNumberWithComma(sale.totalCount),
-      getKCWFormat(sale.totalWonCost),
-      getKCWFormat(sale.totalPayCost),
-      getKCWFormat(profit),
-      `${profitRate}%`,
-      sale.isDone ? '정산완료' : '정산중',
     ];
   };
 
@@ -72,7 +86,11 @@ const WholeSaleBodyRow: FC<Props> = ({ wholeSale, scrollRef, onClickOption, onCl
 
   return (
     <TableRow hover ref={scrollRef}>
-      <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
+      <Menu
+        anchorEl={menuAnchor}
+        open={!!menuAnchor}
+        onClose={() => setMenuAnchor(null)}
+      >
         {Object.entries(productOptionMenus).map(([option, menu]) => (
           <OptionMenu key={option} menu={menu} option={option} />
         ))}

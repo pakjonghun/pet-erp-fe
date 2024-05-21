@@ -40,7 +40,9 @@ const DashboardLayout: FC<Props> = ({ children }) => {
   }, []);
 
   return (
-    <Box sx={{ height: '100%', bgcolor: (theme) => theme.palette.primary.light }}>
+    <Box
+      sx={{ height: '100%', bgcolor: (theme) => theme.palette.primary.light }}
+    >
       <SubHeader title="대시보드">
         <Tabs
           sx={{ mt: 2 }}
@@ -85,6 +87,7 @@ const DashboardLayout: FC<Props> = ({ children }) => {
               <Switch
                 size="small"
                 value={isShowPrevData}
+                checked={isShowPrevData}
                 onChange={(_, checked) => showPrevData(checked)}
               />
             }
