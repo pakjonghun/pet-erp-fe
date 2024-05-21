@@ -12,7 +12,7 @@ import {
   createProductStockSchema,
 } from '../_validations/createProductStockList';
 import StockProduct from './StockProduct';
-import { StockColumn } from '@/http/graphql/codegen/graphql';
+import { CreateStockInput, StockColumn } from '@/http/graphql/codegen/graphql';
 import { snackMessage } from '@/store/snackMessage';
 import { client } from '@/http/graphql/client';
 import { useOutStocks } from '@/http/graphql/hooks/stock/useOutStocks';
@@ -41,7 +41,14 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
   });
 
   const onSubmit = (values: CreateProductStockForm) => {
-    const newValues = filterEmptyValues(values) as CreateProductStockForm;
+    const newValues = filterEmptyValues(values) as CreateStockInput;
+    const newStock = newValues.stocks.map((stock) => {
+      return {
+        ...stock,
+        isSubsidiary: true,
+      };
+    });
+    newValues.stocks = newStock;
     outStocks({
       variables: {
         outStocksInput: newValues,
@@ -92,10 +99,7 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
   };
 
   const currentProductList = watch('stocks');
-  const totalCount = currentProductList.reduce(
-    (acc, cur) => acc + cur.count,
-    0
-  );
+  const totalCount = currentProductList.reduce((acc, cur) => acc + cur.count, 0);
 
   return (
     <BaseModal open={open} onClose={handleClose}>
@@ -118,11 +122,7 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
             gap={3}
           >
             <FormLabel>출고 재고 목록</FormLabel>
-            <Button
-              onClick={handleAppendProduct}
-              variant="outlined"
-              endIcon={<PlusOneIcon />}
-            >
+            <Button onClick={handleAppendProduct} variant="outlined" endIcon={<PlusOneIcon />}>
               추가
             </Button>
             <Typography>{`총수량 : ${totalCount}EA`}</Typography>
@@ -134,6 +134,7 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
             {fields.map((product, index) => {
               return (
                 <StockProduct
+                  isSubsidiary={true}
                   isProductFreeze={productStock != null}
                   index={index}
                   control={control}
@@ -150,11 +151,7 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
-          <Button
-            type="submit"
-            endIcon={loading ? <CommonLoading /> : ''}
-            variant="contained"
-          >
+          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
             출고
           </Button>
         </Stack>

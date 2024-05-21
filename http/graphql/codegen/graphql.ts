@@ -131,6 +131,7 @@ export type CreateProductInput = {
 
 export type CreateSingleStockInput = {
   count: Scalars['Int']['input'];
+  isSubsidiary: Scalars['Boolean']['input'];
   productName: Scalars['String']['input'];
   storageName: Scalars['String']['input'];
 };

@@ -3,10 +3,9 @@ import { Subsidiary } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
 import ModalTitle from '@/components/ui/typograph/ModalTitle';
 import { getKCWFormat } from '@/utils/common';
-import { Stack, Button } from '@mui/material';
+import { Stack, Button, Chip } from '@mui/material';
 import BasePopover from '@/components/ui/modal/BasePopover';
 import { EMPTY } from '@/constants';
-import { getProductList } from '../util';
 
 interface Props {
   open: boolean;
@@ -41,7 +40,13 @@ const SubsidiaryDetailPopover: FC<Props> = ({
         <LabelText label="리드타임" text={selectedSubsidiary.leadTime ?? EMPTY} />
         <LabelText
           label="사용되는 제품목록"
-          text={getProductList(selectedSubsidiary.productList)}
+          text={
+            <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1 }}>
+              {(selectedSubsidiary.productList ?? [])?.map((product) => {
+                return <Chip key={product._id} label={product.name} />;
+              })}
+            </Stack>
+          }
         />
       </Stack>
       <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">

@@ -1,6 +1,6 @@
 import { FC, MouseEvent, useState } from 'react';
 import Cell from '@/components/table/Cell';
-import { IconButton, Menu, TableRow } from '@mui/material';
+import { Chip, IconButton, Menu, Stack, TableRow } from '@mui/material';
 import { getKCWFormat } from '@/utils/common';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { EMPTY, SelectedOptionItem } from '@/constants';
@@ -9,7 +9,6 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { Subsidiary } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import { SelectOption } from '../../types';
-import { getProductList } from '../util';
 
 interface Props {
   subsidiary: Subsidiary;
@@ -46,7 +45,11 @@ const SubsidiaryBodyRow: FC<Props> = ({ subsidiary, scrollRef, onClickOption, on
       subsidiary.name,
       subsidiary.wonPrice == null ? EMPTY : getKCWFormat(subsidiary.wonPrice),
       subsidiary.leadTime ? `${subsidiary.leadTime}일` : EMPTY,
-      getProductList(subsidiary.productList),
+      <Stack key={Math.random()} direction="column" gap={1}>
+        {(subsidiary.productList ?? []).map((subsidiary) => {
+          return <Chip key={subsidiary._id} label={subsidiary.name} />;
+        })}
+      </Stack>,
     ];
   };
 

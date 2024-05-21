@@ -1,5 +1,5 @@
 import { FC, MouseEvent, useState } from 'react';
-import { Box, IconButton, Menu, Paper, Stack } from '@mui/material';
+import { Box, Chip, IconButton, Menu, Paper, Stack } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { SelectOption } from '../../types';
 import { EMPTY, SelectedOptionItem } from '@/constants';
@@ -8,7 +8,6 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { Subsidiary } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
-import { getProductList } from '../util';
 
 interface Props {
   subsidiary: Subsidiary;
@@ -81,7 +80,16 @@ const SubsidiaryCard: FC<Props> = ({ subsidiary, scrollRef, onClickOption, onCli
           </Box>
         </Stack>
         <Stack direction="row" justifyContent="space-between" gap={2}>
-          <LabelText label="제품 리스트" text={getProductList(subsidiary.productList)} />
+          <LabelText
+            label="사용되는 제품 리스트"
+            text={
+              <Stack direction="row" gap={1} flexWrap="wrap">
+                {(subsidiary.productList ?? []).map((product) => (
+                  <Chip key={product._id} label={product.name} />
+                ))}
+              </Stack>
+            }
+          />
         </Stack>
       </Box>
     </Paper>

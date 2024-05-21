@@ -4,15 +4,7 @@ import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT } from '@/constants';
 import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import {
-  Autocomplete,
-  Box,
-  IconButton,
-  Paper,
-  Stack,
-  TextField,
-  styled,
-} from '@mui/material';
+import { Autocomplete, Box, IconButton, Paper, Stack, TextField, styled } from '@mui/material';
 import { Control, Controller, FieldErrors } from 'react-hook-form';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { CreateProductForm } from '../_validations/createProductStockList';
@@ -21,6 +13,7 @@ import { Storage } from '@/http/graphql/codegen/graphql';
 import { useSubsidiaries } from '@/http/graphql/hooks/subsidiary/useSubsidiaries';
 
 interface Props {
+  isSubsidiary: boolean;
   index: number;
   control: Control<any>;
   remove: (index: number) => void;
@@ -29,6 +22,7 @@ interface Props {
 }
 
 const StockProduct: FC<Props> = ({
+  isSubsidiary,
   index,
   control,
   remove,
@@ -42,11 +36,14 @@ const StockProduct: FC<Props> = ({
     data: subsidiaryData,
     networkStatus: subsidiaryNetwork,
     fetchMore: fetchMoreSubsidiary,
-  } = useSubsidiaries({
-    keyword: delayedProductKeyword,
-    skip: 0,
-    limit: LIMIT,
-  });
+  } = useSubsidiaries(
+    {
+      keyword: delayedProductKeyword,
+      skip: 0,
+      limit: LIMIT,
+    },
+    !isSubsidiary
+  );
   const subsidiaryRows = subsidiaryData?.subsidiaries.data ?? [];
   const isLoadingSubsidiary =
     subsidiaryNetwork == 3 || subsidiaryNetwork == 1 || subsidiaryNetwork == 2;
@@ -73,15 +70,17 @@ const StockProduct: FC<Props> = ({
     callback: subsidiaryCallback,
   });
 
-  const { data, networkStatus, fetchMore } = useProducts({
-    keyword: delayedProductKeyword,
-    limit: LIMIT,
-    skip: 0,
-  });
+  const { data, networkStatus, fetchMore } = useProducts(
+    {
+      keyword: delayedProductKeyword,
+      limit: LIMIT,
+      skip: 0,
+    },
+    isSubsidiary
+  );
 
   const rows = data?.products.data.map((item) => item.name) ?? [];
-  const isLoading =
-    networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
+  const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -102,7 +101,7 @@ const StockProduct: FC<Props> = ({
     }
   };
 
-  const scrollRef = useInfinityScroll({ callback });
+  const productScrollRef = useInfinityScroll({ callback });
 
   const [storageKeyword, setStorageKeyword] = useState('');
   const delayedStorageKeyword = useTextDebounce(storageKeyword ?? '');
@@ -117,11 +116,8 @@ const StockProduct: FC<Props> = ({
     skip: 0,
   });
 
-  const storageRows = ((storageData?.storages.data as Storage[]) ?? []).map(
-    (item) => item.name
-  );
-  const isStorageLoading =
-    storageStatus == 1 || storageStatus == 2 || storageStatus == 3;
+  const storageRows = ((storageData?.storages.data as Storage[]) ?? []).map((item) => item.name);
+  const isStorageLoading = storageStatus == 1 || storageStatus == 2 || storageStatus == 3;
 
   const getStorageCallback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -142,7 +138,7 @@ const StockProduct: FC<Props> = ({
     }
   };
   const storageScrollRef = useInfinityScroll({ callback: getStorageCallback });
-
+  const scrollRef = isSubsidiary ? subsidiaryScrollRef : productScrollRef;
   return (
     <Stack
       sx={{
@@ -175,19 +171,12 @@ const StockProduct: FC<Props> = ({
               loading={isStorageLoading}
               loadingText="로딩중"
               noOptionsText="검색 결과가 없습니다."
-              renderInput={(params) => (
-                <TextField {...params} label="창고" required />
-              )}
+              renderInput={(params) => <TextField {...params} label="창고" required />}
               renderOption={(props, item, state) => {
                 const { key, ...rest } = props as any;
                 const isLast = state.index === storageRows.length - 1;
                 return (
-                  <Box
-                    component="li"
-                    ref={isLast ? storageScrollRef : null}
-                    key={item}
-                    {...rest}
-                  >
+                  <Box component="li" ref={isLast ? storageScrollRef : null} key={item} {...rest}>
                     {item}
                   </Box>
                 );
@@ -221,9 +210,9 @@ const StockProduct: FC<Props> = ({
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="제품 이름"
-                  error={!!error?.storageName?.message}
-                  helperText={error?.storageName?.message ?? ''}
+                  label={isSubsidiary ? '부자재 이름' : '제품 이름'}
+                  error={!!error?.productName?.message}
+                  helperText={error?.productName?.message ?? ''}
                 />
               )}
               renderOption={(props, item, state) => {

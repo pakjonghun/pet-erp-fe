@@ -1,8 +1,9 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import PlusOneIcon from '@mui/icons-material/PlusOne';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
   AppBar,
+  Box,
   Button,
   FormGroup,
   FormLabel,
@@ -21,7 +22,11 @@ import {
   createProductStockSchema,
 } from '../_validations/createProductStockList';
 import StockProduct from './StockProduct';
-import { StockColumn } from '@/http/graphql/codegen/graphql';
+import {
+  CreateSingleStockInput,
+  CreateStockInput,
+  StockColumn,
+} from '@/http/graphql/codegen/graphql';
 import { useAddStock } from '@/http/graphql/hooks/stock/useAddStocks';
 import { snackMessage } from '@/store/snackMessage';
 import { client } from '@/http/graphql/client';
@@ -33,7 +38,6 @@ interface Props {
 }
 
 const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
-  const [selectedTab, setSelectedTab] = useState('product');
   const [addStock, { loading }] = useAddStock();
 
   const {
@@ -42,6 +46,7 @@ const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
     control,
     clearErrors,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<CreateProductStockForm>({
     resolver: zodResolver(createProductStockSchema),
@@ -50,8 +55,19 @@ const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
     },
   });
 
+  const [tabValue, setTabValue] = useState(0);
+  const handleClickTab = (value: number) => () => {
+    setTabValue(value);
+    setValue('stocks', [] as unknown as any);
+  };
+
   const onSubmit = (values: CreateProductStockForm) => {
-    const newValues = filterEmptyValues(values) as CreateProductStockForm;
+    const newValues = filterEmptyValues(values) as CreateStockInput;
+    const newStocks = newValues.stocks.map((stock) => ({
+      ...stock,
+      isSubsidiary: !!tabValue,
+    }));
+    newValues.stocks = newStocks;
     addStock({
       variables: {
         addStocksInput: newValues,
@@ -103,30 +119,20 @@ const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
   };
 
   const currentProductList = watch('stocks');
-  const totalCount = currentProductList.reduce(
-    (acc, cur) => acc + cur.count,
-    0
-  );
+  const totalCount = currentProductList.reduce((acc, cur) => acc + cur.count, 0);
 
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ fontWeight: 600 }}>
         입고 재고 입력
       </Typography>
-      {/* <Stack
-        direction="row"
-        sx={(theme) => ({
-          mt: 2,
-          borderBottom: `1px solid ${theme.palette.primary.light}`,
-        })}
-      >
-        <Button sx={{}} variant="text">제품</Button>
-        <Button variant="text">부자재</Button>
-      </Stack> */}
-      <Tabs TabIndicatorProps={{}} value={0}>
-        <Tab label="제품" />
-        <Tab label="부자재" />
-      </Tabs>
+
+      <Box sx={{ mt: 1, borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs value={tabValue}>
+          <Tab sx={{ fontSize: 14 }} onClick={handleClickTab(0)} label="제품" />
+          <Tab sx={{ fontSize: 14 }} onClick={handleClickTab(1)} label="부자재" />
+        </Tabs>
+      </Box>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={{ mt: 4 }}>
           <Stack
@@ -140,11 +146,7 @@ const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
             gap={3}
           >
             <FormLabel>입고 재고 목록</FormLabel>
-            <Button
-              onClick={handleAppendProduct}
-              variant="outlined"
-              endIcon={<PlusOneIcon />}
-            >
+            <Button onClick={handleAppendProduct} variant="outlined" endIcon={<PlusOneIcon />}>
               추가
             </Button>
             <Typography>{`총수량 : ${totalCount}EA`}</Typography>
@@ -156,6 +158,7 @@ const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
             {fields.map((product, index) => {
               return (
                 <StockProduct
+                  isSubsidiary={!!tabValue}
                   isProductFreeze={productStock != null}
                   index={index}
                   control={control}
@@ -172,11 +175,7 @@ const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
-          <Button
-            type="submit"
-            endIcon={loading ? <CommonLoading /> : ''}
-            variant="contained"
-          >
+          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
             입고
           </Button>
         </Stack>

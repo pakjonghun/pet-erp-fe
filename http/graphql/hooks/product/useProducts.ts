@@ -13,11 +13,12 @@ const products = graphql(`
   }
 `);
 
-export const useProducts = (productsInput: ProductsInput) => {
+export const useProducts = (productsInput: ProductsInput, skip: boolean = false) => {
   return useQuery<{ products: ProductsOutput }, QueryProductsArgs>(products, {
     variables: {
       productsInput,
     },
     notifyOnNetworkStatusChange: true,
+    skip,
   });
 };

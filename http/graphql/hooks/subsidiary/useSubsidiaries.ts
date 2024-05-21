@@ -17,11 +17,12 @@ const subsidiaries = graphql(`
   }
 `);
 
-export const useSubsidiaries = (subsidiariesInput: SubsidiariesInput) => {
+export const useSubsidiaries = (subsidiariesInput: SubsidiariesInput, skip: boolean = false) => {
   return useQuery<{ subsidiaries: SubsidiariesOutput }, SubsidiariesQueryVariables>(subsidiaries, {
     variables: {
       subsidiariesInput,
     },
     notifyOnNetworkStatusChange: true,
+    skip,
   });
 };

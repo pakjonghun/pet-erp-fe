@@ -116,6 +116,7 @@ const AddPStockModal: FC<Props> = ({ open, onClose }) => {
             {fields.map((product, index) => {
               return (
                 <StockProduct
+                  isSubsidiary={true}
                   index={index}
                   control={control}
                   error={errors.stocks?.[index]}

@@ -15,7 +15,15 @@ const BaseModal: FC<Props> = ({ open, children, onClose, sx }) => {
   return (
     <Modal open={open} onClose={onClose}>
       <PopupContainer
-        sx={{ overflow: 'auto', maxHeight: '90vh', ...sx }}
+        sx={{
+          overflow: 'auto',
+          maxHeight: '90vh',
+          minWidth: {
+            xs: 300,
+            md: 600,
+          },
+          ...sx,
+        }}
         onClose={onClose}
       >
         {children}
