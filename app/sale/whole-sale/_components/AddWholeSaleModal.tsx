@@ -12,7 +12,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Controller, FieldArrayWithId, useFieldArray, useForm } from 'react-hook-form';
+import {
+  Controller,
+  FieldArrayWithId,
+  useFieldArray,
+  useForm,
+} from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
@@ -68,7 +73,8 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
     clientType: [ClientType.WholeSale, ClientType.Offline],
   });
 
-  const isClientLoading = clientNetwork === 1 || clientNetwork === 2 || clientNetwork === 3;
+  const isClientLoading =
+    clientNetwork === 1 || clientNetwork === 2 || clientNetwork === 3;
   const clientRows = (clientData?.clients.data as Client[]) ?? [];
 
   const clientCallback: IntersectionObserverCallback = (entries) => {
@@ -118,7 +124,9 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
   });
 
   const onSubmit = (createProductInput: CreateWholeSaleForm) => {
-    const newValues = filterEmptyValues(createProductInput) as CreateWholeSaleForm;
+    const newValues = filterEmptyValues(
+      createProductInput
+    ) as CreateWholeSaleForm;
     createWholeSale({
       variables: {
         createWholeSaleInput: newValues,
@@ -184,7 +192,11 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
   const telNumber = watch('telephoneNumber1');
 
   return (
-    <BaseModal open={open} onClose={handleClose}>
+    <BaseModal
+      sx={{ overflow: 'auto', maxHeight: '90vh' }}
+      open={open}
+      onClose={handleClose}
+    >
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
         도매 판매 등록
       </Typography>
@@ -192,7 +204,12 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
       <Typography sx={{ mb: 3 }}>새로운 도매 판매를 등록합니다.</Typography>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FormGroup sx={{ ...modalSizeProps, width: 800, mb: 2 }}>
+        <FormGroup
+          sx={{
+            ...modalSizeProps,
+            mb: 2,
+          }}
+        >
           <Stack direction="row" gap={3} alignItems="center">
             <FormLabel>도매 거래처 정보 입력</FormLabel>
             <Controller
@@ -208,62 +225,77 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
               }}
             />
           </Stack>
-          <Stack direction="row" alignItems="center" gap={3}>
+          <Stack
+            sx={{
+              flexDirection: {
+                xs: 'column',
+                md: 'row',
+              },
+              alignItems: {
+                xs: 'flex-start',
+                md: 'center',
+              },
+            }}
+            gap={3}
+          >
             <Controller
               name="mallId"
               control={control}
               render={({ field }) => {
                 return (
-                  <Stack direction="row" alignItems="center" gap={5} flexWrap="wrap">
-                    <Autocomplete
-                      value={clientRows.find((client) => client.name === field.value)}
-                      onChange={(_, value) => {
-                        field.onChange(value?.name ?? '');
-                        setValue('telephoneNumber1', value?.managerTel ?? EMPTY);
-                      }}
-                      getOptionLabel={(item) => item.name}
-                      size="small"
-                      options={clientRows as Client[]}
-                      isOptionEqualToValue={(item1, item2) => item1.name == item2.name}
-                      defaultValue={{
-                        _id: '',
-                        name: '',
-                        code: '',
-                        clientType: ClientType.WholeSale,
-                        managerTel: EMPTY,
-                      }}
-                      inputValue={clientKeyword}
-                      onInputChange={(_, value) => setClientKeyword(value)}
-                      loading={isClientLoading}
-                      loadingText="로딩중"
-                      noOptionsText="검색 결과가 없습니다."
-                      disablePortal
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          sx={{ minWidth: 400 }}
-                          label="도매 거래처"
-                          required
-                          error={!!errors.mallId?.message}
-                          helperText={errors.mallId?.message ?? ''}
-                        />
-                      )}
-                      renderOption={(props, item, state) => {
-                        const { key, ...rest } = props as any;
-                        const isLast = state.index === clientRows.length - 1;
-                        return (
-                          <Box
-                            component="li"
-                            ref={isLast ? clientScrollRef : null}
-                            key={item.name}
-                            {...rest}
-                          >
-                            {item.name}
-                          </Box>
-                        );
-                      }}
-                    />
-                  </Stack>
+                  <Autocomplete
+                    fullWidth
+                    sx={{ minWidth: 300 }}
+                    value={clientRows.find(
+                      (client) => client.name === field.value
+                    )}
+                    onChange={(_, value) => {
+                      field.onChange(value?.name ?? '');
+                      setValue('telephoneNumber1', value?.managerTel ?? EMPTY);
+                    }}
+                    getOptionLabel={(item) => item.name}
+                    size="small"
+                    options={clientRows as Client[]}
+                    isOptionEqualToValue={(item1, item2) =>
+                      item1.name == item2.name
+                    }
+                    defaultValue={{
+                      _id: '',
+                      name: '',
+                      code: '',
+                      clientType: ClientType.WholeSale,
+                      managerTel: EMPTY,
+                    }}
+                    inputValue={clientKeyword}
+                    onInputChange={(_, value) => setClientKeyword(value)}
+                    loading={isClientLoading}
+                    loadingText="로딩중"
+                    noOptionsText="검색 결과가 없습니다."
+                    disablePortal
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="도매 거래처"
+                        required
+                        error={!!errors.mallId?.message}
+                        helperText={errors.mallId?.message ?? ''}
+                      />
+                    )}
+                    renderOption={(props, item, state) => {
+                      const { key, ...rest } = props as any;
+                      const isLast = state.index === clientRows.length - 1;
+                      return (
+                        <Box
+                          component="li"
+                          ref={isLast ? clientScrollRef : null}
+                          key={item.name}
+                          {...rest}
+                        >
+                          {item.name}
+                        </Box>
+                      );
+                    }}
+                  />
                 );
               }}
             />
@@ -277,6 +309,8 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
                       '& input': {
                         py: 1.2,
                       },
+                      width: '100%',
+                      minWidth: 160,
                     }}
                     label="판매날짜"
                     value={dayjs(field.value)}
@@ -291,7 +325,9 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
             />
           </Stack>
         </FormGroup>
-        {!!telNumber && <LabelText label="연락처 : " text={telNumber ?? EMPTY} />}
+        {!!telNumber && (
+          <LabelText label="연락처 : " text={telNumber ?? EMPTY} />
+        )}
         {productList.length > 0 && (
           <Stack direction="row" sx={{ mt: 2 }} gap={3} alignItems="center">
             <LabelText label="판매가" text={totalPayCost} />
@@ -299,20 +335,28 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
             <LabelText label="수익" text={totalPayCost - totalWonCost} />
             <LabelText
               label="수익율"
-              text={getProfitRate(totalPayCost - totalWonCost, totalPayCost) + '%'}
+              text={
+                getProfitRate(totalPayCost - totalWonCost, totalPayCost) + '%'
+              }
             />
           </Stack>
         )}
         <FormGroup sx={{ mt: 4 }}>
           <Stack direction="row" alignItems="center" gap={3}>
             <FormLabel>판매 제품 목록</FormLabel>
-            <Button onClick={handleAddProduct} variant="outlined" endIcon={<PlusOne />}>
+            <Button
+              onClick={handleAddProduct}
+              variant="outlined"
+              endIcon={<PlusOne />}
+            >
               추가
             </Button>
           </Stack>
           <Stack sx={{ mt: 2 }} gap={2}>
             <Typography sx={{ mt: 1 }} color="error" variant="caption">
-              {errors?.productList?.message ?? errors?.productList?.root?.message ?? ''}
+              {errors?.productList?.message ??
+                errors?.productList?.root?.message ??
+                ''}
             </Typography>
             {fields.map((product, index) => {
               return (
