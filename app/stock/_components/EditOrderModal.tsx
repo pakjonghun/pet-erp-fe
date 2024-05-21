@@ -245,7 +245,6 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
                   loading={false}
                   loadingText="로딩중"
                   noOptionsText="검색 결과가 없습니다."
-                  disablePortal
                   renderInput={(params) => (
                     <TextField {...params} label="공장" required />
                   )}

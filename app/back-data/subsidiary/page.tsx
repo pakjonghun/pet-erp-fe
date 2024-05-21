@@ -20,7 +20,6 @@ import { PlusOneOutlined, Search } from '@mui/icons-material';
 import { ChangeEvent, useState } from 'react';
 import CreateSubsidiaryModal from './_components/AddSubsidiarytModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
-import ProductionTableBody from './_components/SubsidiaryTableBody';
 import { useUploadExcelFile } from '@/http/rest/hooks/file/useUploadExcelFile';
 import { snackMessage } from '@/store/snackMessage';
 import UploadButton from '@/components/ui/button/UploadButtont';
@@ -30,7 +29,6 @@ import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFil
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { SubsidiaryHeaderList } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { Product } from '@/http/graphql/codegen/graphql';
 import { useSubsidiaries } from '@/http/graphql/hooks/subsidiary/useSubsidiaries';
 import SubsidiaryCards from './_components/SubsidiaryCards';
 import SubsidiaryTableBody from './_components/SubsidiaryTableBody';
@@ -80,7 +78,10 @@ const BackDataPage = () => {
       { service: 'subsidiary', formBody },
       {
         onSuccess: () => {
-          snackMessage({ message: '부자재 업로드가 완료되었습니다.', severity: 'success' });
+          snackMessage({
+            message: '부자재 업로드가 완료되었습니다.',
+            severity: 'success',
+          });
           refetch();
         },
         onError: (error) => {
@@ -102,7 +103,10 @@ const BackDataPage = () => {
   const handleDownload = () => {
     download('subsidiary', {
       onSuccess: () => {
-        snackMessage({ message: '부자재 다운로드가 완료되었습니다.', severity: 'success' });
+        snackMessage({
+          message: '부자재 다운로드가 완료되었습니다.',
+          severity: 'success',
+        });
       },
       onError: (err) => {
         const message = err.message;
@@ -123,7 +127,12 @@ const BackDataPage = () => {
           onClose={() => setOpenCreateProduct(false)}
         />
       )}
-      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+      <Stack
+        sx={{ px: 2 }}
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <TableTitle title="부자재 백데이터" />
         <Stack direction="row" alignItems="center" gap={2}>
           <UploadButton

@@ -1,5 +1,7 @@
 import * as React from 'react';
-import Autocomplete, { AutocompleteRenderInputParams } from '@mui/material/Autocomplete';
+import Autocomplete, {
+  AutocompleteRenderInputParams,
+} from '@mui/material/Autocomplete';
 import { Box } from '@mui/material';
 
 interface Props {
@@ -35,14 +37,18 @@ const SearchAutoComplete: React.FC<Props> = ({
       value={value}
       noOptionsText="검색 결과가 없습니다."
       onChange={(_, value) => setValue(value)}
-      disablePortal
       options={options}
       renderInput={renderSearchInput}
       renderOption={(props, item, state) => {
         const { key, ...rest } = props as any;
         const isLast = state.index === options.length - 1;
         return (
-          <Box component="li" ref={isLast ? scrollRef : null} key={item} {...rest}>
+          <Box
+            component="li"
+            ref={isLast ? scrollRef : null}
+            key={item}
+            {...rest}
+          >
             {item}
           </Box>
         );

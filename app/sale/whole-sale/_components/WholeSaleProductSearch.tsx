@@ -139,7 +139,6 @@ const WholeSaleProductSearch: FC<Props> = ({
               loading={isStorageLoading}
               loadingText="로딩중"
               noOptionsText="검색 결과가 없습니다."
-              disablePortal
               renderInput={(params) => (
                 <TextField {...params} label="창고" required />
               )}
@@ -212,7 +211,6 @@ const WholeSaleProductSearch: FC<Props> = ({
 
                 handleReplaceItem(newField);
               }}
-              disablePortal
               renderInput={(params) => (
                 <TextField
                   {...params}

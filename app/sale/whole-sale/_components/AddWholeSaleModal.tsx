@@ -267,7 +267,6 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
                     loading={isClientLoading}
                     loadingText="로딩중"
                     noOptionsText="검색 결과가 없습니다."
-                    disablePortal
                     renderInput={(params) => (
                       <TextField
                         {...params}

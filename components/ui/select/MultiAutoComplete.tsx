@@ -1,5 +1,7 @@
 import { FC, ReactNode } from 'react';
-import Autocomplete, { AutocompleteRenderInputParams } from '@mui/material/Autocomplete';
+import Autocomplete, {
+  AutocompleteRenderInputParams,
+} from '@mui/material/Autocomplete';
 import { Box } from '@mui/material';
 
 interface Props {
@@ -35,13 +37,17 @@ const MultiAutoComplete: FC<Props> = ({
       multiple
       options={options}
       // value={value}
-      disablePortal
       renderInput={renderSearchInput}
       renderOption={(props, item, state) => {
         const { key, ...rest } = props as any;
         const isLast = state.index === options.length - 1;
         return (
-          <Box component="li" ref={isLast ? scrollRef : null} key={item} {...rest}>
+          <Box
+            component="li"
+            ref={isLast ? scrollRef : null}
+            key={item}
+            {...rest}
+          >
             {item}
           </Box>
         );

@@ -4,12 +4,21 @@ import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT } from '@/constants';
 import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { Autocomplete, Box, IconButton, Stack, TextField } from '@mui/material';
+import {
+  Autocomplete,
+  Box,
+  IconButton,
+  Paper,
+  Stack,
+  TextField,
+  styled,
+} from '@mui/material';
 import { Control, Controller, FieldErrors } from 'react-hook-form';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { CreateProductForm } from '../_validations/createProductStockList';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 import { Storage } from '@/http/graphql/codegen/graphql';
+import { useSubsidiaries } from '@/http/graphql/hooks/subsidiary/useSubsidiaries';
 
 interface Props {
   index: number;
@@ -28,6 +37,41 @@ const StockProduct: FC<Props> = ({
 }) => {
   const [productKeyword, setProductKeyword] = useState('');
   const delayedProductKeyword = useTextDebounce(productKeyword ?? '');
+
+  const {
+    data: subsidiaryData,
+    networkStatus: subsidiaryNetwork,
+    fetchMore: fetchMoreSubsidiary,
+  } = useSubsidiaries({
+    keyword: delayedProductKeyword,
+    skip: 0,
+    limit: LIMIT,
+  });
+  const subsidiaryRows = subsidiaryData?.subsidiaries.data ?? [];
+  const isLoadingSubsidiary =
+    subsidiaryNetwork == 3 || subsidiaryNetwork == 1 || subsidiaryNetwork == 2;
+
+  const subsidiaryCallback: IntersectionObserverCallback = (entries) => {
+    if (entries[0].isIntersecting) {
+      if (isLoadingSubsidiary) return;
+
+      const totalCount = subsidiaryData?.subsidiaries.totalCount;
+      if (totalCount != null && totalCount > rows.length) {
+        fetchMore({
+          variables: {
+            subsidiariesInput: {
+              keyword: delayedProductKeyword,
+              skip: subsidiaryRows.length,
+              limit: LIMIT,
+            },
+          },
+        });
+      }
+    }
+  };
+  const subsidiaryScrollRef = useInfinityScroll({
+    callback: subsidiaryCallback,
+  });
 
   const { data, networkStatus, fetchMore } = useProducts({
     keyword: delayedProductKeyword,
@@ -117,7 +161,9 @@ const StockProduct: FC<Props> = ({
           return (
             <Autocomplete
               fullWidth
-              sx={{ minWidth: 200 }}
+              sx={{
+                minWidth: 200,
+              }}
               value={field.value}
               onChange={(_, value) => field.onChange(value)}
               size="small"
@@ -129,7 +175,6 @@ const StockProduct: FC<Props> = ({
               loading={isStorageLoading}
               loadingText="로딩중"
               noOptionsText="검색 결과가 없습니다."
-              disablePortal
               renderInput={(params) => (
                 <TextField {...params} label="창고" required />
               )}
@@ -173,7 +218,6 @@ const StockProduct: FC<Props> = ({
               onChange={(_, value) => {
                 field.onChange(value);
               }}
-              disablePortal
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -187,6 +231,7 @@ const StockProduct: FC<Props> = ({
                 const isLast = state.index === rows.length - 1;
                 return (
                   <Box
+                    sx={{ zIndex: 100000 }}
                     component="li"
                     ref={isLast ? scrollRef : null}
                     key={item}
@@ -224,3 +269,7 @@ const StockProduct: FC<Props> = ({
 };
 
 export default StockProduct;
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  zIndex: 9999, // 원하는 z-index 값
+}));
