@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 const useInfinityScroll = ({
   callback,
-  option = { threshold: 0.8 },
+  option = { threshold: 0.5 },
 }: {
   callback: IntersectionObserverCallback;
   option?: IntersectionObserverInit;

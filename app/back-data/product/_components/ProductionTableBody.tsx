@@ -71,6 +71,7 @@ const ProductionTableBody: FC<Props> = ({ data, isLoading, isEmpty, scrollRef })
       {data.map((item, index) => {
         const product = item as unknown as Product;
         const isLast = index === data.length - 1;
+
         return (
           <ProductBodyRow
             onClickRow={(event, product: Product) => {

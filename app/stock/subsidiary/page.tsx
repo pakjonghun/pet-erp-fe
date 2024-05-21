@@ -54,7 +54,6 @@ const SubsidiaryStockPage = () => {
 
   const rows = (data?.subsidiaryStocks.data as SubsidiaryStockColumn[]) ?? [];
   const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
-
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
       if (isLoading) return;

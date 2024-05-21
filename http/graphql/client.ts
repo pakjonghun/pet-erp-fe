@@ -206,6 +206,10 @@ export const client = new ApolloClient({
             keyArgs: ['productCountStocksInput', ['keyword', 'storageName']],
             merge,
           },
+          subsidiaryStocks: {
+            keyArgs: ['stocksInput', ['keyword', 'storageName']],
+            merge,
+          },
           wholeSales: {
             keyArgs: ['wholeSalesInput', ['keyword', 'from', 'to']],
             merge,

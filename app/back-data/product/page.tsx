@@ -49,8 +49,9 @@ const ProductPage = () => {
   const rows = (data?.products.data as Product[]) ?? [];
   const isLoading = networkStatus == 3 || networkStatus == 1;
   const isEmpty = !isLoading && rows.length === 0;
-
+  console.log('networkStatus : ', networkStatus);
   const callback: IntersectionObserverCallback = (entries) => {
+    console.log('1 : ', 1);
     if (entries[0].isIntersecting) {
       if (isLoading) return;
 
