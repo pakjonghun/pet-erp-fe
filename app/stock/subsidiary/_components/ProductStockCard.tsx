@@ -5,7 +5,8 @@ import { EMPTY, SelectedOptionItem } from '@/constants';
 import { StockColumn } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
-import InventoryIcon from '@mui/icons-material/Inventory';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 interface Props {
   stock: StockColumn;
@@ -23,7 +24,7 @@ const ProductStockCard: FC<Props> = ({ stock, scrollRef, onClickOption, onClickR
         setMenuAnchor(null);
       },
       label: '입고',
-      icon: <InventoryIcon />,
+      icon: <AddCircleOutlineIcon />,
     },
     delete: {
       callback: () => {
@@ -31,7 +32,7 @@ const ProductStockCard: FC<Props> = ({ stock, scrollRef, onClickOption, onClickR
         setMenuAnchor(null);
       },
       label: '출고',
-      icon: <InventoryIcon />,
+      icon: <RemoveCircleOutlineIcon />,
     },
   };
 

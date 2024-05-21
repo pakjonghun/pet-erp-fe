@@ -121,8 +121,28 @@ const ProductStockPage = () => {
         </Stack>
       </Stack>
       <FormGroup sx={{ ml: 2 }}>
-        <Stack direction="row" alignItems="center" gap={3}>
-          <FormControl>
+        <Stack
+          sx={{
+            flexDirection: {
+              xs: 'column',
+              md: 'row',
+            },
+            alignItems: {
+              xs: 'flex-start',
+              md: 'center',
+            },
+          }}
+          gap={2}
+        >
+          <FormControl
+            sx={{
+              width: {
+                md: 300,
+                xs: '100%',
+              },
+              pr: 2,
+            }}
+          >
             <TextField
               onChange={(event) => setKeyword(event.target.value)}
               InputProps={{
@@ -132,12 +152,22 @@ const ProductStockPage = () => {
                   </InputAdornment>
                 ),
               }}
-              sx={{ width: 300, my: 2 }}
+              sx={{
+                my: 2,
+              }}
               label="검색할 제품 이름을 입력하세요."
               size="small"
             />
           </FormControl>
-          <FormControl sx={{ width: 120 }}>
+          <FormControl
+            sx={{
+              pr: 2,
+              width: {
+                md: 120,
+                xs: '100%',
+              },
+            }}
+          >
             <BaseSelect
               defaultValue={storageOption}
               label="창고 선택"
