@@ -1,7 +1,16 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import PlusOneIcon from '@mui/icons-material/PlusOne';
 import BaseModal from '@/components/ui/modal/BaseModal';
-import { Button, FormGroup, FormLabel, Stack, Typography } from '@mui/material';
+import {
+  AppBar,
+  Button,
+  FormGroup,
+  FormLabel,
+  Stack,
+  Tab,
+  Tabs,
+  Typography,
+} from '@mui/material';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
@@ -24,6 +33,7 @@ interface Props {
 }
 
 const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
+  const [selectedTab, setSelectedTab] = useState('product');
   const [addStock, { loading }] = useAddStock();
 
   const {
@@ -100,9 +110,23 @@ const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
 
   return (
     <BaseModal open={open} onClose={handleClose}>
-      <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
+      <Typography variant="h6" component="h6" sx={{ fontWeight: 600 }}>
         입고 재고 입력
       </Typography>
+      {/* <Stack
+        direction="row"
+        sx={(theme) => ({
+          mt: 2,
+          borderBottom: `1px solid ${theme.palette.primary.light}`,
+        })}
+      >
+        <Button sx={{}} variant="text">제품</Button>
+        <Button variant="text">부자재</Button>
+      </Stack> */}
+      <Tabs TabIndicatorProps={{}} value={0}>
+        <Tab label="제품" />
+        <Tab label="부자재" />
+      </Tabs>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={{ mt: 4 }}>
           <Stack
