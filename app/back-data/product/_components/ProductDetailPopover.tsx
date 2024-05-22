@@ -50,7 +50,6 @@ const ProductDetailPopover: FC<Props> = ({
               : getKCWFormat(selectedProduct.wonPrice) ?? EMPTY
           }
         />
-        <LabelText label="유지기간" text={selectedProduct.maintainDate ?? EMPTY} />
         <LabelText label="리드타임" text={selectedProduct.leadTime ?? EMPTY} />
       </Stack>
       <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">

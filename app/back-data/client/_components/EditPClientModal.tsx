@@ -13,16 +13,13 @@ import {
   Typography,
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
-import {
-  CreateClientForm,
-  createClientSchema,
-} from '../_validations/createClientValidation';
+import { CreateClientForm, createClientSchema } from '../_validations/createClientValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { modalSizeProps } from '@/components/commonStyles';
 import { Client, ClientType } from '@/http/graphql/codegen/graphql';
-import { emptyValueToNull, filterEmptyValues } from '@/utils/common';
+import { emptyValueToNull } from '@/utils/common';
 import { clientTypes } from '../constants';
 import { useUpdateClient } from '@/http/graphql/hooks/client/useEditClient';
 import NumberInput from '@/components/ui/input/NumberInput';
@@ -47,10 +44,7 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
     defaultValues: {
       code: selectedClient.code,
       name: selectedClient.name,
-      feeRate:
-        selectedClient.feeRate == null
-          ? undefined
-          : selectedClient.feeRate * 100,
+      feeRate: selectedClient.feeRate == null ? undefined : selectedClient.feeRate * 100,
       clientType: selectedClient.clientType ?? '',
       businessName: selectedClient.businessName ?? '',
       businessNumber: selectedClient.businessNumber ?? '',
@@ -68,13 +62,12 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
         updateClientInput: {
           ...newValues,
           _id: selectedClient._id,
-          feeRate:
-            newValues.feeRate == null ? null : Number(newValues.feeRate) / 100,
+          feeRate: newValues.feeRate == null ? null : Number(newValues.feeRate) / 100,
         },
       },
       onCompleted: () => {
         snackMessage({
-          message: '거래처등록이 완료되었습니다.',
+          message: '거래처수정이 완료되었습니다.',
           severity: 'success',
         });
         handleClose();
@@ -82,7 +75,7 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
       onError: (err) => {
         const message = err.message;
         snackMessage({
-          message: message ?? '거래처등록이 실패했습니다.',
+          message: message ?? '거래처수정이 실패했습니다.',
           severity: 'error',
         });
       },
@@ -97,7 +90,7 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        거래처 입력
+        거래처 수정
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack
@@ -175,9 +168,7 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
                   label="수수료 비율(0~100사이 숫자)"
                   error={!!errors.feeRate?.message}
                   helperText={errors.feeRate?.message ?? ''}
-                  endAdornment={
-                    <InputAdornment position="end">%</InputAdornment>
-                  }
+                  endAdornment={<InputAdornment position="end">%</InputAdornment>}
                 />
               </FormControl>
             )}
@@ -287,12 +278,8 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
-          <Button
-            type="submit"
-            endIcon={loading ? <CommonLoading /> : ''}
-            variant="contained"
-          >
-            등록
+          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
+            수정
           </Button>
         </Stack>
       </form>

@@ -78,7 +78,6 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
             cache.evict({ fieldName: 'stocksState' });
             cache.evict({ fieldName: 'productSales' });
           },
-          optimistic: true,
         });
         onClose();
       },
