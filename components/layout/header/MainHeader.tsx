@@ -30,6 +30,7 @@ const MainHeader: FC<Props> = ({ isLogin, toggleOpen }) => {
         {isLogin && <MobileNavTrigger toggleOpen={toggleOpen} />}
         <Hero isLogin={isLogin} />
         {isLogin && <HeaderNav />}
+
         {isLogin && <SettingMenuTrigger />}
       </Toolbar>
     </AppBar>

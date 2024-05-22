@@ -1,7 +1,7 @@
 'use client';
 
 import { MouseEvent, useState } from 'react';
-import { Box, IconButton } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Menu } from '@mui/material';
 import { BaseListItem } from '@/components/ui/listItem/menuStyles';
@@ -17,6 +17,8 @@ import { snackMessage } from '@/store/snackMessage';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import { useReactiveVar } from '@apollo/client';
 import { authState } from '@/store/isLogin';
+import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
+import LabelText from '@/components/ui/typograph/LabelText';
 
 const SettingMenuTrigger = () => {
   const { role } = useReactiveVar(authState);
@@ -81,11 +83,15 @@ const SettingMenuTrigger = () => {
       icon: <PeopleOutlineOutlinedIcon />,
     },
   };
+  const { data } = useGetMyInfo();
 
   const settingMenuKeys = Object.keys(SettingMenus) as (keyof typeof SettingMenus)[];
 
   return (
-    <Box sx={{ ml: 'auto' }}>
+    <Box sx={{ ml: 'auto', display: 'flex', gap: 1, alignItems: 'center' }}>
+      <Typography variant="body2" sx={{ ml: 'auto' }}>
+        {data?.myInfo.id ?? ''}
+      </Typography>
       <IconButton
         onClick={handleClickSetting}
         size="small"
