@@ -2,17 +2,26 @@ import { FC, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT } from '@/constants';
-import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Autocomplete, Box, IconButton, Paper, Stack, TextField, styled } from '@mui/material';
-import { Control, Controller, FieldErrors } from 'react-hook-form';
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  UseFormClearErrors,
+  UseFormSetError,
+} from 'react-hook-form';
 import NumberInput from '@/components/ui/input/NumberInput';
-import { CreateProductForm } from '../_validations/createProductStockList';
+import { CreateProductForm, CreateProductStockForm } from '../_validations/createProductStockList';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 import { Storage } from '@/http/graphql/codegen/graphql';
-import { useSubsidiaries } from '@/http/graphql/hooks/subsidiary/useSubsidiaries';
+import { useSubsidiaryCountStocks } from '@/http/graphql/hooks/stock/useSubsidiaryCountStocks';
+import { useProductCountStocks } from '@/http/graphql/hooks/stock/useProductCountStocks';
 
 interface Props {
+  clearErrors: UseFormClearErrors<CreateProductStockForm>;
+  setError: UseFormSetError<CreateProductStockForm>;
+  currentProductList: CreateProductForm[];
   isSubsidiary: boolean;
   index: number;
   control: Control<any>;
@@ -21,14 +30,19 @@ interface Props {
   isProductFreeze?: boolean;
 }
 
-const StockProduct: FC<Props> = ({
+const OutStockProduct: FC<Props> = ({
+  currentProductList,
   isSubsidiary,
   index,
   control,
   remove,
   error,
+  clearErrors,
+  setError,
   isProductFreeze = false,
 }) => {
+  const currentProduct = currentProductList[index];
+
   const [productKeyword, setProductKeyword] = useState('');
   const delayedProductKeyword = useTextDebounce(productKeyword ?? '');
 
@@ -36,15 +50,22 @@ const StockProduct: FC<Props> = ({
     data: subsidiaryData,
     networkStatus: subsidiaryNetwork,
     fetchMore: fetchMoreSubsidiary,
-  } = useSubsidiaries(
+  } = useSubsidiaryCountStocks(
     {
       keyword: delayedProductKeyword,
       skip: 0,
       limit: LIMIT,
+      storageName: currentProduct.storageName,
     },
     !isSubsidiary
   );
-  const subsidiaryRows = subsidiaryData?.subsidiaries.data.map((item) => item.name) ?? [];
+
+  const originSubsidiaryList = subsidiaryData?.subsidiaryCountStocks?.data ?? [];
+  const originSubsidiary = originSubsidiaryList.find(
+    (item) => item.name === currentProduct.productName
+  );
+  const subsidiaryRows = originSubsidiaryList.map((item) => item.name) ?? [];
+
   const isLoadingSubsidiary =
     subsidiaryNetwork == 3 || subsidiaryNetwork == 1 || subsidiaryNetwork == 2;
 
@@ -52,14 +73,15 @@ const StockProduct: FC<Props> = ({
     if (entries[0].isIntersecting) {
       if (isLoadingSubsidiary) return;
 
-      const totalCount = subsidiaryData?.subsidiaries.totalCount;
+      const totalCount = subsidiaryData?.subsidiaryCountStocks?.totalCount;
       if (totalCount != null && totalCount > rows.length) {
         fetchMoreSubsidiary({
           variables: {
-            subsidiariesInput: {
+            productCountStocksInput: {
               keyword: delayedProductKeyword,
               skip: subsidiaryRows.length,
               limit: LIMIT,
+              storageName: currentProduct.storageName,
             },
           },
         });
@@ -70,30 +92,36 @@ const StockProduct: FC<Props> = ({
     callback: subsidiaryCallback,
   });
 
-  const { data, networkStatus, fetchMore } = useProducts(
+  const { data, networkStatus, fetchMore } = useProductCountStocks(
     {
       keyword: delayedProductKeyword,
       limit: LIMIT,
       skip: 0,
+      storageName: currentProduct.storageName,
     },
     isSubsidiary
   );
 
-  const rows = data?.products.data.map((item) => item.name) ?? [];
+  const originProductList = data?.productCountStocks?.data ?? [];
+  const rows = originProductList.map((item) => item.name) ?? [];
+  const originProduct = originProductList.find(
+    (product) => product.name === currentProduct.productName
+  );
   const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
       if (isLoading) return;
 
-      const totalCount = data?.products.totalCount;
+      const totalCount = data?.productCountStocks?.totalCount;
       if (totalCount != null && totalCount > rows.length) {
         fetchMore({
           variables: {
-            productsInput: {
+            productCountStocksInput: {
               keyword: delayedProductKeyword,
               limit: LIMIT,
               skip: rows.length,
+              storageName: currentProduct.storageName,
             },
           },
         });
@@ -191,7 +219,7 @@ const StockProduct: FC<Props> = ({
         render={({ field }) => {
           return (
             <Autocomplete
-              disabled={isProductFreeze}
+              disabled={isProductFreeze || !currentProduct.storageName}
               value={field.value}
               fullWidth
               sx={{ minWidth: 200 }}
@@ -245,6 +273,24 @@ const StockProduct: FC<Props> = ({
               label="수량"
               error={!!error?.count?.message}
               helperText={error?.count?.message ?? ''}
+              onChange={(value) => {
+                type OriginTarget = { name: string; count: number } | undefined;
+                let originTarget: OriginTarget = originProduct;
+                if (isSubsidiary) {
+                  originTarget = originSubsidiary;
+                }
+
+                if (!originTarget) return;
+
+                if (value != null && value > originTarget.count) {
+                  setError(`stocks.${index}.count`, {
+                    message: `재고가 ${originTarget.count}EA 남아 있습니다.`,
+                  });
+                } else {
+                  clearErrors(`stocks.${index}.count`);
+                }
+                field.onChange(value);
+              }}
             />
           );
         }}
@@ -257,4 +303,4 @@ const StockProduct: FC<Props> = ({
   );
 };
 
-export default StockProduct;
+export default OutStockProduct;

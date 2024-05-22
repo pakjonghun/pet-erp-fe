@@ -65,6 +65,11 @@ const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
         });
         client.refetchQueries({
           updateCache(cache) {
+            if (tabValue == 1) {
+              cache.evict({ fieldName: 'subsidiaryStocks' });
+              cache.evict({ fieldName: 'subsidiaryStocksState' });
+              cache.evict({ fieldName: 'subsidiaryCountStocks' });
+            }
             cache.evict({ fieldName: 'stocks' });
             cache.evict({ fieldName: 'productCountStocks' });
             cache.evict({ fieldName: 'stocksState' });

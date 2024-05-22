@@ -2,26 +2,23 @@ import { useQuery } from '@apollo/client';
 import { graphql } from '../../codegen';
 import { ProductCountStocksInput } from '../../codegen/graphql';
 
-const productCountStocks = graphql(`
-  query productCountStocks($productCountStocksInput: ProductCountStocksInput!) {
-    productCountStocks(productCountStocksInput: $productCountStocksInput) {
+const subsidiaryCountStocks = graphql(`
+  query subsidiaryCountStocks($productCountStocksInput: ProductCountStocksInput!) {
+    subsidiaryCountStocks(productCountStocksInput: $productCountStocksInput) {
       totalCount
       data {
         name
         count
-        salePrice
-        wonPrice
-        code
       }
     }
   }
 `);
 
-export const useProductCountStocks = (
+export const useSubsidiaryCountStocks = (
   productCountStocksInput: ProductCountStocksInput,
   skip = false
 ) => {
-  return useQuery(productCountStocks, {
+  return useQuery(subsidiaryCountStocks, {
     variables: {
       productCountStocksInput,
     },

@@ -11,15 +11,11 @@ import {
   CreateProductStockForm,
   createProductStockSchema,
 } from '../_validations/createProductStockList';
-import StockProduct from './StockProduct';
-import {
-  CreateStockInput,
-  StockColumn,
-  SubsidiaryStockColumn,
-} from '@/http/graphql/codegen/graphql';
+import { CreateStockInput, SubsidiaryStockColumn } from '@/http/graphql/codegen/graphql';
 import { snackMessage } from '@/store/snackMessage';
 import { client } from '@/http/graphql/client';
 import { useOutStocks } from '@/http/graphql/hooks/stock/useOutStocks';
+import OutStockProduct from './OutStockProduct';
 
 interface Props {
   open: boolean;
@@ -31,6 +27,7 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
   const [outStocks, { loading }] = useOutStocks();
 
   const {
+    setError,
     watch,
     reset,
     control,
@@ -74,6 +71,7 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
             if (tabValue == 1) {
               cache.evict({ fieldName: 'subsidiaryStocks' });
               cache.evict({ fieldName: 'subsidiaryStocksState' });
+              cache.evict({ fieldName: 'subsidiaryCountStocks' });
             }
             cache.evict({ fieldName: 'stocks' });
             cache.evict({ fieldName: 'productCountStocks' });
@@ -156,7 +154,10 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
           <Stack sx={{ mt: 2 }} gap={2}>
             {fields.map((product, index) => {
               return (
-                <StockProduct
+                <OutStockProduct
+                  clearErrors={clearErrors}
+                  currentProductList={currentProductList}
+                  setError={setError}
                   isSubsidiary={!!tabValue}
                   isProductFreeze={productStock != null}
                   index={index}
