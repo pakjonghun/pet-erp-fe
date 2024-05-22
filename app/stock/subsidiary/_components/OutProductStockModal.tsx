@@ -45,7 +45,7 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
     },
   });
 
-  const [tabValue, setTabValue] = useState(productStock == null ? 0 : 1);
+  const [tabValue, setTabValue] = useState(1);
   const handleClickTab = (value: number) => () => {
     setTabValue(value);
     setValue('stocks', [] as unknown as any);
@@ -71,6 +71,10 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
         });
         client.refetchQueries({
           updateCache(cache) {
+            if (tabValue == 1) {
+              cache.evict({ fieldName: 'subsidiaryStocks' });
+              cache.evict({ fieldName: 'subsidiaryStocksState' });
+            }
             cache.evict({ fieldName: 'stocks' });
             cache.evict({ fieldName: 'productCountStocks' });
             cache.evict({ fieldName: 'stocksState' });

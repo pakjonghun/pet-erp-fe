@@ -41,7 +41,7 @@ const OutProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
     },
   });
 
-  const [tabValue, setTabValue] = useState(productStock == null ? 0 : 1);
+  const [tabValue, setTabValue] = useState(0);
   const handleClickTab = (value: number) => () => {
     setTabValue(value);
     setValue('stocks', [] as unknown as any);

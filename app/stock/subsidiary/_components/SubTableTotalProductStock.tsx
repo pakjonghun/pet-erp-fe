@@ -11,12 +11,11 @@ import {
   Typography,
   Stack,
 } from '@mui/material';
-import { StockColumn, SubsidiaryStockColumn } from '@/http/graphql/codegen/graphql';
+import { SubsidiaryStockColumn } from '@/http/graphql/codegen/graphql';
 import ActionButton from '@/components/ui/button/ActionButton';
-import { useStocksState } from '@/http/graphql/hooks/stock/useStocksState';
 import EmptyRow from '@/components/table/EmptyRow';
 import LabelText from '@/components/ui/typograph/LabelText';
-import dayjs from 'dayjs';
+import { useSubsidiaryStocksState } from '@/http/graphql/hooks/stock/useSubsidiaryStocksState';
 
 interface Props {
   productStock: SubsidiaryStockColumn;
@@ -24,25 +23,12 @@ interface Props {
 }
 
 const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) => {
-  const { networkStatus, data } = useStocksState(productStock.productName);
+  const { networkStatus, data } = useSubsidiaryStocksState(productStock.productName);
 
-  const rows = data?.stocksState ?? [];
+  const rows = data?.subsidiaryStocksState ?? [];
 
   const isLoading = networkStatus == 1 || networkStatus == 3 || networkStatus == 2;
   const isEmpty = !isLoading && rows.length == 0;
-
-  const today = dayjs();
-  const recentCreateCompleteDiff = rows
-    .filter((row) => row.state === '제조중')
-    .reduce((acc, cur) => {
-      if (!cur.orderCompleteDate) return acc;
-
-      const diff = dayjs(cur.orderCompleteDate).diff(today, 'day');
-
-      return diff < acc //
-        ? diff
-        : acc;
-    }, Infinity);
 
   return (
     <TableContainer sx={{ mt: 1 }}>

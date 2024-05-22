@@ -1,14 +1,13 @@
 import { FC, MouseEvent, useState } from 'react';
 import Cell from '@/components/table/Cell';
-import { Chip, IconButton, Menu, TableRow } from '@mui/material';
+import { IconButton, Menu, TableRow } from '@mui/material';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import CollapseRow from './CollapseRow';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import OptionCell from './OptionCell';
-import { StockColumn, SubsidiaryStockColumn } from '@/http/graphql/codegen/graphql';
-import { getNumberToString } from '@/utils/sale';
+import { SubsidiaryStockColumn } from '@/http/graphql/codegen/graphql';
 import { getKCWFormat } from '@/utils/common';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';

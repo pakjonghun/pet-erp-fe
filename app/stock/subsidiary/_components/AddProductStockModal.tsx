@@ -12,11 +12,7 @@ import {
   createProductStockSchema,
 } from '../_validations/createProductStockList';
 import StockProduct from './StockProduct';
-import {
-  CreateStockInput,
-  StockColumn,
-  SubsidiaryStockColumn,
-} from '@/http/graphql/codegen/graphql';
+import { CreateStockInput, SubsidiaryStockColumn } from '@/http/graphql/codegen/graphql';
 import { useAddStock } from '@/http/graphql/hooks/stock/useAddStocks';
 import { snackMessage } from '@/store/snackMessage';
 import { client } from '@/http/graphql/client';
@@ -45,7 +41,7 @@ const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
     },
   });
 
-  const [tabValue, setTabValue] = useState<number>(productStock == null ? 0 : 1);
+  const [tabValue, setTabValue] = useState<number>(1);
   const handleClickTab = (value: number) => () => {
     setTabValue(value);
     setValue('stocks', [] as unknown as any);
@@ -69,6 +65,10 @@ const AddProductStockModal: FC<Props> = ({ open, onClose, productStock }) => {
         });
         client.refetchQueries({
           updateCache(cache) {
+            if (tabValue == 1) {
+              cache.evict({ fieldName: 'subsidiaryStocks' });
+              cache.evict({ fieldName: 'subsidiaryStocksState' });
+            }
             cache.evict({ fieldName: 'stocks' });
             cache.evict({ fieldName: 'productCountStocks' });
             cache.evict({ fieldName: 'stocksState' });

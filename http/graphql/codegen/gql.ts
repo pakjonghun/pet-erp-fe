@@ -50,6 +50,7 @@ const documents = {
     "\n  query stocksOrder($productName: String!) {\n    stocksOrder(productName: $productName) {\n      ...ProductOrderFragment\n    }\n  }\n": types.StocksOrderDocument,
     "\n  query stocksState($productName: String!) {\n    stocksState(productName: $productName) {\n      productName\n      count\n      location\n      orderCompleteDate\n      state\n    }\n  }\n": types.StocksStateDocument,
     "\n  query subsidiaryStocks($stocksInput: StocksInput!) {\n    subsidiaryStocks(stocksInput: $stocksInput) {\n      totalCount\n      data {\n        ...SubsidiaryStockColumnFragment\n      }\n    }\n  }\n": types.SubsidiaryStocksDocument,
+    "\n  query subsidiaryStocksState($productName: String!) {\n    subsidiaryStocksState(productName: $productName) {\n      productName\n      count\n      location\n      state\n    }\n  }\n": types.SubsidiaryStocksStateDocument,
     "\n  mutation createStorage($createStorageInput: CreateStorageInput!) {\n    createStorage(createStorageInput: $createStorageInput) {\n      ...StorageFragment\n    }\n  }\n": types.CreateStorageDocument,
     "\n  mutation updateStorage($updateStorageInput: UpdateStorageInput!) {\n    updateStorage(updateStorageInput: $updateStorageInput) {\n      ...StorageFragment\n    }\n  }\n": types.UpdateStorageDocument,
     "\n  mutation removeStorage($_id: String!) {\n    removeStorage(_id: $_id) {\n      ...StorageFragment\n    }\n  }\n": types.RemoveStorageDocument,
@@ -236,6 +237,10 @@ export function graphql(source: "\n  query stocksState($productName: String!) {\
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query subsidiaryStocks($stocksInput: StocksInput!) {\n    subsidiaryStocks(stocksInput: $stocksInput) {\n      totalCount\n      data {\n        ...SubsidiaryStockColumnFragment\n      }\n    }\n  }\n"): (typeof documents)["\n  query subsidiaryStocks($stocksInput: StocksInput!) {\n    subsidiaryStocks(stocksInput: $stocksInput) {\n      totalCount\n      data {\n        ...SubsidiaryStockColumnFragment\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query subsidiaryStocksState($productName: String!) {\n    subsidiaryStocksState(productName: $productName) {\n      productName\n      count\n      location\n      state\n    }\n  }\n"): (typeof documents)["\n  query subsidiaryStocksState($productName: String!) {\n    subsidiaryStocksState(productName: $productName) {\n      productName\n      count\n      location\n      state\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
