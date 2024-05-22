@@ -73,7 +73,7 @@ const CategoryPage = () => {
     formBody.append('file', file);
 
     uploadFile(
-      { service: 'category', formBody },
+      { service: 'product-category', formBody },
       {
         onSuccess: () => {
           snackMessage({ message: '파일 업로드가 완료되었습니다.', severity: 'success' });
