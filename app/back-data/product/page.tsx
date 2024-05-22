@@ -49,9 +49,7 @@ const ProductPage = () => {
   const rows = (data?.products.data as Product[]) ?? [];
   const isLoading = networkStatus == 3 || networkStatus == 1;
   const isEmpty = !isLoading && rows.length === 0;
-  console.log('networkStatus : ', networkStatus);
   const callback: IntersectionObserverCallback = (entries) => {
-    console.log('1 : ', 1);
     if (entries[0].isIntersecting) {
       if (isLoading) return;
 
@@ -82,8 +80,14 @@ const ProductPage = () => {
       {
         onSuccess: () => {
           snackMessage({ message: '제품 업로드가 완료되었습니다.', severity: 'success' });
+
           refetch();
           client.refetchQueries({ include: ['categories'] });
+          client.refetchQueries({
+            updateCache(cache) {
+              cache.evict({ fieldName: 'categories' });
+            },
+          });
         },
         onError: (error) => {
           const message = error.response?.data.message;

@@ -47,7 +47,6 @@ const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickR
       product.wonPrice == null ? EMPTY : getKCWFormat(product.wonPrice),
       product.salePrice == null ? EMPTY : getKCWFormat(product.salePrice),
       product.leadTime ? `${product.leadTime}일` : EMPTY,
-      product.maintainDate ? `${product.maintainDate}일` : EMPTY,
     ];
   };
 

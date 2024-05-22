@@ -119,7 +119,6 @@ export const client = new ApolloClient({
         wonPrice
         salePrice
         leadTime
-        maintainDate
         category {
           ...ProductCategoryFragment
         }

@@ -43,7 +43,6 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
     control,
     watch,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<CreateProductForm>({
     resolver: zodResolver(createProductSchema),
@@ -52,7 +51,6 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
       category: selectedProduct.category?.name as string,
       code: selectedProduct.code,
       leadTime: selectedProduct.leadTime,
-      maintainDate: selectedProduct.maintainDate,
       name: selectedProduct.name,
       salePrice: selectedProduct.salePrice,
       wonPrice: selectedProduct.wonPrice,
@@ -197,18 +195,6 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
                 label="리드타임(일)"
                 error={!!errors.leadTime?.message}
                 helperText={errors.leadTime?.message ?? ''}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="maintainDate"
-            render={({ field }) => (
-              <NumberInput
-                field={field}
-                label="최소 유지기간(일)"
-                error={!!errors.maintainDate?.message}
-                helperText={errors.maintainDate?.message ?? ''}
               />
             )}
           />

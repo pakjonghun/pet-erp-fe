@@ -23,11 +23,6 @@ export const createProductSchema = z.object({
     .min(0, { message: '리드타임은 0이상의 숫자를 입력하세요.' })
     .optional()
     .nullable(),
-  maintainDate: z
-    .number({ invalid_type_error: '제품 유지날짜를 입력해주세요.' })
-    .min(0, { message: '제품 유지날짜는 0이상의 숫자를 입력하세요.' })
-    .optional()
-    .nullable(),
   category: z
     .string({ invalid_type_error: '올바른 카테고리를 입력해주세요.' })
     .optional()

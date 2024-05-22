@@ -27,6 +27,7 @@ import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 import { modalSizeProps } from '@/components/commonStyles';
 import { filterEmptyValues } from '@/utils/common';
 import NumberInput from '@/components/ui/input/NumberInput';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   open: boolean;
@@ -189,18 +190,6 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
                 label="리드타임(일)"
                 error={!!errors.leadTime?.message}
                 helperText={errors.leadTime?.message ?? ''}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="maintainDate"
-            render={({ field }) => (
-              <NumberInput
-                field={field}
-                label="최소 유지기간(날짜)"
-                error={!!errors.maintainDate?.message}
-                helperText={errors.maintainDate?.message ?? ''}
               />
             )}
           />
