@@ -98,6 +98,12 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
       },
       onCompleted: () => {
         snackMessage({ message: '제품등록이 완료되었습니다.', severity: 'success' });
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'productSales' });
+            cache.evict({ fieldName: 'stocks' });
+          },
+        });
         handleClose();
       },
       onError: (err) => {

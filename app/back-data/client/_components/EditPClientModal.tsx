@@ -24,6 +24,7 @@ import { clientTypes } from '../constants';
 import { useUpdateClient } from '@/http/graphql/hooks/client/useEditClient';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { CLIENT_PREFIX } from '@/constants';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   open: boolean;
@@ -69,6 +70,12 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
         snackMessage({
           message: '거래처수정이 완료되었습니다.',
           severity: 'success',
+        });
+
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'dashboardClients' });
+          },
         });
         handleClose();
       },

@@ -28,6 +28,7 @@ import { Product } from '@/http/graphql/codegen/graphql';
 import { modalSizeProps } from '@/components/commonStyles';
 import { emptyValueToNull } from '@/utils/common';
 import NumberInput from '@/components/ui/input/NumberInput';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   selectedProduct: Product;
@@ -103,6 +104,18 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
       },
       onCompleted: () => {
         snackMessage({ message: '제품편집이 완료되었습니다.', severity: 'success' });
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'wholeSales' });
+            cache.evict({ fieldName: 'dashboardClients' });
+            cache.evict({ fieldName: 'stocks' });
+            cache.evict({ fieldName: 'stocksState' });
+            cache.evict({ fieldName: 'productCountStocks' });
+            cache.evict({ fieldName: 'productSales' });
+            cache.evict({ fieldName: 'productSale' });
+            cache.evict({ fieldName: 'topClients' });
+          },
+        });
         handleClose();
       },
       onError: (err) => {

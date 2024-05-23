@@ -13,10 +13,7 @@ import {
 } from '@mui/material';
 import { FC } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import {
-  CreateClientForm,
-  createClientSchema,
-} from '../_validations/createClientValidation';
+import { CreateClientForm, createClientSchema } from '../_validations/createClientValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
@@ -27,6 +24,7 @@ import { filterEmptyValues } from '@/utils/common';
 import { clientTypes } from '../constants';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { CLIENT_PREFIX } from '@/constants';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   open: boolean;
@@ -69,6 +67,13 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
           message: '거래처등록이 완료되었습니다.',
           severity: 'success',
         });
+
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'dashboardClients' });
+          },
+        });
+
         handleClose();
       },
       onError: (err) => {
@@ -163,9 +168,7 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
                   label="수수료 비율(0~100사이 숫자)"
                   error={!!errors.feeRate?.message}
                   helperText={errors.feeRate?.message ?? ''}
-                  endAdornment={
-                    <InputAdornment position="end">%</InputAdornment>
-                  }
+                  endAdornment={<InputAdornment position="end">%</InputAdornment>}
                 />
               </FormControl>
             )}
@@ -275,11 +278,7 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
-          <Button
-            type="submit"
-            endIcon={loading ? <CommonLoading /> : ''}
-            variant="contained"
-          >
+          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
             등록
           </Button>
         </Stack>

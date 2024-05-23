@@ -5,6 +5,7 @@ import BaseModal from '@/components/ui/modal/BaseModal';
 import { snackMessage } from '@/store/snackMessage';
 import { Typography, Stack, Button } from '@mui/material';
 import { useRemoveClient } from '@/http/graphql/hooks/client/useDeleteClient';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   open: boolean;
@@ -25,6 +26,13 @@ const RemoveClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
           message: `${res.removeClient.name}거래처가 삭제되었습니다.`,
           severity: 'success',
         });
+
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'dashboardClients' });
+          },
+        });
+
         onClose();
       },
       onError: (err) => {
