@@ -59,12 +59,9 @@ const WholeSaleProductSearch: FC<Props> = ({
   });
 
   const rows = data?.productCountStocks?.data ?? [];
-  const currentOriginProduct = rows.find(
-    (item) => item.code === currentProduct.productCode
-  );
+  const currentOriginProduct = rows.find((item) => item.code === currentProduct.productCode);
 
-  const isLoading =
-    networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
+  const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -96,8 +93,7 @@ const WholeSaleProductSearch: FC<Props> = ({
   });
 
   const storageRows = (storageData?.storages.data as Storage[]) ?? [];
-  const isStorageLoading =
-    storageNetwork == 1 || storageNetwork == 2 || storageNetwork == 3;
+  const isStorageLoading = storageNetwork == 1 || storageNetwork == 2 || storageNetwork == 3;
 
   const handleReplaceItem = (
     newItem: FieldArrayWithId<CreateWholeSaleForm, 'productList', 'id'>
@@ -139,9 +135,7 @@ const WholeSaleProductSearch: FC<Props> = ({
               loading={isStorageLoading}
               loadingText="로딩중"
               noOptionsText="검색 결과가 없습니다."
-              renderInput={(params) => (
-                <TextField {...params} label="창고" required />
-              )}
+              renderInput={(params) => <TextField {...params} label="창고" required />}
               renderOption={(props, item) => {
                 const { key, ...rest } = props as any;
                 return (
@@ -164,9 +158,7 @@ const WholeSaleProductSearch: FC<Props> = ({
               disabled={!currentProduct.storageName}
               value={field.value}
               getOptionDisabled={(option) => {
-                return selectedProductList.some(
-                  (item) => item.productName === option
-                );
+                return selectedProductList.some((item) => item.productName === option);
               }}
               fullWidth
               filterSelectedOptions
@@ -182,20 +174,14 @@ const WholeSaleProductSearch: FC<Props> = ({
                 field.onChange(value);
                 if (!currentProduct) return;
 
-                let newField: FieldArrayWithId<
-                  CreateWholeSaleForm,
-                  'productList',
-                  'id'
-                > = {
+                let newField: FieldArrayWithId<CreateWholeSaleForm, 'productList', 'id'> = {
                   ...initProductItem,
                   id: productId,
                   storageName: currentProduct.storageName,
                 };
 
                 if (value != null) {
-                  const selectedProduct = rows.find(
-                    (item) => item.name === value
-                  );
+                  const selectedProduct = rows.find((item) => item.name === value);
 
                   if (!selectedProduct) return;
 
@@ -223,12 +209,7 @@ const WholeSaleProductSearch: FC<Props> = ({
                 const { key, ...rest } = props as any;
                 const isLast = state.index === rows.length - 1;
                 return (
-                  <Box
-                    component="li"
-                    ref={isLast ? scrollRef : null}
-                    key={item}
-                    {...rest}
-                  >
+                  <Box component="li" ref={isLast ? scrollRef : null} key={item} {...rest}>
                     {item}
                   </Box>
                 );

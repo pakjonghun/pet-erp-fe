@@ -56,7 +56,7 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
   });
 
   const onSubmit = (values: CreateClientForm) => {
-    const { code, ...newValues } = emptyValueToNull(values) as CreateClientForm;
+    const { code, name, ...newValues } = emptyValueToNull(values) as CreateClientForm;
     editClient({
       variables: {
         updateClientInput: {
@@ -148,10 +148,11 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
             render={({ field }) => (
               <FormControl required>
                 <TextField
+                  disabled
                   size="small"
                   {...field}
                   required
-                  label="거래처이름"
+                  label="거래처이름(편집불가)"
                   error={!!errors.name?.message}
                   helperText={errors.name?.message ?? ''}
                 />

@@ -789,7 +789,7 @@ export type Sale = {
   productName?: Maybe<Scalars['String']['output']>;
   saleAt?: Maybe<Scalars['Date']['output']>;
   shoppingMall?: Maybe<Scalars['String']['output']>;
-  storageName?: Maybe<Scalars['String']['output']>;
+  storageId?: Maybe<Scalars['String']['output']>;
   telephoneNumber1?: Maybe<Scalars['String']['output']>;
   wholeSaleId?: Maybe<Scalars['String']['output']>;
   wonCost?: Maybe<Scalars['Int']['output']>;
