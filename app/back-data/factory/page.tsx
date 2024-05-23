@@ -30,6 +30,7 @@ import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFil
 import { useSubsidiaryCategories } from '@/http/graphql/hooks/subsidiary-category/useSubsidiaryCategories';
 import { Factory, Storage } from '@/http/graphql/codegen/graphql';
 import { useFactories } from '@/http/graphql/hooks/factory/useFactories';
+import { client } from '@/http/graphql/client';
 
 const FactoryPage = () => {
   const [keyword, setKeyword] = useState('');
@@ -79,15 +80,20 @@ const FactoryPage = () => {
       {
         onSuccess: () => {
           snackMessage({
-            message: '파일 업로드가 완료되었습니다.',
+            message: '공장 업로드가 완료되었습니다.',
             severity: 'success',
+          });
+          client.refetchQueries({
+            updateCache(cache) {
+              cache.evict({ fieldName: 'orders' });
+            },
           });
           refetch();
         },
         onError: (err) => {
           const message = err.response?.data.message;
           snackMessage({
-            message: message ?? '파일 업로드가 실패했습니다.',
+            message: message ?? '공장 업로드가 실패했습니다.',
             severity: 'error',
           });
         },

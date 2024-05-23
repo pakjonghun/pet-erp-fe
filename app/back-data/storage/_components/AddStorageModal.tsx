@@ -10,6 +10,7 @@ import { modalSizeProps } from '@/components/commonStyles';
 import { filterEmptyValues } from '@/utils/common';
 import { CreateStorageInput } from '@/http/graphql/codegen/graphql';
 import { useCreateStorage } from '@/http/graphql/hooks/storage/useCreateStorage';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   open: boolean;
@@ -46,6 +47,17 @@ const AddStorageModal: FC<Props> = ({ open, onClose }) => {
           message: '창고 등록이 완료되었습니다.',
           severity: 'success',
         });
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'subsidiaryStocks' });
+            cache.evict({ fieldName: 'subsidiaryStocksState' });
+            cache.evict({ fieldName: 'subsidiaryCountStocks' });
+            cache.evict({ fieldName: 'stocks' });
+            cache.evict({ fieldName: 'productCountStocks' });
+            cache.evict({ fieldName: 'stocksState' });
+          },
+        });
+
         handleClose();
       },
       onError: (err) => {

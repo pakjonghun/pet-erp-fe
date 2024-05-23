@@ -29,6 +29,7 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFile';
 import { Storage } from '@/http/graphql/codegen/graphql';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
+import { client } from '@/http/graphql/client';
 
 const StoragePage = () => {
   const [keyword, setKeyword] = useState('');
@@ -78,15 +79,25 @@ const StoragePage = () => {
       {
         onSuccess: () => {
           snackMessage({
-            message: '파일 업로드가 완료되었습니다.',
+            message: '창고 업로드가 완료되었습니다.',
             severity: 'success',
+          });
+          client.refetchQueries({
+            updateCache(cache) {
+              cache.evict({ fieldName: 'subsidiaryStocks' });
+              cache.evict({ fieldName: 'subsidiaryStocksState' });
+              cache.evict({ fieldName: 'subsidiaryCountStocks' });
+              cache.evict({ fieldName: 'stocks' });
+              cache.evict({ fieldName: 'productCountStocks' });
+              cache.evict({ fieldName: 'stocksState' });
+            },
           });
           refetch();
         },
         onError: (err) => {
           const message = err.response?.data.message;
           snackMessage({
-            message: message ?? '파일 업로드가 실패했습니다.',
+            message: message ?? '창고 업로드가 실패했습니다.',
             severity: 'error',
           });
         },

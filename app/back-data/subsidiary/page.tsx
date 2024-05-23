@@ -32,6 +32,7 @@ import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { useSubsidiaries } from '@/http/graphql/hooks/subsidiary/useSubsidiaries';
 import SubsidiaryCards from './_components/SubsidiaryCards';
 import SubsidiaryTableBody from './_components/SubsidiaryTableBody';
+import { client } from '@/http/graphql/client';
 
 const BackDataPage = () => {
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
@@ -82,6 +83,14 @@ const BackDataPage = () => {
             message: '부자재 업로드가 완료되었습니다.',
             severity: 'success',
           });
+          client.refetchQueries({
+            updateCache(cache) {
+              cache.evict({ fieldName: 'subsidiaryStocks' });
+              cache.evict({ fieldName: 'subsidiaryStocksState' });
+              cache.evict({ fieldName: 'subsidiaryCountStocks' });
+            },
+          });
+
           refetch();
         },
         onError: (error) => {
@@ -127,12 +136,7 @@ const BackDataPage = () => {
           onClose={() => setOpenCreateProduct(false)}
         />
       )}
-      <Stack
-        sx={{ px: 2 }}
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
+      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
         <TableTitle title="부자재 백데이터" />
         <Stack direction="row" alignItems="center" gap={2}>
           <UploadButton

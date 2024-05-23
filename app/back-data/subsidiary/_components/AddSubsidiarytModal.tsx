@@ -28,6 +28,7 @@ import { CreateSubsidiaryForm } from '../_validations/createSubsidiaryValidation
 import MultiAutoComplete from '@/components/ui/select/MultiAutoComplete';
 import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import { useSubsidiaryCategories } from '@/http/graphql/hooks/subsidiary-category/useSubsidiaryCategories';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   open: boolean;
@@ -135,6 +136,14 @@ const AddSubsidiaryModal: FC<Props> = ({ open, onClose }) => {
       },
       onCompleted: () => {
         snackMessage({ message: '부자재등록이 완료되었습니다.', severity: 'success' });
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'subsidiaryStocks' });
+            cache.evict({ fieldName: 'subsidiaryStocksState' });
+            cache.evict({ fieldName: 'subsidiaryCountStocks' });
+          },
+        });
+
         handleClose();
       },
       onError: (err) => {

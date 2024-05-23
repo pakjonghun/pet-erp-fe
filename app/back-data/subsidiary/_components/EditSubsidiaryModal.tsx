@@ -30,6 +30,7 @@ import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import { useSubsidiaryCategories } from '@/http/graphql/hooks/subsidiary-category/useSubsidiaryCategories';
 import { Subsidiary } from '@/http/graphql/codegen/graphql';
 import { useUpdateSubsidiary } from '@/http/graphql/hooks/subsidiary/useUpdateSubsidiary';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   selectedSubsidiary: Subsidiary;
@@ -148,6 +149,13 @@ const AddSubsidiaryModal: FC<Props> = ({ open, selectedSubsidiary, onClose }) =>
       },
       onCompleted: () => {
         snackMessage({ message: '부자재편집이 완료되었습니다.', severity: 'success' });
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'subsidiaryStocks' });
+            cache.evict({ fieldName: 'subsidiaryStocksState' });
+            cache.evict({ fieldName: 'subsidiaryCountStocks' });
+          },
+        });
         handleClose();
       },
       onError: (err) => {

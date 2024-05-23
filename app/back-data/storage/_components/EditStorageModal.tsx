@@ -9,6 +9,7 @@ import { CreateStorageForm, createStorageSchema } from '../_validations/createSt
 import { modalSizeProps } from '@/components/commonStyles';
 import { Storage } from '@/http/graphql/codegen/graphql';
 import { useEditStorage } from '@/http/graphql/hooks/storage/useEditStorage';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   open: boolean;
@@ -59,6 +60,16 @@ const EditStorageModal: FC<Props> = ({ open, storage, onClose }) => {
         snackMessage({
           message: '창고 데이터 편집이 완료되었습니다.',
           severity: 'success',
+        });
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'subsidiaryStocks' });
+            cache.evict({ fieldName: 'subsidiaryStocksState' });
+            cache.evict({ fieldName: 'subsidiaryCountStocks' });
+            cache.evict({ fieldName: 'stocks' });
+            cache.evict({ fieldName: 'productCountStocks' });
+            cache.evict({ fieldName: 'stocksState' });
+          },
         });
         handleClose();
       },

@@ -5,6 +5,7 @@ import BaseModal from '@/components/ui/modal/BaseModal';
 import { snackMessage } from '@/store/snackMessage';
 import { Typography, Stack, Button } from '@mui/material';
 import { useRemoveSubsidiary } from '@/http/graphql/hooks/subsidiary/useRemoveSubsidiary';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   open: boolean;
@@ -25,6 +26,14 @@ const RemoveSubsidiaryModal: FC<Props> = ({ open, selectedSubsidiary, onClose })
           message: `${res.removeSubsidiary.name}부자재가 삭제되었습니다.`,
           severity: 'success',
         });
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'subsidiaryStocks' });
+            cache.evict({ fieldName: 'subsidiaryStocksState' });
+            cache.evict({ fieldName: 'subsidiaryCountStocks' });
+          },
+        });
+
         onClose();
       },
       onError: (err) => {

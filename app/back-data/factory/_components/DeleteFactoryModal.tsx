@@ -7,6 +7,7 @@ import { snackMessage } from '@/store/snackMessage';
 import CommonLoading from '../../../../components/ui/loading/CommonLoading';
 import { Factory } from '@/http/graphql/codegen/graphql';
 import { useRemoveFactory } from '@/http/graphql/hooks/factory/useRemoveFactory';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   item: Factory;
@@ -26,6 +27,11 @@ const DeleteFactoryModal: FC<Props> = ({ item, open, onClose }) => {
         snackMessage({
           message: `${(res.removeFactory as Factory).name} 삭제가 완료되었습니다.`,
           severity: 'success',
+        });
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'orders' });
+          },
         });
         onClose();
       },

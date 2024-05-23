@@ -9,6 +9,7 @@ import { CreateStorageForm, createStorageSchema } from '../_validations/createSt
 import { modalSizeProps } from '@/components/commonStyles';
 import { useCreateFactory } from '@/http/graphql/hooks/factory/useCreateFactory';
 import { filterEmptyValues } from '@/utils/common';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   open: boolean;
@@ -44,6 +45,11 @@ const CreateFactoryModal: FC<Props> = ({ open, onClose }) => {
         snackMessage({
           message: '공장 등록이 완료되었습니다.',
           severity: 'success',
+        });
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'orders' });
+          },
         });
         handleClose();
       },

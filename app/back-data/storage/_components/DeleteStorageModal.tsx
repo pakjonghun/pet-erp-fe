@@ -7,6 +7,7 @@ import { snackMessage } from '@/store/snackMessage';
 import CommonLoading from '../../../../components/ui/loading/CommonLoading';
 import { SubsidiaryCategory } from '@/http/graphql/codegen/graphql';
 import { useRemoveStorage } from '@/http/graphql/hooks/storage/useRemoveStorage';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   item: SubsidiaryCategory;
@@ -27,6 +28,17 @@ const DeleteStorageModal: FC<Props> = ({ item, open, onClose }) => {
           message: `${(res.removeStorage as Storage).name ?? ''} 삭제가 완료되었습니다.`,
           severity: 'success',
         });
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'subsidiaryStocks' });
+            cache.evict({ fieldName: 'subsidiaryStocksState' });
+            cache.evict({ fieldName: 'subsidiaryCountStocks' });
+            cache.evict({ fieldName: 'stocks' });
+            cache.evict({ fieldName: 'productCountStocks' });
+            cache.evict({ fieldName: 'stocksState' });
+          },
+        });
+
         onClose();
       },
       onError: (err) => {

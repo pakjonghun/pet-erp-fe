@@ -33,6 +33,7 @@ import { ClientHeaderList } from './constants';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Client } from '@/http/graphql/codegen/graphql';
+import { client } from '@/http/graphql/client';
 
 const BackDataPage = () => {
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
@@ -81,6 +82,11 @@ const BackDataPage = () => {
       {
         onSuccess: () => {
           snackMessage({ message: '거래처 업로드가 완료되었습니다.', severity: 'success' });
+          client.refetchQueries({
+            updateCache(cache) {
+              cache.evict({ fieldName: 'dashboardClients' });
+            },
+          });
           refetch();
         },
         onError: (error) => {
