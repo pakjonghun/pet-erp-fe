@@ -40,9 +40,9 @@ const SubsidiaryBodyRow: FC<Props> = ({ subsidiary, scrollRef, onClickOption, on
 
   const createRow = (subsidiary: Subsidiary) => {
     return [
-      subsidiary.code,
-      subsidiary.category?.name ?? EMPTY,
       subsidiary.name,
+      subsidiary.category?.name ?? EMPTY,
+      subsidiary.code,
       subsidiary.wonPrice == null ? EMPTY : getKCWFormat(subsidiary.wonPrice),
       subsidiary.leadTime ? `${subsidiary.leadTime}일` : EMPTY,
       <Stack key={Math.random()} direction="column" gap={1}>

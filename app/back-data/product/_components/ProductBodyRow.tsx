@@ -40,10 +40,10 @@ const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickR
 
   const createRow = (product: Product) => {
     return [
-      product.code,
+      product.name,
       product.category?.name ?? EMPTY,
       product.barCode ?? EMPTY,
-      product.name,
+      product.code,
       product.wonPrice == null ? EMPTY : getKCWFormat(product.wonPrice),
       product.salePrice == null ? EMPTY : getKCWFormat(product.salePrice),
       product.leadTime ? `${product.leadTime}일` : EMPTY,
