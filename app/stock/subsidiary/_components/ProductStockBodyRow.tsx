@@ -1,6 +1,6 @@
 import { FC, MouseEvent, useState } from 'react';
 import Cell from '@/components/table/Cell';
-import { IconButton, Menu, TableRow } from '@mui/material';
+import { Chip, IconButton, Menu, Stack, TableRow } from '@mui/material';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import CollapseRow from './CollapseRow';
@@ -48,7 +48,11 @@ const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption
       stock.stockCount,
       stock.wonPrice ? getKCWFormat(stock.wonPrice) : EMPTY,
       stock.leadTime == null ? EMPTY : `${stock.leadTime}일`,
-      'z',
+      <Stack key={Math.random()} direction="column" gap={1} alignItems="flex-start">
+        {(stock?.productList ?? []).map((product, index) => {
+          return <Chip key={`${product}_${index}`} label={product ?? ''} />;
+        })}
+      </Stack>,
     ];
   };
 

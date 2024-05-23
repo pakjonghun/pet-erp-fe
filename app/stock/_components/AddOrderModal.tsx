@@ -21,10 +21,7 @@ import { Factory } from '@/http/graphql/codegen/graphql';
 import { filterEmptyValues } from '@/utils/common';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { LIMIT } from '@/constants';
-import {
-  CreateOrderForm,
-  createOrderSchema,
-} from '../_validation/createOrderValidation';
+import { CreateOrderForm, createOrderSchema } from '../_validation/createOrderValidation';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import OrderProduct from './OrderProduct';
 import { PlusOne } from '@mui/icons-material';
@@ -126,8 +123,7 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
   });
 
   const factories = (data?.factories.data as Factory[]) ?? [];
-  const isLoading =
-    networkStatus === 2 || networkStatus === 3 || networkStatus === 1;
+  const isLoading = networkStatus === 2 || networkStatus === 3 || networkStatus === 1;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -199,7 +195,7 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
                       py: 1.2,
                     },
                   }}
-                  label="발주날짜"
+                  label="발주날짜*"
                   value={dayjs(field.value)}
                   onChange={(value) => {
                     if (!value) return;
@@ -227,19 +223,12 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
                   loading={false}
                   loadingText="로딩중"
                   noOptionsText="검색 결과가 없습니다."
-                  renderInput={(params) => (
-                    <TextField {...params} label="공장" required />
-                  )}
+                  renderInput={(params) => <TextField {...params} label="공장" required />}
                   renderOption={(props, item, state) => {
                     const { key, ...rest } = props as any;
                     const isLast = state.index === factories.length - 1;
                     return (
-                      <Box
-                        component="li"
-                        ref={isLast ? factoryRef : null}
-                        key={item}
-                        {...rest}
-                      >
+                      <Box component="li" ref={isLast ? factoryRef : null} key={item} {...rest}>
                         {item}
                       </Box>
                     );
@@ -323,11 +312,7 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
-          <Button
-            type="submit"
-            endIcon={loading ? <CommonLoading /> : ''}
-            variant="contained"
-          >
+          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
             등록
           </Button>
         </Stack>

@@ -7,7 +7,7 @@ import LoadingCard from '../../../../components/ui/loading/LoadingCard';
 import { CommonListProps } from '@/types';
 import AddProductStockModal from './AddProductStockModal';
 import OutProductStockModal from './OutProductStockModal';
-import { StockColumn, SubsidiaryStockColumn } from '@/http/graphql/codegen/graphql';
+import { SubsidiaryStockColumn } from '@/http/graphql/codegen/graphql';
 
 interface Props extends CommonListProps<SubsidiaryStockColumn> {
   sx?: SxProps;
@@ -17,7 +17,6 @@ const ProductStockCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx 
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
   const [productStock, setProductStock] = useState<null | SubsidiaryStockColumn>(null);
-  const [optionType, setOptionType] = useState<null | any>(null);
 
   const handleClickOption = (option: any | null, client: SubsidiaryStockColumn | null) => {
     setProductStock(client);

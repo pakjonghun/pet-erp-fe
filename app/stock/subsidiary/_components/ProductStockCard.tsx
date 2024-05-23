@@ -1,5 +1,5 @@
 import { FC, MouseEvent, useState } from 'react';
-import { Box, IconButton, Menu, Paper, Stack } from '@mui/material';
+import { Box, Chip, IconButton, Menu, Paper, Stack } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { StockColumn, SubsidiaryStockColumn } from '@/http/graphql/codegen/graphql';
@@ -65,6 +65,25 @@ const ProductStockCard: FC<Props> = ({ stock, scrollRef, onClickOption, onClickR
           <Box sx={{ flex: 1 }}>
             <LabelText label="리드타임" text={stock.leadTime ?? EMPTY} />
           </Box>
+        </Stack>
+        <Stack direction="row" gap={1} flexWrap="wrap">
+          <LabelText
+            label="사용할수있는 제품목록"
+            text={
+              <>
+                <br />
+                {(stock?.productList ?? []).map((product, index) => {
+                  return (
+                    <Chip
+                      sx={{ mr: 1, mt: 0.5 }}
+                      key={`${product}_${index}`}
+                      label={product ?? ''}
+                    />
+                  );
+                })}
+              </>
+            }
+          />
         </Stack>
       </Box>
     </Paper>
