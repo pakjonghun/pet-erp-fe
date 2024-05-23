@@ -53,6 +53,8 @@ const LoginPage = () => {
     });
   };
 
+  console.log('login');
+
   if (loading || isLogin) return <></>;
 
   return (
