@@ -169,6 +169,10 @@ export const client = new ApolloClient({
             keyArgs: ['topClientInput', ['from', 'to']],
             merge,
           },
+          subsidiaries: {
+            keyArgs: ['clientsInput', ['keyword']],
+            merge,
+          },
           clients: {
             keyArgs: ['clientsInput', ['keyword']],
             merge,

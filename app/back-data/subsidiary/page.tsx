@@ -40,15 +40,14 @@ const BackDataPage = () => {
   const delayKeyword = useTextDebounce(keyword);
   const [fileKey, setFileKey] = useState(new Date());
 
-  const { data, networkStatus, fetchMore, refetch } = useSubsidiaries({
+  const { data, networkStatus, fetchMore, refetch, error } = useSubsidiaries({
     keyword: delayKeyword,
     skip: 0,
     limit: LIMIT,
   });
   const rows = data?.subsidiaries.data ?? [];
-  const isLoading = networkStatus == 3 || networkStatus == 1;
+  const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
   const isEmpty = !isLoading && rows.length === 0;
-
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
       if (isLoading) return;
