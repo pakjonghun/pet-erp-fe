@@ -27,7 +27,6 @@ import { snackMessage } from '@/store/snackMessage';
 import ActionButton from '@/components/ui/button/ActionButton';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFile';
-import { useSubsidiaryCategories } from '@/http/graphql/hooks/subsidiary-category/useSubsidiaryCategories';
 import { Factory, Storage } from '@/http/graphql/codegen/graphql';
 import { useFactories } from '@/http/graphql/hooks/factory/useFactories';
 import { client } from '@/http/graphql/client';
@@ -54,7 +53,7 @@ const FactoryPage = () => {
 
     fetchMore({
       variables: {
-        categoriesInput: {
+        factoriesInput: {
           keyword: delayKeyword,
           limit: LIMIT,
           skip: rows.length,
