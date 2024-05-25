@@ -41,7 +41,7 @@ const FactoryCard: FC<Props> = ({
       <EditStorageModal
         open={openEdit}
         onClose={handleCloseEdit}
-        factory={{ _id, name, address, note, phoneNumber }}
+        factory={{ _id, name, address, note, phoneNumber, productList }}
       />
       <LabelText label="이름" text={name} />
       <LabelText label="연락처" text={phoneNumber ?? EMPTY} />

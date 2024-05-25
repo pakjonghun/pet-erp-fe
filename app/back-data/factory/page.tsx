@@ -160,8 +160,8 @@ const FactoryPage = () => {
                 </InputAdornment>
               ),
             }}
-            sx={{ width: 270, my: 2 }}
-            label="검색할 공장이름을 입력하세요."
+            sx={{ width: 350, my: 2 }}
+            label="검색할 공장이름이나 제품명을 입력하세요."
             size="small"
           />
         </FormControl>
