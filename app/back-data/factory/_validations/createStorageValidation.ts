@@ -8,6 +8,10 @@ export const createStorageSchema = z.object({
   phoneNumber: z.string().optional().nullable(),
 
   note: z.string().optional().nullable(),
+  productList: z
+    .array(z.string().min(1, { message: '생산제품을 입력하세요' }))
+    .optional()
+    .nullable(),
 });
 
 export type CreateStorageForm = z.infer<typeof createStorageSchema>;

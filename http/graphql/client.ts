@@ -62,6 +62,7 @@ export const client = new ApolloClient({
         address
         phoneNumber
         note
+        productList
       }
 
       fragment StorageFragment on Storage {

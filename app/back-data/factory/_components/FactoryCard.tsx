@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Paper, Stack, Button } from '@mui/material';
+import { Paper, Stack, Button, Chip } from '@mui/material';
 import DeleteStorageModal from './DeleteFactoryModal';
 import { Factory } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
@@ -10,7 +10,9 @@ interface Props {
   item: Factory;
 }
 
-const FactoryCard: FC<Props> = ({ item: { _id, name, address, note, phoneNumber } }) => {
+const FactoryCard: FC<Props> = ({
+  item: { _id, name, address, note, phoneNumber, productList = [] },
+}) => {
   const [openDelete, setOpenDelete] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
@@ -45,6 +47,16 @@ const FactoryCard: FC<Props> = ({ item: { _id, name, address, note, phoneNumber 
       <LabelText label="연락처" text={phoneNumber ?? EMPTY} />
       <LabelText label="주소" text={address ?? EMPTY} />
       <LabelText label="메모" text={note ?? EMPTY} />
+      <LabelText
+        label="생산 제품 리스트"
+        text={
+          <Stack direction="row" gap={1} flexWrap="wrap">
+            {productList?.map((product) => {
+              return <Chip label={product} key={`${product}_${Math.random()}`} />;
+            })}
+          </Stack>
+        }
+      />
       <Stack direction="row" gap={1} sx={{ alignSelf: 'flex-end' }}>
         <Button onClick={() => setOpenDelete(true)} color="error" variant="outlined">
           삭제
