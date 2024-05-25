@@ -43,6 +43,7 @@ const documents = {
     "\n  mutation updateOrder($updateOrderInput: UpdateOrderInput!) {\n    updateOrder(updateOrderInput: $updateOrderInput) {\n      ...ProductOrderFragment\n    }\n  }\n": types.UpdateOrderDocument,
     "\n  query orders($ordersInput: OrdersInput!) {\n    orders(ordersInput: $ordersInput) {\n      totalCount\n      data {\n        ...ProductOrderFragment\n      }\n    }\n  }\n": types.OrdersDocument,
     "\n  mutation removeOrder($_id: String!) {\n    removeOrder(_id: $_id) {\n      ...ProductOrderFragment\n    }\n  }\n": types.RemoveOrderDocument,
+    "\n  mutation loadSabangData {\n    loadSabangData {\n      month\n    }\n  }\n": types.LoadSabangDataDocument,
     "\n  mutation addStock($addStocksInput: CreateStockInput!) {\n    addStock(addStocksInput: $addStocksInput) {\n      _id\n    }\n  }\n": types.AddStockDocument,
     "\n  mutation outStock($outStocksInput: CreateStockInput!) {\n    outStock(outStocksInput: $outStocksInput) {\n      _id\n    }\n  }\n": types.OutStockDocument,
     "\n  query productCountStocks($productCountStocksInput: ProductCountStocksInput!) {\n    productCountStocks(productCountStocksInput: $productCountStocksInput) {\n      totalCount\n      data {\n        name\n        count\n        salePrice\n        wonPrice\n        code\n      }\n    }\n  }\n": types.ProductCountStocksDocument,
@@ -210,6 +211,10 @@ export function graphql(source: "\n  query orders($ordersInput: OrdersInput!) {\
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation removeOrder($_id: String!) {\n    removeOrder(_id: $_id) {\n      ...ProductOrderFragment\n    }\n  }\n"): (typeof documents)["\n  mutation removeOrder($_id: String!) {\n    removeOrder(_id: $_id) {\n      ...ProductOrderFragment\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation loadSabangData {\n    loadSabangData {\n      month\n    }\n  }\n"): (typeof documents)["\n  mutation loadSabangData {\n    loadSabangData {\n      month\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

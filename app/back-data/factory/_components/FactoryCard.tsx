@@ -47,7 +47,7 @@ const FactoryCard: FC<Props> = ({
       <LabelText label="연락처" text={phoneNumber ?? EMPTY} />
       <LabelText label="주소" text={address ?? EMPTY} />
       <LabelText label="메모" text={note ?? EMPTY} />
-      <LabelText
+      {/* <LabelText
         label="생산 제품 리스트"
         text={
           <Stack direction="row" gap={1} flexWrap="wrap">
@@ -56,7 +56,7 @@ const FactoryCard: FC<Props> = ({
             })}
           </Stack>
         }
-      />
+      /> */}
       <Stack direction="row" gap={1} sx={{ alignSelf: 'flex-end' }}>
         <Button onClick={() => setOpenDelete(true)} color="error" variant="outlined">
           삭제

@@ -2,7 +2,7 @@
 
 import { FC, ReactNode, useEffect, useState } from 'react';
 import SubHeader from '@/components/layout/header/SubHeader';
-import { Box, Tabs, Tab, Stack, FormControlLabel, Switch } from '@mui/material';
+import { Box, Tabs, Tab, Stack, FormControlLabel, Switch, IconButton, Button } from '@mui/material';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { getOriginPath } from '@/utils/common';
@@ -40,9 +40,7 @@ const DashboardLayout: FC<Props> = ({ children }) => {
   }, []);
 
   return (
-    <Box
-      sx={{ height: '100%', bgcolor: (theme) => theme.palette.primary.light }}
-    >
+    <Box sx={{ height: '100%', bgcolor: (theme) => theme.palette.primary.light }}>
       <SubHeader title="대시보드">
         <Tabs
           sx={{ mt: 2 }}

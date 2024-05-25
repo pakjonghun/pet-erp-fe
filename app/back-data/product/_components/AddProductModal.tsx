@@ -91,7 +91,6 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
   const scrollRef = useInfinityScroll({ callback });
   console.log(errors);
   const onSubmit = (createProductInput: CreateProductForm) => {
-    console.log('createProductInput : ', createProductInput.name);
     const newValues = filterEmptyValues(createProductInput) as CreateProductForm;
     createProduct({
       variables: {

@@ -18,7 +18,6 @@ import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import { useReactiveVar } from '@apollo/client';
 import { authState } from '@/store/isLogin';
 import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
-import LabelText from '@/components/ui/typograph/LabelText';
 
 const SettingMenuTrigger = () => {
   const { role } = useReactiveVar(authState);

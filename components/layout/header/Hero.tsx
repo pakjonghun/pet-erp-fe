@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import PetsIcon from '@mui/icons-material/Pets';
 import { Stack, Typography } from '@mui/material';
 import Link from 'next/link';

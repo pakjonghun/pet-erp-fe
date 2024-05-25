@@ -201,7 +201,7 @@ const EditFactoryModal: FC<Props> = ({ open, factory, onClose }) => {
               />
             )}
           />
-          <Controller
+          {/* <Controller
             control={control}
             name="productList"
             render={({ field }) => (
@@ -229,7 +229,7 @@ const EditFactoryModal: FC<Props> = ({ open, factory, onClose }) => {
                 }}
               />
             )}
-          />
+          /> */}
           <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
             <Button type="button" variant="outlined" onClick={handleClose}>
               취소

@@ -122,7 +122,6 @@ const FactoryPage = () => {
       },
     });
   };
-
   return (
     <TablePage sx={{ flex: 1 }}>
       <CreateCategoryModal open={openCreateCategory} onClose={() => setOpenCreateCategory(false)} />
