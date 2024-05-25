@@ -9,6 +9,7 @@ import { Client } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import { SelectOption } from '../../types';
 import { ClientTypeToHangle } from '../constants';
+import { getFixedTwo } from '@/utils/sale';
 
 interface Props {
   client: Client;
@@ -43,7 +44,7 @@ const ClientBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow
       client.name,
       client.businessName ?? EMPTY,
       client.code,
-      client.feeRate == null ? EMPTY : client.feeRate * 100 + '%',
+      client.feeRate == null ? EMPTY : getFixedTwo(client.feeRate * 100) + '%',
       ClientTypeToHangle[client.clientType],
       client.payDate ?? EMPTY,
       client.manager ?? EMPTY,

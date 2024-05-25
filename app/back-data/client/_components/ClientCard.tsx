@@ -9,6 +9,7 @@ import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
 import { SelectOption } from '../../types';
 import { ClientTypeToHangle } from '../constants';
+import { getFixedTwo } from '@/utils/sale';
 
 interface Props {
   client: Client;
@@ -75,7 +76,7 @@ const ClientCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow })
           <Box sx={{ flex: 1 }}>
             <LabelText
               label="수수료율"
-              text={client.feeRate == null ? EMPTY : client.feeRate * 100 + '%'}
+              text={client.feeRate == null ? EMPTY : getFixedTwo(client.feeRate * 100) + '%'}
             />
           </Box>
           <Box sx={{ flex: 1 }}>

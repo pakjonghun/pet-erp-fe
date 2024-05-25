@@ -40,7 +40,7 @@ const BackDataPage = () => {
   const delayKeyword = useTextDebounce(keyword);
   const [fileKey, setFileKey] = useState(new Date());
 
-  const { data, networkStatus, fetchMore, refetch, error } = useSubsidiaries({
+  const { data, networkStatus, fetchMore, refetch } = useSubsidiaries({
     keyword: delayKeyword,
     skip: 0,
     limit: LIMIT,

@@ -5,6 +5,7 @@ import ModalTitle from '@/components/ui/typograph/ModalTitle';
 import { Stack, Button } from '@mui/material';
 import BasePopover from '@/components/ui/modal/BasePopover';
 import { EMPTY } from '@/constants';
+import { getFixedTwo } from '@/utils/sale';
 
 interface Props {
   open: boolean;
@@ -36,7 +37,9 @@ const ClientDetailPopover: FC<Props> = ({
         <LabelText label="사업자등록번호" text={selectedClient.businessNumber ?? EMPTY} />
         <LabelText
           label="수수료율"
-          text={selectedClient.feeRate == null ? EMPTY : (selectedClient.feeRate ?? 0) * 100 + '%'}
+          text={
+            selectedClient.feeRate == null ? EMPTY : getFixedTwo(selectedClient.feeRate * 100) + '%'
+          }
         />
         <LabelText label="결제일" text={selectedClient.payDate ?? EMPTY} />
         <LabelText label="관리자" text={selectedClient.manager ?? EMPTY} />
