@@ -1,5 +1,6 @@
 'use client';
 
+import WebStoriesOutlinedIcon from '@mui/icons-material/WebStoriesOutlined';
 import { MouseEvent, useState } from 'react';
 import { Box, IconButton, Typography } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -80,6 +81,15 @@ const SettingMenuTrigger = () => {
       role: [UserRole.Admin] as string[],
       label: '계정 관리',
       icon: <PeopleOutlineOutlinedIcon />,
+    },
+    log: {
+      callback: () => {
+        router.push('/setting/log');
+        setSettingMenuAnchor(null);
+      },
+      role: [UserRole.Admin] as string[],
+      label: '로그 조회',
+      icon: <WebStoriesOutlinedIcon />,
     },
   };
   const { data } = useGetMyInfo();
