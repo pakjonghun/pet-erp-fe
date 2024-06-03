@@ -184,9 +184,24 @@ const ProductPage = () => {
           },
         }}
       >
-        <Table stickyHeader>
+        <Table
+          sx={{
+            '& th, tr, td': {
+              p: 1,
+              border: '0.5px solid lightGray',
+            },
+          }}
+          stickyHeader
+        >
           <TableHead>
-            <TableRow>
+            <TableRow
+              sx={{
+                '& > th': {
+                  bgcolor: 'primary.light',
+                  color: 'gray',
+                },
+              }}
+            >
               {ProductHeaderList.map((item, index) => (
                 <HeadCell key={`${index}_${item}`} text={item} />
               ))}

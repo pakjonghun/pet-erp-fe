@@ -40,7 +40,15 @@ const ProductionTableBody: FC<Props> = ({ data, isLoading, isEmpty, scrollRef })
   };
 
   return (
-    <TableBody>
+    <TableBody
+      sx={{
+        '& .MuiTableCell-root': {
+          px: 1,
+          py: 0.4,
+          fontWeight: 500,
+        },
+      }}
+    >
       {selectedProduct && (
         <RemoveProductModal
           open={optionType === 'delete'}
