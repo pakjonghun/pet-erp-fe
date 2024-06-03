@@ -20,7 +20,7 @@ const DashboardTable: FC<Props> = ({ saleInfos, title }) => {
   const isEmpty = saleInfos.length === 0;
   return (
     <TableContainer component={Paper} sx={{ p: 3 }}>
-      <Typography sx={{ my: 1, pl: 1 }} variant="h5">
+      <Typography sx={{ my: 1, pl: 1 }} variant="body1" fontWeight="bold" color="GrayText">
         {title}
       </Typography>
       <Table sx={{ minWidth: 500 }} aria-label="simple table">
