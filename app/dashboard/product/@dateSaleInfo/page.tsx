@@ -6,7 +6,7 @@ import { getProfitRate } from '@/utils/sale';
 import { useDashboardProduct } from '@/http/graphql/hooks/product/useDashboardProduct';
 import { saleRange } from '@/store/saleStore';
 import { useReactiveVar } from '@apollo/client';
-import { Grid, Skeleton } from '@mui/material';
+import { Grid, Skeleton, Typography } from '@mui/material';
 
 const DateSaleInfoPage = () => {
   const { from } = useReactiveVar(saleRange);
@@ -25,10 +25,16 @@ const DateSaleInfoPage = () => {
 
   return (
     <DashboardCard>
+      <Typography
+        sx={{ mb: 2 }}
+        variant="body2"
+        fontWeight="bold"
+        color="gray"
+      >{`${date}`}</Typography>
       <Grid rowSpacing={3} container>
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
           <DashboardCardContent
-            label={`${date} 매출`}
+            label={`매출`}
             current={todayData?.dashboardProduct?.current?.accPayCost ?? 0}
             previous={todayData?.dashboardProduct?.previous?.accPayCost ?? 0}
           />
@@ -36,7 +42,7 @@ const DateSaleInfoPage = () => {
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
           <DashboardCardContent
             numberType="comma"
-            label={`${date} 판매량`}
+            label={`판매량`}
             current={todayData?.dashboardProduct?.current?.accCount ?? 0}
             previous={todayData?.dashboardProduct?.previous?.accCount ?? 0}
           />
@@ -44,7 +50,7 @@ const DateSaleInfoPage = () => {
 
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
           <DashboardCardContent
-            label={`${date} 수익`}
+            label={`수익`}
             current={todayData?.dashboardProduct?.current?.accProfit ?? 0}
             previous={todayData?.dashboardProduct?.previous?.accProfit ?? 0}
           />
@@ -52,7 +58,7 @@ const DateSaleInfoPage = () => {
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
           <DashboardCardContent
             numberType="percent"
-            label={`${date} 수익율`}
+            label={`수익율`}
             current={getProfitRate(
               todayData?.dashboardProduct?.current?.accProfit ?? 0,
               todayData?.dashboardProduct?.current?.accPayCost ?? 0

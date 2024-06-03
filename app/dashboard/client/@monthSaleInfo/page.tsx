@@ -5,7 +5,7 @@ import { getProfitRate } from '@/utils/sale';
 import { useDashboardClient } from '@/http/graphql/hooks/client/useDashboardClient';
 import { saleRange } from '@/store/saleStore';
 import { useReactiveVar } from '@apollo/client';
-import { Grid, Skeleton } from '@mui/material';
+import { Grid, Skeleton, Typography } from '@mui/material';
 
 const DateSaleInfoPage = () => {
   const { from } = useReactiveVar(saleRange);
@@ -23,10 +23,13 @@ const DateSaleInfoPage = () => {
   }
   return (
     <DashboardCard>
+      <Typography sx={{ mb: 2 }} variant="body2" fontWeight="bold" color="gray">
+        {month}
+      </Typography>
       <Grid rowSpacing={3} container>
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
           <DashboardCardContent
-            label={`${month} 매출`}
+            label={`매출`}
             current={monthData?.dashboardClient?.current?.accPayCost ?? 0}
             previous={monthData?.dashboardClient?.previous?.accPayCost ?? 0}
           />
@@ -34,7 +37,7 @@ const DateSaleInfoPage = () => {
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
           <DashboardCardContent
             numberType="comma"
-            label={`${month} 판매량`}
+            label={`판매량`}
             current={monthData?.dashboardClient?.current?.accCount ?? 0}
             previous={monthData?.dashboardClient?.previous?.accCount ?? 0}
           />
@@ -42,7 +45,7 @@ const DateSaleInfoPage = () => {
 
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
           <DashboardCardContent
-            label={`${month} 수익`}
+            label={`수익`}
             current={monthData?.dashboardClient?.current?.accProfit ?? 0}
             previous={monthData?.dashboardClient?.previous?.accProfit ?? 0}
           />
@@ -50,7 +53,7 @@ const DateSaleInfoPage = () => {
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
           <DashboardCardContent
             numberType="percent"
-            label={`${month} 수익율`}
+            label={`수익율`}
             current={getProfitRate(
               monthData?.dashboardClient?.current?.accProfit ?? 0,
               monthData?.dashboardClient?.current?.accPayCost ?? 0
