@@ -69,7 +69,7 @@ const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickR
         </Cell>
       ))}
 
-      <Cell sx={{ minWidth: 50 }}>
+      {/* <Cell sx={{ minWidth: 50 }}>
         <IconButton
           onClick={(event) => {
             setMenuAnchor(event.currentTarget);
@@ -77,7 +77,7 @@ const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickR
         >
           <MoreHorizIcon />
         </IconButton>
-      </Cell>
+      </Cell> */}
     </TableRow>
   );
 };

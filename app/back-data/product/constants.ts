@@ -6,5 +6,4 @@ export const ProductHeaderList = [
   '원가',
   '판매가',
   '리드타임(일)',
-  '',
 ];

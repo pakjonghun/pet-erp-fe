@@ -6,11 +6,14 @@ import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 import TablePage from '@/components/table/TablePage';
 import TableTitle from '@/components/ui/typograph/TableTitle';
 import {
+  Button,
   FormControl,
   FormGroup,
   InputAdornment,
   Stack,
   Table,
+  TableBody,
+  TableContainer,
   TableHead,
   TableRow,
   TextField,
@@ -25,7 +28,7 @@ import { useUploadExcelFile } from '@/http/rest/hooks/file/useUploadExcelFile';
 import { snackMessage } from '@/store/snackMessage';
 import UploadButton from '@/components/ui/button/UploadButtont';
 import { useProducts } from '@/http/graphql/hooks/product/useProducts';
-import { LIMIT } from '@/constants';
+import { EMPTY, LIMIT } from '@/constants';
 import ProductionCards from './_components/ProductionCards';
 import ActionButton from '@/components/ui/button/ActionButton';
 import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFile';
@@ -34,6 +37,11 @@ import { ProductHeaderList } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Product } from '@/http/graphql/codegen/graphql';
 import { client } from '@/http/graphql/client';
+import Cell from '@/components/table/Cell';
+import { getKCWFormat } from '@/utils/common';
+import RemoveProductModal from './_components/RemoveProductModal';
+import EditProductModal from './_components/EditProductModal';
+import { SelectOption } from '../types';
 
 const ProductPage = () => {
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
@@ -117,105 +125,226 @@ const ProductPage = () => {
   };
 
   const [openCreateProduct, setOpenCreateProduct] = useState(false);
-  return (
-    <TablePage sx={{ flex: 1 }}>
-      {openCreateProduct && (
-        <CreateProductModal open={openCreateProduct} onClose={() => setOpenCreateProduct(false)} />
-      )}
-      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
-        <TableTitle title="제품 백데이터" />
-        <Stack direction="row" alignItems="center" gap={2}>
-          <UploadButton
-            fileKey={fileKey}
-            loading={isPending}
-            onChange={handleUploadExcelFile}
-            text="제품 업로드"
-          />
-          <ActionButton
-            icon={isDownloading ? <CommonLoading /> : <FileDownloadIcon />}
-            text="제품 다운로드"
-            onClick={handleDownload}
-          />
+  const [selectedProduct, setSelectedProduct] = useState<null | Product>(null);
 
-          <ActionButton
-            icon={<PlusOneOutlined />}
-            text="제품 등록"
-            onClick={() => setOpenCreateProduct(true)}
+  const createRow = (product: Product) => {
+    return [
+      product.name,
+      product.category?.name ?? EMPTY,
+      product.barCode ?? EMPTY,
+      product.code,
+      product.wonPrice == null ? EMPTY : getKCWFormat(product.wonPrice),
+      product.salePrice == null ? EMPTY : getKCWFormat(product.salePrice),
+      product.leadTime ? `${product.leadTime}일` : EMPTY,
+    ];
+  };
+
+  const parsedRowData = selectedProduct ? createRow(selectedProduct) : [];
+  const [optionType, setOptionType] = useState<null | SelectOption>(null);
+
+  const handleClickEdit = () => {
+    setOptionType('edit');
+  };
+
+  const handleClickDelete = () => {
+    setOptionType('delete');
+  };
+
+  return (
+    <>
+      <TablePage sx={{ flex: 1 }}>
+        {openCreateProduct && (
+          <CreateProductModal
+            open={openCreateProduct}
+            onClose={() => setOpenCreateProduct(false)}
           />
+        )}
+        <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+          <TableTitle title="제품 백데이터" />
+          <Stack direction="row" alignItems="center" gap={2}>
+            <UploadButton
+              fileKey={fileKey}
+              loading={isPending}
+              onChange={handleUploadExcelFile}
+              text="제품 업로드"
+            />
+            <ActionButton
+              icon={isDownloading ? <CommonLoading /> : <FileDownloadIcon />}
+              text="제품 다운로드"
+              onClick={handleDownload}
+            />
+
+            <ActionButton
+              icon={<PlusOneOutlined />}
+              text="제품 등록"
+              onClick={() => setOpenCreateProduct(true)}
+            />
+          </Stack>
         </Stack>
-      </Stack>
-      <FormGroup sx={{ ml: 2 }}>
-        <FormControl>
-          <TextField
-            onChange={(event) => setKeyword(event.target.value)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Search />
-                </InputAdornment>
-              ),
-            }}
-            sx={{ width: 270, my: 2 }}
-            label="검색할 제품 이름을 입력하세요."
-            size="small"
-          />
-        </FormControl>
-      </FormGroup>
-      <Typography sx={{ p: 3 }}>
-        {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
-      </Typography>
-      <ProductionCards
-        sx={{
-          display: {
-            xs: 'block',
-            md: 'none',
-          },
-        }}
-        isLoading={isLoading}
-        data={rows}
-        isEmpty={isEmpty}
-        scrollRef={scrollRef}
-      />
-      <ScrollTableContainer
-        sx={{
-          display: {
-            xs: 'none',
-            md: 'block',
-          },
-        }}
-      >
-        <Table
+        <FormGroup sx={{ ml: 2 }}>
+          <FormControl>
+            <TextField
+              onChange={(event) => setKeyword(event.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Search />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{ width: 270, my: 2 }}
+              label="검색할 제품 이름을 입력하세요."
+              size="small"
+            />
+          </FormControl>
+        </FormGroup>
+        <Typography sx={{ p: 3 }}>
+          {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
+        </Typography>
+        <ProductionCards
           sx={{
-            '& th, tr, td': {
-              p: 1,
-              border: '0.5px solid lightGray',
+            display: {
+              xs: 'block',
+              md: 'none',
             },
           }}
-          stickyHeader
+          isLoading={isLoading}
+          data={rows}
+          isEmpty={isEmpty}
+          scrollRef={scrollRef}
+        />
+        <ScrollTableContainer
+          sx={{
+            display: {
+              xs: 'none',
+              md: 'block',
+            },
+            height: '40vh',
+          }}
         >
-          <TableHead>
-            <TableRow
+          <Table
+            sx={{
+              '& th, tr, td': {
+                p: 1,
+                border: '0.5px solid lightGray',
+              },
+            }}
+            stickyHeader
+          >
+            <TableHead>
+              <TableRow
+                sx={{
+                  '& > th': {
+                    bgcolor: 'primary.light',
+                    color: 'gray',
+                  },
+                }}
+              >
+                {ProductHeaderList.map((item, index) => (
+                  <HeadCell key={`${index}_${item}`} text={item} />
+                ))}
+              </TableRow>
+            </TableHead>
+            <ProductionTableBody
+              setSelectedProduct={setSelectedProduct}
+              selectedProduct={selectedProduct}
+              isLoading={isLoading}
+              data={rows}
+              isEmpty={isEmpty}
+              scrollRef={scrollRef}
+            />
+          </Table>
+        </ScrollTableContainer>
+      </TablePage>
+      {selectedProduct && (
+        <TablePage
+          sx={{
+            flex: 1,
+            display: {
+              xs: 'none',
+              md: 'block',
+            },
+          }}
+        >
+          <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+            <TableTitle title="선택된 제품 데이터" />
+          </Stack>
+          <TableContainer>
+            <Table
               sx={{
-                '& > th': {
-                  bgcolor: 'primary.light',
-                  color: 'gray',
+                '& th, tr, td': {
+                  p: 1,
+                  border: '0.5px solid lightGray',
                 },
               }}
+              stickyHeader
             >
-              {ProductHeaderList.map((item, index) => (
-                <HeadCell key={`${index}_${item}`} text={item} />
-              ))}
-            </TableRow>
-          </TableHead>
-          <ProductionTableBody
-            isLoading={isLoading}
-            data={rows}
-            isEmpty={isEmpty}
-            scrollRef={scrollRef}
-          />
-        </Table>
-      </ScrollTableContainer>
-    </TablePage>
+              <TableHead>
+                <TableRow
+                  sx={{
+                    '& > th': {
+                      bgcolor: 'primary.light',
+                      color: 'gray',
+                    },
+                  }}
+                >
+                  {ProductHeaderList.map((item, index) => (
+                    <HeadCell key={`${index}_${item}`} text={item} />
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody
+                sx={{
+                  '& .MuiTableCell-root': {
+                    px: 1,
+                    py: 0.4,
+                    fontWeight: 500,
+                  },
+                }}
+              >
+                <TableRow hover ref={scrollRef}>
+                  {parsedRowData.map((item, index) => (
+                    <Cell key={`${selectedProduct._id}_${index}`} sx={{ minWidth: 200 }}>
+                      {item}
+                    </Cell>
+                  ))}
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Stack direction="row" gap={1} sx={{ mt: 2, mr: 2 }} justifyContent="flex-end">
+            <Button color="error" variant="outlined" onClick={handleClickDelete}>
+              삭제
+            </Button>
+            <Button variant="contained" onClick={handleClickEdit}>
+              편집
+            </Button>
+          </Stack>
+        </TablePage>
+      )}
+
+      {selectedProduct && (
+        <RemoveProductModal
+          open={optionType === 'delete'}
+          onClose={() => {
+            setSelectedProduct(null);
+            setOptionType(null);
+          }}
+          selectedProduct={selectedProduct}
+        />
+      )}
+
+      {selectedProduct && (
+        <EditProductModal
+          open={optionType === 'edit'}
+          onClose={() => {
+            setSelectedProduct(null);
+            setOptionType(null);
+          }}
+          selectedProduct={selectedProduct}
+        />
+      )}
+    </>
   );
 };
 

@@ -11,12 +11,22 @@ import LoadingRow from '@/components/table/LoadingRow';
 import { ProductHeaderList } from '../constants';
 import { CommonListProps } from '@/types';
 
-interface Props extends CommonListProps<Product> {}
+interface Props extends CommonListProps<Product> {
+  selectedProduct: null | Product;
+  setSelectedProduct: (product: null | Product) => void;
+}
 
-const ProductionTableBody: FC<Props> = ({ data, isLoading, isEmpty, scrollRef }) => {
+const ProductionTableBody: FC<Props> = ({
+  data,
+  isLoading,
+  isEmpty,
+  scrollRef,
+  selectedProduct,
+  setSelectedProduct,
+}) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  const [selectedProduct, setSelectedProduct] = useState<null | Product>(null);
+
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
 
   const handleClickOption = (option: SelectOption | null, product: Product | null) => {
@@ -44,12 +54,12 @@ const ProductionTableBody: FC<Props> = ({ data, isLoading, isEmpty, scrollRef })
       sx={{
         '& .MuiTableCell-root': {
           px: 1,
-          py: 0.4,
+          py: 1,
           fontWeight: 500,
         },
       }}
     >
-      {selectedProduct && (
+      {/* {selectedProduct && (
         <RemoveProductModal
           open={optionType === 'delete'}
           onClose={() => handleClickOption(null, null)}
@@ -63,8 +73,8 @@ const ProductionTableBody: FC<Props> = ({ data, isLoading, isEmpty, scrollRef })
           onClose={() => handleClickOption(null, null)}
           selectedProduct={selectedProduct}
         />
-      )}
-      {selectedProduct && (
+      )} */}
+      {/* {selectedProduct && (
         <ProductDetailPopover
           onClose={handleClosePopover}
           position={popoverPosition}
@@ -74,7 +84,7 @@ const ProductionTableBody: FC<Props> = ({ data, isLoading, isEmpty, scrollRef })
           onClickEdit={handleClickEdit}
           selectedProduct={selectedProduct}
         />
-      )}
+      )} */}
       <EmptyRow colSpan={ProductHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
         const product = item as unknown as Product;
