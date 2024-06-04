@@ -165,7 +165,7 @@ const ProductPage = () => {
 
   return (
     <>
-      <TablePage sx={{ flex: 1, px: 2 }}>
+      <TablePage sx={{ flex: 1 }}>
         {openCreateProduct && (
           <CreateProductModal
             open={openCreateProduct}
@@ -238,6 +238,7 @@ const ProductPage = () => {
               md: 'block',
             },
             height: '30vh',
+            px: 2,
           }}
         >
           <Table
@@ -281,7 +282,6 @@ const ProductPage = () => {
             xs: 'none',
             md: 'block',
           },
-          px: 2,
         }}
       >
         <Stack
@@ -292,7 +292,7 @@ const ProductPage = () => {
         >
           <TableTitle title="선택된 제품 데이터" />
         </Stack>
-        <TableContainer>
+        <TableContainer sx={{ px: 2 }}>
           <Table
             sx={{
               '& th, tr, td': {
