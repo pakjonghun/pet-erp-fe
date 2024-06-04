@@ -10,6 +10,7 @@ import ProductDetailPopover from './ProductDetailPopover';
 import LoadingRow from '@/components/table/LoadingRow';
 import { ProductHeaderList } from '../constants';
 import { CommonListProps } from '@/types';
+import { CommonTableBody } from '@/components/commonStyles';
 
 interface Props extends CommonListProps<Product> {
   selectedProduct: null | Product;
@@ -53,15 +54,7 @@ const ProductionTableBody: FC<Props> = ({
   };
 
   return (
-    <TableBody
-      sx={{
-        '& .MuiTableCell-root': {
-          px: 1,
-          py: 1,
-          fontWeight: 500,
-        },
-      }}
-    >
+    <CommonTableBody>
       {/* {selectedProduct && (
         <RemoveProductModal
           open={optionType === 'delete'}
@@ -109,7 +102,7 @@ const ProductionTableBody: FC<Props> = ({
         );
       })}
       <LoadingRow isLoading={isLoading} colSpan={ProductHeaderList.length} />
-    </TableBody>
+    </CommonTableBody>
   );
 };
 

@@ -43,6 +43,12 @@ import RemoveProductModal from './_components/RemoveProductModal';
 import EditProductModal from './_components/EditProductModal';
 import { SelectOption } from '../types';
 import EmptyRow from '@/components/table/EmptyRow';
+import {
+  CommonHeaderRow,
+  CommonTable,
+  CommonTableBody,
+} from '@/components/commonStyles';
+// import { CommonTable } from '@/components/commonStyles';
 
 const ProductPage = () => {
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
@@ -241,28 +247,13 @@ const ProductPage = () => {
             px: 2,
           }}
         >
-          <Table
-            sx={{
-              '& th, tr, td': {
-                p: 1,
-                border: '0.5px solid lightGray',
-              },
-            }}
-            stickyHeader
-          >
+          <CommonTable stickyHeader>
             <TableHead>
-              <TableRow
-                sx={{
-                  '& > th': {
-                    bgcolor: 'primary.light',
-                    color: 'gray',
-                  },
-                }}
-              >
+              <CommonHeaderRow>
                 {ProductHeaderList.map((item, index) => (
                   <HeadCell key={`${index}_${item}`} text={item} />
                 ))}
-              </TableRow>
+              </CommonHeaderRow>
             </TableHead>
             <ProductionTableBody
               setSelectedProduct={setSelectedProduct}
@@ -272,7 +263,7 @@ const ProductPage = () => {
               isEmpty={isEmpty}
               scrollRef={scrollRef}
             />
-          </Table>
+          </CommonTable>
         </ScrollTableContainer>
       </TablePage>
       <TablePage
@@ -293,38 +284,15 @@ const ProductPage = () => {
           <TableTitle title="선택된 제품 데이터" />
         </Stack>
         <TableContainer sx={{ px: 2 }}>
-          <Table
-            sx={{
-              '& th, tr, td': {
-                p: 1,
-                border: '0.5px solid lightGray',
-              },
-            }}
-            stickyHeader
-          >
+          <CommonTable stickyHeader>
             <TableHead>
-              <TableRow
-                sx={{
-                  '& > th': {
-                    bgcolor: 'primary.light',
-                    color: 'gray',
-                  },
-                }}
-              >
+              <CommonHeaderRow>
                 {ProductHeaderList.map((item, index) => (
                   <HeadCell key={`${index}_${item}`} text={item} />
                 ))}
-              </TableRow>
+              </CommonHeaderRow>
             </TableHead>
-            <TableBody
-              sx={{
-                '& .MuiTableCell-root': {
-                  px: 1,
-                  py: 0.4,
-                  fontWeight: 500,
-                },
-              }}
-            >
+            <CommonTableBody>
               {selectedProduct ? (
                 <TableRow hover ref={scrollRef}>
                   {parsedRowData.map((item, index) => (
@@ -343,8 +311,8 @@ const ProductPage = () => {
                   message="선택된 데이터가 없습니다."
                 />
               )}
-            </TableBody>
-          </Table>
+            </CommonTableBody>
+          </CommonTable>
         </TableContainer>
         {selectedProduct && (
           <Stack
