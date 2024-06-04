@@ -29,7 +29,10 @@ const ProductionTableBody: FC<Props> = ({
 
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
 
-  const handleClickOption = (option: SelectOption | null, product: Product | null) => {
+  const handleClickOption = (
+    option: SelectOption | null,
+    product: Product | null
+  ) => {
     setSelectedProduct(product);
     setOptionType(option);
   };
@@ -89,9 +92,10 @@ const ProductionTableBody: FC<Props> = ({
       {data.map((item, index) => {
         const product = item as unknown as Product;
         const isLast = index === data.length - 1;
-
+        const isSelected = selectedProduct?._id === product._id;
         return (
           <ProductBodyRow
+            isSelected={isSelected}
             onClickRow={(event, product: Product) => {
               setPopoverPosition({ left: event.clientX, top: event.clientY });
               setPopoverAnchor(event.currentTarget);

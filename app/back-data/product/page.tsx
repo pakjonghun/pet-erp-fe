@@ -42,6 +42,7 @@ import { getKCWFormat } from '@/utils/common';
 import RemoveProductModal from './_components/RemoveProductModal';
 import EditProductModal from './_components/EditProductModal';
 import { SelectOption } from '../types';
+import EmptyRow from '@/components/table/EmptyRow';
 
 const ProductPage = () => {
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
@@ -87,7 +88,10 @@ const ProductPage = () => {
       { service: 'product', formBody },
       {
         onSuccess: () => {
-          snackMessage({ message: '제품 업로드가 완료되었습니다.', severity: 'success' });
+          snackMessage({
+            message: '제품 업로드가 완료되었습니다.',
+            severity: 'success',
+          });
 
           refetch();
           client.refetchQueries({ include: ['categories'] });
@@ -101,7 +105,10 @@ const ProductPage = () => {
         },
         onError: (error) => {
           const message = error.response?.data.message;
-          snackMessage({ message: message ?? '제품 업로드가 실패하였습니다.', severity: 'error' });
+          snackMessage({
+            message: message ?? '제품 업로드가 실패하였습니다.',
+            severity: 'error',
+          });
         },
         onSettled: () => {
           setFileKey(new Date());
@@ -115,11 +122,17 @@ const ProductPage = () => {
   const handleDownload = () => {
     download('product', {
       onSuccess: () => {
-        snackMessage({ message: '제품 다운로드가 완료되었습니다.', severity: 'success' });
+        snackMessage({
+          message: '제품 다운로드가 완료되었습니다.',
+          severity: 'success',
+        });
       },
       onError: (err) => {
         const message = err.message;
-        snackMessage({ message: message ?? '제품 다운로드가 실패하였습니다.', severity: 'error' });
+        snackMessage({
+          message: message ?? '제품 다운로드가 실패하였습니다.',
+          severity: 'error',
+        });
       },
     });
   };
@@ -152,14 +165,19 @@ const ProductPage = () => {
 
   return (
     <>
-      <TablePage sx={{ flex: 1 }}>
+      <TablePage sx={{ flex: 1, px: 2 }}>
         {openCreateProduct && (
           <CreateProductModal
             open={openCreateProduct}
             onClose={() => setOpenCreateProduct(false)}
           />
         )}
-        <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+        <Stack
+          sx={{ px: 2 }}
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+        >
           <TableTitle title="제품 백데이터" />
           <Stack direction="row" alignItems="center" gap={2}>
             <UploadButton
@@ -219,7 +237,7 @@ const ProductPage = () => {
               xs: 'none',
               md: 'block',
             },
-            height: '40vh',
+            height: '30vh',
           }}
         >
           <Table
@@ -256,72 +274,98 @@ const ProductPage = () => {
           </Table>
         </ScrollTableContainer>
       </TablePage>
-      {selectedProduct && (
-        <TablePage
-          sx={{
-            flex: 1,
-            display: {
-              xs: 'none',
-              md: 'block',
-            },
-          }}
+      <TablePage
+        sx={{
+          flex: 1,
+          display: {
+            xs: 'none',
+            md: 'block',
+          },
+          px: 2,
+        }}
+      >
+        <Stack
+          sx={{ px: 2 }}
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
         >
-          <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
-            <TableTitle title="선택된 제품 데이터" />
-          </Stack>
-          <TableContainer>
-            <Table
-              sx={{
-                '& th, tr, td': {
-                  p: 1,
-                  border: '0.5px solid lightGray',
-                },
-              }}
-              stickyHeader
-            >
-              <TableHead>
-                <TableRow
-                  sx={{
-                    '& > th': {
-                      bgcolor: 'primary.light',
-                      color: 'gray',
-                    },
-                  }}
-                >
-                  {ProductHeaderList.map((item, index) => (
-                    <HeadCell key={`${index}_${item}`} text={item} />
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody
+          <TableTitle title="선택된 제품 데이터" />
+        </Stack>
+        <TableContainer>
+          <Table
+            sx={{
+              '& th, tr, td': {
+                p: 1,
+                border: '0.5px solid lightGray',
+              },
+            }}
+            stickyHeader
+          >
+            <TableHead>
+              <TableRow
                 sx={{
-                  '& .MuiTableCell-root': {
-                    px: 1,
-                    py: 0.4,
-                    fontWeight: 500,
+                  '& > th': {
+                    bgcolor: 'primary.light',
+                    color: 'gray',
                   },
                 }}
               >
+                {ProductHeaderList.map((item, index) => (
+                  <HeadCell key={`${index}_${item}`} text={item} />
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody
+              sx={{
+                '& .MuiTableCell-root': {
+                  px: 1,
+                  py: 0.4,
+                  fontWeight: 500,
+                },
+              }}
+            >
+              {selectedProduct ? (
                 <TableRow hover ref={scrollRef}>
                   {parsedRowData.map((item, index) => (
-                    <Cell key={`${selectedProduct._id}_${index}`} sx={{ minWidth: 200 }}>
+                    <Cell
+                      key={`${selectedProduct._id}_${index}`}
+                      sx={{ minWidth: 200 }}
+                    >
                       {item}
                     </Cell>
                   ))}
                 </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <Stack direction="row" gap={1} sx={{ mt: 2, mr: 2 }} justifyContent="flex-end">
-            <Button color="error" variant="outlined" onClick={handleClickDelete}>
+              ) : (
+                <EmptyRow
+                  colSpan={7}
+                  isEmpty={!selectedProduct}
+                  message="선택된 데이터가 없습니다."
+                />
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        {selectedProduct && (
+          <Stack
+            direction="row"
+            gap={1}
+            sx={{ mt: 2 }}
+            justifyContent="flex-end"
+          >
+            <Button
+              color="error"
+              variant="outlined"
+              onClick={handleClickDelete}
+            >
               삭제
             </Button>
             <Button variant="contained" onClick={handleClickEdit}>
               편집
             </Button>
           </Stack>
-        </TablePage>
-      )}
+        )}
+      </TablePage>
 
       {selectedProduct && (
         <RemoveProductModal

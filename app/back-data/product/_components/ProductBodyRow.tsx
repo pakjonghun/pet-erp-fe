@@ -11,13 +11,23 @@ import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import { SelectOption } from '../../types';
 
 interface Props {
+  isSelected: boolean;
   product: Product;
-  onClickRow: (event: MouseEvent<HTMLTableCellElement>, product: Product) => void;
+  onClickRow: (
+    event: MouseEvent<HTMLTableCellElement>,
+    product: Product
+  ) => void;
   onClickOption: (option: SelectOption | null, product: Product | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow }) => {
+const ProductBodyRow: FC<Props> = ({
+  product,
+  scrollRef,
+  onClickOption,
+  onClickRow,
+  isSelected,
+}) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<SelectOption, SelectedOptionItem> = {
     edit: {
@@ -53,8 +63,16 @@ const ProductBodyRow: FC<Props> = ({ product, scrollRef, onClickOption, onClickR
   const parsedRowData = createRow(product);
 
   return (
-    <TableRow hover ref={scrollRef}>
-      <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
+    <TableRow
+      sx={{ bgcolor: isSelected ? 'action.hover' : '' }}
+      hover
+      ref={scrollRef}
+    >
+      <Menu
+        anchorEl={menuAnchor}
+        open={!!menuAnchor}
+        onClose={() => setMenuAnchor(null)}
+      >
         {Object.entries(productOptionMenus).map(([option, menu]) => (
           <OptionMenu key={option} menu={menu} option={option} />
         ))}
