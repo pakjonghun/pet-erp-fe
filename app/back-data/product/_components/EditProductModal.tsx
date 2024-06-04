@@ -58,17 +58,31 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
     },
   });
 
+  useEffect(() => {
+    reset({
+      barCode: selectedProduct.barCode ?? '',
+      category: selectedProduct.category?.name as string,
+      code: selectedProduct.code,
+      leadTime: selectedProduct.leadTime,
+      name: selectedProduct.name,
+      salePrice: selectedProduct.salePrice,
+      wonPrice: selectedProduct.wonPrice,
+    });
+  }, [selectedProduct]);
+
   const categoryKeyword = watch('category');
   const delayedCategoryKeyword = useTextDebounce(categoryKeyword ?? '');
 
-  const { data, networkStatus, refetch, fetchMore } = useFindManyProductCategory({
-    keyword: delayedCategoryKeyword,
-    limit: LIMIT,
-    skip: 0,
-  });
+  const { data, networkStatus, refetch, fetchMore } =
+    useFindManyProductCategory({
+      keyword: delayedCategoryKeyword,
+      limit: LIMIT,
+      skip: 0,
+    });
   const rows = data?.categories.data ?? [];
 
-  const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
+  const isLoading =
+    networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -94,7 +108,9 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
     refetch();
   }, [delayedCategoryKeyword, refetch]);
   const onSubmit = (values: CreateProductForm) => {
-    const { code, ...newValues } = emptyValueToNull(values) as CreateProductForm;
+    const { code, ...newValues } = emptyValueToNull(
+      values
+    ) as CreateProductForm;
     updateProduct({
       variables: {
         updateProductInput: {
@@ -103,7 +119,10 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
         },
       },
       onCompleted: () => {
-        snackMessage({ message: '제품편집이 완료되었습니다.', severity: 'success' });
+        snackMessage({
+          message: '제품편집이 완료되었습니다.',
+          severity: 'success',
+        });
         client.refetchQueries({
           updateCache(cache) {
             cache.evict({ fieldName: 'wholeSales' });
@@ -120,7 +139,10 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
       },
       onError: (err) => {
         const message = err.message;
-        snackMessage({ message: message ?? '제품편집이 실패했습니다.', severity: 'error' });
+        snackMessage({
+          message: message ?? '제품편집이 실패했습니다.',
+          severity: 'error',
+        });
       },
     });
   };
@@ -259,7 +281,11 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
-          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
+          <Button
+            type="submit"
+            endIcon={loading ? <CommonLoading /> : ''}
+            variant="contained"
+          >
             편집
           </Button>
         </Stack>

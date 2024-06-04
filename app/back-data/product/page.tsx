@@ -371,7 +371,7 @@ const ProductPage = () => {
         <RemoveProductModal
           open={optionType === 'delete'}
           onClose={() => {
-            setSelectedProduct(null);
+            // setSelectedProduct(null);
             setOptionType(null);
           }}
           selectedProduct={selectedProduct}
@@ -382,7 +382,7 @@ const ProductPage = () => {
         <EditProductModal
           open={optionType === 'edit'}
           onClose={() => {
-            setSelectedProduct(null);
+            // setSelectedProduct(null);
             setOptionType(null);
           }}
           selectedProduct={selectedProduct}
