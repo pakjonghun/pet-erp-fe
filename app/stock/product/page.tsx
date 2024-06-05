@@ -166,7 +166,6 @@ const ProductStockPage = () => {
                   md: 300,
                   xs: '100%',
                 },
-                pr: 2,
               }}
             >
               <TextField
@@ -260,27 +259,7 @@ const ProductStockPage = () => {
           },
         }}
       >
-        {/* <Stack
-          sx={{ px: 2 }}
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        > */}
         <TableTitle sx={{ px: 2 }} title="선택된 제품 재고관리" />
-        {/* <Stack direction="row" alignItems="center" gap={2}>
-            <ActionButton
-              icon={<AddCircleOutlineIcon />}
-              text="입고"
-              onClick={() => setOpenAddStock(true)}
-            />
-            <ActionButton
-              icon={<RemoveCircleOutlineIcon />}
-              text="출고"
-              onClick={() => setOpenOutStock(true)}
-            />
-          </Stack>
-        </Stack> */}
-
         <TableContainer
           sx={{
             display: {
@@ -299,25 +278,6 @@ const ProductStockPage = () => {
           ) : (
             <EmptyRow colSpan={7} isEmpty={!productStock} />
           )}
-          {/* <CommonTable stickyHeader>
-            <TableHead>
-              <CommonHeaderRow>
-                {ProductStockHeaderList.map((item, index) => (
-                  <HeadCell key={`${item}_${index}`} text={item} />
-                ))}
-              </CommonHeaderRow>
-            </TableHead>
-            <ProductStockTableBody
-              productStock={productStock}
-              setProductStock={setProductStock}
-              openAddStock={() => setOpenAddStock(true)}
-              openOutStock={() => setOpenOutStock(true)}
-              data={rows}
-              isEmpty={isEmpty}
-              isLoading={isLoading}
-              scrollRef={scrollRef}
-            />
-          </CommonTable> */}
         </TableContainer>
         {openSubAddStock && (
           <AddProductStockModal
@@ -325,7 +285,6 @@ const ProductStockPage = () => {
             open={openSubAddStock}
             onClose={() => {
               setOpenSubAddStock(false);
-              // setProductStock(null);
             }}
           />
         )}
@@ -335,7 +294,6 @@ const ProductStockPage = () => {
             open={openSubOutStock}
             onClose={() => {
               setOpenSubOutStock(false);
-              // setProductStock(null);
             }}
           />
         )}
@@ -345,10 +303,3 @@ const ProductStockPage = () => {
 };
 
 export default ProductStockPage;
-
-// {open && (
-//   <CollapseRow
-//     onClickOption={onClickOption}
-//     productStock={productStock}
-//     open={open}
-//   />

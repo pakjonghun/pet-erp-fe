@@ -23,6 +23,11 @@ import { getNumberWithComma } from '@/utils/common';
 import EmptyRow from '@/components/table/EmptyRow';
 import { useReactiveVar } from '@apollo/client';
 import { authState } from '@/store/isLogin';
+import {
+  CommonHeaderRow,
+  CommonTable,
+  CommonTableBody,
+} from '@/components/commonStyles';
 
 interface Props {
   productStock: StockColumn;
@@ -71,7 +76,7 @@ const SubTableOrder: FC<Props> = ({ productStock }) => {
           </Stack>
         )}
       </Stack>
-      <Table sx={{ mt: 2 }} size="small">
+      <CommonTable sx={{ mt: 2 }} size="small">
         <TableHead
           sx={{
             '.MuiTableCell-root': {
@@ -79,7 +84,7 @@ const SubTableOrder: FC<Props> = ({ productStock }) => {
             },
           }}
         >
-          <TableRow>
+          <CommonHeaderRow>
             <TableCell>발주날짜</TableCell>
             <TableCell>공장</TableCell>
             <TableCell>총 수량</TableCell>
@@ -88,9 +93,9 @@ const SubTableOrder: FC<Props> = ({ productStock }) => {
             <TableCell>총 금액</TableCell>
             <TableCell>지불여부</TableCell>
             <TableCell>생산완료 예정일</TableCell>
-          </TableRow>
+          </CommonHeaderRow>
         </TableHead>
-        <TableBody>
+        <CommonTableBody>
           <EmptyRow
             colSpan={8}
             isEmpty={isEmpty}
@@ -136,8 +141,8 @@ const SubTableOrder: FC<Props> = ({ productStock }) => {
               </TableRow>
             );
           })}
-        </TableBody>
-      </Table>
+        </CommonTableBody>
+      </CommonTable>
     </TableContainer>
   );
 };

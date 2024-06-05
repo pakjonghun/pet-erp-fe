@@ -9,6 +9,7 @@ import {
   FormGroup,
   InputAdornment,
   Stack,
+  TableContainer,
   TableHead,
   TextField,
   Typography,
@@ -29,8 +30,13 @@ import BaseSelect from '@/components/ui/select/BaseSelect';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { useSubsidiaryStocks } from '@/http/graphql/hooks/stock/useSubsidiaryStocks';
+import {
+  subsidiaryStocks,
+  useSubsidiaryStocks,
+} from '@/http/graphql/hooks/stock/useSubsidiaryStocks';
 import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
+import CollapseRow from './_components/CollapseRow';
+import EmptyRow from '@/components/table/EmptyRow';
 
 const SubsidiaryStockPage = () => {
   const { data: storageData } = useStorages({
@@ -78,6 +84,23 @@ const SubsidiaryStockPage = () => {
 
   const [openAddStock, setOpenAddStock] = useState(false);
   const [openOutStock, setOpenOutStock] = useState(false);
+  const [openSubAddStock, setOpenSubAddStock] = useState(false);
+  const [openSubOutStock, setOpenSubOutStock] = useState(false);
+
+  const handleClickOption = (
+    option: any | null,
+    subsidiary: SubsidiaryStockColumn | null
+  ) => {
+    setProductStock(subsidiary);
+    console.log(option);
+    if (option == 'add') {
+      setOpenSubAddStock(true);
+    }
+
+    if (option == 'out') {
+      setOpenSubOutStock(true);
+    }
+  };
 
   const storageOptions = ['모두선택'].concat(
     ((storageData?.storages.data as Storage[]) ?? []).map((item) => item.name)
@@ -88,21 +111,21 @@ const SubsidiaryStockPage = () => {
       <TablePage sx={{ flex: 1 }}>
         {openAddStock && (
           <AddProductStockModal
-            productStock={productStock}
+            productStock={null}
             open={openAddStock}
             onClose={() => {
               setOpenAddStock(false);
-              setProductStock(null);
+              // setProductStock(null);
             }}
           />
         )}
         {openOutStock && (
           <OutProductStockModal
-            productStock={productStock}
+            productStock={null}
             open={openOutStock}
             onClose={() => {
               setOpenOutStock(false);
-              setProductStock(null);
+              // setProductStock(null);
             }}
           />
         )}
@@ -146,7 +169,6 @@ const SubsidiaryStockPage = () => {
                   md: 300,
                   xs: '100%',
                 },
-                pr: 2,
               }}
             >
               <TextField
@@ -229,121 +251,10 @@ const SubsidiaryStockPage = () => {
           </CommonTable>
         </ScrollTableContainer>
       </TablePage>
-      <TablePage sx={{ flex: 1 }}>
-        {openAddStock && (
-          <AddProductStockModal
-            productStock={productStock}
-            open={openAddStock}
-            onClose={() => {
-              setOpenAddStock(false);
-              setProductStock(null);
-            }}
-          />
-        )}
-        {openOutStock && (
-          <OutProductStockModal
-            productStock={productStock}
-            open={openOutStock}
-            onClose={() => {
-              setOpenOutStock(false);
-              setProductStock(null);
-            }}
-          />
-        )}
-        <Stack
-          sx={{ px: 2 }}
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <TableTitle title="부자재 재고관리" />
-          <Stack direction="row" alignItems="center" gap={2}>
-            <ActionButton
-              icon={<AddCircleOutlineIcon />}
-              text="입고"
-              onClick={() => setOpenAddStock(true)}
-            />
-            <ActionButton
-              icon={<RemoveCircleOutlineIcon />}
-              text="출고"
-              onClick={() => setOpenOutStock(true)}
-            />
-          </Stack>
-        </Stack>
-        <FormGroup sx={{ ml: 2 }}>
-          <Stack
-            sx={{
-              flexDirection: {
-                xs: 'column',
-                md: 'row',
-              },
-              alignItems: {
-                xs: 'flex-start',
-                md: 'center',
-              },
-            }}
-            gap={2}
-          >
-            <FormControl
-              sx={{
-                width: {
-                  md: 300,
-                  xs: '100%',
-                },
-                pr: 2,
-              }}
-            >
-              <TextField
-                onChange={(event) => setKeyword(event.target.value)}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <Search />
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{ my: 2 }}
-                label="검색할 부자재 이름을 입력하세요."
-                size="small"
-              />
-            </FormControl>
-            <FormControl
-              sx={{
-                pr: 2,
-                width: {
-                  md: 120,
-                  xs: '100%',
-                },
-              }}
-            >
-              <BaseSelect
-                defaultValue={storageOption}
-                label="창고 선택"
-                onChangeValue={(event) => {
-                  setStorageOption(event.target.value);
-                }}
-                optionItems={storageOptions}
-                value={storageOption}
-              />
-            </FormControl>
-          </Stack>
-        </FormGroup>
-        <Typography sx={{ p: 3 }}>
-          {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
-        </Typography>
-        <ProductStockCards
-          sx={{
-            display: {
-              xs: 'block',
-              md: 'none',
-            },
-          }}
-          data={rows}
-          isEmpty={isEmpty}
-          isLoading={isLoading}
-          scrollRef={scrollRef}
-        />
-        <ScrollTableContainer
+      <TablePage sx={{ flex: 1, px: 2 }}>
+        <TableTitle title="선택된 부자재 재고관리" />
+
+        <TableContainer
           sx={{
             display: {
               xs: 'none',
@@ -351,26 +262,36 @@ const SubsidiaryStockPage = () => {
             },
           }}
         >
-          <CommonTable stickyHeader>
-            <TableHead>
-              <CommonHeaderRow>
-                {ProductStockHeaderList.map((item, index) => (
-                  <HeadCell key={`${item}_${index}`} text={item} />
-                ))}
-              </CommonHeaderRow>
-            </TableHead>
-            <ProductStockTableBody
+          {!!productStock ? (
+            <CollapseRow
+              onClickOption={handleClickOption}
               productStock={productStock}
-              setProductStock={setProductStock}
-              openAddStock={() => setOpenAddStock(true)}
-              openOutStock={() => setOpenOutStock(true)}
-              data={rows}
-              isEmpty={isEmpty}
-              isLoading={isLoading}
-              scrollRef={scrollRef}
+              open
             />
-          </CommonTable>
-        </ScrollTableContainer>
+          ) : (
+            <EmptyRow colSpan={10} isEmpty={!productStock} />
+          )}
+        </TableContainer>
+        {openSubAddStock && (
+          <AddProductStockModal
+            productStock={productStock}
+            open={openSubAddStock}
+            onClose={() => {
+              setOpenSubAddStock(false);
+              // setProductStock(null);
+            }}
+          />
+        )}
+        {openSubOutStock && (
+          <OutProductStockModal
+            productStock={productStock}
+            open={openSubOutStock}
+            onClose={() => {
+              setOpenSubOutStock(false);
+              // setProductStock(null);
+            }}
+          />
+        )}
       </TablePage>
     </>
   );

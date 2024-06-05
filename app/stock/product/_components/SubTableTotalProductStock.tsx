@@ -4,10 +4,8 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import {
   TableRow,
   TableCell,
-  Table,
   TableHead,
   TableContainer,
-  TableBody,
   Typography,
   Stack,
 } from '@mui/material';
@@ -17,6 +15,11 @@ import { useStocksState } from '@/http/graphql/hooks/stock/useStocksState';
 import EmptyRow from '@/components/table/EmptyRow';
 import LabelText from '@/components/ui/typograph/LabelText';
 import dayjs from 'dayjs';
+import {
+  CommonHeaderRow,
+  CommonTable,
+  CommonTableBody,
+} from '@/components/commonStyles';
 
 interface Props {
   productStock: StockColumn;
@@ -85,7 +88,7 @@ const SubTableTotalProductStock: FC<Props> = ({
       <Typography variant="caption" sx={{ ml: 2, display: 'inline-block' }}>
         모든 창고 및 공장에서 생산중인 현황입니다.
       </Typography>
-      <Table sx={{ mt: 2 }} size="small">
+      <CommonTable sx={{ mt: 2 }} size="small">
         <TableHead
           sx={{
             '.MuiTableCell-root': {
@@ -93,14 +96,14 @@ const SubTableTotalProductStock: FC<Props> = ({
             },
           }}
         >
-          <TableRow>
+          <CommonHeaderRow>
             <TableCell>구분</TableCell>
             <TableCell>위치</TableCell>
             <TableCell>수량</TableCell>
             <TableCell>생산완료 예정일</TableCell>
-          </TableRow>
+          </CommonHeaderRow>
         </TableHead>
-        <TableBody>
+        <CommonTableBody>
           <EmptyRow
             colSpan={5}
             isEmpty={isEmpty}
@@ -120,8 +123,8 @@ const SubTableTotalProductStock: FC<Props> = ({
               </TableRow>
             );
           })}
-        </TableBody>
-      </Table>
+        </CommonTableBody>
+      </CommonTable>
     </TableContainer>
   );
 };
