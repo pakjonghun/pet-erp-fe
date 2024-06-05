@@ -10,16 +10,26 @@ import LoadingRow from '@/components/table/LoadingRow';
 import { SubsidiaryHeaderList } from '../constants';
 import SubsidiaryBodyRow from './SubsidiaryBodyRow';
 import { CommonListProps } from '@/types';
+import { CommonTableBody } from '@/components/commonStyles';
 
 interface Props extends CommonListProps<Subsidiary> {}
 
-const SubsidiaryTableBody: FC<Props> = ({ data, isLoading, isEmpty, scrollRef }) => {
+const SubsidiaryTableBody: FC<Props> = ({
+  data,
+  isLoading,
+  isEmpty,
+  scrollRef,
+}) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  const [selectedSubsidiary, setSelectedSubsidiary] = useState<null | Subsidiary>(null);
+  const [selectedSubsidiary, setSelectedSubsidiary] =
+    useState<null | Subsidiary>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
 
-  const handleClickOption = (option: SelectOption | null, subsidiary: Subsidiary | null) => {
+  const handleClickOption = (
+    option: SelectOption | null,
+    subsidiary: Subsidiary | null
+  ) => {
     setSelectedSubsidiary(subsidiary);
     setOptionType(option);
   };
@@ -40,7 +50,7 @@ const SubsidiaryTableBody: FC<Props> = ({ data, isLoading, isEmpty, scrollRef })
   };
 
   return (
-    <TableBody>
+    <CommonTableBody>
       {selectedSubsidiary && (
         <RemoveSubsidiaryModal
           open={optionType === 'delete'}
@@ -85,7 +95,7 @@ const SubsidiaryTableBody: FC<Props> = ({ data, isLoading, isEmpty, scrollRef })
         );
       })}
       <LoadingRow isLoading={isLoading} colSpan={SubsidiaryHeaderList.length} />
-    </TableBody>
+    </CommonTableBody>
   );
 };
 

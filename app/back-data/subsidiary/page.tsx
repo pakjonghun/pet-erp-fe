@@ -33,6 +33,7 @@ import { useSubsidiaries } from '@/http/graphql/hooks/subsidiary/useSubsidiaries
 import SubsidiaryCards from './_components/SubsidiaryCards';
 import SubsidiaryTableBody from './_components/SubsidiaryTableBody';
 import { client } from '@/http/graphql/client';
+import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 
 const BackDataPage = () => {
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
@@ -46,7 +47,8 @@ const BackDataPage = () => {
     limit: LIMIT,
   });
   const rows = data?.subsidiaries.data ?? [];
-  const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
+  const isLoading =
+    networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
   const isEmpty = !isLoading && rows.length === 0;
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -135,7 +137,12 @@ const BackDataPage = () => {
           onClose={() => setOpenCreateProduct(false)}
         />
       )}
-      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+      <Stack
+        sx={{ px: 2 }}
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <TableTitle title="부자재 백데이터" />
         <Stack direction="row" alignItems="center" gap={2}>
           <UploadButton
@@ -197,13 +204,13 @@ const BackDataPage = () => {
           },
         }}
       >
-        <Table stickyHeader>
+        <CommonTable stickyHeader>
           <TableHead>
-            <TableRow>
+            <CommonHeaderRow>
               {SubsidiaryHeaderList.map((item, index) => (
                 <HeadCell key={`${index}_${item}`} text={item} />
               ))}
-            </TableRow>
+            </CommonHeaderRow>
           </TableHead>
           <SubsidiaryTableBody
             isLoading={isLoading}
@@ -211,7 +218,7 @@ const BackDataPage = () => {
             isEmpty={isEmpty}
             scrollRef={scrollRef}
           />
-        </Table>
+        </CommonTable>
       </ScrollTableContainer>
     </TablePage>
   );

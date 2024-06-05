@@ -34,6 +34,7 @@ import { useClients } from '@/http/graphql/hooks/client/useClients';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Client } from '@/http/graphql/codegen/graphql';
 import { client } from '@/http/graphql/client';
+import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 
 const BackDataPage = () => {
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
@@ -81,7 +82,10 @@ const BackDataPage = () => {
       { service: 'client', formBody },
       {
         onSuccess: () => {
-          snackMessage({ message: '거래처 업로드가 완료되었습니다.', severity: 'success' });
+          snackMessage({
+            message: '거래처 업로드가 완료되었습니다.',
+            severity: 'success',
+          });
           client.refetchQueries({
             updateCache(cache) {
               cache.evict({ fieldName: 'dashboardClients' });
@@ -108,7 +112,10 @@ const BackDataPage = () => {
   const handleDownload = () => {
     download('client', {
       onSuccess: () => {
-        snackMessage({ message: '거래처 다운로드가 완료되었습니다.', severity: 'success' });
+        snackMessage({
+          message: '거래처 다운로드가 완료되었습니다.',
+          severity: 'success',
+        });
       },
       onError: (err) => {
         const message = err.message;
@@ -124,9 +131,17 @@ const BackDataPage = () => {
   return (
     <TablePage sx={{ flex: 1 }}>
       {openCreateClient && (
-        <CreateClientModal open={openCreateClient} onClose={() => setOpenCreateClient(false)} />
+        <CreateClientModal
+          open={openCreateClient}
+          onClose={() => setOpenCreateClient(false)}
+        />
       )}
-      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+      <Stack
+        sx={{ px: 2 }}
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <TableTitle title="거래처 백데이터" />
         <Stack direction="row" alignItems="center" gap={2}>
           <UploadButton
@@ -186,15 +201,16 @@ const BackDataPage = () => {
             xs: 'none',
             md: 'block',
           },
+          px: 2,
         }}
       >
-        <Table stickyHeader>
+        <CommonTable stickyHeader>
           <TableHead>
-            <TableRow>
+            <CommonHeaderRow>
               {ClientHeaderList.map((item, index) => (
                 <HeadCell key={`${item}_${index}`} text={item} />
               ))}
-            </TableRow>
+            </CommonHeaderRow>
           </TableHead>
           <ClientTableBody
             data={rows}
@@ -202,7 +218,7 @@ const BackDataPage = () => {
             isLoading={isLoading}
             scrollRef={scrollRef}
           />
-        </Table>
+        </CommonTable>
       </ScrollTableContainer>
     </TablePage>
   );

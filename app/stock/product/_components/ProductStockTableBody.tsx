@@ -6,6 +6,7 @@ import ProductStockBodyRow from './ProductStockBodyRow';
 import LoadingRow from '@/components/table/LoadingRow';
 import { ProductStockHeaderList } from '../constants';
 import { CommonListProps } from '@/types';
+import { CommonTableBody } from '@/components/commonStyles';
 
 interface Props extends CommonListProps<StockColumn> {
   openAddStock: () => void;
@@ -29,7 +30,10 @@ const ProductStockTableBody: FC<Props> = ({
 
   const [optionType, setOptionType] = useState<null | string>(null);
 
-  const handleClickOption = (option: any | null, product: StockColumn | null) => {
+  const handleClickOption = (
+    option: any | null,
+    product: StockColumn | null
+  ) => {
     setProductStock(product);
     if (option == 'add') {
       openAddStock();
@@ -56,7 +60,7 @@ const ProductStockTableBody: FC<Props> = ({
   };
 
   return (
-    <TableBody>
+    <CommonTableBody>
       <EmptyRow colSpan={ProductStockHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
         const stock = item as unknown as StockColumn;
@@ -75,8 +79,11 @@ const ProductStockTableBody: FC<Props> = ({
           />
         );
       })}
-      <LoadingRow isLoading={isLoading} colSpan={ProductStockHeaderList.length} />
-    </TableBody>
+      <LoadingRow
+        isLoading={isLoading}
+        colSpan={ProductStockHeaderList.length}
+      />
+    </CommonTableBody>
   );
 };
 

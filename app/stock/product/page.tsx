@@ -32,6 +32,7 @@ import BaseSelect from '@/components/ui/select/BaseSelect';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 
 const ProductStockPage = () => {
   const { data: storageData } = useStorages({
@@ -53,7 +54,8 @@ const ProductStockPage = () => {
   });
 
   const rows = (data?.stocks.data as StockColumn[]) ?? [];
-  const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
+  const isLoading =
+    networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -105,7 +107,12 @@ const ProductStockPage = () => {
           }}
         />
       )}
-      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+      <Stack
+        sx={{ px: 2 }}
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <TableTitle title="제품 재고관리" />
         <Stack direction="row" alignItems="center" gap={2}>
           <ActionButton
@@ -203,13 +210,13 @@ const ProductStockPage = () => {
           },
         }}
       >
-        <Table stickyHeader>
+        <CommonTable stickyHeader>
           <TableHead>
-            <TableRow>
+            <CommonHeaderRow>
               {ProductStockHeaderList.map((item, index) => (
                 <HeadCell key={`${item}_${index}`} text={item} />
               ))}
-            </TableRow>
+            </CommonHeaderRow>
           </TableHead>
           <ProductStockTableBody
             productStock={productStock}
@@ -221,7 +228,7 @@ const ProductStockPage = () => {
             isLoading={isLoading}
             scrollRef={scrollRef}
           />
-        </Table>
+        </CommonTable>
       </ScrollTableContainer>
     </TablePage>
   );

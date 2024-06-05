@@ -29,6 +29,7 @@ import { ProductOrder, UserRole } from '@/http/graphql/codegen/graphql';
 import { useProductOrders } from '@/http/graphql/hooks/productOrder/useProductOrders';
 import { useReactiveVar } from '@apollo/client';
 import { authState } from '@/store/isLogin';
+import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 
 const OrderPage = () => {
   const { role } = useReactiveVar(authState);
@@ -43,7 +44,8 @@ const OrderPage = () => {
   });
 
   const rows = data?.orders.data ?? [];
-  const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
+  const isLoading =
+    networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
       if (isLoading) return;
@@ -70,9 +72,17 @@ const OrderPage = () => {
   return (
     <TablePage sx={{ flex: 1 }}>
       {openCreateClient && (
-        <AddOrderModal open={openCreateClient} onClose={() => setOpenCreateClient(false)} />
+        <AddOrderModal
+          open={openCreateClient}
+          onClose={() => setOpenCreateClient(false)}
+        />
       )}
-      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+      <Stack
+        sx={{ px: 2 }}
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <TableTitle title="발주" />
         {!cannotModify && (
           <Stack direction="row" alignItems="center" gap={2}>
@@ -124,13 +134,13 @@ const OrderPage = () => {
           },
         }}
       >
-        <Table stickyHeader>
+        <CommonTable stickyHeader>
           <TableHead>
-            <TableRow>
+            <CommonHeaderRow>
               {OrderHeaderList.map((item, index) => (
                 <HeadCell key={`${item}_${index}`} text={item} />
               ))}
-            </TableRow>
+            </CommonHeaderRow>
           </TableHead>
           <OrderTableBody
             data={rows as ProductOrder[]}
@@ -138,7 +148,7 @@ const OrderPage = () => {
             isLoading={isLoading}
             scrollRef={scrollRef}
           />
-        </Table>
+        </CommonTable>
       </ScrollTableContainer>
     </TablePage>
   );

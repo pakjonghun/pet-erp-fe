@@ -9,6 +9,7 @@ import { CommonListProps } from '@/types';
 import EditOrderModal from '../../_components/EditOrderModal';
 import RemoveOrderModal from '../../_components/RemoveOrderModal';
 import OrderDetailPopover from './OrderDetailPopover';
+import { CommonTableBody } from '@/components/commonStyles';
 
 interface Props extends CommonListProps<ProductOrder> {}
 
@@ -18,7 +19,10 @@ const OrderTableBody: FC<Props> = ({ isLoading, isEmpty, data, scrollRef }) => {
   const [selectedOrder, setSelectedOrder] = useState<null | ProductOrder>(null);
   const [optionType, setOptionType] = useState<null | any>(null);
 
-  const handleClickOption = (option: any | null, client: ProductOrder | null) => {
+  const handleClickOption = (
+    option: any | null,
+    client: ProductOrder | null
+  ) => {
     setSelectedOrder(client);
     setOptionType(option);
   };
@@ -39,7 +43,7 @@ const OrderTableBody: FC<Props> = ({ isLoading, isEmpty, data, scrollRef }) => {
   };
 
   return (
-    <TableBody>
+    <CommonTableBody>
       {selectedOrder && (
         <EditOrderModal
           open={optionType === 'edit'}
@@ -86,7 +90,7 @@ const OrderTableBody: FC<Props> = ({ isLoading, isEmpty, data, scrollRef }) => {
         );
       })}
       <LoadingRow isLoading={isLoading} colSpan={OrderHeaderList.length} />
-    </TableBody>
+    </CommonTableBody>
   );
 };
 

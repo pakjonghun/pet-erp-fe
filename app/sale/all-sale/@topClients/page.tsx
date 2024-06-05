@@ -16,6 +16,7 @@ import { useEffect } from 'react';
 import { useDashboardClients } from '@/http/graphql/hooks/client/useDashboardClients';
 import ClientSaleTableBodySection from './_components/ClientSaleTableBodySection';
 import ClientSaleCards from './_components/ClientSaleCards';
+import { CommonHeaderRow } from '@/components/commonStyles';
 
 const TopClients = () => {
   const { from, to } = useReactiveVar(saleRange);
@@ -25,7 +26,8 @@ const TopClients = () => {
   });
 
   const rows = data?.dashboardClients ?? [];
-  const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
+  const isLoading =
+    networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
   const isEmpty = !isLoading && rows.length === 0;
   const { totalCount, totalPayCost, totalProfit } = useReactiveVar(clientTotal);
 
@@ -67,7 +69,7 @@ const TopClients = () => {
 
   return (
     <TablePage>
-      <TableTitle title={`TOP10 거래처`} />
+      <TableTitle sx={{}} title={`TOP10 거래처`} />
       <ClientSaleCards
         sx={{
           display: {
@@ -90,7 +92,7 @@ const TopClients = () => {
       >
         <Table stickyHeader>
           <TableHead>
-            <TableRow hover>
+            <CommonHeaderRow hover>
               <HeadCell text="이름" />
               <HeadCell
                 sx={{ textAlign: 'right' }}
@@ -129,7 +131,7 @@ const TopClients = () => {
                   </>
                 }
               />
-            </TableRow>
+            </CommonHeaderRow>
           </TableHead>
 
           <ClientSaleTableBodySection

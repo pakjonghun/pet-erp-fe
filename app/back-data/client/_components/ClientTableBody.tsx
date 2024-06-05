@@ -10,16 +10,25 @@ import LoadingRow from '@/components/table/LoadingRow';
 import { ClientHeaderList } from '../constants';
 import EditPClientModal from './EditPClientModal';
 import { CommonListProps } from '@/types';
+import { CommonTableBody } from '@/components/commonStyles';
 
 interface Props extends CommonListProps<Client> {}
 
-const ClientTableBody: FC<Props> = ({ isLoading, isEmpty, data, scrollRef }) => {
+const ClientTableBody: FC<Props> = ({
+  isLoading,
+  isEmpty,
+  data,
+  scrollRef,
+}) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
   const [selectedClient, setSelectedClient] = useState<null | Client>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
 
-  const handleClickOption = (option: SelectOption | null, client: Client | null) => {
+  const handleClickOption = (
+    option: SelectOption | null,
+    client: Client | null
+  ) => {
     setSelectedClient(client);
     setOptionType(option);
   };
@@ -40,7 +49,7 @@ const ClientTableBody: FC<Props> = ({ isLoading, isEmpty, data, scrollRef }) => 
   };
 
   return (
-    <TableBody>
+    <CommonTableBody>
       {selectedClient && (
         <RemoveClientModal
           open={optionType === 'delete'}
@@ -86,7 +95,7 @@ const ClientTableBody: FC<Props> = ({ isLoading, isEmpty, data, scrollRef }) => 
         );
       })}
       <LoadingRow isLoading={isLoading} colSpan={ClientHeaderList.length} />
-    </TableBody>
+    </CommonTableBody>
   );
 };
 

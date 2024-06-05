@@ -32,6 +32,7 @@ import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { useSubsidiaryStocks } from '@/http/graphql/hooks/stock/useSubsidiaryStocks';
+import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 
 const SubsidiaryStockPage = () => {
   const { data: storageData } = useStorages({
@@ -43,7 +44,8 @@ const SubsidiaryStockPage = () => {
 
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
-  const [productStock, setProductStock] = useState<null | SubsidiaryStockColumn>(null);
+  const [productStock, setProductStock] =
+    useState<null | SubsidiaryStockColumn>(null);
 
   const { data, networkStatus, fetchMore } = useSubsidiaryStocks({
     keyword: delayKeyword,
@@ -53,7 +55,8 @@ const SubsidiaryStockPage = () => {
   });
 
   const rows = (data?.subsidiaryStocks.data as SubsidiaryStockColumn[]) ?? [];
-  const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
+  const isLoading =
+    networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
       if (isLoading) return;
@@ -104,7 +107,12 @@ const SubsidiaryStockPage = () => {
           }}
         />
       )}
-      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+      <Stack
+        sx={{ px: 2 }}
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <TableTitle title="부자재 재고관리" />
         <Stack direction="row" alignItems="center" gap={2}>
           <ActionButton
@@ -200,13 +208,13 @@ const SubsidiaryStockPage = () => {
           },
         }}
       >
-        <Table stickyHeader>
+        <CommonTable stickyHeader>
           <TableHead>
-            <TableRow>
+            <CommonHeaderRow>
               {ProductStockHeaderList.map((item, index) => (
                 <HeadCell key={`${item}_${index}`} text={item} />
               ))}
-            </TableRow>
+            </CommonHeaderRow>
           </TableHead>
           <ProductStockTableBody
             productStock={productStock}
@@ -218,7 +226,7 @@ const SubsidiaryStockPage = () => {
             isLoading={isLoading}
             scrollRef={scrollRef}
           />
-        </Table>
+        </CommonTable>
       </ScrollTableContainer>
     </TablePage>
   );

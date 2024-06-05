@@ -1,11 +1,15 @@
 import { FC, useState } from 'react';
-import { StockColumn, SubsidiaryStockColumn } from '@/http/graphql/codegen/graphql';
+import {
+  StockColumn,
+  SubsidiaryStockColumn,
+} from '@/http/graphql/codegen/graphql';
 import { TableBody } from '@mui/material';
 import EmptyRow from '@/components/table/EmptyRow';
 import ProductStockBodyRow from './ProductStockBodyRow';
 import LoadingRow from '@/components/table/LoadingRow';
 import { ProductStockHeaderList } from '../constants';
 import { CommonListProps } from '@/types';
+import { CommonTableBody } from '@/components/commonStyles';
 
 interface Props extends CommonListProps<SubsidiaryStockColumn> {
   openAddStock: () => void;
@@ -27,7 +31,10 @@ const ProductStockTableBody: FC<Props> = ({
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
 
-  const handleClickOption = (option: any | null, product: SubsidiaryStockColumn | null) => {
+  const handleClickOption = (
+    option: any | null,
+    product: SubsidiaryStockColumn | null
+  ) => {
     setProductStock(product);
     if (option == 'add') {
       openAddStock();
@@ -39,7 +46,7 @@ const ProductStockTableBody: FC<Props> = ({
   };
 
   return (
-    <TableBody>
+    <CommonTableBody>
       <EmptyRow colSpan={ProductStockHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
         const stock = item as unknown as SubsidiaryStockColumn;
@@ -58,8 +65,11 @@ const ProductStockTableBody: FC<Props> = ({
           />
         );
       })}
-      <LoadingRow isLoading={isLoading} colSpan={ProductStockHeaderList.length} />
-    </TableBody>
+      <LoadingRow
+        isLoading={isLoading}
+        colSpan={ProductStockHeaderList.length}
+      />
+    </CommonTableBody>
   );
 };
 
