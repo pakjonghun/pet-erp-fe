@@ -4,11 +4,12 @@ import { FC } from 'react';
 import { ProductSaleData } from '@/http/graphql/codegen/graphql';
 import Cell from '@/components/table/Cell';
 import EmptyRow from '@/components/table/EmptyRow';
-import { TableBody, TableRow, Stack, Chip } from '@mui/material';
+import { TableRow, Stack, Chip } from '@mui/material';
 import SaleTableCell from '@/components/table/SaleTableCell';
 import { getProfitRate } from '@/utils/sale';
 import { CommonListProps } from '@/types';
 import LoadingRow from '@/components/table/LoadingRow';
+import { CommonTableBody } from '@/components/commonStyles';
 
 interface Props extends CommonListProps<ProductSaleData> {
   setSelectedProductSale: (product: ProductSaleData | null) => void;
@@ -22,7 +23,7 @@ const TableBodySection: FC<Props> = ({
   setSelectedProductSale,
 }) => {
   return (
-    <TableBody>
+    <CommonTableBody>
       <EmptyRow colSpan={6} isEmpty={isEmpty} />
       {data.map((item, index) => {
         const row = item as unknown as ProductSaleData;
@@ -52,7 +53,10 @@ const TableBodySection: FC<Props> = ({
             />
             <SaleTableCell
               numberType="percent"
-              current={getProfitRate(row?.sales?.accProfit ?? 0, row?.sales?.accPayCost ?? 0)}
+              current={getProfitRate(
+                row?.sales?.accProfit ?? 0,
+                row?.sales?.accPayCost ?? 0
+              )}
               previous={getProfitRate(
                 row?.sales?.prevAccProfit ?? 0,
                 row?.sales?.prevAccPayCost ?? 0
@@ -78,7 +82,7 @@ const TableBodySection: FC<Props> = ({
         );
       })}
       <LoadingRow colSpan={6} isLoading={isLoading} />
-    </TableBody>
+    </CommonTableBody>
   );
 };
 

@@ -30,6 +30,7 @@ import { useReactiveVar } from '@apollo/client';
 import { saleRange } from '@/store/saleStore';
 import { UserRole, WholeSaleItem } from '@/http/graphql/codegen/graphql';
 import { authState } from '@/store/isLogin';
+import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 
 const WholeSalePage = () => {
   const { role } = useReactiveVar(authState);
@@ -46,7 +47,8 @@ const WholeSalePage = () => {
     to,
   });
   const rows = (data?.wholeSales.data as WholeSaleItem[]) ?? [];
-  const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
+  const isLoading =
+    networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
   const isEmpty = !isLoading && rows.length === 0;
 
   const callback: IntersectionObserverCallback = (entries) => {
@@ -76,9 +78,17 @@ const WholeSalePage = () => {
   return (
     <TablePage sx={{ flex: 1 }}>
       {openCreateProduct && (
-        <AddWholeSaleModal open={openCreateProduct} onClose={() => setOpenCreateProduct(false)} />
+        <AddWholeSaleModal
+          open={openCreateProduct}
+          onClose={() => setOpenCreateProduct(false)}
+        />
       )}
-      <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+      <Stack
+        sx={{ px: 2 }}
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <TableTitle title="도매 판매" />
         {!cannotModify && (
           <Stack direction="row" alignItems="center" gap={2}>
@@ -130,13 +140,13 @@ const WholeSalePage = () => {
           },
         }}
       >
-        <Table stickyHeader>
+        <CommonTable stickyHeader>
           <TableHead>
-            <TableRow>
+            <CommonHeaderRow>
               {WholeSaleHeaderList.map((item, index) => (
                 <HeadCell key={`${index}_${item}`} text={item} />
               ))}
-            </TableRow>
+            </CommonHeaderRow>
           </TableHead>
           <WholeSaleTableBody
             isLoading={isLoading}
@@ -144,7 +154,7 @@ const WholeSalePage = () => {
             isEmpty={isEmpty}
             scrollRef={scrollRef}
           />
-        </Table>
+        </CommonTable>
       </ScrollTableContainer>
     </TablePage>
   );

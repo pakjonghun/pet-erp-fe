@@ -10,16 +10,26 @@ import { WholeSaleHeaderList } from '../constants';
 import { CommonListProps } from '@/types';
 import { SelectOption } from '@/app/back-data/types';
 import EditWholeSaleModal from './EditWholeSaleModal';
+import { CommonTableBody } from '@/components/commonStyles';
 
 interface Props extends CommonListProps<WholeSaleItem> {}
 
-const WholeSaleTableBody: FC<Props> = ({ data, isLoading, isEmpty, scrollRef }) => {
+const WholeSaleTableBody: FC<Props> = ({
+  data,
+  isLoading,
+  isEmpty,
+  scrollRef,
+}) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  const [selectedWholeSale, setSelectedWholeSale] = useState<null | WholeSaleItem>(null);
+  const [selectedWholeSale, setSelectedWholeSale] =
+    useState<null | WholeSaleItem>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
 
-  const handleClickOption = (option: SelectOption | null, wholeSale: WholeSaleItem | null) => {
+  const handleClickOption = (
+    option: SelectOption | null,
+    wholeSale: WholeSaleItem | null
+  ) => {
     setSelectedWholeSale(wholeSale);
     setOptionType(option);
   };
@@ -40,7 +50,7 @@ const WholeSaleTableBody: FC<Props> = ({ data, isLoading, isEmpty, scrollRef }) 
   };
 
   return (
-    <TableBody>
+    <CommonTableBody>
       {selectedWholeSale && (
         <RemoveWholeSaleModal
           open={optionType === 'delete'}
@@ -86,7 +96,7 @@ const WholeSaleTableBody: FC<Props> = ({ data, isLoading, isEmpty, scrollRef }) 
         );
       })}
       <LoadingRow isLoading={isLoading} colSpan={WholeSaleHeaderList.length} />
-    </TableBody>
+    </CommonTableBody>
   );
 };
 

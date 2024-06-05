@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Table, TableBody, TableHead, TableRow } from '@mui/material';
+import { TableHead, TableRow } from '@mui/material';
 import { FindLogsDto, Log } from '@/http/graphql/codegen/graphql';
 import { useFindLogs } from '@/http/graphql/hooks/log/useFindLogs';
 import dayjs from 'dayjs';
@@ -9,6 +9,11 @@ import EmptyRow from '@/components/table/EmptyRow';
 import Cell from '@/components/table/Cell';
 import HeadCell from '@/components/table/HeadCell';
 import ScrollTableContainer from '@/components/table/ScrollTableContainer';
+import {
+  CommonHeaderRow,
+  CommonTable,
+  CommonTableBody,
+} from '@/components/commonStyles';
 
 interface Props {
   findLogsQuery: FindLogsDto;
@@ -46,22 +51,26 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
 
   return (
     <ScrollTableContainer sx={{ mt: 3 }}>
-      <Table sx={{ tableLayout: 'auto' }} stickyHeader>
+      <CommonTable sx={{ tableLayout: 'auto' }} stickyHeader>
         <TableHead>
-          <TableRow>
+          <CommonHeaderRow>
             <HeadCell text="날짜" />
             <HeadCell text="작성자" />
             <HeadCell tableCellProp={{ width: '60%' }} text="내용" />
             <HeadCell text="로그타입" />
-          </TableRow>
+          </CommonHeaderRow>
         </TableHead>
-        <TableBody>
+        <CommonTableBody>
           <EmptyRow colSpan={4} isEmpty={isEmpty} />
           {rows.map((row, index) => {
             const result = parseToJSON(row.description);
 
             return (
-              <TableRow hover key={row._id} ref={index === rows.length - 1 ? scrollRef : null}>
+              <TableRow
+                hover
+                key={row._id}
+                ref={index === rows.length - 1 ? scrollRef : null}
+              >
                 <Cell sx={{ whiteSpace: 'nowrap' }}>{row.createdAt}</Cell>
                 <Cell>{row.userId}</Cell>
                 <Cell sx={{ whiteSpace: 'nowrap' }}>{result}</Cell>
@@ -70,8 +79,8 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
             );
           })}
           <LoadingRow isLoading={isLoading} colSpan={4} />
-        </TableBody>
-      </Table>
+        </CommonTableBody>
+      </CommonTable>
     </ScrollTableContainer>
   );
 };

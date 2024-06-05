@@ -16,7 +16,7 @@ import { useEffect } from 'react';
 import { useDashboardClients } from '@/http/graphql/hooks/client/useDashboardClients';
 import ClientSaleTableBodySection from './_components/ClientSaleTableBodySection';
 import ClientSaleCards from './_components/ClientSaleCards';
-import { CommonHeaderRow } from '@/components/commonStyles';
+import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 
 const TopClients = () => {
   const { from, to } = useReactiveVar(saleRange);
@@ -69,7 +69,7 @@ const TopClients = () => {
 
   return (
     <TablePage>
-      <TableTitle sx={{}} title={`TOP10 거래처`} />
+      <TableTitle sx={{ ml: 2 }} title={`TOP10 거래처`} />
       <ClientSaleCards
         sx={{
           display: {
@@ -90,46 +90,26 @@ const TopClients = () => {
           maxHeight: `calc(${TABLE_MAX_HEIGHT} + 71.98px)`,
         }}
       >
-        <Table stickyHeader>
+        <CommonTable stickyHeader>
           <TableHead>
             <CommonHeaderRow hover>
               <HeadCell text="이름" />
               <HeadCell
-                sx={{ textAlign: 'right' }}
-                text={
-                  <>
-                    판매수량
-                    <br />({getNumberWithComma(totalCount)})
-                  </>
-                }
+                sx={{ textAlign: 'right', whiteSpace: 'nowrap' }}
+                text={<>판매수량({getNumberWithComma(totalCount)})</>}
               />
               <HeadCell
-                sx={{ textAlign: 'right' }}
-                text={
-                  <>
-                    매출
-                    <br />({getKCWFormat(totalPayCost)})
-                  </>
-                }
+                sx={{ textAlign: 'right', whiteSpace: 'nowrap' }}
+                text={<>매출({getKCWFormat(totalPayCost)})</>}
               />
 
               <HeadCell
-                sx={{ textAlign: 'right' }}
-                text={
-                  <>
-                    수익
-                    <br />({getKCWFormat(totalProfit)})
-                  </>
-                }
+                sx={{ textAlign: 'right', whiteSpace: 'nowrap' }}
+                text={<>수익 ({getKCWFormat(totalProfit)})</>}
               />
               <HeadCell
-                sx={{ textAlign: 'right' }}
-                text={
-                  <>
-                    수익율
-                    <br />({getKCWFormat(totalProfit)})
-                  </>
-                }
+                sx={{ textAlign: 'right', whiteSpace: 'nowrap' }}
+                text={<>수익율({getKCWFormat(totalProfit)})</>}
               />
             </CommonHeaderRow>
           </TableHead>
@@ -140,7 +120,7 @@ const TopClients = () => {
             isLoading={isLoading}
             scrollRef={null}
           />
-        </Table>
+        </CommonTable>
       </ScrollTableContainer>
     </TablePage>
   );

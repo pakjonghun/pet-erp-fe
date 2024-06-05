@@ -1,7 +1,14 @@
 'use client';
 
 import TableTitle from '@/components/ui/typograph/TableTitle';
-import { FormControl, FormGroup, TextField, InputAdornment, Button, Stack } from '@mui/material';
+import {
+  FormControl,
+  FormGroup,
+  TextField,
+  InputAdornment,
+  Button,
+  Stack,
+} from '@mui/material';
 import { ProductSaleData } from '@/http/graphql/codegen/graphql';
 import { Search } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
@@ -23,7 +30,8 @@ const ProductSales = () => {
   const [order, setOrder] = useState<OrderValue>(1);
   const [keyword, setKeyword] = useState('');
   const delayedKeyword = useTextDebounce(keyword);
-  const [selectedProductSale, setSelectedProductSale] = useState<null | ProductSaleData>(null);
+  const [selectedProductSale, setSelectedProductSale] =
+    useState<null | ProductSaleData>(null);
   const { from, to } = useReactiveVar(saleRange);
   const { data, networkStatus, fetchMore } = useProductSales({
     keyword: delayedKeyword,
@@ -41,7 +49,8 @@ const ProductSales = () => {
   };
 
   const rows = (data?.productSales?.data as ProductSaleData[]) ?? [];
-  const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
+  const isLoading =
+    networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
   const isEmpty = !isLoading && rows.length === 0;
 
   const callback: IntersectionObserverCallback = (entries) => {
@@ -99,7 +108,7 @@ const ProductSales = () => {
         />
       )}
       <Stack direction="row" alignItems="center">
-        <TableTitle title="판매 매출현황" />
+        <TableTitle sx={{ ml: 2 }} title="판매 매출현황" />
         <HeaderSortButton
           sx={{ mt: 1 }}
           text="자산순"
