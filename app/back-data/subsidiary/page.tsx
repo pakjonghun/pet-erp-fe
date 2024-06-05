@@ -271,17 +271,10 @@ const BackDataPage = () => {
             xs: 'none',
             md: 'block',
           },
+          px: 2,
         }}
       >
-        <Stack
-          sx={{ px: 2 }}
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <TableTitle title="선택된 부자재 데이터" />
-        </Stack>
-
+        <TableTitle title="선택된 부자재 데이터" />
         <TableContainer
           sx={{
             display: {
