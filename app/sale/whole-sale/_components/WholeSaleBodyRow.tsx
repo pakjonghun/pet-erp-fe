@@ -15,6 +15,7 @@ import { useReactiveVar } from '@apollo/client';
 import { authState } from '@/store/isLogin';
 
 interface Props {
+  isSelected: boolean;
   wholeSale: WholeSaleItem;
   onClickRow: (
     event: MouseEvent<HTMLTableCellElement>,
@@ -28,6 +29,7 @@ interface Props {
 }
 
 const WholeSaleBodyRow: FC<Props> = ({
+  isSelected,
   wholeSale,
   scrollRef,
   onClickOption,
@@ -85,7 +87,13 @@ const WholeSaleBodyRow: FC<Props> = ({
   const parsedRowData = createRow(wholeSale);
 
   return (
-    <TableRow hover ref={scrollRef}>
+    <TableRow
+      sx={(theme) => ({
+        bgcolor: isSelected ? theme.palette.action.hover : '',
+      })}
+      hover
+      ref={scrollRef}
+    >
       <Menu
         anchorEl={menuAnchor}
         open={!!menuAnchor}
@@ -104,18 +112,6 @@ const WholeSaleBodyRow: FC<Props> = ({
           {item}
         </Cell>
       ))}
-
-      <Cell sx={{ minWidth: 50 }}>
-        {!cannotModify && (
-          <IconButton
-            onClick={(event) => {
-              setMenuAnchor(event.currentTarget);
-            }}
-          >
-            <MoreHorizIcon />
-          </IconButton>
-        )}
-      </Cell>
     </TableRow>
   );
 };

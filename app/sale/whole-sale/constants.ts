@@ -8,5 +8,4 @@ export const WholeSaleHeaderList = [
   '수익율',
   '정산여부',
   '제품목록',
-  '',
 ];

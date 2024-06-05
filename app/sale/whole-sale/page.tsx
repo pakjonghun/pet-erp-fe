@@ -5,11 +5,13 @@ import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 import TablePage from '@/components/table/TablePage';
 import TableTitle from '@/components/ui/typograph/TableTitle';
 import {
+  Button,
+  Chip,
   FormControl,
   FormGroup,
   InputAdornment,
   Stack,
-  Table,
+  TableContainer,
   TableHead,
   TableRow,
   TextField,
@@ -31,6 +33,14 @@ import { saleRange } from '@/store/saleStore';
 import { UserRole, WholeSaleItem } from '@/http/graphql/codegen/graphql';
 import { authState } from '@/store/isLogin';
 import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
+import { SelectOption } from '@/app/back-data/types';
+import RemoveWholeSaleModal from './_components/RemoveWholeSaleModal';
+import EditWholeSaleModal from './_components/EditWholeSaleModal';
+import { getProfitRate } from '@/utils/sale';
+import dayjs from 'dayjs';
+import { getKCWFormat, getNumberWithComma } from '@/utils/common';
+import EmptyRow from '@/components/table/EmptyRow';
+import Cell from '@/components/table/Cell';
 
 const WholeSalePage = () => {
   const { role } = useReactiveVar(authState);
@@ -75,88 +85,215 @@ const WholeSalePage = () => {
   const scrollRef = useInfinityScroll({ callback });
 
   const [openCreateProduct, setOpenCreateProduct] = useState(false);
-  return (
-    <TablePage sx={{ flex: 1 }}>
-      {openCreateProduct && (
-        <AddWholeSaleModal
-          open={openCreateProduct}
-          onClose={() => setOpenCreateProduct(false)}
-        />
-      )}
-      <Stack
-        sx={{ px: 2 }}
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        <TableTitle title="도매 판매" />
-        {!cannotModify && (
-          <Stack direction="row" alignItems="center" gap={2}>
-            <ActionButton
-              icon={<PlusOneOutlined />}
-              text="도매 판매 등록"
-              onClick={() => setOpenCreateProduct(true)}
-            />
-          </Stack>
-        )}
-      </Stack>
-      <FormGroup sx={{ ml: 2 }}>
-        <FormControl>
-          <TextField
-            onChange={(event) => setKeyword(event.target.value)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Search />
-                </InputAdornment>
-              ),
-            }}
-            sx={{ width: 270, my: 2 }}
-            label="검색할 제품 이름을 입력하세요."
-            size="small"
+  const [selectedWholeSale, setSelectedWholeSale] =
+    useState<null | WholeSaleItem>(null);
+  const [optionType, setOptionType] = useState<null | SelectOption>(null);
+  const handleClickEdit = () => {
+    setOptionType('edit');
+  };
+
+  const handleClickDelete = () => {
+    setOptionType('delete');
+  };
+
+  const createRow = (sale: WholeSaleItem) => {
+    const profit = sale.totalPayCost - sale.totalWonCost;
+    const profitRate = getProfitRate(
+      sale.totalPayCost - sale.totalWonCost,
+      sale.totalPayCost
+    );
+    return [
+      sale.mallId,
+      dayjs(sale.saleAt).format('YYYY-MM-DD'),
+      getNumberWithComma(sale.totalCount),
+      getKCWFormat(sale.totalWonCost),
+      getKCWFormat(sale.totalPayCost),
+      getKCWFormat(profit),
+      `${profitRate}%`,
+      sale.isDone ? '정산완료' : '정산중',
+      <Stack key={Math.random()} direction="column" gap={1}>
+        {sale.productList.map((item) => (
+          <Chip
+            key={`${item.__typename}_${Math.random()}`}
+            label={`${item.productName}(${item.count})`}
           />
-        </FormControl>
-      </FormGroup>
-      <Typography sx={{ p: 3 }}>
-        {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
-      </Typography>
-      <WholeSaleCards
+        ))}
+      </Stack>,
+    ];
+  };
+
+  const parsedRowData = selectedWholeSale ? createRow(selectedWholeSale) : [];
+
+  return (
+    <>
+      <TablePage sx={{ flex: 1 }}>
+        {selectedWholeSale && (
+          <RemoveWholeSaleModal
+            open={optionType === 'delete'}
+            onClose={() => setOptionType(null)}
+            selectedWholeSale={selectedWholeSale}
+          />
+        )}
+
+        {selectedWholeSale && (
+          <EditWholeSaleModal
+            open={optionType === 'edit'}
+            onClose={() => setOptionType(null)}
+            wholeSale={selectedWholeSale}
+          />
+        )}
+
+        {openCreateProduct && (
+          <AddWholeSaleModal
+            open={openCreateProduct}
+            onClose={() => setOpenCreateProduct(false)}
+          />
+        )}
+        <Stack
+          sx={{ px: 2 }}
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          <TableTitle title="도매 판매" />
+          {!cannotModify && (
+            <Stack direction="row" alignItems="center" gap={2}>
+              <ActionButton
+                icon={<PlusOneOutlined />}
+                text="도매 판매 등록"
+                onClick={() => setOpenCreateProduct(true)}
+              />
+            </Stack>
+          )}
+        </Stack>
+        <FormGroup sx={{ ml: 2 }}>
+          <FormControl>
+            <TextField
+              onChange={(event) => setKeyword(event.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Search />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{ width: 270, my: 2 }}
+              label="검색할 제품 이름을 입력하세요."
+              size="small"
+            />
+          </FormControl>
+        </FormGroup>
+        <Typography sx={{ p: 3 }}>
+          {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
+        </Typography>
+        <WholeSaleCards
+          sx={{
+            display: {
+              xs: 'block',
+              md: 'none',
+            },
+          }}
+          isLoading={isLoading}
+          data={rows}
+          isEmpty={isEmpty}
+          scrollRef={scrollRef}
+        />
+        <ScrollTableContainer
+          sx={{
+            display: {
+              xs: 'none',
+              md: 'block',
+            },
+          }}
+        >
+          <CommonTable stickyHeader>
+            <TableHead>
+              <CommonHeaderRow>
+                {WholeSaleHeaderList.map((item, index) => (
+                  <HeadCell key={`${index}_${item}`} text={item} />
+                ))}
+              </CommonHeaderRow>
+            </TableHead>
+            <WholeSaleTableBody
+              selectedWholeSale={selectedWholeSale}
+              setSelectedWholeSale={setSelectedWholeSale}
+              isLoading={isLoading}
+              data={rows}
+              isEmpty={isEmpty}
+              scrollRef={scrollRef}
+            />
+          </CommonTable>
+        </ScrollTableContainer>
+      </TablePage>
+      <TablePage
         sx={{
-          display: {
-            xs: 'block',
-            md: 'none',
-          },
-        }}
-        isLoading={isLoading}
-        data={rows}
-        isEmpty={isEmpty}
-        scrollRef={scrollRef}
-      />
-      <ScrollTableContainer
-        sx={{
+          flex: 1,
           display: {
             xs: 'none',
             md: 'block',
           },
+          px: 2,
         }}
       >
-        <CommonTable stickyHeader>
-          <TableHead>
-            <CommonHeaderRow>
-              {WholeSaleHeaderList.map((item, index) => (
-                <HeadCell key={`${index}_${item}`} text={item} />
-              ))}
-            </CommonHeaderRow>
-          </TableHead>
-          <WholeSaleTableBody
-            isLoading={isLoading}
-            data={rows}
-            isEmpty={isEmpty}
-            scrollRef={scrollRef}
-          />
-        </CommonTable>
-      </ScrollTableContainer>
-    </TablePage>
+        <TableTitle title="선택된 도매 판매 데이터" />
+        <TableContainer
+          sx={{
+            display: {
+              xs: 'none',
+              md: 'block',
+            },
+          }}
+        >
+          <CommonTable stickyHeader>
+            <TableHead>
+              <CommonHeaderRow>
+                {WholeSaleHeaderList.map((item, index) => (
+                  <HeadCell key={`${index}_${item}`} text={item} />
+                ))}
+              </CommonHeaderRow>
+            </TableHead>
+
+            {!!selectedWholeSale ? (
+              <TableRow hover ref={scrollRef}>
+                {parsedRowData.map((item, index) => (
+                  <Cell
+                    key={`${selectedWholeSale._id}_${index}`}
+                    sx={{ minWidth: 200 }}
+                  >
+                    {item}
+                  </Cell>
+                ))}
+              </TableRow>
+            ) : (
+              <EmptyRow
+                colSpan={9}
+                isEmpty={!selectedWholeSale}
+                message="선택된 데이터가 없습니다."
+              />
+            )}
+          </CommonTable>
+        </TableContainer>
+        {!!selectedWholeSale && (
+          <Stack
+            direction="row"
+            gap={1}
+            sx={{ mt: 2 }}
+            justifyContent="flex-end"
+          >
+            <Button
+              color="error"
+              variant="outlined"
+              onClick={handleClickDelete}
+            >
+              삭제
+            </Button>
+            <Button variant="contained" onClick={handleClickEdit}>
+              편집
+            </Button>
+          </Stack>
+        )}
+      </TablePage>
+    </>
   );
 };
 
