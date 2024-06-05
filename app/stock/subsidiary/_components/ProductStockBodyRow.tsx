@@ -13,6 +13,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 interface Props {
+  isSelected: boolean;
   productStock: SubsidiaryStockColumn;
   onClickRow: (
     event: MouseEvent<HTMLTableCellElement>,
@@ -26,6 +27,7 @@ interface Props {
 }
 
 const ProductStockBodyRow: FC<Props> = ({
+  isSelected,
   productStock,
   scrollRef,
   onClickOption,
@@ -76,7 +78,13 @@ const ProductStockBodyRow: FC<Props> = ({
 
   return (
     <>
-      <TableRow hover ref={scrollRef}>
+      <TableRow
+        sx={(theme) => ({
+          bgcolor: isSelected ? theme.palette.action.hover : '',
+        })}
+        hover
+        ref={scrollRef}
+      >
         <Menu
           anchorEl={menuAnchor}
           open={!!menuAnchor}

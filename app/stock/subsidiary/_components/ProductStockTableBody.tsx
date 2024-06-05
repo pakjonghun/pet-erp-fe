@@ -51,8 +51,10 @@ const ProductStockTableBody: FC<Props> = ({
       {data.map((item, index) => {
         const stock = item as unknown as SubsidiaryStockColumn;
         const isLast = index === data.length - 1;
+        const isSelected = item.productName === productStock?.productName;
         return (
           <ProductStockBodyRow
+            isSelected={isSelected}
             onClickRow={(event, stock: SubsidiaryStockColumn) => {
               setPopoverPosition({ left: event.clientX, top: event.clientY });
               setPopoverAnchor(event.currentTarget);
