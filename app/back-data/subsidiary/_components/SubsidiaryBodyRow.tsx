@@ -11,13 +11,26 @@ import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import { SelectOption } from '../../types';
 
 interface Props {
+  isSelected: boolean;
   subsidiary: Subsidiary;
-  onClickRow: (event: MouseEvent<HTMLTableCellElement>, subsidiary: Subsidiary) => void;
-  onClickOption: (option: SelectOption | null, product: Subsidiary | null) => void;
+  onClickRow: (
+    event: MouseEvent<HTMLTableCellElement>,
+    subsidiary: Subsidiary
+  ) => void;
+  onClickOption: (
+    option: SelectOption | null,
+    product: Subsidiary | null
+  ) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const SubsidiaryBodyRow: FC<Props> = ({ subsidiary, scrollRef, onClickOption, onClickRow }) => {
+const SubsidiaryBodyRow: FC<Props> = ({
+  isSelected,
+  subsidiary,
+  scrollRef,
+  onClickOption,
+  onClickRow,
+}) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<SelectOption, SelectedOptionItem> = {
     edit: {
@@ -56,8 +69,18 @@ const SubsidiaryBodyRow: FC<Props> = ({ subsidiary, scrollRef, onClickOption, on
   const parsedRowData = createRow(subsidiary);
 
   return (
-    <TableRow hover ref={scrollRef}>
-      <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
+    <TableRow
+      sx={(theme) => ({
+        bgcolor: isSelected ? theme.palette.action.hover : '',
+      })}
+      hover
+      ref={scrollRef}
+    >
+      <Menu
+        anchorEl={menuAnchor}
+        open={!!menuAnchor}
+        onClose={() => setMenuAnchor(null)}
+      >
         {Object.entries(productOptionMenus).map(([option, menu]) => (
           <OptionMenu key={option} menu={menu} option={option} />
         ))}
@@ -72,7 +95,7 @@ const SubsidiaryBodyRow: FC<Props> = ({ subsidiary, scrollRef, onClickOption, on
         </Cell>
       ))}
 
-      <Cell sx={{ minWidth: 50 }}>
+      {/* <Cell sx={{ minWidth: 50 }}>
         <IconButton
           onClick={(event) => {
             setMenuAnchor(event.currentTarget);
@@ -80,7 +103,7 @@ const SubsidiaryBodyRow: FC<Props> = ({ subsidiary, scrollRef, onClickOption, on
         >
           <MoreHorizIcon />
         </IconButton>
-      </Cell>
+      </Cell> */}
     </TableRow>
   );
 };

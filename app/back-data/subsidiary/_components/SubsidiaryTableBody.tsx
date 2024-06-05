@@ -12,9 +12,14 @@ import SubsidiaryBodyRow from './SubsidiaryBodyRow';
 import { CommonListProps } from '@/types';
 import { CommonTableBody } from '@/components/commonStyles';
 
-interface Props extends CommonListProps<Subsidiary> {}
+interface Props extends CommonListProps<Subsidiary> {
+  selectedSubsidiary: Subsidiary | null;
+  setSelectedSubsidiary: (value: Subsidiary | null) => void;
+}
 
 const SubsidiaryTableBody: FC<Props> = ({
+  selectedSubsidiary,
+  setSelectedSubsidiary,
   data,
   isLoading,
   isEmpty,
@@ -22,8 +27,7 @@ const SubsidiaryTableBody: FC<Props> = ({
 }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  const [selectedSubsidiary, setSelectedSubsidiary] =
-    useState<null | Subsidiary>(null);
+
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
 
   const handleClickOption = (
@@ -51,7 +55,7 @@ const SubsidiaryTableBody: FC<Props> = ({
 
   return (
     <CommonTableBody>
-      {selectedSubsidiary && (
+      {/* {selectedSubsidiary && (
         <RemoveSubsidiaryModal
           open={optionType === 'delete'}
           onClose={() => handleClickOption(null, null)}
@@ -76,12 +80,14 @@ const SubsidiaryTableBody: FC<Props> = ({
           onClickEdit={handleClickEdit}
           selectedSubsidiary={selectedSubsidiary}
         />
-      )}
+      )} */}
       <EmptyRow colSpan={SubsidiaryHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
+        const isSelected = item._id === selectedSubsidiary?._id;
         const isLast = index === data.length - 1;
         return (
           <SubsidiaryBodyRow
+            isSelected={isSelected}
             onClickRow={(event, subsidiary: Subsidiary) => {
               setPopoverPosition({ left: event.clientX, top: event.clientY });
               setPopoverAnchor(event.currentTarget);

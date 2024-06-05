@@ -11,8 +11,6 @@ import {
   FormGroup,
   InputAdornment,
   Stack,
-  Table,
-  TableBody,
   TableContainer,
   TableHead,
   TableRow,
@@ -293,7 +291,7 @@ const ProductPage = () => {
               </CommonHeaderRow>
             </TableHead>
             <CommonTableBody>
-              {selectedProduct ? (
+              {!!selectedProduct ? (
                 <TableRow hover ref={scrollRef}>
                   {parsedRowData.map((item, index) => (
                     <Cell
@@ -314,7 +312,7 @@ const ProductPage = () => {
             </CommonTableBody>
           </CommonTable>
         </TableContainer>
-        {selectedProduct && (
+        {!!selectedProduct && (
           <Stack
             direction="row"
             gap={1}

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
   Autocomplete,
@@ -13,7 +13,10 @@ import {
   Typography,
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
-import { CreateClientForm, createClientSchema } from '../_validations/createClientValidation';
+import {
+  CreateClientForm,
+  createClientSchema,
+} from '../_validations/createClientValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
@@ -45,7 +48,10 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
     defaultValues: {
       code: selectedClient.code,
       name: selectedClient.name,
-      feeRate: selectedClient.feeRate == null ? undefined : selectedClient.feeRate * 100,
+      feeRate:
+        selectedClient.feeRate == null
+          ? undefined
+          : selectedClient.feeRate * 100,
       clientType: selectedClient.clientType ?? '',
       businessName: selectedClient.businessName ?? '',
       businessNumber: selectedClient.businessNumber ?? '',
@@ -56,14 +62,35 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
     },
   });
 
+  useEffect(() => {
+    reset({
+      code: selectedClient.code,
+      name: selectedClient.name,
+      feeRate:
+        selectedClient.feeRate == null
+          ? undefined
+          : selectedClient.feeRate * 100,
+      clientType: selectedClient.clientType ?? '',
+      businessName: selectedClient.businessName ?? '',
+      businessNumber: selectedClient.businessNumber ?? '',
+      payDate: selectedClient.payDate,
+      manager: selectedClient.manager ?? '',
+      managerTel: selectedClient.managerTel ?? '',
+      inActive: !!selectedClient.inActive,
+    });
+  }, [selectedClient]);
+
   const onSubmit = (values: CreateClientForm) => {
-    const { code, name, ...newValues } = emptyValueToNull(values) as CreateClientForm;
+    const { code, name, ...newValues } = emptyValueToNull(
+      values
+    ) as CreateClientForm;
     editClient({
       variables: {
         updateClientInput: {
           ...newValues,
           _id: selectedClient._id,
-          feeRate: newValues.feeRate == null ? null : Number(newValues.feeRate) / 100,
+          feeRate:
+            newValues.feeRate == null ? null : Number(newValues.feeRate) / 100,
         },
       },
       onCompleted: () => {
@@ -176,7 +203,9 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
                   label="수수료 비율(0~100사이 숫자)"
                   error={!!errors.feeRate?.message}
                   helperText={errors.feeRate?.message ?? ''}
-                  endAdornment={<InputAdornment position="end">%</InputAdornment>}
+                  endAdornment={
+                    <InputAdornment position="end">%</InputAdornment>
+                  }
                 />
               </FormControl>
             )}
@@ -286,7 +315,11 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
-          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
+          <Button
+            type="submit"
+            endIcon={loading ? <CommonLoading /> : ''}
+            variant="contained"
+          >
             수정
           </Button>
         </Stack>

@@ -6,11 +6,12 @@ import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 import TablePage from '@/components/table/TablePage';
 import TableTitle from '@/components/ui/typograph/TableTitle';
 import {
+  Button,
   FormControl,
   FormGroup,
   InputAdornment,
   Stack,
-  Table,
+  TableContainer,
   TableHead,
   TableRow,
   TextField,
@@ -24,17 +25,23 @@ import ClientTableBody from './_components/ClientTableBody';
 import { useUploadExcelFile } from '@/http/rest/hooks/file/useUploadExcelFile';
 import { snackMessage } from '@/store/snackMessage';
 import UploadButton from '@/components/ui/button/UploadButtont';
-import { LIMIT } from '@/constants';
+import { EMPTY, LIMIT } from '@/constants';
 import ClientCards from './_components/ClientCards';
 import ActionButton from '@/components/ui/button/ActionButton';
 import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFile';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
-import { ClientHeaderList } from './constants';
+import { ClientHeaderList, ClientTypeToHangle } from './constants';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { Client } from '@/http/graphql/codegen/graphql';
 import { client } from '@/http/graphql/client';
 import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
+import RemoveClientModal from './_components/RemoveClientModal';
+import EditPClientModal from './_components/EditPClientModal';
+import { SelectOption } from '../types';
+import Cell from '@/components/table/Cell';
+import { getFixedTwo } from '@/utils/sale';
+import EmptyRow from '@/components/table/EmptyRow';
 
 const BackDataPage = () => {
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
@@ -127,100 +134,229 @@ const BackDataPage = () => {
     });
   };
 
+  const [selectedClient, setSelectedClient] = useState<null | Client>(null);
+  const [optionType, setOptionType] = useState<null | SelectOption>(null);
   const [openCreateClient, setOpenCreateClient] = useState(false);
-  return (
-    <TablePage sx={{ flex: 1 }}>
-      {openCreateClient && (
-        <CreateClientModal
-          open={openCreateClient}
-          onClose={() => setOpenCreateClient(false)}
-        />
-      )}
-      <Stack
-        sx={{ px: 2 }}
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        <TableTitle title="거래처 백데이터" />
-        <Stack direction="row" alignItems="center" gap={2}>
-          <UploadButton
-            fileKey={fileKey}
-            loading={isPending}
-            onChange={handleUploadExcelFile}
-            text="거래처 업로드"
-          />
-          <ActionButton
-            icon={isDownloading ? <CommonLoading /> : <FileDownloadIcon />}
-            text="거래처 다운로드"
-            onClick={handleDownload}
-          />
 
-          <ActionButton
-            icon={<PlusOneOutlined />}
-            text="거래처 입력"
-            onClick={() => setOpenCreateClient(true)}
+  const handleClickEdit = () => {
+    setOptionType('edit');
+  };
+
+  const handleClickDelete = () => {
+    setOptionType('delete');
+  };
+
+  const createRow = (client: Client) => {
+    return [
+      client.name,
+      client.businessName ?? EMPTY,
+      client.code,
+      client.feeRate == null ? EMPTY : getFixedTwo(client.feeRate * 100) + '%',
+      ClientTypeToHangle[client.clientType],
+      client.payDate ?? EMPTY,
+      client.manager ?? EMPTY,
+      client.managerTel ?? EMPTY,
+      client.inActive ? '거래중' : '거래종료',
+    ];
+  };
+
+  const parsedClient = selectedClient ? createRow(selectedClient) : [];
+
+  return (
+    <>
+      <TablePage sx={{ flex: 1 }}>
+        {openCreateClient && (
+          <CreateClientModal
+            open={openCreateClient}
+            onClose={() => setOpenCreateClient(false)}
           />
+        )}
+        <Stack
+          sx={{ px: 2 }}
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          <TableTitle title="거래처 백데이터" />
+          <Stack direction="row" alignItems="center" gap={2}>
+            <UploadButton
+              fileKey={fileKey}
+              loading={isPending}
+              onChange={handleUploadExcelFile}
+              text="거래처 업로드"
+            />
+            <ActionButton
+              icon={isDownloading ? <CommonLoading /> : <FileDownloadIcon />}
+              text="거래처 다운로드"
+              onClick={handleDownload}
+            />
+
+            <ActionButton
+              icon={<PlusOneOutlined />}
+              text="거래처 입력"
+              onClick={() => setOpenCreateClient(true)}
+            />
+          </Stack>
         </Stack>
-      </Stack>
-      <FormGroup sx={{ ml: 2 }}>
-        <FormControl>
-          <TextField
-            onChange={(event) => setKeyword(event.target.value)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Search />
-                </InputAdornment>
-              ),
-            }}
-            sx={{ width: 270, my: 2 }}
-            label="검색할 거래처 이름을 입력하세요."
-            size="small"
-          />
-        </FormControl>
-      </FormGroup>
-      <Typography sx={{ p: 3 }}>
-        {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
-      </Typography>
-      <ClientCards
+        <FormGroup sx={{ ml: 2 }}>
+          <FormControl>
+            <TextField
+              onChange={(event) => setKeyword(event.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Search />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{ width: 270, my: 2 }}
+              label="검색할 거래처 이름을 입력하세요."
+              size="small"
+            />
+          </FormControl>
+        </FormGroup>
+        <Typography sx={{ p: 3 }}>
+          {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
+        </Typography>
+        <ClientCards
+          sx={{
+            display: {
+              xs: 'block',
+              md: 'none',
+            },
+          }}
+          data={rows}
+          isEmpty={isEmpty}
+          isLoading={isLoading}
+          scrollRef={scrollRef}
+        />
+        <ScrollTableContainer
+          sx={{
+            display: {
+              xs: 'none',
+              md: 'block',
+            },
+            height: '30vh',
+            px: 2,
+          }}
+        >
+          <CommonTable stickyHeader>
+            <TableHead>
+              <CommonHeaderRow>
+                {ClientHeaderList.map((item, index) => (
+                  <HeadCell key={`${item}_${index}`} text={item} />
+                ))}
+              </CommonHeaderRow>
+            </TableHead>
+            <ClientTableBody
+              setSelectedClient={setSelectedClient}
+              selectedClient={selectedClient}
+              data={rows}
+              isEmpty={isEmpty}
+              isLoading={isLoading}
+              scrollRef={scrollRef}
+            />
+          </CommonTable>
+        </ScrollTableContainer>
+      </TablePage>
+      <TablePage
         sx={{
-          display: {
-            xs: 'block',
-            md: 'none',
-          },
-        }}
-        data={rows}
-        isEmpty={isEmpty}
-        isLoading={isLoading}
-        scrollRef={scrollRef}
-      />
-      <ScrollTableContainer
-        sx={{
+          flex: 1,
           display: {
             xs: 'none',
             md: 'block',
           },
-          px: 2,
         }}
       >
-        <CommonTable stickyHeader>
-          <TableHead>
-            <CommonHeaderRow>
-              {ClientHeaderList.map((item, index) => (
-                <HeadCell key={`${item}_${index}`} text={item} />
-              ))}
-            </CommonHeaderRow>
-          </TableHead>
-          <ClientTableBody
-            data={rows}
-            isEmpty={isEmpty}
-            isLoading={isLoading}
-            scrollRef={scrollRef}
-          />
-        </CommonTable>
-      </ScrollTableContainer>
-    </TablePage>
+        <Stack
+          sx={{ px: 2 }}
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          <TableTitle title="선택된 거래처 데이터" />
+        </Stack>
+        <ClientCards
+          sx={{
+            display: {
+              xs: 'block',
+              md: 'none',
+            },
+          }}
+          data={rows}
+          isEmpty={isEmpty}
+          isLoading={isLoading}
+          scrollRef={scrollRef}
+        />
+        <TableContainer
+          sx={{
+            px: 2,
+          }}
+        >
+          <CommonTable stickyHeader>
+            <TableHead>
+              <CommonHeaderRow>
+                {ClientHeaderList.map((item, index) => (
+                  <HeadCell key={`${item}_${index}`} text={item} />
+                ))}
+              </CommonHeaderRow>
+            </TableHead>
+            {selectedClient ? (
+              <TableRow hover ref={scrollRef}>
+                {parsedClient.map((item, index) => (
+                  <Cell
+                    key={`${Math.random()}_${index}`}
+                    sx={{ minWidth: 200 }}
+                  >
+                    {item}
+                  </Cell>
+                ))}
+              </TableRow>
+            ) : (
+              <EmptyRow
+                colSpan={9}
+                isEmpty={!selectedClient}
+                message="선택된 데이터가 없습니다."
+              />
+            )}
+          </CommonTable>
+        </TableContainer>
+        {!!selectedClient && (
+          <Stack
+            direction="row"
+            gap={1}
+            sx={{ mt: 2 }}
+            justifyContent="flex-end"
+          >
+            <Button
+              color="error"
+              variant="outlined"
+              onClick={handleClickDelete}
+            >
+              삭제
+            </Button>
+            <Button variant="contained" onClick={handleClickEdit}>
+              편집
+            </Button>
+          </Stack>
+        )}
+      </TablePage>
+      {selectedClient && (
+        <RemoveClientModal
+          open={optionType === 'delete'}
+          onClose={() => setOptionType(null)}
+          selectedClient={selectedClient}
+        />
+      )}
+
+      {selectedClient && (
+        <EditPClientModal
+          open={optionType === 'edit'}
+          onClose={() => setOptionType(null)}
+          selectedClient={selectedClient}
+        />
+      )}
+    </>
   );
 };
 

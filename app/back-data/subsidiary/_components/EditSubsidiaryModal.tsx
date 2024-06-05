@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
   AutocompleteRenderInputParams,
@@ -38,11 +38,16 @@ interface Props {
   onClose: () => void;
 }
 
-const AddSubsidiaryModal: FC<Props> = ({ open, selectedSubsidiary, onClose }) => {
+const AddSubsidiaryModal: FC<Props> = ({
+  open,
+  selectedSubsidiary,
+  onClose,
+}) => {
   const [updateSubsidiary, { loading }] = useUpdateSubsidiary();
   const isEmptyProductList =
     !selectedSubsidiary.productList ||
-    (selectedSubsidiary.productList.length === 1 && selectedSubsidiary.productList[0].name == '');
+    (selectedSubsidiary.productList.length === 1 &&
+      selectedSubsidiary.productList[0].name == '');
 
   const {
     reset,
@@ -64,6 +69,20 @@ const AddSubsidiaryModal: FC<Props> = ({ open, selectedSubsidiary, onClose }) =>
       wonPrice: selectedSubsidiary.wonPrice,
     },
   });
+
+  useEffect(() => {
+    reset({
+      code: selectedSubsidiary.code,
+      name: selectedSubsidiary.name,
+      category: selectedSubsidiary.category?.name,
+      leadTime: selectedSubsidiary.leadTime,
+      productList: isEmptyProductList
+        ? null
+        : selectedSubsidiary.productList?.map((item) => item.name),
+      wonPrice: selectedSubsidiary.wonPrice,
+    });
+  }, [selectedSubsidiary]);
+
   const categoryKeyword = watch('category');
   const delayedCategoryKeyword = useTextDebounce(categoryKeyword ?? '');
 
@@ -78,7 +97,8 @@ const AddSubsidiaryModal: FC<Props> = ({ open, selectedSubsidiary, onClose }) =>
   });
 
   const categoryRows = categories?.subsidiaryCategories.data ?? [];
-  const isCategoryLoading = categoryNetwork == 1 || categoryNetwork == 2 || categoryNetwork == 3;
+  const isCategoryLoading =
+    categoryNetwork == 1 || categoryNetwork == 2 || categoryNetwork == 3;
   const categoryCallback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
       if (isCategoryLoading) return;
@@ -112,7 +132,8 @@ const AddSubsidiaryModal: FC<Props> = ({ open, selectedSubsidiary, onClose }) =>
     skip: 0,
   });
   const productRows = products?.products.data ?? [];
-  const isProductLoading = productNetwork == 1 || productNetwork == 2 || productNetwork == 3;
+  const isProductLoading =
+    productNetwork == 1 || productNetwork == 2 || productNetwork == 3;
   const productCallback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
       if (isProductLoading) return;
@@ -148,7 +169,10 @@ const AddSubsidiaryModal: FC<Props> = ({ open, selectedSubsidiary, onClose }) =>
         },
       },
       onCompleted: () => {
-        snackMessage({ message: '부자재편집이 완료되었습니다.', severity: 'success' });
+        snackMessage({
+          message: '부자재편집이 완료되었습니다.',
+          severity: 'success',
+        });
         client.refetchQueries({
           updateCache(cache) {
             cache.evict({ fieldName: 'subsidiaryStocks' });
@@ -160,7 +184,10 @@ const AddSubsidiaryModal: FC<Props> = ({ open, selectedSubsidiary, onClose }) =>
       },
       onError: (err) => {
         const message = err.message;
-        snackMessage({ message: message ?? '부자재편집이 실패했습니다.', severity: 'error' });
+        snackMessage({
+          message: message ?? '부자재편집이 실패했습니다.',
+          severity: 'error',
+        });
       },
     });
   };
@@ -302,7 +329,11 @@ const AddSubsidiaryModal: FC<Props> = ({ open, selectedSubsidiary, onClose }) =>
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
-          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
+          <Button
+            type="submit"
+            endIcon={loading ? <CommonLoading /> : ''}
+            variant="contained"
+          >
             편집
           </Button>
         </Stack>

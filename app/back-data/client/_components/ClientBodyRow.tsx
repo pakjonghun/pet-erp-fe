@@ -12,13 +12,20 @@ import { ClientTypeToHangle } from '../constants';
 import { getFixedTwo } from '@/utils/sale';
 
 interface Props {
+  isSelected: boolean;
   client: Client;
   onClickRow: (event: MouseEvent<HTMLTableCellElement>, client: Client) => void;
   onClickOption: (option: SelectOption | null, client: Client | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const ClientBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) => {
+const ClientBodyRow: FC<Props> = ({
+  isSelected,
+  client,
+  scrollRef,
+  onClickOption,
+  onClickRow,
+}) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<SelectOption, SelectedOptionItem> = {
     edit: {
@@ -56,8 +63,18 @@ const ClientBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow
   const parsedClient = createRow(client);
 
   return (
-    <TableRow hover ref={scrollRef}>
-      <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
+    <TableRow
+      sx={(theme) => ({
+        bgcolor: isSelected ? theme.palette.action.hover : '',
+      })}
+      hover
+      ref={scrollRef}
+    >
+      <Menu
+        anchorEl={menuAnchor}
+        open={!!menuAnchor}
+        onClose={() => setMenuAnchor(null)}
+      >
         {Object.entries(productOptionMenus).map(([option, menu]) => (
           <OptionMenu key={option} menu={menu} option={option} />
         ))}
@@ -71,7 +88,7 @@ const ClientBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow
           {item}
         </Cell>
       ))}
-
+      {/* 
       <Cell sx={{ minWidth: 50 }}>
         <IconButton
           onClick={(event) => {
@@ -80,7 +97,7 @@ const ClientBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow
         >
           <MoreHorizIcon />
         </IconButton>
-      </Cell>
+      </Cell> */}
     </TableRow>
   );
 };

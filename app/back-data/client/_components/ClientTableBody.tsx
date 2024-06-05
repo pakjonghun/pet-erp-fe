@@ -12,9 +12,14 @@ import EditPClientModal from './EditPClientModal';
 import { CommonListProps } from '@/types';
 import { CommonTableBody } from '@/components/commonStyles';
 
-interface Props extends CommonListProps<Client> {}
+interface Props extends CommonListProps<Client> {
+  selectedClient: Client | null;
+  setSelectedClient: (item: Client | null) => void;
+}
 
 const ClientTableBody: FC<Props> = ({
+  selectedClient,
+  setSelectedClient,
   isLoading,
   isEmpty,
   data,
@@ -22,7 +27,7 @@ const ClientTableBody: FC<Props> = ({
 }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  const [selectedClient, setSelectedClient] = useState<null | Client>(null);
+  // const [selectedClient, setSelectedClient] = useState<null | Client>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
 
   const handleClickOption = (
@@ -33,24 +38,24 @@ const ClientTableBody: FC<Props> = ({
     setOptionType(option);
   };
 
-  const handleClickEdit = () => {
-    handleClosePopover();
-    handleClickOption('edit', selectedClient);
-  };
+  // const handleClickEdit = () => {
+  //   handleClosePopover();
+  //   handleClickOption('edit', selectedClient);
+  // };
 
-  const handleClickDelete = () => {
-    handleClosePopover();
-    handleClickOption('delete', selectedClient);
-  };
+  // const handleClickDelete = () => {
+  //   handleClosePopover();
+  //   handleClickOption('delete', selectedClient);
+  // };
 
-  const handleClosePopover = () => {
-    setPopoverAnchor(null);
-    setSelectedClient(null);
-  };
+  // const handleClosePopover = () => {
+  // setPopoverAnchor(null);
+  // setSelectedClient(null);
+  // };
 
   return (
     <CommonTableBody>
-      {selectedClient && (
+      {/* {selectedClient && (
         <RemoveClientModal
           open={optionType === 'delete'}
           onClose={() => handleClickOption(null, null)}
@@ -75,13 +80,15 @@ const ClientTableBody: FC<Props> = ({
           onClickEdit={handleClickEdit}
           selectedClient={selectedClient}
         />
-      )}
+      )} */}
       <EmptyRow colSpan={ClientHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
         const client = item as unknown as Client;
         const isLast = index === data.length - 1;
+        const isSelected = selectedClient?._id == client._id;
         return (
           <ClientBodyRow
+            isSelected={isSelected}
             onClickRow={(event, client: Client) => {
               setPopoverPosition({ left: event.clientX, top: event.clientY });
               setPopoverAnchor(event.currentTarget);

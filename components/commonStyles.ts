@@ -6,6 +6,7 @@ import {
   TableRow,
   styled,
 } from '@mui/material';
+import TablePage from './table/TablePage';
 
 export const modalSizeProps: SxProps = {
   minWidth: {
