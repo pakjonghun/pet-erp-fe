@@ -11,20 +11,30 @@ import RemoveOrderModal from '../../_components/RemoveOrderModal';
 import OrderDetailPopover from './OrderDetailPopover';
 import { CommonTableBody } from '@/components/commonStyles';
 
-interface Props extends CommonListProps<ProductOrder> {}
+interface Props extends CommonListProps<ProductOrder> {
+  selectedOrder: ProductOrder | null;
+  setSelectedOrder: (item: ProductOrder | null) => void;
+}
 
-const OrderTableBody: FC<Props> = ({ isLoading, isEmpty, data, scrollRef }) => {
+const OrderTableBody: FC<Props> = ({
+  isLoading,
+  isEmpty,
+  data,
+  scrollRef,
+  selectedOrder,
+  setSelectedOrder,
+}) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  const [selectedOrder, setSelectedOrder] = useState<null | ProductOrder>(null);
-  const [optionType, setOptionType] = useState<null | any>(null);
+  // const [selectedOrder, setSelectedOrder] = useState<null | ProductOrder>(null);
+  // const [optionType, setOptionType] = useState<null | any>(null);
 
   const handleClickOption = (
     option: any | null,
     client: ProductOrder | null
   ) => {
     setSelectedOrder(client);
-    setOptionType(option);
+    // setOptionType(option);
   };
 
   const handleClickEdit = () => {
@@ -44,39 +54,14 @@ const OrderTableBody: FC<Props> = ({ isLoading, isEmpty, data, scrollRef }) => {
 
   return (
     <CommonTableBody>
-      {selectedOrder && (
-        <EditOrderModal
-          open={optionType === 'edit'}
-          onClose={() => handleClickOption(null, null)}
-          selectedOrder={selectedOrder}
-        />
-      )}
-
-      {selectedOrder && (
-        <RemoveOrderModal
-          open={optionType === 'delete'}
-          onClose={() => handleClickOption(null, null)}
-          selectedOrder={selectedOrder}
-        />
-      )}
-
-      {selectedOrder && (
-        <OrderDetailPopover
-          onClose={handleClosePopover}
-          position={popoverPosition}
-          open={!!popoverAnchor}
-          anchorEl={popoverAnchor}
-          onClickDelete={handleClickDelete}
-          onClickEdit={handleClickEdit}
-          selectedOrder={selectedOrder}
-        />
-      )}
       <EmptyRow colSpan={OrderHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
         const order = item as unknown as ProductOrder;
         const isLast = index === data.length - 1;
+        const isSelected = item._id === selectedOrder?._id;
         return (
           <OrderBodyRow
+            isSelected={isSelected}
             onClickRow={(event, client: ProductOrder) => {
               setPopoverPosition({ left: event.clientX, top: event.clientY });
               setPopoverAnchor(event.currentTarget);

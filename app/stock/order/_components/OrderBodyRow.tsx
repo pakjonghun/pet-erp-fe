@@ -1,7 +1,6 @@
 import Cell from '@/components/table/Cell';
-import { Chip, IconButton, Menu, Stack, TableRow } from '@mui/material';
+import { Chip, Menu, Stack, TableRow } from '@mui/material';
 import React, { FC, MouseEvent, useState } from 'react';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
@@ -12,6 +11,7 @@ import { useReactiveVar } from '@apollo/client';
 import { authState } from '@/store/isLogin';
 
 interface Props {
+  isSelected: boolean;
   client: ProductOrder;
   onClickRow: (
     event: MouseEvent<HTMLTableCellElement>,
@@ -22,6 +22,7 @@ interface Props {
 }
 
 const OrderBodyRow: FC<Props> = ({
+  isSelected,
   client,
   scrollRef,
   onClickOption,
@@ -96,7 +97,13 @@ const OrderBodyRow: FC<Props> = ({
   const parsedClient = createRow(client);
 
   return (
-    <TableRow hover ref={scrollRef}>
+    <TableRow
+      sx={(theme) => ({
+        bgcolor: isSelected ? theme.palette.action.hover : '',
+      })}
+      hover
+      ref={scrollRef}
+    >
       <Menu
         anchorEl={menuAnchor}
         open={!!menuAnchor}
@@ -115,18 +122,6 @@ const OrderBodyRow: FC<Props> = ({
           {item}
         </Cell>
       ))}
-
-      <Cell sx={{ minWidth: 50 }}>
-        {!cannotModify && (
-          <IconButton
-            onClick={(event) => {
-              setMenuAnchor(event.currentTarget);
-            }}
-          >
-            <MoreHorizIcon />
-          </IconButton>
-        )}
-      </Cell>
     </TableRow>
   );
 };

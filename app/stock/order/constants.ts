@@ -8,5 +8,4 @@ export const OrderHeaderList = [
   '생산완료 예정일',
   '총 수량',
   '제품목록',
-  '',
 ];
