@@ -337,6 +337,7 @@ const ProductPage = () => {
           open={optionType === 'delete'}
           onClose={() => {
             setOptionType(null);
+            setSelectedProduct(null);
           }}
           selectedProduct={selectedProduct}
         />
@@ -345,9 +346,8 @@ const ProductPage = () => {
       {selectedProduct && (
         <EditProductModal
           open={optionType === 'edit'}
-          onClose={() => {
-            setOptionType(null);
-          }}
+          onClose={() => setOptionType(null)}
+          setSelectedProduct={setSelectedProduct}
           selectedProduct={selectedProduct}
         />
       )}

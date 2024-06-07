@@ -128,6 +128,7 @@ const OrderPage = () => {
     <>
       {selectedOrder && (
         <EditOrderModal
+          setSelectedOrder={setSelectedOrder}
           open={optionType === 'edit'}
           onClose={() => setOptionType(null)}
           selectedOrder={selectedOrder}
@@ -137,7 +138,10 @@ const OrderPage = () => {
       {selectedOrder && (
         <RemoveOrderModal
           open={optionType === 'delete'}
-          onClose={() => setOptionType(null)}
+          onClose={() => {
+            setOptionType(null);
+            setSelectedOrder(null);
+          }}
           selectedOrder={selectedOrder}
         />
       )}

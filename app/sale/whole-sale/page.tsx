@@ -130,13 +130,17 @@ const WholeSalePage = () => {
         {selectedWholeSale && (
           <RemoveWholeSaleModal
             open={optionType === 'delete'}
-            onClose={() => setOptionType(null)}
+            onClose={() => {
+              setOptionType(null);
+              setSelectedWholeSale(null);
+            }}
             selectedWholeSale={selectedWholeSale}
           />
         )}
 
         {selectedWholeSale && (
           <EditWholeSaleModal
+            setSelectedWholeSale={setSelectedWholeSale}
             open={optionType === 'edit'}
             onClose={() => setOptionType(null)}
             wholeSale={selectedWholeSale}

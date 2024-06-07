@@ -24,19 +24,29 @@ import { LIMIT, PRODUCT_PREFIX } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 import { useUpdateProduct } from '@/http/graphql/hooks/product/useUpdateProduct';
-import { Product } from '@/http/graphql/codegen/graphql';
+import {
+  Product,
+  ProductFragmentFragmentDoc,
+} from '@/http/graphql/codegen/graphql';
 import { modalSizeProps } from '@/components/commonStyles';
 import { emptyValueToNull } from '@/utils/common';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { client } from '@/http/graphql/client';
+import { useFragment } from '@apollo/client';
 
 interface Props {
   selectedProduct: Product;
+  setSelectedProduct: (item: Product | null) => void;
   open: boolean;
   onClose: () => void;
 }
 
-const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
+const EditProductModal: FC<Props> = ({
+  open,
+  selectedProduct,
+  onClose,
+  setSelectedProduct,
+}) => {
   const [updateProduct, { loading }] = useUpdateProduct();
 
   const {
@@ -118,11 +128,13 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
           _id: selectedProduct._id,
         },
       },
-      onCompleted: () => {
+      onCompleted: (res) => {
         snackMessage({
           message: '제품편집이 완료되었습니다.',
           severity: 'success',
         });
+        setSelectedProduct(res.updateProduct as Product);
+
         client.refetchQueries({
           updateCache(cache) {
             cache.evict({ fieldName: 'wholeSales' });

@@ -33,9 +33,15 @@ interface Props {
   open: boolean;
   selectedClient: Client;
   onClose: () => void;
+  setSelectedClient: (item: Client | null) => void;
 }
 
-const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
+const EditPClientModal: FC<Props> = ({
+  open,
+  selectedClient,
+  onClose,
+  setSelectedClient,
+}) => {
   const [editClient, { loading }] = useUpdateClient();
 
   const {
@@ -93,11 +99,13 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose }) => {
             newValues.feeRate == null ? null : Number(newValues.feeRate) / 100,
         },
       },
-      onCompleted: () => {
+      onCompleted: (res) => {
         snackMessage({
           message: '거래처수정이 완료되었습니다.',
           severity: 'success',
         });
+
+        setSelectedClient(res.updateClient as Client);
 
         client.refetchQueries({
           updateCache(cache) {

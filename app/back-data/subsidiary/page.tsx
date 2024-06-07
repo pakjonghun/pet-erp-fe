@@ -332,22 +332,19 @@ const BackDataPage = () => {
         )}
 
         {selectedSubsidiary && (
-          <EditSubsidiaryModal
-            open={optionType === 'edit'}
-            onClose={() => setOptionType(null)}
-            selectedSubsidiary={selectedSubsidiary}
-          />
-        )}
-        {selectedSubsidiary && (
           <RemoveSubsidiaryModal
             open={optionType === 'delete'}
-            onClose={() => setOptionType(null)}
+            onClose={() => {
+              setOptionType(null);
+              setSelectedSubsidiary(null);
+            }}
             selectedSubsidiary={selectedSubsidiary}
           />
         )}
 
         {selectedSubsidiary && (
           <EditSubsidiaryModal
+            setSelectedSubsidiary={setSelectedSubsidiary}
             open={optionType === 'edit'}
             onClose={() => setOptionType(null)}
             selectedSubsidiary={selectedSubsidiary}

@@ -344,7 +344,10 @@ const BackDataPage = () => {
       {selectedClient && (
         <RemoveClientModal
           open={optionType === 'delete'}
-          onClose={() => setOptionType(null)}
+          onClose={() => {
+            setOptionType(null);
+            setSelectedClient(null);
+          }}
           selectedClient={selectedClient}
         />
       )}
@@ -353,6 +356,7 @@ const BackDataPage = () => {
         <EditPClientModal
           open={optionType === 'edit'}
           onClose={() => setOptionType(null)}
+          setSelectedClient={setSelectedClient}
           selectedClient={selectedClient}
         />
       )}

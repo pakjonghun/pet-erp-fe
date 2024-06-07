@@ -62,7 +62,8 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
     skip: 0,
   });
   const rows = data?.categories.data ?? [];
-  const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
+  const isLoading =
+    networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
 
   const setCategory = (selectedCategory: string | null) => {
     if (!selectedCategory) return;
@@ -89,15 +90,19 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
   };
 
   const scrollRef = useInfinityScroll({ callback });
-  console.log(errors);
   const onSubmit = (createProductInput: CreateProductForm) => {
-    const newValues = filterEmptyValues(createProductInput) as CreateProductForm;
+    const newValues = filterEmptyValues(
+      createProductInput
+    ) as CreateProductForm;
     createProduct({
       variables: {
         createProductInput: newValues,
       },
       onCompleted: () => {
-        snackMessage({ message: '제품등록이 완료되었습니다.', severity: 'success' });
+        snackMessage({
+          message: '제품등록이 완료되었습니다.',
+          severity: 'success',
+        });
         client.refetchQueries({
           updateCache(cache) {
             cache.evict({ fieldName: 'productSales' });
@@ -108,7 +113,10 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
       },
       onError: (err) => {
         const message = err.message;
-        snackMessage({ message: message ?? '제품등록이 실패했습니다.', severity: 'error' });
+        snackMessage({
+          message: message ?? '제품등록이 실패했습니다.',
+          severity: 'error',
+        });
       },
     });
   };
@@ -248,7 +256,11 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
-          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
+          <Button
+            type="submit"
+            endIcon={loading ? <CommonLoading /> : ''}
+            variant="contained"
+          >
             등록
           </Button>
         </Stack>

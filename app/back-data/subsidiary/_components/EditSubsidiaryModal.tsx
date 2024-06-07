@@ -36,12 +36,14 @@ interface Props {
   selectedSubsidiary: Subsidiary;
   open: boolean;
   onClose: () => void;
+  setSelectedSubsidiary: (item: null | Subsidiary) => void;
 }
 
 const AddSubsidiaryModal: FC<Props> = ({
   open,
   selectedSubsidiary,
   onClose,
+  setSelectedSubsidiary,
 }) => {
   const [updateSubsidiary, { loading }] = useUpdateSubsidiary();
   const isEmptyProductList =
@@ -168,11 +170,12 @@ const AddSubsidiaryModal: FC<Props> = ({
           _id: selectedSubsidiary._id,
         },
       },
-      onCompleted: () => {
+      onCompleted: (res) => {
         snackMessage({
           message: '부자재편집이 완료되었습니다.',
           severity: 'success',
         });
+        setSelectedSubsidiary(res.updateSubsidiary as Subsidiary);
         client.refetchQueries({
           updateCache(cache) {
             cache.evict({ fieldName: 'subsidiaryStocks' });
