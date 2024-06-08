@@ -57,8 +57,7 @@ const WholeSalePage = () => {
     to,
   });
   const rows = (data?.wholeSales.data as WholeSaleItem[]) ?? [];
-  const isLoading =
-    networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
+  const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
   const isEmpty = !isLoading && rows.length === 0;
 
   const callback: IntersectionObserverCallback = (entries) => {
@@ -85,8 +84,7 @@ const WholeSalePage = () => {
   const scrollRef = useInfinityScroll({ callback });
 
   const [openCreateProduct, setOpenCreateProduct] = useState(false);
-  const [selectedWholeSale, setSelectedWholeSale] =
-    useState<null | WholeSaleItem>(null);
+  const [selectedWholeSale, setSelectedWholeSale] = useState<null | WholeSaleItem>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
   const handleClickEdit = () => {
     setOptionType('edit');
@@ -98,10 +96,7 @@ const WholeSalePage = () => {
 
   const createRow = (sale: WholeSaleItem) => {
     const profit = sale.totalPayCost - sale.totalWonCost;
-    const profitRate = getProfitRate(
-      sale.totalPayCost - sale.totalWonCost,
-      sale.totalPayCost
-    );
+    const profitRate = getProfitRate(sale.totalPayCost - sale.totalWonCost, sale.totalPayCost);
     return [
       sale.mallId,
       dayjs(sale.saleAt).format('YYYY-MM-DD'),
@@ -125,7 +120,7 @@ const WholeSalePage = () => {
   const parsedRowData = selectedWholeSale ? createRow(selectedWholeSale) : [];
 
   return (
-    <>
+    <Stack direction="column">
       <TablePage sx={{ flex: 1 }}>
         {selectedWholeSale && (
           <RemoveWholeSaleModal
@@ -148,17 +143,9 @@ const WholeSalePage = () => {
         )}
 
         {openCreateProduct && (
-          <AddWholeSaleModal
-            open={openCreateProduct}
-            onClose={() => setOpenCreateProduct(false)}
-          />
+          <AddWholeSaleModal open={openCreateProduct} onClose={() => setOpenCreateProduct(false)} />
         )}
-        <Stack
-          sx={{ px: 2 }}
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
+        <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
           <TableTitle title="도매 판매" />
           {!cannotModify && (
             <Stack direction="row" alignItems="center" gap={2}>
@@ -231,7 +218,6 @@ const WholeSalePage = () => {
       </TablePage>
       <TablePage
         sx={{
-          flex: 1,
           display: {
             xs: 'none',
             md: 'block',
@@ -260,10 +246,7 @@ const WholeSalePage = () => {
             {!!selectedWholeSale ? (
               <TableRow hover ref={scrollRef}>
                 {parsedRowData.map((item, index) => (
-                  <Cell
-                    key={`${selectedWholeSale._id}_${index}`}
-                    sx={{ minWidth: 200 }}
-                  >
+                  <Cell key={`${selectedWholeSale._id}_${index}`} sx={{ minWidth: 200 }}>
                     {item}
                   </Cell>
                 ))}
@@ -278,17 +261,8 @@ const WholeSalePage = () => {
           </CommonTable>
         </TableContainer>
         {!!selectedWholeSale && (
-          <Stack
-            direction="row"
-            gap={1}
-            sx={{ mt: 2 }}
-            justifyContent="flex-end"
-          >
-            <Button
-              color="error"
-              variant="outlined"
-              onClick={handleClickDelete}
-            >
+          <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
+            <Button color="error" variant="outlined" onClick={handleClickDelete}>
               삭제
             </Button>
             <Button variant="contained" onClick={handleClickEdit}>
@@ -297,7 +271,7 @@ const WholeSalePage = () => {
           </Stack>
         )}
       </TablePage>
-    </>
+    </Stack>
   );
 };
 
