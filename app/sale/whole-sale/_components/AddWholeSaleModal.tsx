@@ -124,7 +124,7 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
       },
       onCompleted: () => {
         snackMessage({
-          message: '도매 판매등록이 완료되었습니다.',
+          message: '비 사방넷 판매 등록이 완료되었습니다.',
           severity: 'success',
         });
         client.refetchQueries({
@@ -145,7 +145,7 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
       onError: (err) => {
         const message = err.message;
         snackMessage({
-          message: message ?? '도매 판매등록이 실패했습니다.',
+          message: message ?? '비 사방넷 판매 등록이 실패했습니다.',
           severity: 'error',
         });
       },
@@ -189,10 +189,10 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        도매 판매 등록
+        비 사방넷 판매 등록
       </Typography>
 
-      <Typography sx={{ mb: 3 }}>새로운 도매 판매를 등록합니다.</Typography>
+      <Typography sx={{ mb: 3 }}>새로운 비 사방넷 판매를 등록합니다.</Typography>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup
@@ -202,7 +202,7 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
           }}
         >
           <Stack direction="row" gap={3} alignItems="center">
-            <FormLabel>도매 거래처 정보 입력</FormLabel>
+            <FormLabel>거래처 정보 입력</FormLabel>
             <Controller
               control={control}
               name="isDone"
@@ -260,7 +260,7 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        label="도매 거래처"
+                        label="거래처"
                         required
                         error={!!errors.mallId?.message}
                         helperText={errors.mallId?.message ?? ''}

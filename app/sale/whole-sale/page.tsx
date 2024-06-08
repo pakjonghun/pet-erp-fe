@@ -146,12 +146,12 @@ const WholeSalePage = () => {
           <AddWholeSaleModal open={openCreateProduct} onClose={() => setOpenCreateProduct(false)} />
         )}
         <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
-          <TableTitle title="도매 판매" />
+          <TableTitle title="비 사방넷 판매" />
           {!cannotModify && (
             <Stack direction="row" alignItems="center" gap={2}>
               <ActionButton
                 icon={<PlusOneOutlined />}
-                text="도매 판매 등록"
+                text="비 사방넷 판매 등록"
                 onClick={() => setOpenCreateProduct(true)}
               />
             </Stack>
@@ -225,7 +225,7 @@ const WholeSalePage = () => {
           px: 2,
         }}
       >
-        <TableTitle title="선택된 도매 판매 데이터" />
+        <TableTitle title="선택된 비 사방넷 판매 데이터" />
         <TableContainer
           sx={{
             display: {

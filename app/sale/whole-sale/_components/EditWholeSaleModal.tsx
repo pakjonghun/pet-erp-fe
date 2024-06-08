@@ -136,7 +136,7 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose, setSelectedWh
       },
       onCompleted: (res) => {
         snackMessage({
-          message: '도매 판매편집이 완료되었습니다.',
+          message: '비 사방넷 판매 편집이 완료되었습니다.',
           severity: 'success',
         });
         if (Array.isArray(res.updateWholeSale) && res.updateWholeSale[0]) {
@@ -159,7 +159,7 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose, setSelectedWh
       onError: (err) => {
         const message = err.message;
         snackMessage({
-          message: message ?? '도매 판매편집이 실패했습니다.',
+          message: message ?? '비 사방넷 판매 편집이 실패했습니다.',
           severity: 'error',
         });
       },
@@ -203,13 +203,13 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose, setSelectedWh
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        도매 판매 편집
+        비 사방넷 판매 편집
       </Typography>
-      <Typography sx={{ mb: 3 }}>도매 판매를 편집합니다.</Typography>
+      <Typography sx={{ mb: 3 }}>비 사방넷 판매를 편집합니다.</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={{ ...modalSizeProps, mb: 2 }}>
           <Stack direction="row" gap={3} alignItems="center">
-            <FormLabel>도매 거래처 정보 입력</FormLabel>
+            <FormLabel>거래처 정보 입력</FormLabel>
             <Controller
               control={control}
               name="isDone"
@@ -268,7 +268,7 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose, setSelectedWh
                       <TextField
                         {...params}
                         value={field.value}
-                        label="도매 거래처"
+                        label="거래처"
                         required
                         error={!!errors.mallId?.message}
                         helperText={errors.mallId?.message ?? ''}
