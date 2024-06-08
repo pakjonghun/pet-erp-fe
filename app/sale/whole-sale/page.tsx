@@ -120,7 +120,7 @@ const WholeSalePage = () => {
   const parsedRowData = selectedWholeSale ? createRow(selectedWholeSale) : [];
 
   return (
-    <Stack direction="column">
+    <Stack direction="column" sx={{ width: '100%' }}>
       <TablePage sx={{ flex: 1 }}>
         {selectedWholeSale && (
           <RemoveWholeSaleModal

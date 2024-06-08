@@ -92,7 +92,6 @@ const SubsidiaryStockPage = () => {
     subsidiary: SubsidiaryStockColumn | null
   ) => {
     setProductStock(subsidiary);
-    console.log(option);
     if (option == 'add') {
       setOpenSubAddStock(true);
     }
