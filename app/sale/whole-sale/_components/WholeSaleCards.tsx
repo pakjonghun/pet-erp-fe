@@ -63,6 +63,7 @@ const WholeSaleCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx }) 
       )}
       {selectedWholeSale && (
         <EditWholeSaleModal
+          setSelectedWholeSale={setSelectedWholeSale}
           open={optionType === 'edit'}
           onClose={() => handleClickOption(null, null)}
           wholeSale={selectedWholeSale}

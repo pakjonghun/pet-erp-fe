@@ -63,6 +63,7 @@ const ProductionCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx })
       )}
       {selectedProduct && (
         <EditProductModal
+          setSelectedProduct={setSelectedProduct}
           open={optionType === 'edit'}
           onClose={() => handleClickOption(null, null)}
           selectedProduct={selectedProduct}

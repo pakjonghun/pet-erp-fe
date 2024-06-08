@@ -63,6 +63,7 @@ const ClientCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx }) => 
       )}
       {selectedClient && (
         <EditPClientModal
+          setSelectedClient={setSelectedClient}
           open={optionType === 'edit'}
           onClose={() => handleClickOption(null, null)}
           selectedClient={selectedClient}
