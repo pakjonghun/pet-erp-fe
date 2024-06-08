@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import {
   CreateWholeSaleForm,
@@ -7,15 +7,7 @@ import {
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import {
-  Autocomplete,
-  Box,
-  FormControl,
-  FormGroup,
-  IconButton,
-  Stack,
-  TextField,
-} from '@mui/material';
+import { Autocomplete, Box, IconButton, Stack, TextField } from '@mui/material';
 import {
   Control,
   Controller,
@@ -42,6 +34,7 @@ interface Props {
     newItem: FieldArrayWithId<CreateWholeSaleForm, 'productList', 'id'>
   ) => void;
   selectedProductList: CreateWholeSaleProductForm[];
+  isEdit?: boolean;
   error?: FieldErrors<CreateWholeSaleProductForm>;
 }
 
@@ -55,16 +48,21 @@ const WholeSaleProductSearch: FC<Props> = ({
   error,
   clearError,
   setError,
+  isEdit = false,
 }) => {
   const currentProduct = selectedProductList[index];
   const [productKeyword, setProductKeyword] = useState('');
   const delayedProductKeyword = useTextDebounce(productKeyword ?? '');
-  const { data, networkStatus, fetchMore } = useProductCountStocks({
+  const { data, networkStatus, fetchMore, refetch } = useProductCountStocks({
     storageName: currentProduct.storageName,
     keyword: delayedProductKeyword,
     limit: LIMIT,
     skip: 0,
   });
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   const rows = data?.productCountStocks?.data ?? [];
   const currentOriginProduct = rows.find((item) => item.code === currentProduct.productCode);
@@ -233,26 +231,24 @@ const WholeSaleProductSearch: FC<Props> = ({
               sx={{ minWidth: 70, width: '100%' }}
               field={field}
               onChange={(value) => {
-                if (!currentOriginProduct) return;
                 field.onChange(value);
+                if (!currentOriginProduct) return;
 
+                field.onChange(value);
                 clearError(`productList.${index}.count`);
+
                 if (value != null) {
-                  if (value > currentOriginProduct.count) {
+                  if (value > currentOriginProduct.count && !isEdit) {
                     setError(`productList.${index}.count`, {
                       message: `제품 재고가 ${currentOriginProduct.count}EA 남아 있습니다.`,
                     });
                   }
 
-                  if (value < 0) {
-                    setError(`productList.${index}.count`, {
-                      message: '제품 수량은 1 이상의 값을 입력하세요',
-                    });
-                  }
-                }
-
-                if (value != null && value > currentOriginProduct.count) {
-                } else {
+                  // if (value < 1) {
+                  //   setError(`productList.${index}.count`, {
+                  //     message: '제품 수량은 1 이상의 값을 입력하세요',
+                  //   });
+                  // }
                 }
               }}
               label="판매수량"

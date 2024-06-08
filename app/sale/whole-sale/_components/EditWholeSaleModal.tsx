@@ -173,7 +173,7 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose, setSelectedWh
 
   const handleAddProduct = () => {
     if (productList.length === 0) {
-      clearErrors();
+      clearErrors('productList');
     }
     append(initProductItem);
   };
@@ -231,7 +231,6 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose, setSelectedWh
               },
               alignItems: {
                 xs: 'flex-start',
-                md: 'center',
               },
             }}
             gap={3}
@@ -345,6 +344,7 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose, setSelectedWh
             {fields.map((product, index) => {
               return (
                 <WholeSaleProductSearch
+                  isEdit
                   setError={setError}
                   clearError={clearErrors}
                   productId={product.id}
