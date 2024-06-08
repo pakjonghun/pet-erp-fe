@@ -172,6 +172,9 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose, setSelectedWh
   };
 
   const handleAddProduct = () => {
+    if (productList.length === 0) {
+      clearErrors();
+    }
     append(initProductItem);
   };
 

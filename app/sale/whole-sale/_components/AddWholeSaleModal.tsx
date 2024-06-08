@@ -116,7 +116,6 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
     control,
     name: 'productList',
   });
-
   const onSubmit = (createProductInput: CreateWholeSaleForm) => {
     const newValues = filterEmptyValues(createProductInput) as CreateWholeSaleForm;
     createWholeSale({
@@ -154,11 +153,14 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
   };
 
   const handleClose = () => {
-    // reset();
     onClose();
   };
 
   const handleAddProduct = () => {
+    if (productList.length === 0) {
+      clearErrors('productList');
+    }
+
     append(initProductItem);
   };
 
@@ -222,7 +224,6 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
               },
               alignItems: {
                 xs: 'flex-start',
-                md: 'center',
               },
             }}
             gap={3}

@@ -7,7 +7,15 @@ import {
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { Autocomplete, Box, IconButton, Stack, TextField } from '@mui/material';
+import {
+  Autocomplete,
+  Box,
+  FormControl,
+  FormGroup,
+  IconButton,
+  Stack,
+  TextField,
+} from '@mui/material';
 import {
   Control,
   Controller,
@@ -84,6 +92,7 @@ const WholeSaleProductSearch: FC<Props> = ({
 
   const scrollRef = useInfinityScroll({ callback });
 
+  console.log('error : ', error);
   const [storageKeyword, setStorageKeyword] = useState('');
   const debouncedStorageKeyword = useTextDebounce(storageKeyword);
   const { data: storageData, networkStatus: storageNetwork } = useStorages({
@@ -108,13 +117,10 @@ const WholeSaleProductSearch: FC<Props> = ({
           xs: 'column',
           md: 'row',
         },
-        alignItems: {
-          xs: 'flex-start',
-          md: 'center',
-        },
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        gap: 2,
       }}
-      justifyContent="space-between"
-      gap={2}
     >
       <Controller
         control={control}
@@ -228,15 +234,26 @@ const WholeSaleProductSearch: FC<Props> = ({
               field={field}
               onChange={(value) => {
                 if (!currentOriginProduct) return;
+                field.onChange(value);
+
+                clearError(`productList.${index}.count`);
+                if (value != null) {
+                  if (value > currentOriginProduct.count) {
+                    setError(`productList.${index}.count`, {
+                      message: `제품 재고가 ${currentOriginProduct.count}EA 남아 있습니다.`,
+                    });
+                  }
+
+                  if (value < 0) {
+                    setError(`productList.${index}.count`, {
+                      message: '제품 수량은 1 이상의 값을 입력하세요',
+                    });
+                  }
+                }
 
                 if (value != null && value > currentOriginProduct.count) {
-                  setError(`productList.${index}.count`, {
-                    message: `제품 재고가 ${currentOriginProduct.count}EA 남아 있습니다.`,
-                  });
                 } else {
-                  clearError(`productList.${index}.count`);
                 }
-                field.onChange(value);
               }}
               label="판매수량"
               error={!!error?.count?.message}
