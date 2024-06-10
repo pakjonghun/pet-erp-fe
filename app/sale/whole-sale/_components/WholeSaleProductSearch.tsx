@@ -90,7 +90,6 @@ const WholeSaleProductSearch: FC<Props> = ({
 
   const scrollRef = useInfinityScroll({ callback });
 
-  console.log('error : ', error);
   const [storageKeyword, setStorageKeyword] = useState('');
   const debouncedStorageKeyword = useTextDebounce(storageKeyword);
   const { data: storageData, networkStatus: storageNetwork } = useStorages({
