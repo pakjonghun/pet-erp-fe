@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Button, Stack, TextField } from '@mui/material';
+import { Box, Button, Stack, TextField, Typography } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { LoginForm, loginSchema } from './validate';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,7 +12,6 @@ import { client } from '@/http/graphql/client';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { useReactiveVar } from '@apollo/client';
 import { authState } from '@/store/isLogin';
-import { getMyInfoDocument } from '@/http/graphql/hooks/users/useGetMyInfo';
 
 const LoginPage = () => {
   const {
@@ -22,8 +21,8 @@ const LoginPage = () => {
   } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      id: '',
-      password: '',
+      id: 'admin',
+      password: '123123123',
     },
     mode: 'onChange',
   });
@@ -48,7 +47,10 @@ const LoginPage = () => {
       },
       onError: (error) => {
         const message = error.response?.data.message;
-        snackMessage({ message: message ?? '로그인이 실패했습니다.', severity: 'error' });
+        snackMessage({
+          message: message ?? '로그인이 실패했습니다.',
+          severity: 'error',
+        });
       },
     });
   };
@@ -58,7 +60,16 @@ const LoginPage = () => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack sx={{ mx: 'auto', pt: '20%', px: 3 }} maxWidth="sm" direction="column" gap={2}>
+        <Stack
+          sx={{ mx: 'auto', pt: '20%', px: 3 }}
+          maxWidth="sm"
+          direction="column"
+          gap={2}
+        >
+          <Typography variant="subtitle2">
+            미리 입력된 계정을 테스트를 위한 계정 admin 입니다. <br /> 계속
+            진행하려면 로그인을 해주세요.
+          </Typography>
           <Controller
             name="id"
             control={control}
