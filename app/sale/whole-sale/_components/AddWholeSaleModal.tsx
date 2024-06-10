@@ -41,6 +41,7 @@ import { DatePicker } from '@mui/x-date-pickers';
 import { useCreateWholeSale } from '@/http/graphql/hooks/wholeSale/useCreateWholeSale';
 import dayjs from 'dayjs';
 import { client } from '@/http/graphql/client';
+import NumberInput from '@/components/ui/input/NumberInput';
 
 export const initProductItem: CreateWholeSaleProductForm = {
   storageName: '',
@@ -114,6 +115,7 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
       telephoneNumber1: '',
       productList: [],
       isDone: false,
+      deliveryBoxCount: 1,
     },
   });
 
@@ -225,6 +227,22 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
               }}
             />
           </Stack>
+          <Controller
+            control={control}
+            name={'deliveryBoxCount'}
+            render={({ field }) => {
+              return (
+                <NumberInput
+                  sx={{ minWidth: 70, width: '100%' }}
+                  helperText={errors?.deliveryBoxCount?.message ?? ''}
+                  error={!!errors?.deliveryBoxCount?.message}
+                  label="송장 개수"
+                  field={field}
+                />
+              );
+            }}
+          />
+
           <Stack
             sx={{
               flexDirection: {

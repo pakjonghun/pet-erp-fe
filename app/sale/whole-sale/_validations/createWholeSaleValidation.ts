@@ -17,6 +17,10 @@ export const createWholeSaleProductSchema = z.object({
 });
 
 export const createWholeSaleSchema = z.object({
+  deliveryBoxCount: z
+    .number()
+    .min(1, { message: '1 이상의 숫자를 입력하세요.' })
+    .optional(),
   mallId: z.string().min(1, { message: '거래처 이름을 입력하세요.' }),
   saleAt: z.date(),
   telephoneNumber1: z.string().optional().nullable(),
@@ -27,4 +31,6 @@ export const createWholeSaleSchema = z.object({
 });
 
 export type CreateWholeSaleForm = z.infer<typeof createWholeSaleSchema>;
-export type CreateWholeSaleProductForm = z.infer<typeof createWholeSaleProductSchema>;
+export type CreateWholeSaleProductForm = z.infer<
+  typeof createWholeSaleProductSchema
+>;

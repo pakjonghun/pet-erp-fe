@@ -45,6 +45,7 @@ import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { client } from '@/http/graphql/client';
 import { useUpdateWholeSale } from '@/http/graphql/hooks/wholeSale/useUpdateWholeSale';
+import NumberInput from '@/components/ui/input/NumberInput';
 
 export const initProductItem: CreateWholeSaleProductForm = {
   storageName: '',
@@ -68,6 +69,7 @@ const EditWholeSaleModal: FC<Props> = ({
   onClose,
   setSelectedWholeSale,
 }) => {
+  console.log('wholeSale : ', wholeSale);
   const [updateWholeSale, { loading }] = useUpdateWholeSale();
   const [clientKeyword, setClientKeyword] = useState('');
   const delayedClientKeyword = useTextDebounce(clientKeyword);
@@ -335,6 +337,21 @@ const EditWholeSaleModal: FC<Props> = ({
               }}
             />
           </Stack>
+          <Controller
+            control={control}
+            name={'deliveryBoxCount'}
+            render={({ field }) => {
+              return (
+                <NumberInput
+                  sx={{ minWidth: 70, width: '100%' }}
+                  helperText={errors?.deliveryBoxCount?.message ?? ''}
+                  error={!!errors?.deliveryBoxCount?.message}
+                  label="송장 개수"
+                  field={field}
+                />
+              );
+            }}
+          />
         </FormGroup>
         {!!telNumber && (
           <LabelText label="연락처 : " text={telNumber ?? EMPTY} />
