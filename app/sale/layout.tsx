@@ -2,12 +2,17 @@
 
 import { FC, ReactNode, useEffect, useState } from 'react';
 import SubHeader from '@/components/layout/header/SubHeader';
-import { Box, Stack, Tab, Tabs } from '@mui/material';
+import { Box, FormControlLabel, Stack, Switch, Tab, Tabs } from '@mui/material';
 import SwitchDate from '@/components/calendar/dateSwitch/SwitchDate';
 import { SearchStandard } from '@/components/calendar/dateSwitch/types';
 import { DateRange } from '@/components/calendar/dateFilter/type';
 import { useReactiveVar } from '@apollo/client';
-import { clientTotal, saleRange, saleTotal } from '@/store/saleStore';
+import {
+  clientTotal,
+  saleRange,
+  saleTotal,
+  showPrevSaleData,
+} from '@/store/saleStore';
 import { getToday } from '@/components/calendar/dateFilter/utils';
 import { usePathname } from 'next/navigation';
 import { SaleTabs } from './constants';
@@ -39,6 +44,8 @@ const SaleLayout: FC<Props> = ({ children }) => {
       saleTotal({ totalCount: 0, totalPayCost: 0, totalProfit: 0 });
     };
   }, []);
+
+  const isShowPrevSaleData = useReactiveVar(showPrevSaleData);
 
   return (
     <Box sx={{ height: '100%' }}>
@@ -72,13 +79,26 @@ const SaleLayout: FC<Props> = ({ children }) => {
           })}
         </Tabs>
       </SubHeader>
-      <SwitchDate
-        sx={{ pl: 3, mt: 2 }}
-        range={range}
-        setRange={setRange}
-        searchStandard={searchStandard}
-        setSearchStandard={setSearchStandard}
-      />
+      <Stack direction="row" justifyContent="space-between">
+        <SwitchDate
+          sx={{ pl: 3, mt: 2 }}
+          range={range}
+          setRange={setRange}
+          searchStandard={searchStandard}
+          setSearchStandard={setSearchStandard}
+        />
+        <FormControlLabel
+          label={isShowPrevSaleData ? '수익 비교 끄기' : '수익 비교 켜기'}
+          control={
+            <Switch
+              size="small"
+              value={isShowPrevSaleData}
+              checked={isShowPrevSaleData}
+              onChange={(_, checked) => showPrevSaleData(checked)}
+            />
+          }
+        />
+      </Stack>
       <Stack
         sx={{
           flexDirection: {

@@ -6,7 +6,6 @@ import {
   FormGroup,
   TextField,
   InputAdornment,
-  Button,
   Stack,
 } from '@mui/material';
 import { ProductSaleData } from '@/http/graphql/codegen/graphql';

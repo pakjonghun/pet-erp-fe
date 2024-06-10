@@ -4,11 +4,13 @@ import { FC } from 'react';
 import { SaleInfos } from '@/http/graphql/codegen/graphql';
 import Cell from '@/components/table/Cell';
 import EmptyRow from '@/components/table/EmptyRow';
-import { TableBody, TableRow } from '@mui/material';
+import { TableRow } from '@mui/material';
 import SaleTableCell from '@/components/table/SaleTableCell';
 import { getProfitRate } from '@/utils/sale';
 import { CommonListProps } from '@/types';
 import { CommonTableBody } from '@/components/commonStyles';
+import { useReactiveVar } from '@apollo/client';
+import { showPrevSaleData } from '@/store/saleStore';
 
 interface Props extends CommonListProps<SaleInfos> {}
 
@@ -18,6 +20,8 @@ const ClientSaleTableBodySection: FC<Props> = ({
   isLoading,
   scrollRef,
 }) => {
+  const isShowSalePrevData = useReactiveVar(showPrevSaleData);
+
   return (
     <CommonTableBody>
       <EmptyRow colSpan={5} isEmpty={isEmpty} />
@@ -31,19 +35,23 @@ const ClientSaleTableBodySection: FC<Props> = ({
           >
             <Cell sx={{ minWidth: 200 }}>{row.name}</Cell>
             <SaleTableCell
+              isShowPrevData={isShowSalePrevData}
               current={row?.accCount ?? 0}
               previous={row.prevAccCount ?? 0}
               numberType="comma"
             />
             <SaleTableCell
+              isShowPrevData={isShowSalePrevData}
               current={row.accPayCost ?? 0}
               previous={row.prevAccPayCost ?? 0}
             />
             <SaleTableCell
+              isShowPrevData={isShowSalePrevData}
               current={row.accProfit ?? 0}
               previous={row.prevAccProfit ?? 0}
             />
             <SaleTableCell
+              isShowPrevData={isShowSalePrevData}
               numberType="percent"
               current={getProfitRate(row?.accProfit ?? 0, row?.accPayCost ?? 0)}
               previous={getProfitRate(
