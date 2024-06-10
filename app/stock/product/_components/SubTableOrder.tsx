@@ -28,6 +28,7 @@ import {
   CommonTable,
   CommonTableBody,
 } from '@/components/commonStyles';
+import LoadingRow from '@/components/table/LoadingRow';
 
 interface Props {
   productStock: StockColumn;
@@ -101,6 +102,7 @@ const SubTableOrder: FC<Props> = ({ productStock }) => {
             isEmpty={isEmpty}
             message="검색결과가 없습니다."
           />
+          <LoadingRow isLoading={isLoading} colSpan={8} />
           {rows?.map((row) => {
             const allEmptyLeadTime = row.products.every(
               (item) => item.product.leadTime == null

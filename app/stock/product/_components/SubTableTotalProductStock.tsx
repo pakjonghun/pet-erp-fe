@@ -20,6 +20,7 @@ import {
   CommonTable,
   CommonTableBody,
 } from '@/components/commonStyles';
+import LoadingRow from '@/components/table/LoadingRow';
 
 interface Props {
   productStock: StockColumn;
@@ -109,6 +110,8 @@ const SubTableTotalProductStock: FC<Props> = ({
             isEmpty={isEmpty}
             message="검색된 데이터가 없습니다."
           />
+
+          <LoadingRow isLoading={isLoading} colSpan={5} />
           {rows.map((row, index) => {
             return (
               <TableRow key={`${row.__typename}_${index}`}>
