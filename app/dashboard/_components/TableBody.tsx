@@ -32,7 +32,7 @@ const DashboardTableBody: FC<Props> = ({ saleInfos }) => {
             isShowPrevData={isShowPrevData}
             current={saleInfo.accProfit ?? 0}
             previous={saleInfo.prevAccProfit ?? 0}
-            numberType="comma"
+            numberType="currency"
           />
           <SaleTableCell
             isShowPrevData={isShowPrevData}
