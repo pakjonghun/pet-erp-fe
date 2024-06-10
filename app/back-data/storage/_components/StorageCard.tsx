@@ -10,9 +10,7 @@ interface Props {
   item: Storage;
 }
 
-const StorageCard: FC<Props> = ({
-  item: { _id, name, address, note, phoneNumber },
-}) => {
+const StorageCard: FC<Props> = ({ item: { _id, name, address, note, phoneNumber } }) => {
   const [openDelete, setOpenDelete] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
@@ -37,11 +35,7 @@ const StorageCard: FC<Props> = ({
         gap: 1,
       }}
     >
-      <DeleteStorageModal
-        open={openDelete}
-        onClose={handleCloseDelete}
-        item={{ _id, name }}
-      />
+      <DeleteStorageModal open={openDelete} onClose={handleCloseDelete} item={{ _id, name }} />
       <EditStorageModal
         open={openEdit}
         onClose={handleCloseEdit}
@@ -49,14 +43,14 @@ const StorageCard: FC<Props> = ({
       />
       <LabelText label="이름" text={name} />
       <LabelText label="연락처" text={phoneNumber ?? EMPTY} />
-      <LabelText label="주소" text={address ?? EMPTY} />
+      <LabelText
+        sx={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden', width: '100%' }}
+        label="주소"
+        text={address ?? EMPTY}
+      />
       <LabelText label="메모" text={note ?? EMPTY} />
       <Stack direction="row" gap={1} sx={{ alignSelf: 'flex-end' }}>
-        <Button
-          onClick={() => setOpenDelete(true)}
-          color="error"
-          variant="outlined"
-        >
+        <Button onClick={() => setOpenDelete(true)} color="error" variant="outlined">
           삭제
         </Button>
         <Button onClick={() => setOpenEdit(true)} variant="contained">

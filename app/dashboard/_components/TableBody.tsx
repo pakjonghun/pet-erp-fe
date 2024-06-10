@@ -13,7 +13,7 @@ const DashboardTableBody: FC<Props> = ({ saleInfos }) => {
     <>
       {saleInfos.map((saleInfo) => (
         <TableRow key={saleInfo.name}>
-          <TableCell>{saleInfo.name}</TableCell>
+          <TableCell sx={{ whiteSpace: 'nowrap' }}>{saleInfo.name}</TableCell>
           <SaleTableCell
             current={saleInfo.accPayCost ?? 0}
             previous={saleInfo.prevAccPayCost ?? 0}

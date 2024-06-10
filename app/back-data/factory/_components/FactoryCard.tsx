@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Paper, Stack, Button, Chip } from '@mui/material';
+import { Paper, Stack, Button, Chip, Container, Typography } from '@mui/material';
 import DeleteStorageModal from './DeleteFactoryModal';
 import { Factory } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
@@ -45,18 +45,12 @@ const FactoryCard: FC<Props> = ({
       />
       <LabelText label="이름" text={name} />
       <LabelText label="연락처" text={phoneNumber ?? EMPTY} />
-      <LabelText label="주소" text={address ?? EMPTY} />
+      <LabelText
+        sx={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden', width: '100%' }}
+        label="주소"
+        text={address ?? EMPTY}
+      />
       <LabelText label="메모" text={note ?? EMPTY} />
-      {/* <LabelText
-        label="생산 제품 리스트"
-        text={
-          <Stack direction="row" gap={1} flexWrap="wrap">
-            {productList?.map((product) => {
-              return <Chip label={product} key={`${product}_${Math.random()}`} />;
-            })}
-          </Stack>
-        }
-      /> */}
       <Stack direction="row" gap={1} sx={{ alignSelf: 'flex-end' }}>
         <Button onClick={() => setOpenDelete(true)} color="error" variant="outlined">
           삭제
