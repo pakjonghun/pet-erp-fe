@@ -227,21 +227,6 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
               }}
             />
           </Stack>
-          <Controller
-            control={control}
-            name={'deliveryBoxCount'}
-            render={({ field }) => {
-              return (
-                <NumberInput
-                  sx={{ minWidth: 70, width: '100%' }}
-                  helperText={errors?.deliveryBoxCount?.message ?? ''}
-                  error={!!errors?.deliveryBoxCount?.message}
-                  label="송장 개수"
-                  field={field}
-                />
-              );
-            }}
-          />
 
           <Stack
             sx={{
@@ -335,6 +320,21 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
                       const _value = value as any;
                       field.onChange(new Date(_value));
                     }}
+                  />
+                );
+              }}
+            />
+            <Controller
+              control={control}
+              name={'deliveryBoxCount'}
+              render={({ field }) => {
+                return (
+                  <NumberInput
+                    sx={{ minWidth: 70, width: '100%' }}
+                    helperText={errors?.deliveryBoxCount?.message ?? ''}
+                    error={!!errors?.deliveryBoxCount?.message}
+                    label="송장 개수"
+                    field={field}
                   />
                 );
               }}
