@@ -14,6 +14,7 @@ import { saleRange, showPrevData } from '@/store/saleStore';
 import { useDashboardProducts } from '@/http/graphql/hooks/product/useDashboardProducts';
 import { getNumberToString } from '@/utils/sale';
 import { Cancel } from '@mui/icons-material';
+import CommonLoading from '@/components/ui/loading/CommonLoading';
 
 export interface GroupProps {
   id: string;
@@ -37,7 +38,7 @@ const GroupList: FC<Props> = ({ id, tagName, productList, changeTagName, removeG
     productCodeList,
   });
 
-  const isLoading = networkStatus == 3 || networkStatus == 1;
+  const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
   const productInsightList = insightData?.dashboardProducts;
   const productInsightsByCode = new Map<string, SaleInfos>();
   productInsightList?.forEach((item) => {
@@ -237,99 +238,112 @@ const GroupList: FC<Props> = ({ id, tagName, productList, changeTagName, removeG
           </Grid>
         }
       />
-      {productList.map((value) => {
-        const labelId = `checkbox-list-label-${value}`;
-        const saleData = productInsightsByCode.get(value.code);
+      {isLoading ? (
+        <Stack direction="row" justifyContent="center" alignItems="center">
+          <CommonLoading />
+        </Stack>
+      ) : (
+        <>
+          {productList.map((value) => {
+            const labelId = `checkbox-list-label-${value}`;
+            const saleData = productInsightsByCode.get(value.code);
 
-        return (
-          <ListItem sx={{ px: 2 }} key={value._id} disablePadding>
-            <ListItemButton sx={{ p: 0 }} role={undefined} onClick={handleToggle(value.code)} dense>
-              <Grid container rowSpacing={1}>
-                <Grid item xs={3}>
-                  <Stack direction="row" alignItems="center">
-                    <ListItemIcon>
-                      <Checkbox
-                        edge="start"
-                        checked={checked.indexOf(value.code) !== -1}
-                        tabIndex={-1}
-                        disableRipple
-                        inputProps={{ 'aria-labelledby': labelId }}
+            return (
+              <ListItem sx={{ px: 2 }} key={value._id} disablePadding>
+                <ListItemButton
+                  sx={{ p: 0 }}
+                  role={undefined}
+                  onClick={handleToggle(value.code)}
+                  dense
+                >
+                  <Grid container rowSpacing={1}>
+                    <Grid item xs={3}>
+                      <Stack direction="row" alignItems="center">
+                        <ListItemIcon>
+                          <Checkbox
+                            edge="start"
+                            checked={checked.indexOf(value.code) !== -1}
+                            tabIndex={-1}
+                            disableRipple
+                            inputProps={{ 'aria-labelledby': labelId }}
+                          />
+                        </ListItemIcon>
+                        <ListItemText
+                          sx={{
+                            display: 'inline-block',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            width: '100px',
+                            textOverflow: 'ellipsis',
+                          }}
+                          primary={value.name}
+                        />
+                      </Stack>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <ListItemText
+                        sx={{ textAlign: 'center' }}
+                        primary={getNumberToString(saleData?.accCount ?? 0, 'comma')}
                       />
-                    </ListItemIcon>
-                    <ListItemText
-                      sx={{
-                        display: 'inline-block',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        width: '100px',
-                        textOverflow: 'ellipsis',
-                      }}
-                      primary={value.name}
-                    />
-                  </Stack>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <ListItemText
+                        sx={{ textAlign: 'center' }}
+                        primary={getNumberToString(saleData?.accPayCost ?? 0, 'currency')}
+                      />
+                    </Grid>
+                    <Grid item xs={3}>
+                      <ListItemText
+                        sx={{ textAlign: 'center' }}
+                        primary={getNumberToString(saleData?.accProfit ?? 0, 'currency')}
+                      />
+                    </Grid>
+                  </Grid>
+                </ListItemButton>
+              </ListItem>
+            );
+          })}
+          <ListItemText
+            sx={{ mt: 2, px: 1, pt: 1, borderTop: '1px solid lightGrey' }}
+            primary={
+              <Grid sx={{ fontSize: 14 }} container>
+                <Grid textAlign="center" item xs={3}>
+                  합계
                 </Grid>
-                <Grid item xs={3}>
-                  <ListItemText
-                    sx={{ textAlign: 'center' }}
-                    primary={getNumberToString(saleData?.accCount ?? 0, 'comma')}
-                  />
+                <Grid textAlign="center" item xs={3}>
+                  {getNumberToString(footerTotal?.accCount ?? 0, 'comma')}
                 </Grid>
-                <Grid item xs={3}>
-                  <ListItemText
-                    sx={{ textAlign: 'center' }}
-                    primary={getNumberToString(saleData?.accPayCost ?? 0, 'currency')}
-                  />
+                <Grid textAlign="center" item xs={3}>
+                  {getNumberToString(footerTotal?.accPayCost ?? 0, 'currency')}
                 </Grid>
-                <Grid item xs={3}>
-                  <ListItemText
-                    sx={{ textAlign: 'center' }}
-                    primary={getNumberToString(saleData?.accProfit ?? 0, 'currency')}
-                  />
+                <Grid textAlign="center" item xs={3}>
+                  {getNumberToString(footerTotal?.accProfit ?? 0, 'currency')}
                 </Grid>
               </Grid>
-            </ListItemButton>
-          </ListItem>
-        );
-      })}
-      <ListItemText
-        sx={{ mt: 2, px: 1, pt: 1, borderTop: '1px solid lightGrey' }}
-        primary={
-          <Grid sx={{ fontSize: 14 }} container>
-            <Grid textAlign="center" item xs={3}>
-              합계
-            </Grid>
-            <Grid textAlign="center" item xs={3}>
-              {getNumberToString(footerTotal?.accCount ?? 0, 'comma')}
-            </Grid>
-            <Grid textAlign="center" item xs={3}>
-              {getNumberToString(footerTotal?.accPayCost ?? 0, 'currency')}
-            </Grid>
-            <Grid textAlign="center" item xs={3}>
-              {getNumberToString(footerTotal?.accProfit ?? 0, 'currency')}
-            </Grid>
-          </Grid>
-        }
-        secondary={
-          isShowPrevData ? (
-            <Grid sx={{ fontSize: 14 }} container>
-              <Grid textAlign="center" item xs={3}>
-                이전기간과 비교
-              </Grid>
-              <Grid textAlign="center" item xs={3}>
-                {getNumberToString(footerTotal?.prevAccCount ?? 0, 'comma')}
-              </Grid>
-              <Grid textAlign="center" item xs={3}>
-                {getNumberToString(footerTotal?.prevAccPayCost ?? 0, 'currency')}
-              </Grid>
-              <Grid textAlign="center" item xs={3}>
-                {getNumberToString(footerTotal?.prevAccProfit ?? 0, 'currency')}
-              </Grid>
-            </Grid>
-          ) : (
-            <></>
-          )
-        }
-      />
+            }
+            secondary={
+              isShowPrevData ? (
+                <Grid sx={{ fontSize: 14 }} container>
+                  <Grid textAlign="center" item xs={3}>
+                    이전기간과 비교
+                  </Grid>
+                  <Grid textAlign="center" item xs={3}>
+                    {getNumberToString(footerTotal?.prevAccCount ?? 0, 'comma')}
+                  </Grid>
+                  <Grid textAlign="center" item xs={3}>
+                    {getNumberToString(footerTotal?.prevAccPayCost ?? 0, 'currency')}
+                  </Grid>
+                  <Grid textAlign="center" item xs={3}>
+                    {getNumberToString(footerTotal?.prevAccProfit ?? 0, 'currency')}
+                  </Grid>
+                </Grid>
+              ) : (
+                <></>
+              )
+            }
+          />
+        </>
+      )}
     </List>
   );
 };
