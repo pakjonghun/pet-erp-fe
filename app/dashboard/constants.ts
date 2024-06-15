@@ -6,6 +6,6 @@ export const DashboardTabs = {
     label: '거래처 판매',
   },
   'dashboard/insight': {
-    label: '비교/분석',
+    label: '인사이트',
   },
 };

@@ -5,6 +5,7 @@ import {
   AutocompleteRenderInputParams,
   Button,
   FormControl,
+  Grid,
   Stack,
   TextField,
 } from '@mui/material';
@@ -158,18 +159,21 @@ const ProductLayout = () => {
           그룹생성
         </Button>
       </Stack>
-      {groupList.map(({ productList, tagName, id }) => {
-        return (
-          <GroupList
-            changeTagName={changeTagName}
-            key={id}
-            id={id}
-            removeGroupList={removeGroupList}
-            tagName={tagName}
-            productList={productList}
-          />
-        );
-      })}
+      <Grid container sx={{ mt: 3, width: '100%' }} gap={2}>
+        {groupList.map(({ productList, tagName, id }) => {
+          return (
+            <Grid key={id} xs={12} lg={5.9} xl={3.9}>
+              <GroupList
+                changeTagName={changeTagName}
+                id={id}
+                removeGroupList={removeGroupList}
+                tagName={tagName}
+                productList={productList}
+              />
+            </Grid>
+          );
+        })}
+      </Grid>
     </>
   );
 };

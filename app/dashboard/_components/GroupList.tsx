@@ -91,10 +91,9 @@ const GroupList: FC<Props> = ({ id, tagName, productList, changeTagName, removeG
   return (
     <List
       sx={{
+        height: '100%',
         position: 'relative',
-        my: 6,
         borderRadius: 2,
-        width: '100%',
         bgcolor: 'background.paper',
         boxShadow: (theme) => theme.shadows[1],
       }}
@@ -239,7 +238,7 @@ const GroupList: FC<Props> = ({ id, tagName, productList, changeTagName, removeG
         }
       />
       {isLoading ? (
-        <Stack direction="row" justifyContent="center" alignItems="center">
+        <Stack sx={{ minHeight: 200 }} direction="row" justifyContent="center" alignItems="center">
           <CommonLoading />
         </Stack>
       ) : (
