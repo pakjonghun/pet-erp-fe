@@ -164,7 +164,7 @@ const GroupList: FC<Props> = ({ id, tagName, productList, changeTagName, removeG
         sx={{ mt: 2, px: 2 }}
         primary={
           <Grid container>
-            <Grid textAlign="left" item xs={3}>
+            <Grid textAlign="left" item xs={5}>
               <Stack direction="row" alignItems="center">
                 <ListItemIcon>
                   <Checkbox
@@ -202,7 +202,7 @@ const GroupList: FC<Props> = ({ id, tagName, productList, changeTagName, removeG
                 justifyContent: 'center',
               }}
               item
-              xs={3}
+              xs={2}
             >
               판매수
             </Grid>
@@ -230,7 +230,7 @@ const GroupList: FC<Props> = ({ id, tagName, productList, changeTagName, removeG
               }}
               textAlign="center"
               item
-              xs={3}
+              xs={2}
             >
               수익
             </Grid>
@@ -256,7 +256,7 @@ const GroupList: FC<Props> = ({ id, tagName, productList, changeTagName, removeG
                   dense
                 >
                   <Grid container rowSpacing={1}>
-                    <Grid item xs={3}>
+                    <Grid item xs={5}>
                       <Stack direction="row" alignItems="center">
                         <ListItemIcon>
                           <Checkbox
@@ -279,7 +279,7 @@ const GroupList: FC<Props> = ({ id, tagName, productList, changeTagName, removeG
                         />
                       </Stack>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
                       <ListItemText
                         sx={{ textAlign: 'center' }}
                         primary={getNumberToString(saleData?.accCount ?? 0, 'comma')}
@@ -291,7 +291,7 @@ const GroupList: FC<Props> = ({ id, tagName, productList, changeTagName, removeG
                         primary={getNumberToString(saleData?.accPayCost ?? 0, 'currency')}
                       />
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
                       <ListItemText
                         sx={{ textAlign: 'center' }}
                         primary={getNumberToString(saleData?.accProfit ?? 0, 'currency')}
@@ -306,16 +306,16 @@ const GroupList: FC<Props> = ({ id, tagName, productList, changeTagName, removeG
             sx={{ mt: 2, px: 1, pt: 1, borderTop: '1px solid lightGrey' }}
             primary={
               <Grid sx={{ fontSize: 14 }} container>
-                <Grid textAlign="center" item xs={3}>
+                <Grid textAlign="center" item xs={5}>
                   합계
                 </Grid>
-                <Grid textAlign="center" item xs={3}>
+                <Grid textAlign="center" item xs={2}>
                   {getNumberToString(footerTotal?.accCount ?? 0, 'comma')}
                 </Grid>
                 <Grid textAlign="center" item xs={3}>
                   {getNumberToString(footerTotal?.accPayCost ?? 0, 'currency')}
                 </Grid>
-                <Grid textAlign="center" item xs={3}>
+                <Grid textAlign="center" item xs={2}>
                   {getNumberToString(footerTotal?.accProfit ?? 0, 'currency')}
                 </Grid>
               </Grid>
@@ -323,16 +323,16 @@ const GroupList: FC<Props> = ({ id, tagName, productList, changeTagName, removeG
             secondary={
               isShowPrevData ? (
                 <Grid sx={{ fontSize: 14 }} container>
-                  <Grid textAlign="center" item xs={3}>
+                  <Grid textAlign="center" item xs={5}>
                     이전기간과 비교
                   </Grid>
-                  <Grid textAlign="center" item xs={3}>
+                  <Grid textAlign="center" item xs={2}>
                     {getNumberToString(footerTotal?.prevAccCount ?? 0, 'comma')}
                   </Grid>
                   <Grid textAlign="center" item xs={3}>
                     {getNumberToString(footerTotal?.prevAccPayCost ?? 0, 'currency')}
                   </Grid>
-                  <Grid textAlign="center" item xs={3}>
+                  <Grid textAlign="center" item xs={2}>
                     {getNumberToString(footerTotal?.prevAccProfit ?? 0, 'currency')}
                   </Grid>
                 </Grid>

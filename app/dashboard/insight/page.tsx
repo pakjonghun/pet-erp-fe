@@ -77,7 +77,7 @@ const ProductLayout = () => {
   const handleCreateGroup = () => {
     const groupItem: GroupProps = {
       id: v4(),
-      tagName: `#태그 이름을 정해주세요.`,
+      tagName: `#더블클릭 하여 태그 이름을 정해주세요.`,
       productList: productList.map((item) => productByName.get(item)) as Product[],
     };
     setGroupList((prev) => {
