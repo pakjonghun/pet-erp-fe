@@ -106,6 +106,30 @@ const ProductLayout = () => {
     });
   };
 
+  const changeTagName = (tagName: string, id: string) => {
+    setGroupList((prev) => {
+      const targetGroupListIndex = groupList.findIndex((item) => item.id === id);
+      if (targetGroupListIndex < -1) return prev;
+
+      const targetGroupList = prev[targetGroupListIndex];
+      const newTargetGroupList = {
+        ...targetGroupList,
+        tagName,
+      };
+
+      const nextGroupList = prev.slice();
+      nextGroupList[targetGroupListIndex] = newTargetGroupList;
+
+      try {
+        localStorage.setItem(ERP_GROUP_LIST, JSON.stringify(nextGroupList));
+      } catch (err) {
+        //
+      } finally {
+        return nextGroupList;
+      }
+    });
+  };
+
   return (
     <>
       <Stack direction="row" gap={3} sx={{ mt: 4 }}>
@@ -137,6 +161,7 @@ const ProductLayout = () => {
       {groupList.map(({ productList, tagName, id }) => {
         return (
           <GroupList
+            changeTagName={changeTagName}
             key={id}
             id={id}
             removeGroupList={removeGroupList}

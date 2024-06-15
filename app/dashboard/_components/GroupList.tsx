@@ -23,9 +23,10 @@ export interface GroupProps {
 
 interface Props extends GroupProps {
   removeGroupList: (id: string) => void;
+  changeTagName: (tagName: string, id: string) => void;
 }
 
-const GroupList: FC<Props> = ({ id, tagName, productList, removeGroupList }) => {
+const GroupList: FC<Props> = ({ id, tagName, productList, changeTagName, removeGroupList }) => {
   const isShowPrevData = useReactiveVar(showPrevData);
   const { from, to } = useReactiveVar(saleRange);
   const productCodeList = productList.map((item) => item.code);
@@ -46,7 +47,7 @@ const GroupList: FC<Props> = ({ id, tagName, productList, removeGroupList }) => 
 
   const [checked, setChecked] = useState(() => productList.map((item) => item.code));
   const [isEditing, setIsEditing] = useState(false);
-  const [tag, setTag] = useState(tagName);
+  const [tag, setTag] = useState(() => tagName);
 
   const selectedProductInsightList = checked.map((item) => {
     return productInsightsByCode.get(item);
@@ -125,10 +126,14 @@ const GroupList: FC<Props> = ({ id, tagName, productList, removeGroupList }) => 
                 size="small"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
+                    changeTagName(tag, id);
                     setIsEditing(false);
                   }
                 }}
-                onBlur={() => setIsEditing(false)}
+                onBlur={() => {
+                  changeTagName(tag, id);
+                  setIsEditing(false);
+                }}
                 value={tag}
                 onChange={(e) => setTag(e.target.value)}
               />
