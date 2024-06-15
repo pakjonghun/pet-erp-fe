@@ -5,4 +5,7 @@ export const DashboardTabs = {
   'dashboard/client': {
     label: '거래처 판매',
   },
+  'dashboard/insight': {
+    label: '비교/분석',
+  },
 };

@@ -13,5 +13,6 @@ export const saleTotal = makeVar({
   totalPayCost: 0,
   totalProfit: 0,
 });
+
 export const showPrevData = makeVar(false);
 export const showPrevSaleData = makeVar(false);

@@ -5,6 +5,7 @@ import { FindDateInput } from '../../codegen/graphql';
 const dashboardProducts = graphql(`
   query dashboardProducts($dashboardProductsInput: FindDateInput!) {
     dashboardProducts(dashboardProductsInput: $dashboardProductsInput) {
+      _id
       name
       accPayCost
       accCount
