@@ -70,7 +70,7 @@ const ProductLayout = () => {
       const parsedGroupList = JSON.parse(defaultGroupList);
       setGroupList(parsedGroupList);
     } catch (err) {
-      //
+      console.error(err);
     }
   }, [setGroupList]);
 
@@ -80,12 +80,12 @@ const ProductLayout = () => {
       tagName: `#더블클릭 하여 태그 이름을 정해주세요.`,
       productList: productList.map((item) => productByName.get(item)) as Product[],
     };
-    setGroupList((prev) => {
+    setGroupList((prev = []) => {
       const nextGroupList = [groupItem, ...prev];
       try {
         localStorage.setItem(ERP_GROUP_LIST, JSON.stringify(nextGroupList));
       } catch (err) {
-        //
+        console.error(err);
       } finally {
         return nextGroupList;
       }
@@ -95,12 +95,12 @@ const ProductLayout = () => {
   };
 
   const removeGroupList = (id: string) => {
-    setGroupList((prev) => {
+    setGroupList((prev = []) => {
       const nextGroupList = prev.filter((item) => item.id !== id);
       try {
         localStorage.setItem(ERP_GROUP_LIST, JSON.stringify(nextGroupList));
       } catch (err) {
-        //
+        console.error(err);
       } finally {
         return nextGroupList;
       }
