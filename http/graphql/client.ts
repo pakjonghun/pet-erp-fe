@@ -99,6 +99,7 @@ export const client = new ApolloClient({
         userId
         description
         logType
+        createdAt
       }
 
       fragment ProductCategoryFragment on ProductCategory {
