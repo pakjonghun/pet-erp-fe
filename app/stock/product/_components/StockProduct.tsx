@@ -11,7 +11,7 @@ import { CreateProductForm } from '../_validations/createProductStockList';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 import { Storage } from '@/http/graphql/codegen/graphql';
 import { useSubsidiaries } from '@/http/graphql/hooks/subsidiary/useSubsidiaries';
-import { removeTrailNumber } from '@/utils/common';
+import { removeTrailString } from '@/utils/common';
 
 interface Props {
   isSubsidiary: boolean;
@@ -208,7 +208,7 @@ const StockProduct: FC<Props> = ({
                 loadingText="로딩중"
                 noOptionsText="검색 결과가 없습니다."
                 onChange={(_, value) => {
-                  field.onChange(removeTrailNumber(value));
+                  field.onChange(removeTrailString(value));
                 }}
                 renderInput={(params) => (
                   <TextField

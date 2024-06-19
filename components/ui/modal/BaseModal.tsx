@@ -19,8 +19,8 @@ const BaseModal: FC<Props> = ({ open, children, onClose, sx }) => {
           overflow: 'auto',
           maxHeight: '90vh',
           minWidth: {
-            xs: 300,
-            md: 600,
+            xs: 380,
+            md: 800,
           },
           ...sx,
         }}

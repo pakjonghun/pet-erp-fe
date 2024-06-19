@@ -17,7 +17,7 @@ import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 import { Storage } from '@/http/graphql/codegen/graphql';
 import { useSubsidiaryCountStocks } from '@/http/graphql/hooks/stock/useSubsidiaryCountStocks';
 import { useProductCountStocks } from '@/http/graphql/hooks/stock/useProductCountStocks';
-import { removeTrailNumber } from '@/utils/common';
+import { removeTrailString } from '@/utils/common';
 
 interface Props {
   clearErrors: UseFormClearErrors<CreateProductStockForm>;
@@ -234,7 +234,7 @@ const OutStockProduct: FC<Props> = ({
               loadingText="로딩중"
               noOptionsText="검색 결과가 없습니다."
               onChange={(_, value) => {
-                field.onChange(removeTrailNumber(value));
+                field.onChange(removeTrailString(value));
               }}
               renderInput={(params) => (
                 <TextField
