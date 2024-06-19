@@ -49,7 +49,7 @@ export const roleToHandle = {
   ADMIN_LOG: '사용이력 조회',
 };
 
-const roleTitleToHangle: Record<string, string> = {
+export const roleTitleToHangle: Record<string, string> = {
   ADMIN: '어드민',
   BACK: '백데이터',
   STOCK: '재고',
@@ -82,7 +82,6 @@ const CreateAccountModal: FC<Props> = ({ open, onClose }) => {
     reset,
     control,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<CreateAccountForm>({
     resolver: zodResolver(createAccountSchema),
