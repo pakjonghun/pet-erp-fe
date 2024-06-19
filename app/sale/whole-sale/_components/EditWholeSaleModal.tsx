@@ -12,12 +12,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import {
-  Controller,
-  FieldArrayWithId,
-  useFieldArray,
-  useForm,
-} from 'react-hook-form';
+import { Controller, FieldArrayWithId, useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
@@ -29,11 +24,7 @@ import {
   CreateWholeSaleProductForm,
   createWholeSaleSchema,
 } from '../_validations/createWholeSaleValidation';
-import {
-  Client,
-  ClientType,
-  WholeSaleItem,
-} from '@/http/graphql/codegen/graphql';
+import { Client, ClientType, WholeSaleItem } from '@/http/graphql/codegen/graphql';
 import { PlusOne } from '@mui/icons-material';
 import WholeSaleProductSearch from './WholeSaleProductSearch';
 import LabelText from '@/components/ui/typograph/LabelText';
@@ -63,12 +54,7 @@ interface Props {
   setSelectedWholeSale: (item: null | WholeSaleItem) => void;
 }
 
-const EditWholeSaleModal: FC<Props> = ({
-  open,
-  wholeSale,
-  onClose,
-  setSelectedWholeSale,
-}) => {
+const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose, setSelectedWholeSale }) => {
   const [updateWholeSale, { loading }] = useUpdateWholeSale();
   const [clientKeyword, setClientKeyword] = useState('');
   const delayedClientKeyword = useTextDebounce(clientKeyword);
@@ -82,8 +68,7 @@ const EditWholeSaleModal: FC<Props> = ({
     skip: 0,
   });
 
-  const isClientLoading =
-    clientNetwork === 1 || clientNetwork === 2 || clientNetwork === 3;
+  const isClientLoading = clientNetwork === 1 || clientNetwork === 2 || clientNetwork === 3;
   const clientRows = (clientData?.clients.data as Client[]) ?? [];
 
   const clientCallback: IntersectionObserverCallback = (entries) => {
@@ -143,9 +128,7 @@ const EditWholeSaleModal: FC<Props> = ({
   });
 
   const onSubmit = (createProductInput: CreateWholeSaleForm) => {
-    const newValues = filterEmptyValues(
-      createProductInput
-    ) as CreateWholeSaleForm;
+    const newValues = filterEmptyValues(createProductInput) as CreateWholeSaleForm;
     updateWholeSale({
       variables: {
         updateWholeSaleInput: {
@@ -159,7 +142,6 @@ const EditWholeSaleModal: FC<Props> = ({
           severity: 'success',
         });
         if (Array.isArray(res.updateWholeSale) && res.updateWholeSale[0]) {
-          console.log('res.updateWholeSale[0] : ', res.updateWholeSale[0]);
           setSelectedWholeSale(res.updateWholeSale[0] as WholeSaleItem);
         }
         client.refetchQueries({
@@ -263,9 +245,7 @@ const EditWholeSaleModal: FC<Props> = ({
                   <Autocomplete
                     fullWidth
                     sx={{ minWidth: 300 }}
-                    value={clientRows.find(
-                      (client) => client.name === field.value
-                    )}
+                    value={clientRows.find((client) => client.name === field.value)}
                     onChange={(_, value) => {
                       field.onChange(value?.name ?? '');
                       setValue('telephoneNumber1', value?.managerTel ?? EMPTY);
@@ -355,9 +335,7 @@ const EditWholeSaleModal: FC<Props> = ({
             />
           </Stack>
         </FormGroup>
-        {!!telNumber && (
-          <LabelText label="연락처 : " text={telNumber ?? EMPTY} />
-        )}
+        {!!telNumber && <LabelText label="연락처 : " text={telNumber ?? EMPTY} />}
         {productList.length > 0 && (
           <Stack direction="row" sx={{ mt: 2 }} gap={3} alignItems="center">
             <LabelText label="판매가" text={totalPayCost} />
@@ -365,28 +343,20 @@ const EditWholeSaleModal: FC<Props> = ({
             <LabelText label="수익" text={totalPayCost - totalWonCost} />
             <LabelText
               label="수익율"
-              text={
-                getProfitRate(totalPayCost - totalWonCost, totalPayCost) + '%'
-              }
+              text={getProfitRate(totalPayCost - totalWonCost, totalPayCost) + '%'}
             />
           </Stack>
         )}
         <FormGroup sx={{ mt: 4 }}>
           <Stack direction="row" alignItems="center" gap={3}>
             <FormLabel>판매 제품 목록</FormLabel>
-            <Button
-              onClick={handleAddProduct}
-              variant="outlined"
-              endIcon={<PlusOne />}
-            >
+            <Button onClick={handleAddProduct} variant="outlined" endIcon={<PlusOne />}>
               추가
             </Button>
           </Stack>
           <Stack sx={{ mt: 2 }} gap={2}>
             <Typography sx={{ mt: 1 }} color="error" variant="caption">
-              {errors?.productList?.message ??
-                errors?.productList?.root?.message ??
-                ''}
+              {errors?.productList?.message ?? errors?.productList?.root?.message ?? ''}
             </Typography>
             {fields.map((product, index) => {
               return (

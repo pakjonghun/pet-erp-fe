@@ -50,7 +50,7 @@ const documents = {
     "\n  query stocks($stocksInput: StocksInput!) {\n    stocks(stocksInput: $stocksInput) {\n      totalCount\n      data {\n        ...StockColumnFragment\n      }\n    }\n  }\n": types.StocksDocument,
     "\n  query stocksOrder($productName: String!) {\n    stocksOrder(productName: $productName) {\n      ...ProductOrderFragment\n    }\n  }\n": types.StocksOrderDocument,
     "\n  query stocksState($productName: String!) {\n    stocksState(productName: $productName) {\n      productName\n      count\n      location\n      orderCompleteDate\n      state\n    }\n  }\n": types.StocksStateDocument,
-    "\n  query subsidiaryCountStocks($productCountStocksInput: ProductCountStocksInput!) {\n    subsidiaryCountStocks(productCountStocksInput: $productCountStocksInput) {\n      totalCount\n      data {\n        name\n        count\n      }\n    }\n  }\n": types.SubsidiaryCountStocksDocument,
+    "\n  query subsidiaryCountStocks($productCountStocksInput: ProductCountStocksInput!) {\n    subsidiaryCountStocks(productCountStocksInput: $productCountStocksInput) {\n      totalCount\n      data {\n        name\n        count\n        code\n      }\n    }\n  }\n": types.SubsidiaryCountStocksDocument,
     "\n  query subsidiaryStocks($stocksInput: StocksInput!) {\n    subsidiaryStocks(stocksInput: $stocksInput) {\n      totalCount\n      data {\n        ...SubsidiaryStockColumnFragment\n      }\n    }\n  }\n": types.SubsidiaryStocksDocument,
     "\n  query subsidiaryStocksState($productName: String!) {\n    subsidiaryStocksState(productName: $productName) {\n      productName\n      count\n      location\n      state\n    }\n  }\n": types.SubsidiaryStocksStateDocument,
     "\n  mutation createStorage($createStorageInput: CreateStorageInput!) {\n    createStorage(createStorageInput: $createStorageInput) {\n      ...StorageFragment\n    }\n  }\n": types.CreateStorageDocument,
@@ -242,7 +242,7 @@ export function graphql(source: "\n  query stocksState($productName: String!) {\
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query subsidiaryCountStocks($productCountStocksInput: ProductCountStocksInput!) {\n    subsidiaryCountStocks(productCountStocksInput: $productCountStocksInput) {\n      totalCount\n      data {\n        name\n        count\n      }\n    }\n  }\n"): (typeof documents)["\n  query subsidiaryCountStocks($productCountStocksInput: ProductCountStocksInput!) {\n    subsidiaryCountStocks(productCountStocksInput: $productCountStocksInput) {\n      totalCount\n      data {\n        name\n        count\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query subsidiaryCountStocks($productCountStocksInput: ProductCountStocksInput!) {\n    subsidiaryCountStocks(productCountStocksInput: $productCountStocksInput) {\n      totalCount\n      data {\n        name\n        count\n        code\n      }\n    }\n  }\n"): (typeof documents)["\n  query subsidiaryCountStocks($productCountStocksInput: ProductCountStocksInput!) {\n    subsidiaryCountStocks(productCountStocksInput: $productCountStocksInput) {\n      totalCount\n      data {\n        name\n        count\n        code\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

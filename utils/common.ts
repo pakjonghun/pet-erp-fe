@@ -84,3 +84,8 @@ export const isNumber = (value: unknown) => {
   const isNotInfinity = !isFinite(parseValue);
   return isNotNull && !isNan && !isNotInfinity;
 };
+
+export const removeTrailNumber = (str: string) => {
+  if (!str) return '';
+  return str.replace(/\(.+\)$/, '');
+};

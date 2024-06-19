@@ -11,6 +11,7 @@ import { CreateProductForm } from '../_validations/createProductStockList';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 import { Storage } from '@/http/graphql/codegen/graphql';
 import { useSubsidiaries } from '@/http/graphql/hooks/subsidiary/useSubsidiaries';
+import { removeTrailNumber } from '@/utils/common';
 
 interface Props {
   isSubsidiary: boolean;
@@ -44,7 +45,8 @@ const StockProduct: FC<Props> = ({
     },
     !isSubsidiary
   );
-  const subsidiaryRows = subsidiaryData?.subsidiaries.data.map((item) => item.name) ?? [];
+  const subsidiaryRows =
+    subsidiaryData?.subsidiaries.data.map((item) => `${item.name}(${item.code})`) ?? [];
   const isLoadingSubsidiary =
     subsidiaryNetwork == 3 || subsidiaryNetwork == 1 || subsidiaryNetwork == 2;
 
@@ -79,7 +81,7 @@ const StockProduct: FC<Props> = ({
     isSubsidiary
   );
 
-  const rows = data?.products.data.map((item) => item.name) ?? [];
+  const rows = data?.products.data.map((item) => `${item.name}(${item.code})`) ?? [];
   const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
 
   const callback: IntersectionObserverCallback = (entries) => {
@@ -161,7 +163,7 @@ const StockProduct: FC<Props> = ({
                 minWidth: 200,
               }}
               value={field.value}
-              onChange={(_, value) => field.onChange(value)}
+              onChange={(_, value) => field.onChange(removeTrailNumber(value))}
               size="small"
               options={storageRows}
               isOptionEqualToValue={(item1, item2) => item1 === item2}
@@ -194,7 +196,7 @@ const StockProduct: FC<Props> = ({
               disabled={isProductFreeze}
               value={field.value}
               fullWidth
-              sx={{ minWidth: 200 }}
+              sx={{ minWidth: 300 }}
               filterSelectedOptions
               size="small"
               options={isSubsidiary ? subsidiaryRows : rows}
@@ -205,12 +207,12 @@ const StockProduct: FC<Props> = ({
               loadingText="로딩중"
               noOptionsText="검색 결과가 없습니다."
               onChange={(_, value) => {
-                field.onChange(value);
+                field.onChange(removeTrailNumber(value));
               }}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label={isSubsidiary ? '부자재 이름' : '제품 이름'}
+                  label={isSubsidiary ? '부자재 이름(코드)' : '제품 이름(코드)'}
                   error={!!error?.productName?.message}
                   helperText={error?.productName?.message ?? ''}
                 />
