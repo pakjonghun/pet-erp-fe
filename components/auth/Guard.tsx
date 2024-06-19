@@ -17,7 +17,7 @@ const Guard: FC<Props> = ({ children }) => {
   const isPublic = PUBLIC_PATH.includes(firstPath);
   const { data: myInfo, loading } = useGetMyInfo();
   useEffect(() => {
-    authState({ loading, isLogin: !!myInfo, role: myInfo?.myInfo.role ?? '' });
+    authState({ loading, isLogin: !!myInfo, role: myInfo?.myInfo.role ?? [] });
   }, [myInfo, loading]);
 
   if (isPublic) {

@@ -6,8 +6,6 @@ import { Stack, Button, Chip } from '@mui/material';
 import BasePopover from '@/components/ui/modal/BasePopover';
 import { EMPTY } from '@/constants';
 import dayjs from 'dayjs';
-import { authState } from '@/store/isLogin';
-import { useReactiveVar } from '@apollo/client';
 
 interface Props {
   open: boolean;
@@ -28,8 +26,8 @@ const OrderDetailPopover: FC<Props> = ({
   onClickDelete,
   onClickEdit,
 }) => {
-  const { role } = useReactiveVar(authState);
-  const cannotModify = role === UserRole.Staff;
+  // const { role } = useReactiveVar(authState);
+  // const cannotModify = role === UserRole.Staff;
   const allHasNoLeadTime = selectedOrder.products.every((item) => item.product.leadTime == null);
   const biggestLeadTime = allHasNoLeadTime
     ? -1
@@ -80,16 +78,14 @@ const OrderDetailPopover: FC<Props> = ({
           }
         />
       </Stack>
-      {!cannotModify && (
-        <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
-          <Button color="error" variant="outlined" onClick={onClickDelete}>
-            삭제
-          </Button>
-          <Button variant="contained" onClick={onClickEdit}>
-            편집
-          </Button>
-        </Stack>
-      )}
+      <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
+        <Button color="error" variant="outlined" onClick={onClickDelete}>
+          삭제
+        </Button>
+        <Button variant="contained" onClick={onClickEdit}>
+          편집
+        </Button>
+      </Stack>
     </BasePopover>
   );
 };
