@@ -27,11 +27,7 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { modalSizeProps } from '@/components/commonStyles';
 
-type UserRoleToHangle = {
-  [key in UserRole]?: string;
-};
-
-const roleHandleMapper = {
+export const roleToHandle = {
   ['ADMIN' as string]: '어드민',
   MANAGER: '관리자',
   STAFF: '스텝',
@@ -70,7 +66,6 @@ const CreateAccountModal: FC<Props> = ({ open, onClose }) => {
   const [visible, setVisible] = useState(false);
 
   const roleList = new Map<string, string[]>();
-  console.log(roleList);
 
   Object.values(UserRole).forEach((item) => {
     const deleteElement = ['MANAGER', 'ADMIN', 'STAFF'];
@@ -93,7 +88,7 @@ const CreateAccountModal: FC<Props> = ({ open, onClose }) => {
       id: '',
       password: '',
       passwordConfirm: '',
-      role: UserRole.Staff,
+      role: [] as UserRole[],
     },
   });
 
@@ -206,7 +201,7 @@ const CreateAccountModal: FC<Props> = ({ open, onClose }) => {
                         <FormLabel>{hangleTitle}</FormLabel>
                         <Stack direction="row" flexWrap="wrap">
                           {elements.map((role) => {
-                            const label = roleHandleMapper[role];
+                            const label = roleToHandle[role];
                             return (
                               <FormControlLabel
                                 sx={{
@@ -215,6 +210,10 @@ const CreateAccountModal: FC<Props> = ({ open, onClose }) => {
                                   justifyContent: 'center',
                                   height: 26,
                                 }}
+                                onChange={(_, checked) => {
+                                  console.log(checked);
+                                }}
+                                value={role}
                                 key={role}
                                 label={label}
                                 control={<Checkbox />}

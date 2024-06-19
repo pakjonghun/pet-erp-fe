@@ -23,7 +23,7 @@ interface Props {
 
 const WholeSaleCard: FC<Props> = ({ sale, scrollRef, onClickOption, onClickRow }) => {
   const { role } = useReactiveVar(authState);
-  const cannotModify = role == UserRole.Staff;
+  const cannotModify = role.includes(UserRole.SaleEdit);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<SelectOption, SelectedOptionItem> = {
     edit: {

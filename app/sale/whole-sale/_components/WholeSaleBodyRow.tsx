@@ -17,14 +17,8 @@ import { authState } from '@/store/isLogin';
 interface Props {
   isSelected: boolean;
   wholeSale: WholeSaleItem;
-  onClickRow: (
-    event: MouseEvent<HTMLTableCellElement>,
-    sale: WholeSaleItem
-  ) => void;
-  onClickOption: (
-    option: SelectOption | null,
-    sale: WholeSaleItem | null
-  ) => void;
+  onClickRow: (event: MouseEvent<HTMLTableCellElement>, sale: WholeSaleItem) => void;
+  onClickOption: (option: SelectOption | null, sale: WholeSaleItem | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
@@ -36,7 +30,7 @@ const WholeSaleBodyRow: FC<Props> = ({
   onClickRow,
 }) => {
   const { role } = useReactiveVar(authState);
-  const cannotModify = role == UserRole.Staff;
+  const cannotModify = !role.includes(UserRole.SaleEdit);
 
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<SelectOption, SelectedOptionItem> = {
@@ -60,10 +54,7 @@ const WholeSaleBodyRow: FC<Props> = ({
 
   const createRow = (sale: WholeSaleItem) => {
     const profit = sale.totalPayCost - sale.totalWonCost;
-    const profitRate = getProfitRate(
-      sale.totalPayCost - sale.totalWonCost,
-      sale.totalPayCost
-    );
+    const profitRate = getProfitRate(sale.totalPayCost - sale.totalWonCost, sale.totalPayCost);
     return [
       sale.mallId,
       dayjs(sale.saleAt).format('YYYY-MM-DD'),
@@ -94,11 +85,7 @@ const WholeSaleBodyRow: FC<Props> = ({
       hover
       ref={scrollRef}
     >
-      <Menu
-        anchorEl={menuAnchor}
-        open={!!menuAnchor}
-        onClose={() => setMenuAnchor(null)}
-      >
+      <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
         {Object.entries(productOptionMenus).map(([option, menu]) => (
           <OptionMenu key={option} menu={menu} option={option} />
         ))}

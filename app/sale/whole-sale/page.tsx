@@ -44,7 +44,7 @@ import Cell from '@/components/table/Cell';
 
 const WholeSalePage = () => {
   const { role } = useReactiveVar(authState);
-  const cannotModify = role == UserRole.Staff;
+  const cannotModify = !role.includes(UserRole.SaleEdit);
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
   const { from, to } = useReactiveVar(saleRange);

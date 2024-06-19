@@ -30,7 +30,7 @@ const WholeSaleDetailPopover: FC<Props> = ({
   onClickEdit,
 }) => {
   const { role } = useReactiveVar(authState);
-  const cannotModify = role == UserRole.Staff;
+  const cannotModify = role.includes(UserRole.SaleEdit);
   const profit = sale.totalPayCost - sale.totalWonCost;
   const profitRate = getProfitRate(profit, sale.totalPayCost);
 

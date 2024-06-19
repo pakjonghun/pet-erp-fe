@@ -12,7 +12,7 @@ export const idValidateSchema = z.object({
 export const createAccountSchema = idValidateSchema
   .merge(passwordCheckSchema)
   .extend({
-    role: z.enum(Object.values(UserRole) as unknown as [string]),
+    role: z.array(z.nativeEnum(UserRole)),
   })
   .superRefine(checkPassword);
 
