@@ -86,6 +86,7 @@ export const isNumber = (value: unknown) => {
 };
 
 export const removeTrailNumber = (str: string) => {
+  console.log(str);
   if (!str) return '';
-  return str.replace(/\(.+\)$/, '');
+  return str.replace(/\([^)]*\)$/, '');
 };
