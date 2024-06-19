@@ -9,11 +9,7 @@ import EmptyRow from '@/components/table/EmptyRow';
 import Cell from '@/components/table/Cell';
 import HeadCell from '@/components/table/HeadCell';
 import ScrollTableContainer from '@/components/table/ScrollTableContainer';
-import {
-  CommonHeaderRow,
-  CommonTable,
-  CommonTableBody,
-} from '@/components/commonStyles';
+import { CommonHeaderRow, CommonTable, CommonTableBody } from '@/components/commonStyles';
 
 interface Props {
   findLogsQuery: FindLogsDto;
@@ -46,8 +42,8 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
 
   const scrollRef = useInfinityScroll({ callback });
 
-  const isLoading = networkStatus === 1 || networkStatus === 3;
-  const isEmpty = rows.length === 0;
+  const isLoading = networkStatus === 1 || networkStatus === 3 || networkStatus === 2;
+  const isEmpty = !isLoading && rows.length === 0;
 
   return (
     <ScrollTableContainer sx={{ mt: 3 }}>
@@ -66,11 +62,7 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
             const result = parseToJSON(row.description);
 
             return (
-              <TableRow
-                hover
-                key={row._id}
-                ref={index === rows.length - 1 ? scrollRef : null}
-              >
+              <TableRow hover key={row._id} ref={index === rows.length - 1 ? scrollRef : null}>
                 <Cell sx={{ whiteSpace: 'nowrap' }}>{row.createdAt}</Cell>
                 <Cell>{row.userId}</Cell>
                 <Cell sx={{ whiteSpace: 'nowrap' }}>{result}</Cell>
