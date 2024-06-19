@@ -40,7 +40,10 @@ import dayjs from 'dayjs';
 
 const OrderPage = () => {
   const { role } = useReactiveVar(authState);
-  const cannotModify = role === UserRole.Staff;
+  const canCreate = role?.includes(UserRole.OrderCreate);
+  const canEdit = role?.includes(UserRole.OrderEdit);
+  const canDelete = role?.includes(UserRole.OrderDelete);
+
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
 
@@ -51,8 +54,7 @@ const OrderPage = () => {
   });
 
   const rows = data?.orders.data ?? [];
-  const isLoading =
-    networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
+  const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
       if (isLoading) return;
@@ -80,15 +82,12 @@ const OrderPage = () => {
   const [optionType, setOptionType] = useState<null | any>(null);
 
   const createRow = (order: ProductOrder) => {
-    const allHasNoLeadTime = order.products.every(
-      (item) => item.product.leadTime == null
-    );
+    const allHasNoLeadTime = order.products.every((item) => item.product.leadTime == null);
 
     const biggestLeadTime = allHasNoLeadTime
       ? -1
       : order.products.reduce(
-          (acc, cur) =>
-            (cur.product.leadTime ?? 0) > acc ? cur.product.leadTime ?? 0 : acc,
+          (acc, cur) => ((cur.product.leadTime ?? 0) > acc ? cur.product.leadTime ?? 0 : acc),
           -Infinity
         );
 
@@ -147,19 +146,11 @@ const OrderPage = () => {
       )}
       <TablePage sx={{ flex: 1 }}>
         {openCreateClient && (
-          <AddOrderModal
-            open={openCreateClient}
-            onClose={() => setOpenCreateClient(false)}
-          />
+          <AddOrderModal open={openCreateClient} onClose={() => setOpenCreateClient(false)} />
         )}
-        <Stack
-          sx={{ px: 2 }}
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
+        <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
           <TableTitle title="발주" />
-          {!cannotModify && (
+          {canCreate && (
             <Stack direction="row" alignItems="center" gap={2}>
               <ActionButton
                 icon={<PlusOneOutlined />}
@@ -239,11 +230,7 @@ const OrderPage = () => {
           px: 2,
         }}
       >
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
+        <Stack direction="row" alignItems="center" justifyContent="space-between">
           <TableTitle title="선택된 발주 데이터" />
         </Stack>
         <TableContainer
@@ -265,47 +252,39 @@ const OrderPage = () => {
             {!!selectedOrder ? (
               <TableRow hover ref={scrollRef}>
                 {parsedOrder.map((item, index) => (
-                  <Cell
-                    key={`${selectedOrder._id}_${index}`}
-                    sx={{ minWidth: 200 }}
-                  >
+                  <Cell key={`${selectedOrder._id}_${index}`} sx={{ minWidth: 200 }}>
                     {item}
                   </Cell>
                 ))}
               </TableRow>
             ) : (
-              <EmptyRow
-                colSpan={9}
-                isEmpty={!selectedOrder}
-                message="선택된 데이터가 없습니다."
-              />
+              <EmptyRow colSpan={9} isEmpty={!selectedOrder} message="선택된 데이터가 없습니다." />
             )}
           </CommonTable>
         </TableContainer>
         {!!selectedOrder && (
-          <Stack
-            direction="row"
-            gap={1}
-            sx={{ mt: 2 }}
-            justifyContent="flex-end"
-          >
-            <Button
-              color="error"
-              variant="outlined"
-              onClick={() => {
-                setOptionType('delete');
-              }}
-            >
-              삭제
-            </Button>
-            <Button
-              variant="contained"
-              onClick={() => {
-                setOptionType('edit');
-              }}
-            >
-              편집
-            </Button>
+          <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
+            {canDelete && (
+              <Button
+                color="error"
+                variant="outlined"
+                onClick={() => {
+                  setOptionType('delete');
+                }}
+              >
+                삭제
+              </Button>
+            )}
+            {canEdit && (
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setOptionType('edit');
+                }}
+              >
+                편집
+              </Button>
+            )}
           </Stack>
         )}
       </TablePage>

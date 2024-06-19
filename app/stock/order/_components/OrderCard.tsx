@@ -20,10 +20,10 @@ interface Props {
 
 const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) => {
   const { role } = useReactiveVar(authState);
-  const cannotModify = role == UserRole.Staff;
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<any, SelectedOptionItem> = {
     edit: {
+      role: [UserRole.OrderEdit],
       callback: () => {
         onClickOption('edit', client);
         setMenuAnchor(null);
@@ -32,6 +32,7 @@ const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) 
       icon: <Edit />,
     },
     delete: {
+      role: [UserRole.OrderDelete],
       callback: () => {
         onClickOption('delete', client);
         setMenuAnchor(null);
@@ -57,16 +58,14 @@ const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) 
           <OptionMenu key={option} menu={menu} option={option} />
         ))}
       </Menu>
-      {!cannotModify && (
-        <IconButton
-          sx={{ position: 'absolute', right: 3, top: 3 }}
-          onClick={(event) => {
-            setMenuAnchor(event.currentTarget);
-          }}
-        >
-          <MoreHorizIcon />
-        </IconButton>
-      )}
+      <IconButton
+        sx={{ position: 'absolute', right: 3, top: 3 }}
+        onClick={(event) => {
+          setMenuAnchor(event.currentTarget);
+        }}
+      >
+        <MoreHorizIcon />
+      </IconButton>
       <Box
         onClick={(event) => onClickRow(event, client)}
         sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}

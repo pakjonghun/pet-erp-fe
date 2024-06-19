@@ -25,20 +25,23 @@ import ProductStockCards from './_components/ProductStockCards';
 import ActionButton from '@/components/ui/button/ActionButton';
 import { ProductStockHeaderList } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { Storage, SubsidiaryStockColumn } from '@/http/graphql/codegen/graphql';
+import { Storage, SubsidiaryStockColumn, UserRole } from '@/http/graphql/codegen/graphql';
 import BaseSelect from '@/components/ui/select/BaseSelect';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import {
-  subsidiaryStocks,
-  useSubsidiaryStocks,
-} from '@/http/graphql/hooks/stock/useSubsidiaryStocks';
+import { useSubsidiaryStocks } from '@/http/graphql/hooks/stock/useSubsidiaryStocks';
 import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 import CollapseRow from './_components/CollapseRow';
 import EmptyRow from '@/components/table/EmptyRow';
+import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 
 const SubsidiaryStockPage = () => {
+  const { data: userData } = useGetMyInfo();
+  const myRole = userData?.myInfo.role ?? [];
+  const canIn = myRole.includes(UserRole.StockIn);
+  const canOut = myRole.includes(UserRole.StockOut);
+
   const { data: storageData } = useStorages({
     keyword: '',
     limit: 100,
@@ -48,8 +51,7 @@ const SubsidiaryStockPage = () => {
 
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
-  const [productStock, setProductStock] =
-    useState<null | SubsidiaryStockColumn>(null);
+  const [productStock, setProductStock] = useState<null | SubsidiaryStockColumn>(null);
 
   const { data, networkStatus, fetchMore } = useSubsidiaryStocks({
     keyword: delayKeyword,
@@ -59,8 +61,7 @@ const SubsidiaryStockPage = () => {
   });
 
   const rows = (data?.subsidiaryStocks.data as SubsidiaryStockColumn[]) ?? [];
-  const isLoading =
-    networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
+  const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
       if (isLoading) return;
@@ -87,10 +88,7 @@ const SubsidiaryStockPage = () => {
   const [openSubAddStock, setOpenSubAddStock] = useState(false);
   const [openSubOutStock, setOpenSubOutStock] = useState(false);
 
-  const handleClickOption = (
-    option: any | null,
-    subsidiary: SubsidiaryStockColumn | null
-  ) => {
+  const handleClickOption = (option: any | null, subsidiary: SubsidiaryStockColumn | null) => {
     setProductStock(subsidiary);
     if (option == 'add') {
       setOpenSubAddStock(true);
@@ -128,24 +126,23 @@ const SubsidiaryStockPage = () => {
             }}
           />
         )}
-        <Stack
-          sx={{ px: 2 }}
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
+        <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
           <TableTitle title="부자재 재고관리" />
           <Stack direction="row" alignItems="center" gap={2}>
-            <ActionButton
-              icon={<AddCircleOutlineIcon />}
-              text="입고"
-              onClick={() => setOpenAddStock(true)}
-            />
-            <ActionButton
-              icon={<RemoveCircleOutlineIcon />}
-              text="출고"
-              onClick={() => setOpenOutStock(true)}
-            />
+            {canIn && (
+              <ActionButton
+                icon={<AddCircleOutlineIcon />}
+                text="입고"
+                onClick={() => setOpenAddStock(true)}
+              />
+            )}
+            {canOut && (
+              <ActionButton
+                icon={<RemoveCircleOutlineIcon />}
+                text="출고"
+                onClick={() => setOpenOutStock(true)}
+              />
+            )}
           </Stack>
         </Stack>
         <FormGroup sx={{ ml: 2 }}>
@@ -252,7 +249,6 @@ const SubsidiaryStockPage = () => {
       </TablePage>
       <TablePage sx={{ flex: 1, px: 2 }}>
         <TableTitle title="선택된 부자재 재고관리" />
-
         <TableContainer
           sx={{
             display: {
@@ -262,11 +258,7 @@ const SubsidiaryStockPage = () => {
           }}
         >
           {!!productStock ? (
-            <CollapseRow
-              onClickOption={handleClickOption}
-              productStock={productStock}
-              open
-            />
+            <CollapseRow onClickOption={handleClickOption} productStock={productStock} open />
           ) : (
             <EmptyRow colSpan={10} isEmpty={!productStock} />
           )}

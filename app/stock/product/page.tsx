@@ -25,7 +25,7 @@ import ProductStockCards from './_components/ProductStockCards';
 import ActionButton from '@/components/ui/button/ActionButton';
 import { ProductStockHeaderList } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { StockColumn, Storage } from '@/http/graphql/codegen/graphql';
+import { StockColumn, Storage, UserRole } from '@/http/graphql/codegen/graphql';
 import { useStocks } from '@/http/graphql/hooks/stock/useStocks';
 import BaseSelect from '@/components/ui/select/BaseSelect';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
@@ -34,8 +34,14 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 import CollapseRow from './_components/CollapseRow';
 import EmptyRow from '@/components/table/EmptyRow';
+import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 
 const ProductStockPage = () => {
+  const { data: userData } = useGetMyInfo();
+  const myRole = userData?.myInfo.role ?? [];
+  const canIn = myRole.includes(UserRole.StockIn);
+  const canOut = myRole.includes(UserRole.StockOut);
+
   const { data: storageData } = useStorages({
     keyword: '',
     limit: 100,
@@ -55,8 +61,7 @@ const ProductStockPage = () => {
   });
 
   const rows = (data?.stocks.data as StockColumn[]) ?? [];
-  const isLoading =
-    networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
+  const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -88,10 +93,7 @@ const ProductStockPage = () => {
     ((storageData?.storages.data as Storage[]) ?? []).map((item) => item.name)
   );
 
-  const handleClickOption = (
-    option: any | null,
-    product: StockColumn | null
-  ) => {
+  const handleClickOption = (option: any | null, product: StockColumn | null) => {
     setProductStock(product);
     if (option == 'add') {
       setOpenSubAddStock(true);
@@ -126,24 +128,23 @@ const ProductStockPage = () => {
           />
         )}
 
-        <Stack
-          sx={{ px: 2 }}
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
+        <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
           <TableTitle title="제품 재고관리" />
           <Stack direction="row" alignItems="center" gap={2}>
-            <ActionButton
-              icon={<AddCircleOutlineIcon />}
-              text="입고"
-              onClick={() => setOpenAddStock(true)}
-            />
-            <ActionButton
-              icon={<RemoveCircleOutlineIcon />}
-              text="출고"
-              onClick={() => setOpenOutStock(true)}
-            />
+            {canIn && (
+              <ActionButton
+                icon={<AddCircleOutlineIcon />}
+                text="입고"
+                onClick={() => setOpenAddStock(true)}
+              />
+            )}
+            {canOut && (
+              <ActionButton
+                icon={<RemoveCircleOutlineIcon />}
+                text="출고"
+                onClick={() => setOpenOutStock(true)}
+              />
+            )}
           </Stack>
         </Stack>
         <FormGroup sx={{ ml: 2 }}>
@@ -270,11 +271,7 @@ const ProductStockPage = () => {
           }}
         >
           {productStock ? (
-            <CollapseRow
-              onClickOption={handleClickOption}
-              productStock={productStock}
-              open
-            />
+            <CollapseRow onClickOption={handleClickOption} productStock={productStock} open />
           ) : (
             <EmptyRow colSpan={7} isEmpty={!productStock} />
           )}

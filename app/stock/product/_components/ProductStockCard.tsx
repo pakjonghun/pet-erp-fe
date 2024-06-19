@@ -2,7 +2,7 @@ import { FC, MouseEvent, useState } from 'react';
 import { Box, IconButton, Menu, Paper, Stack } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { EMPTY, SelectedOptionItem } from '@/constants';
-import { StockColumn } from '@/http/graphql/codegen/graphql';
+import { StockColumn, UserRole } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
@@ -19,6 +19,7 @@ const ProductStockCard: FC<Props> = ({ stock, scrollRef, onClickOption, onClickR
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<any, SelectedOptionItem> = {
     edit: {
+      role: [UserRole.StockIn],
       callback: () => {
         onClickOption('add', stock);
         setMenuAnchor(null);
@@ -27,6 +28,7 @@ const ProductStockCard: FC<Props> = ({ stock, scrollRef, onClickOption, onClickR
       icon: <AddCircleOutlineIcon />,
     },
     delete: {
+      role: [UserRole.StockOut],
       callback: () => {
         onClickOption('out', stock);
         setMenuAnchor(null);
