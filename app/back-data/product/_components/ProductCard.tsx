@@ -5,7 +5,7 @@ import { SelectOption } from '../../types';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { Product } from '@/http/graphql/codegen/graphql';
+import { Product, UserRole } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
 
@@ -20,6 +20,7 @@ const ProductCard: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow 
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<SelectOption, SelectedOptionItem> = {
     edit: {
+      role: [UserRole.BackEdit],
       callback: () => {
         onClickOption('edit', product);
         setMenuAnchor(null);
@@ -28,6 +29,7 @@ const ProductCard: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow 
       icon: <Edit />,
     },
     delete: {
+      role: [UserRole.BackDelete],
       callback: () => {
         onClickOption('delete', product);
         setMenuAnchor(null);
@@ -40,9 +42,9 @@ const ProductCard: FC<Props> = ({ product, scrollRef, onClickOption, onClickRow 
   return (
     <Paper ref={scrollRef} sx={{ position: 'relative', py: 3, px: 4 }}>
       <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
-        {Object.entries(productOptionMenus).map(([option, menu]) => (
-          <OptionMenu key={option} menu={menu} option={option} />
-        ))}
+        {Object.entries(productOptionMenus).map(([option, menu]) => {
+          return <OptionMenu key={option} menu={menu} option={option} />;
+        })}
       </Menu>
       <IconButton
         sx={{ position: 'absolute', right: 3, top: 3 }}

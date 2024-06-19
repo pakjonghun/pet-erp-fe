@@ -12,7 +12,6 @@ import {
   FormGroup,
   InputAdornment,
   Stack,
-  Table,
   TableContainer,
   TableHead,
   TableRow,
@@ -38,14 +37,20 @@ import SubsidiaryTableBody from './_components/SubsidiaryTableBody';
 import { client } from '@/http/graphql/client';
 import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 import { SelectOption } from '../types';
-import { Subsidiary } from '@/http/graphql/codegen/graphql';
+import { Subsidiary, UserRole } from '@/http/graphql/codegen/graphql';
 import RemoveSubsidiaryModal from './_components/RemoveSubsidiaryModal';
 import EditSubsidiaryModal from './_components/EditSubsidiaryModal';
 import Cell from '@/components/table/Cell';
 import EmptyRow from '@/components/table/EmptyRow';
 import { getKCWFormat } from '@/utils/common';
+import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 
 const BackDataPage = () => {
+  const { data: userData } = useGetMyInfo();
+  const myRole = userData?.myInfo.role ?? [];
+  const canDelete = myRole.includes(UserRole.BackDelete);
+  const canEdit = myRole.includes(UserRole.BackEdit);
+
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
@@ -57,8 +62,7 @@ const BackDataPage = () => {
     limit: LIMIT,
   });
   const rows = data?.subsidiaries.data ?? [];
-  const isLoading =
-    networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
+  const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
   const isEmpty = !isLoading && rows.length === 0;
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -140,8 +144,7 @@ const BackDataPage = () => {
 
   const [openCreateProduct, setOpenCreateProduct] = useState(false);
 
-  const [selectedSubsidiary, setSelectedSubsidiary] =
-    useState<null | Subsidiary>(null);
+  const [selectedSubsidiary, setSelectedSubsidiary] = useState<null | Subsidiary>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
   const handleClickEdit = () => {
     setOptionType('edit');
@@ -177,12 +180,7 @@ const BackDataPage = () => {
             onClose={() => setOpenCreateProduct(false)}
           />
         )}
-        <Stack
-          sx={{ px: 2 }}
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
+        <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
           <TableTitle title="부자재 백데이터" />
           <Stack direction="row" alignItems="center" gap={2}>
             <UploadButton
@@ -294,10 +292,7 @@ const BackDataPage = () => {
             {!!selectedSubsidiary ? (
               <TableRow hover ref={scrollRef}>
                 {parsedRowData.map((item, index) => (
-                  <Cell
-                    key={`${selectedSubsidiary._id}_${index}`}
-                    sx={{ minWidth: 200 }}
-                  >
+                  <Cell key={`${selectedSubsidiary._id}_${index}`} sx={{ minWidth: 200 }}>
                     {item}
                   </Cell>
                 ))}
@@ -312,22 +307,17 @@ const BackDataPage = () => {
           </CommonTable>
         </TableContainer>
         {!!selectedSubsidiary && (
-          <Stack
-            direction="row"
-            gap={1}
-            sx={{ mt: 2 }}
-            justifyContent="flex-end"
-          >
-            <Button
-              color="error"
-              variant="outlined"
-              onClick={handleClickDelete}
-            >
-              삭제
-            </Button>
-            <Button variant="contained" onClick={handleClickEdit}>
-              편집
-            </Button>
+          <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
+            {canDelete && (
+              <Button color="error" variant="outlined" onClick={handleClickDelete}>
+                삭제
+              </Button>
+            )}
+            {canEdit && (
+              <Button variant="contained" onClick={handleClickEdit}>
+                편집
+              </Button>
+            )}
           </Stack>
         )}
 

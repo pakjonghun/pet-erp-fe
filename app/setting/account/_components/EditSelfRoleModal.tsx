@@ -31,9 +31,6 @@ const EditSelfRoleModal: FC<Props> = ({ myInfo, open, onClose }) => {
   const roleList = new Map<string, UserRole[]>();
 
   Object.values(UserRole).forEach((item) => {
-    const deleteElement = ['MANAGER', 'ADMIN', 'STAFF'];
-    if (deleteElement.includes(item)) return;
-
     const split = item.split('_');
     const title = split[0];
     const target = roleList.get(title);
@@ -82,7 +79,7 @@ const EditSelfRoleModal: FC<Props> = ({ myInfo, open, onClose }) => {
       <Typography sx={{ color: (theme) => theme.palette.warning.dark }}>
         ADMIN 계정만 권한을 수정할 수 있습니다.
       </Typography>
-      <Typography sx={{ color: (theme) => theme.palette.warning.dark }}>
+      <Typography sx={{ mb: 2, color: (theme) => theme.palette.warning.dark }}>
         다른권한으로 수정시 다시 권한수정이 불가능합니다.
       </Typography>
       {Array.from(roleList).map(([title, elements]) => {

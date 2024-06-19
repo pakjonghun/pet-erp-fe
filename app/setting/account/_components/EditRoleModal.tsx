@@ -29,8 +29,6 @@ const EditRoleModal: FC<Props> = ({ selectedUser, open, onClose }) => {
   const roleList = new Map<string, UserRole[]>();
 
   Object.values(UserRole).forEach((item) => {
-    const deleteElement = ['MANAGER', 'ADMIN', 'STAFF'];
-    if (deleteElement.includes(item)) return;
     const split = item.split('_');
     const title = split[0];
     const target = roleList.get(title);

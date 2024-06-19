@@ -4,7 +4,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { Client } from '@/http/graphql/codegen/graphql';
+import { Client, UserRole } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
 import { SelectOption } from '../../types';
@@ -22,6 +22,7 @@ const ClientCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow })
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<SelectOption, SelectedOptionItem> = {
     edit: {
+      role: [UserRole.BackEdit],
       callback: () => {
         onClickOption('edit', client);
         setMenuAnchor(null);
@@ -30,6 +31,7 @@ const ClientCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow })
       icon: <Edit />,
     },
     delete: {
+      role: [UserRole.BackDelete],
       callback: () => {
         onClickOption('delete', client);
         setMenuAnchor(null);

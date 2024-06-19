@@ -1,16 +1,22 @@
 import { FC, useState } from 'react';
 import { Paper, Stack, Button } from '@mui/material';
 import DeleteStorageModal from './DeleteStorageModal';
-import { Storage } from '@/http/graphql/codegen/graphql';
+import { Storage, UserRole } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
 import { EMPTY } from '@/constants';
 import EditStorageModal from './EditStorageModal';
+import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 
 interface Props {
   item: Storage;
 }
 
 const StorageCard: FC<Props> = ({ item: { _id, name, address, note, phoneNumber } }) => {
+  const { data: userData } = useGetMyInfo();
+  const myRole = userData?.myInfo.role ?? [];
+  const canDelete = myRole.includes(UserRole.BackDelete);
+  const canEdit = myRole.includes(UserRole.BackEdit);
+
   const [openDelete, setOpenDelete] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
@@ -50,12 +56,16 @@ const StorageCard: FC<Props> = ({ item: { _id, name, address, note, phoneNumber 
       />
       <LabelText label="메모" text={note ?? EMPTY} />
       <Stack direction="row" gap={1} sx={{ alignSelf: 'flex-end' }}>
-        <Button onClick={() => setOpenDelete(true)} color="error" variant="outlined">
-          삭제
-        </Button>
-        <Button onClick={() => setOpenEdit(true)} variant="contained">
-          수정
-        </Button>
+        {canDelete && (
+          <Button onClick={() => setOpenDelete(true)} color="error" variant="outlined">
+            삭제
+          </Button>
+        )}
+        {canEdit && (
+          <Button onClick={() => setOpenEdit(true)} variant="contained">
+            수정
+          </Button>
+        )}
       </Stack>
     </Paper>
   );

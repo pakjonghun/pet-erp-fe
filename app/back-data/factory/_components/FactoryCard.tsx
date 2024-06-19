@@ -1,10 +1,11 @@
 import { FC, useState } from 'react';
 import { Paper, Stack, Button, Chip, Container, Typography } from '@mui/material';
 import DeleteStorageModal from './DeleteFactoryModal';
-import { Factory } from '@/http/graphql/codegen/graphql';
+import { Factory, UserRole } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
 import { EMPTY } from '@/constants';
 import EditStorageModal from './EditFactoryModal';
+import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 
 interface Props {
   item: Factory;
@@ -13,6 +14,11 @@ interface Props {
 const FactoryCard: FC<Props> = ({
   item: { _id, name, address, note, phoneNumber, productList = [] },
 }) => {
+  const { data: userData } = useGetMyInfo();
+  const myRole = userData?.myInfo.role ?? [];
+  const canDelete = myRole.includes(UserRole.BackDelete);
+  const canEdit = myRole.includes(UserRole.BackEdit);
+
   const [openDelete, setOpenDelete] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
@@ -52,12 +58,16 @@ const FactoryCard: FC<Props> = ({
       />
       <LabelText label="메모" text={note ?? EMPTY} />
       <Stack direction="row" gap={1} sx={{ alignSelf: 'flex-end' }}>
-        <Button onClick={() => setOpenDelete(true)} color="error" variant="outlined">
-          삭제
-        </Button>
-        <Button onClick={() => setOpenEdit(true)} variant="contained">
-          수정
-        </Button>
+        {canDelete && (
+          <Button onClick={() => setOpenDelete(true)} color="error" variant="outlined">
+            삭제
+          </Button>
+        )}
+        {canEdit && (
+          <Button onClick={() => setOpenEdit(true)} variant="contained">
+            수정
+          </Button>
+        )}
       </Stack>
     </Paper>
   );

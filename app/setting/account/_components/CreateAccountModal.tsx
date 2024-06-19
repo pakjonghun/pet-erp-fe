@@ -69,8 +69,6 @@ const CreateAccountModal: FC<Props> = ({ open, onClose }) => {
   const roleList = new Map<string, string[]>();
 
   Object.values(UserRole).forEach((item) => {
-    const deleteElement = ['MANAGER', 'ADMIN', 'STAFF'];
-    if (deleteElement.includes(item)) return;
     const split = item.split('_');
     const title = split[0];
     const target = roleList.get(title);

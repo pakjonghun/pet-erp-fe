@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { UserRole } from './http/graphql/codegen/graphql';
 
 export const EMPTY = '미입력';
 export const PUBLIC_PATH = ['login'];
@@ -9,6 +10,7 @@ export type SelectedOptionItem = {
   icon: ReactNode;
   label: string;
   callback: () => void;
+  role?: UserRole[];
 };
 
 export const PRODUCT_PREFIX = 'P';

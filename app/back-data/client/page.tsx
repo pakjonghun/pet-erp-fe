@@ -33,7 +33,7 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { ClientHeaderList, ClientTypeToHangle } from './constants';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { Client } from '@/http/graphql/codegen/graphql';
+import { Client, UserRole } from '@/http/graphql/codegen/graphql';
 import { client } from '@/http/graphql/client';
 import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 import RemoveClientModal from './_components/RemoveClientModal';
@@ -42,8 +42,14 @@ import { SelectOption } from '../types';
 import Cell from '@/components/table/Cell';
 import { getFixedTwo } from '@/utils/sale';
 import EmptyRow from '@/components/table/EmptyRow';
+import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 
 const BackDataPage = () => {
+  const { data: userData } = useGetMyInfo();
+  const myRole = userData?.myInfo.role ?? [];
+  const canDelete = myRole.includes(UserRole.BackDelete);
+  const canEdit = myRole.includes(UserRole.BackEdit);
+
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
@@ -166,17 +172,9 @@ const BackDataPage = () => {
     <>
       <TablePage sx={{ flex: 1 }}>
         {openCreateClient && (
-          <CreateClientModal
-            open={openCreateClient}
-            onClose={() => setOpenCreateClient(false)}
-          />
+          <CreateClientModal open={openCreateClient} onClose={() => setOpenCreateClient(false)} />
         )}
-        <Stack
-          sx={{ px: 2 }}
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
+        <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
           <TableTitle title="거래처 백데이터" />
           <Stack direction="row" alignItems="center" gap={2}>
             <UploadButton
@@ -268,12 +266,7 @@ const BackDataPage = () => {
           },
         }}
       >
-        <Stack
-          sx={{ px: 2 }}
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
+        <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
           <TableTitle title="선택된 거래처 데이터" />
         </Stack>
         <ClientCards
@@ -304,40 +297,28 @@ const BackDataPage = () => {
             {selectedClient ? (
               <TableRow hover ref={scrollRef}>
                 {parsedClient.map((item, index) => (
-                  <Cell
-                    key={`${Math.random()}_${index}`}
-                    sx={{ minWidth: 200 }}
-                  >
+                  <Cell key={`${Math.random()}_${index}`} sx={{ minWidth: 200 }}>
                     {item}
                   </Cell>
                 ))}
               </TableRow>
             ) : (
-              <EmptyRow
-                colSpan={9}
-                isEmpty={!selectedClient}
-                message="선택된 데이터가 없습니다."
-              />
+              <EmptyRow colSpan={9} isEmpty={!selectedClient} message="선택된 데이터가 없습니다." />
             )}
           </CommonTable>
         </TableContainer>
         {!!selectedClient && (
-          <Stack
-            direction="row"
-            gap={1}
-            sx={{ mt: 2 }}
-            justifyContent="flex-end"
-          >
-            <Button
-              color="error"
-              variant="outlined"
-              onClick={handleClickDelete}
-            >
-              삭제
-            </Button>
-            <Button variant="contained" onClick={handleClickEdit}>
-              편집
-            </Button>
+          <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
+            {canDelete && (
+              <Button color="error" variant="outlined" onClick={handleClickDelete}>
+                삭제
+              </Button>
+            )}
+            {canEdit && (
+              <Button variant="contained" onClick={handleClickEdit}>
+                편집
+              </Button>
+            )}
           </Stack>
         )}
       </TablePage>

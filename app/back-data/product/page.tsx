@@ -33,7 +33,7 @@ import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFil
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { ProductHeaderList } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { Product } from '@/http/graphql/codegen/graphql';
+import { Product, UserRole } from '@/http/graphql/codegen/graphql';
 import { client } from '@/http/graphql/client';
 import Cell from '@/components/table/Cell';
 import { getKCWFormat } from '@/utils/common';
@@ -41,13 +41,15 @@ import RemoveProductModal from './_components/RemoveProductModal';
 import EditProductModal from './_components/EditProductModal';
 import { SelectOption } from '../types';
 import EmptyRow from '@/components/table/EmptyRow';
-import {
-  CommonHeaderRow,
-  CommonTable,
-  CommonTableBody,
-} from '@/components/commonStyles';
+import { CommonHeaderRow, CommonTable, CommonTableBody } from '@/components/commonStyles';
+import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 
 const ProductPage = () => {
+  const { data: userData } = useGetMyInfo();
+  const myRole = userData?.myInfo.role ?? [];
+  const canDelete = myRole.includes(UserRole.BackDelete);
+  const canEdit = myRole.includes(UserRole.BackEdit);
+
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
@@ -175,12 +177,7 @@ const ProductPage = () => {
             onClose={() => setOpenCreateProduct(false)}
           />
         )}
-        <Stack
-          sx={{ px: 2 }}
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
+        <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
           <TableTitle title="제품 백데이터" />
           <Stack direction="row" alignItems="center" gap={2}>
             <UploadButton
@@ -272,12 +269,7 @@ const ProductPage = () => {
           },
         }}
       >
-        <Stack
-          sx={{ px: 2 }}
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
+        <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
           <TableTitle title="선택된 제품 데이터" />
         </Stack>
         <TableContainer sx={{ px: 2 }}>
@@ -293,10 +285,7 @@ const ProductPage = () => {
               {!!selectedProduct ? (
                 <TableRow hover ref={scrollRef}>
                   {parsedRowData.map((item, index) => (
-                    <Cell
-                      key={`${selectedProduct._id}_${index}`}
-                      sx={{ minWidth: 200 }}
-                    >
+                    <Cell key={`${selectedProduct._id}_${index}`} sx={{ minWidth: 200 }}>
                       {item}
                     </Cell>
                   ))}
@@ -312,22 +301,17 @@ const ProductPage = () => {
           </CommonTable>
         </TableContainer>
         {!!selectedProduct && (
-          <Stack
-            direction="row"
-            gap={1}
-            sx={{ mt: 2 }}
-            justifyContent="flex-end"
-          >
-            <Button
-              color="error"
-              variant="outlined"
-              onClick={handleClickDelete}
-            >
-              삭제
-            </Button>
-            <Button variant="contained" onClick={handleClickEdit}>
-              편집
-            </Button>
+          <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
+            {canDelete && (
+              <Button color="error" variant="outlined" onClick={handleClickDelete}>
+                삭제
+              </Button>
+            )}
+            {canEdit && (
+              <Button variant="contained" onClick={handleClickEdit}>
+                편집
+              </Button>
+            )}
           </Stack>
         )}
       </TablePage>
