@@ -3,6 +3,8 @@ import { Box, Chip, Paper, Stack, Typography } from '@mui/material';
 import { ProductSaleData } from '@/http/graphql/codegen/graphql';
 import SaleCard from '@/components/card/SaleCard';
 import { getProfitRate } from '@/utils/sale';
+import { useReactiveVar } from '@apollo/client';
+import { showPrevSaleData } from '@/store/saleStore';
 
 interface Props {
   productSaleData: ProductSaleData;
@@ -10,27 +12,32 @@ interface Props {
 }
 
 const ProductSaleCard: FC<Props> = ({ productSaleData, scrollRef }) => {
+  const isShowPrevData = useReactiveVar(showPrevSaleData);
   return (
     <Paper ref={scrollRef} sx={{ position: 'relative', py: 3, px: 4 }}>
       <Box>
         <Typography>{productSaleData.name}</Typography>
         <SaleCard
+          isShowPrevData={isShowPrevData}
           label="판매수량"
           current={productSaleData.sales?.accCount ?? 0}
           previous={productSaleData.sales?.prevAccCount ?? 0}
           numberType="comma"
         />
         <SaleCard
+          isShowPrevData={isShowPrevData}
           label="매출"
           current={productSaleData.sales?.accPayCost ?? 0}
           previous={productSaleData.sales?.prevAccPayCost ?? 0}
         />
         <SaleCard
+          isShowPrevData={isShowPrevData}
           label="수익"
           current={productSaleData.sales?.accProfit ?? 0}
           previous={productSaleData.sales?.prevAccProfit ?? 0}
         />
         <SaleCard
+          isShowPrevData={isShowPrevData}
           label="수익율"
           numberType="percent"
           current={getProfitRate(
