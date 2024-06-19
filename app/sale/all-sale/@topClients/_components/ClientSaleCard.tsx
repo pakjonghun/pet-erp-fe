@@ -3,7 +3,6 @@ import { Box, Paper, Typography } from '@mui/material';
 import { SaleInfos } from '@/http/graphql/codegen/graphql';
 import SaleCard from '@/components/card/SaleCard';
 import { getProfitRate } from '@/utils/sale';
-import { useReactiveVar } from '@apollo/client';
 
 interface Props {
   clientSaleData: SaleInfos;
