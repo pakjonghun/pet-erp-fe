@@ -43,6 +43,8 @@ const ProductSales = () => {
   const rows = (data?.productSales?.data as ProductSaleData[]) ?? [];
   const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
   const isEmpty = !isLoading && rows.length === 0;
+  console.log('rows : ', rows);
+  console.log('networkStatus : ', networkStatus);
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -85,9 +87,8 @@ const ProductSales = () => {
       },
       { totalCount: 0, totalPayCost: 0, totalProfit: 0 }
     );
-
     saleTotal(totalData);
-  }, [data?.productSales?.data]);
+  }, [data]);
 
   return (
     <TablePage sx={{ flex: 1 }}>
