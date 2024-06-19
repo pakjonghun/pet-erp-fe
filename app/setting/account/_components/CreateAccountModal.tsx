@@ -2,6 +2,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
+  Box,
   Button,
   Checkbox,
   Container,
@@ -81,6 +82,7 @@ const CreateAccountModal: FC<Props> = ({ open, onClose }) => {
     reset,
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<CreateAccountForm>({
     resolver: zodResolver(createAccountSchema),
@@ -193,11 +195,14 @@ const CreateAccountModal: FC<Props> = ({ open, onClose }) => {
             control={control}
             render={({ field }) => (
               <FormControl>
+                <Typography sx={{ mb: 1 }} variant="subtitle1">
+                  권한설정
+                </Typography>
                 {Array.from(roleList).map(([title, elements]) => {
                   const hangleTitle = roleTitleToHangle[title];
                   return (
-                    <Container sx={{ mb: 1 }} key={title}>
-                      <FormGroup>
+                    <Box sx={{ mb: 1 }} key={title}>
+                      <FormGroup sx={{ pl: 2 }}>
                         <FormLabel>{hangleTitle}</FormLabel>
                         <Stack direction="row" flexWrap="wrap">
                           {elements.map((role) => {
@@ -211,7 +216,10 @@ const CreateAccountModal: FC<Props> = ({ open, onClose }) => {
                                   height: 26,
                                 }}
                                 onChange={(_, checked) => {
-                                  console.log(checked);
+                                  const newValue = checked
+                                    ? [...field.value, role]
+                                    : field.value.filter((item) => item !== role);
+                                  field.onChange(newValue);
                                 }}
                                 value={role}
                                 key={role}
@@ -222,7 +230,7 @@ const CreateAccountModal: FC<Props> = ({ open, onClose }) => {
                           })}
                         </Stack>
                       </FormGroup>
-                    </Container>
+                    </Box>
                   );
                 })}
               </FormControl>

@@ -52,7 +52,7 @@ const AccountCard: FC<Props> = ({ user, onSelectUser }) => {
   const accountList = user.role.map((item) => <Chip label={roleToHandle[item]} key={item} />);
 
   return (
-    <Paper sx={{ position: 'relative', px: 4, py: 2 }}>
+    <Paper sx={{ position: 'relative', px: 4, py: 2, height: '100%' }}>
       <IconButton
         onClick={(event) => setOptionAnchor(event.currentTarget)}
         sx={{ position: 'absolute', right: 3, top: 3 }}
@@ -81,7 +81,7 @@ const AccountCard: FC<Props> = ({ user, onSelectUser }) => {
         <LabelText
           label="권한"
           text={
-            <Stack direction="row" gap={1} flexWrap="wrap">
+            <Stack sx={{ mt: 1 }} direction="row" gap={1} flexWrap="wrap">
               {accountList}
             </Stack>
           }
