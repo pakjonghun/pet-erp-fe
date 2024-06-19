@@ -3,8 +3,12 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
   Button,
+  Checkbox,
+  Container,
   FormControl,
+  FormControlLabel,
   FormGroup,
+  FormLabel,
   InputAdornment,
   InputLabel,
   MenuItem,
@@ -23,6 +27,39 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { modalSizeProps } from '@/components/commonStyles';
 
+type UserRoleToHangle = {
+  [key in UserRole]?: string;
+};
+
+const roleHandleMapper = {
+  ['ADMIN' as string]: '어드민',
+  MANAGER: '관리자',
+  STAFF: '스텝',
+  BACK_DELETE: '백 데이터삭제',
+  BACK_EDIT: '백 데이터편집',
+  STOCK_IN: '입고 입력',
+  STOCK_OUT: '출고 입력',
+  ORDER_CREATE: '발주입력',
+  ORDER_EDIT: '발주편집',
+  ORDER_DELETE: '발주삭제',
+  SALE_CREATE: '비 사방넷 판매입력',
+  SALE_EDIT: '비 사방넷 판매편집',
+  SALE_DELETE: '비 사방넷 판매삭제',
+  ADMIN_ACCESS: '올엑세스 권한',
+  ADMIN_IP: '접속 아이피 설정',
+  ADMIN_ACCOUNT: '계정관리',
+  ADMIN_DELIVERY: '탭배비용 관리',
+  ADMIN_LOG: '사용이력 조회',
+};
+
+const roleTitleToHangle: Record<string, string> = {
+  ADMIN: '어드민',
+  BACK: '백데이터',
+  STOCK: '재고',
+  ORDER: '발주',
+  SALE: '판매',
+};
+
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -31,6 +68,19 @@ interface Props {
 const CreateAccountModal: FC<Props> = ({ open, onClose }) => {
   const [createAccount, { loading }] = useCreateAccount();
   const [visible, setVisible] = useState(false);
+
+  const roleList = new Map<string, string[]>();
+  console.log(roleList);
+
+  Object.values(UserRole).forEach((item) => {
+    const deleteElement = ['MANAGER', 'ADMIN', 'STAFF'];
+    if (deleteElement.includes(item)) return;
+    const split = item.split('_');
+    const title = split[0];
+    const target = roleList.get(title);
+    const newElement = target ? [...target, item] : [item];
+    roleList.set(title, newElement);
+  });
 
   const {
     reset,
@@ -147,15 +197,35 @@ const CreateAccountModal: FC<Props> = ({ open, onClose }) => {
             name="role"
             control={control}
             render={({ field }) => (
-              <FormControl required>
-                <InputLabel>권한</InputLabel>
-                <Select {...field} label="권한" id="role_change_select">
-                  {Object.values(UserRole).map((role) => (
-                    <MenuItem value={role} key={role}>
-                      {role}
-                    </MenuItem>
-                  ))}
-                </Select>
+              <FormControl>
+                {Array.from(roleList).map(([title, elements]) => {
+                  const hangleTitle = roleTitleToHangle[title];
+                  return (
+                    <Container sx={{ mb: 1 }} key={title}>
+                      <FormGroup>
+                        <FormLabel>{hangleTitle}</FormLabel>
+                        <Stack direction="row" flexWrap="wrap">
+                          {elements.map((role) => {
+                            const label = roleHandleMapper[role];
+                            return (
+                              <FormControlLabel
+                                sx={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  height: 26,
+                                }}
+                                key={role}
+                                label={label}
+                                control={<Checkbox />}
+                              />
+                            );
+                          })}
+                        </Stack>
+                      </FormGroup>
+                    </Container>
+                  );
+                })}
               </FormControl>
             )}
           />

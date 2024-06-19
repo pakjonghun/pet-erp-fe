@@ -1082,8 +1082,23 @@ export type User = {
 
 export enum UserRole {
   Admin = 'ADMIN',
+  AdminAccess = 'ADMIN_ACCESS',
+  AdminAccount = 'ADMIN_ACCOUNT',
+  AdminDelivery = 'ADMIN_DELIVERY',
+  AdminIp = 'ADMIN_IP',
+  AdminLog = 'ADMIN_LOG',
+  BackDelete = 'BACK_DELETE',
+  BackEdit = 'BACK_EDIT',
   Manager = 'MANAGER',
-  Staff = 'STAFF'
+  OrderCreate = 'ORDER_CREATE',
+  OrderDelete = 'ORDER_DELETE',
+  OrderEdit = 'ORDER_EDIT',
+  SaleCreate = 'SALE_CREATE',
+  SaleDelete = 'SALE_DELETE',
+  SaleEdit = 'SALE_EDIT',
+  Staff = 'STAFF',
+  StockIn = 'STOCK_IN',
+  StockOut = 'STOCK_OUT'
 }
 
 export type WholeSaleItem = {
