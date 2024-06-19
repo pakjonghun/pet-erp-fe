@@ -81,14 +81,14 @@ const EditRoleModal: FC<Props> = ({ selectedUser, open, onClose }) => {
       <Typography sx={{ color: (theme) => theme.palette.warning.dark }}>
         해당 계정의 권한을 선택된 권한으로 수정합니다.
       </Typography>
-      <Typography sx={{ color: (theme) => theme.palette.warning.dark }}>
+      <Typography sx={{ mb: 2, color: (theme) => theme.palette.warning.dark }}>
         권한 수정후 다시 로그인 해야 권한이 적용됩니다.
       </Typography>
       {Array.from(roleList).map(([title, elements]) => {
         const hangleTitle = roleTitleToHangle[title];
         return (
           <Box sx={{ mb: 1 }} key={title}>
-            <FormGroup sx={{ pl: 2 }}>
+            <FormGroup>
               <FormLabel>{hangleTitle}</FormLabel>
               <Stack direction="row" flexWrap="wrap">
                 {elements.map((elem) => {

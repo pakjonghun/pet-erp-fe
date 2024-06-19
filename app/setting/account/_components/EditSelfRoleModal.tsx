@@ -1,6 +1,17 @@
 'use client';
 
-import { Button, FormControl, SelectChangeEvent, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  FormLabel,
+  SelectChangeEvent,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { FC, useState } from 'react';
 import BaseModal from '../../../../components/ui/modal/BaseModal';
 import { MyInfo, UserRole } from '@/http/graphql/codegen/graphql';
@@ -8,6 +19,7 @@ import { useUpdateProfile } from '@/http/graphql/hooks/users/useUpdateProfile';
 import { snackMessage } from '@/store/snackMessage';
 import CommonLoading from '../../../../components/ui/loading/CommonLoading';
 import BaseSelect from '@/components/ui/select/BaseSelect';
+import { roleTitleToHangle, roleToHandle } from './CreateAccountModal';
 
 interface Props {
   myInfo: MyInfo;
@@ -16,11 +28,27 @@ interface Props {
 }
 
 const EditSelfRoleModal: FC<Props> = ({ myInfo, open, onClose }) => {
+  const roleList = new Map<string, UserRole[]>();
+
+  Object.values(UserRole).forEach((item) => {
+    const deleteElement = ['MANAGER', 'ADMIN', 'STAFF'];
+    if (deleteElement.includes(item)) return;
+
+    const split = item.split('_');
+    const title = split[0];
+    const target = roleList.get(title);
+    const newElement = target ? [...target, item] : [item];
+    roleList.set(title, newElement);
+  });
+
   const [updateProfile, { loading }] = useUpdateProfile();
-  const [role, setRole] = useState<UserRole>(myInfo.role);
-  const onChangeRole = (event: SelectChangeEvent) => {
-    setRole(event.target.value as UserRole);
+  const [role, setRole] = useState<UserRole[]>(myInfo.role);
+
+  const onChangeRole = (checked: boolean, newRole: UserRole) => {
+    const newValue = checked ? [...role, newRole] : role.filter((item) => item !== newRole);
+    setRole(newValue);
   };
+
   const handleClose = () => {
     const originRole = myInfo.role;
     if (!originRole) return;
@@ -57,15 +85,38 @@ const EditSelfRoleModal: FC<Props> = ({ myInfo, open, onClose }) => {
       <Typography sx={{ color: (theme) => theme.palette.warning.dark }}>
         다른권한으로 수정시 다시 권한수정이 불가능합니다.
       </Typography>
-      <FormControl fullWidth sx={{ mt: 3 }}>
-        <BaseSelect
-          label="권한"
-          defaultValue={role}
-          value={role}
-          onChangeValue={onChangeRole}
-          optionItems={Object.values(UserRole)}
-        />
-      </FormControl>
+      {Array.from(roleList).map(([title, elements]) => {
+        const hangleTitle = roleTitleToHangle[title];
+        return (
+          <Box sx={{ mb: 1 }} key={title}>
+            <FormGroup>
+              <FormLabel>{hangleTitle}</FormLabel>
+              <Stack direction="row" flexWrap="wrap">
+                {elements.map((elem) => {
+                  const label = roleToHandle[elem];
+                  return (
+                    <FormControlLabel
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: 26,
+                      }}
+                      onChange={(_, checked) => {
+                        onChangeRole(checked, elem);
+                      }}
+                      value={elem}
+                      key={elem}
+                      label={label}
+                      control={<Checkbox defaultChecked={role.includes(elem)} />}
+                    />
+                  );
+                })}
+              </Stack>
+            </FormGroup>
+          </Box>
+        );
+      })}
       <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
         <Button variant="outlined" onClick={handleClose}>
           취소
