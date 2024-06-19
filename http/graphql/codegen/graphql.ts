@@ -163,7 +163,7 @@ export type CreateSubsidiaryInput = {
 export type CreateUserDto = {
   id: Scalars['String']['input'];
   password: Scalars['String']['input'];
-  role: Scalars['String']['input'];
+  role: Array<UserRole>;
 };
 
 export type CreateWholeSaleInput = {
@@ -472,7 +472,7 @@ export type MyInfo = {
   __typename?: 'MyInfo';
   createdAt: Scalars['Date']['output'];
   id: Scalars['String']['output'];
-  role: UserRole;
+  role: Array<UserRole>;
 };
 
 export enum Order {
@@ -1029,7 +1029,7 @@ export type UpdateProductInput = {
 
 export type UpdateProfileDto = {
   password?: InputMaybe<Scalars['String']['input']>;
-  role?: InputMaybe<Scalars['String']['input']>;
+  role?: InputMaybe<Array<UserRole>>;
 };
 
 export type UpdateStorageInput = {
@@ -1058,7 +1058,7 @@ export type UpdateSubsidiaryInput = {
 export type UpdateUserDto = {
   id?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
-  role?: InputMaybe<Scalars['String']['input']>;
+  role?: InputMaybe<Array<UserRole>>;
 };
 
 export type UpdateWholeSaleInput = {
@@ -1076,14 +1076,26 @@ export type User = {
   _id: Scalars['ID']['output'];
   createdAt: Scalars['Date']['output'];
   id: Scalars['String']['output'];
-  role: UserRole;
+  role: Array<UserRole>;
   updatedAt: Scalars['Date']['output'];
 };
 
 export enum UserRole {
-  Admin = 'ADMIN',
-  Manager = 'MANAGER',
-  Staff = 'STAFF'
+  AdminAccess = 'ADMIN_ACCESS',
+  AdminAccount = 'ADMIN_ACCOUNT',
+  AdminDelivery = 'ADMIN_DELIVERY',
+  AdminIp = 'ADMIN_IP',
+  AdminLog = 'ADMIN_LOG',
+  BackDelete = 'BACK_DELETE',
+  BackEdit = 'BACK_EDIT',
+  OrderCreate = 'ORDER_CREATE',
+  OrderDelete = 'ORDER_DELETE',
+  OrderEdit = 'ORDER_EDIT',
+  SaleCreate = 'SALE_CREATE',
+  SaleDelete = 'SALE_DELETE',
+  SaleEdit = 'SALE_EDIT',
+  StockIn = 'STOCK_IN',
+  StockOut = 'STOCK_OUT'
 }
 
 export type WholeSaleItem = {
@@ -1157,7 +1169,7 @@ export type LogFragmentFragment = { __typename?: 'Log', _id: string, userId: str
 
 export type ProductCategoryFragmentFragment = { __typename?: 'ProductCategory', _id?: string | null, name?: string | null } & { ' $fragmentName'?: 'ProductCategoryFragmentFragment' };
 
-export type UserFragmentFragment = { __typename?: 'User', id: string, role: UserRole, createdAt: any } & { ' $fragmentName'?: 'UserFragmentFragment' };
+export type UserFragmentFragment = { __typename?: 'User', id: string, role: Array<UserRole>, createdAt: any } & { ' $fragmentName'?: 'UserFragmentFragment' };
 
 export type ProductFragmentFragment = { __typename?: 'Product', _id: string, code: string, barCode?: string | null, name: string, wonPrice?: number | null, salePrice?: number | null, leadTime?: number | null, category?: (
     { __typename?: 'ProductCategory' }
@@ -1612,14 +1624,14 @@ export type UpdateUserMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, role: UserRole, createdAt: any } };
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, role: Array<UserRole>, createdAt: any } };
 
 export type CreateUserMutationVariables = Exact<{
   createUserInput: CreateUserDto;
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: string, role: UserRole, createdAt: any } };
+export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: string, role: Array<UserRole>, createdAt: any } };
 
 export type RemoveUserMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -1631,19 +1643,19 @@ export type RemoveUserMutation = { __typename?: 'Mutation', removeUser: { __type
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, role: UserRole, createdAt: any }> };
+export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, role: Array<UserRole>, createdAt: any }> };
 
 export type MyInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyInfoQuery = { __typename?: 'Query', myInfo: { __typename?: 'MyInfo', id: string, role: UserRole, createdAt: any } };
+export type MyInfoQuery = { __typename?: 'Query', myInfo: { __typename?: 'MyInfo', id: string, role: Array<UserRole>, createdAt: any } };
 
 export type UpdateProfileMutationVariables = Exact<{
   updateProfileInput: UpdateProfileDto;
 }>;
 
 
-export type UpdateProfileMutation = { __typename?: 'Mutation', updateProfile: { __typename?: 'User', id: string, role: UserRole } };
+export type UpdateProfileMutation = { __typename?: 'Mutation', updateProfile: { __typename?: 'User', id: string, role: Array<UserRole> } };
 
 export type CreateWholeSaleMutationVariables = Exact<{
   createWholeSaleInput: CreateWholeSaleInput;

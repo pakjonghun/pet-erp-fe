@@ -44,7 +44,9 @@ import Cell from '@/components/table/Cell';
 
 const WholeSalePage = () => {
   const { role } = useReactiveVar(authState);
-  const cannotModify = !role.includes(UserRole.SaleEdit);
+  const canCreate = role.includes(UserRole.SaleCreate);
+  const canEdit = role.includes(UserRole.SaleEdit);
+  const canDelete = role.includes(UserRole.SaleDelete);
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
   const { from, to } = useReactiveVar(saleRange);
@@ -147,7 +149,7 @@ const WholeSalePage = () => {
         )}
         <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
           <TableTitle title="비 사방넷 판매" />
-          {!cannotModify && (
+          {canCreate && (
             <Stack direction="row" alignItems="center" gap={2}>
               <ActionButton
                 icon={<PlusOneOutlined />}
@@ -262,12 +264,16 @@ const WholeSalePage = () => {
         </TableContainer>
         {!!selectedWholeSale && (
           <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
-            <Button color="error" variant="outlined" onClick={handleClickDelete}>
-              삭제
-            </Button>
-            <Button variant="contained" onClick={handleClickEdit}>
-              편집
-            </Button>
+            {canDelete && (
+              <Button color="error" variant="outlined" onClick={handleClickDelete}>
+                삭제
+              </Button>
+            )}
+            {canEdit && (
+              <Button variant="contained" onClick={handleClickEdit}>
+                편집
+              </Button>
+            )}
           </Stack>
         )}
       </TablePage>
