@@ -15,14 +15,8 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 interface Props {
   isSelected: boolean;
   productStock: SubsidiaryStockColumn;
-  onClickRow: (
-    event: MouseEvent<HTMLTableCellElement>,
-    stock: SubsidiaryStockColumn
-  ) => void;
-  onClickOption: (
-    option: any | null,
-    client: SubsidiaryStockColumn | null
-  ) => void;
+  onClickRow: (event: MouseEvent<HTMLTableCellElement>, stock: SubsidiaryStockColumn) => void;
+  onClickOption: (option: any | null, client: SubsidiaryStockColumn | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
@@ -61,12 +55,7 @@ const ProductStockBodyRow: FC<Props> = ({
       stock.stockCount,
       stock.wonPrice ? getKCWFormat(stock.wonPrice) : EMPTY,
       stock.leadTime == null ? EMPTY : `${stock.leadTime}일`,
-      <Stack
-        key={Math.random()}
-        direction="column"
-        gap={1}
-        alignItems="flex-start"
-      >
+      <Stack key={Math.random()} direction="column" gap={1} alignItems="flex-start">
         {(stock?.productList ?? []).map((product, index) => {
           return <Chip key={`${product}_${index}`} label={product ?? ''} />;
         })}
@@ -77,49 +66,31 @@ const ProductStockBodyRow: FC<Props> = ({
   const parsedClient = createRow(productStock);
 
   return (
-    <>
-      <TableRow
-        sx={(theme) => ({
-          bgcolor: isSelected ? theme.palette.action.hover : '',
-        })}
-        hover
-        ref={scrollRef}
-      >
-        <Menu
-          anchorEl={menuAnchor}
-          open={!!menuAnchor}
-          onClose={() => setMenuAnchor(null)}
-        >
-          {Object.entries(productOptionMenus).map(([option, menu]) => (
-            <OptionMenu key={option} menu={menu} option={option} />
-          ))}
-        </Menu>
-        {/* <Cell onClick={() => setOpen((prev) => !prev)}>
-          <IconButton>{open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}</IconButton>
-        </Cell> */}
-        {parsedClient.map((item, index) => (
-          <Cell
-            key={`${productStock.__typename}_${index}`}
-            onClick={(event) => {
-              onClickRow(event, productStock);
-              setOpen((prev) => !prev);
-            }}
-            sx={{ minWidth: 200 }}
-          >
-            {item}
-          </Cell>
+    <TableRow
+      sx={(theme) => ({
+        bgcolor: isSelected ? theme.palette.action.hover : '',
+      })}
+      hover
+      ref={scrollRef}
+    >
+      <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
+        {Object.entries(productOptionMenus).map(([option, menu]) => (
+          <OptionMenu key={option} menu={menu} option={option} />
         ))}
-
-        {/* <OptionCell onClick={setMenuAnchor} /> */}
-      </TableRow>
-      {/* {open && (
-        <CollapseRow
-          onClickOption={onClickOption}
-          productStock={productStock}
-          open={open}
-        />
-      )} */}
-    </>
+      </Menu>
+      {parsedClient.map((item, index) => (
+        <Cell
+          key={`${productStock.__typename}_${index}`}
+          onClick={(event) => {
+            onClickRow(event, productStock);
+            setOpen((prev) => !prev);
+          }}
+          sx={{ minWidth: 200 }}
+        >
+          {item}
+        </Cell>
+      ))}
+    </TableRow>
   );
 };
 

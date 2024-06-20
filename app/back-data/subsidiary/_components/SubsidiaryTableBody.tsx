@@ -30,10 +30,7 @@ const SubsidiaryTableBody: FC<Props> = ({
 
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
 
-  const handleClickOption = (
-    option: SelectOption | null,
-    subsidiary: Subsidiary | null
-  ) => {
+  const handleClickOption = (option: SelectOption | null, subsidiary: Subsidiary | null) => {
     setSelectedSubsidiary(subsidiary);
     setOptionType(option);
   };

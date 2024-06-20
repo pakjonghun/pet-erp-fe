@@ -1,9 +1,5 @@
 import { FC, useState } from 'react';
-import {
-  StockColumn,
-  SubsidiaryStockColumn,
-} from '@/http/graphql/codegen/graphql';
-import { TableBody } from '@mui/material';
+import { SubsidiaryStockColumn } from '@/http/graphql/codegen/graphql';
 import EmptyRow from '@/components/table/EmptyRow';
 import ProductStockBodyRow from './ProductStockBodyRow';
 import LoadingRow from '@/components/table/LoadingRow';
@@ -31,10 +27,7 @@ const ProductStockTableBody: FC<Props> = ({
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
 
-  const handleClickOption = (
-    option: any | null,
-    product: SubsidiaryStockColumn | null
-  ) => {
+  const handleClickOption = (option: any | null, product: SubsidiaryStockColumn | null) => {
     setProductStock(product);
     if (option == 'add') {
       openAddStock();
@@ -67,10 +60,7 @@ const ProductStockTableBody: FC<Props> = ({
           />
         );
       })}
-      <LoadingRow
-        isLoading={isLoading}
-        colSpan={ProductStockHeaderList.length}
-      />
+      <LoadingRow isLoading={isLoading} colSpan={ProductStockHeaderList.length} />
     </CommonTableBody>
   );
 };
