@@ -43,7 +43,6 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
         snackMessage({ message: '오늘 사방넷 데이터를 모두 받아왔습니다.', severity: 'success' });
       },
     });
-    await client.refetchQueries({ include: 'all' });
   };
 
   return (
