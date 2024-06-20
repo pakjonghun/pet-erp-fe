@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import { AppBar, Stack, SxProps, Typography, keyframes, makeStyles, styled } from '@mui/material';
 import { Button } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -16,6 +16,17 @@ interface Props {
 
 const SubHeader: FC<Props> = ({ title, children, sx }) => {
   const [loadSabangData, { loading }] = useLoadSabangData();
+  const [delayLoading, setDelayLoading] = useState(false);
+
+  useEffect(() => {
+    if (!loading) {
+      setTimeout(() => {
+        setDelayLoading(loading);
+      }, 2000);
+    } else {
+      setDelayLoading(loading);
+    }
+  }, [loading]);
 
   const handleClickLoadSabang = async () => {
     loadSabangData({
@@ -36,8 +47,8 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
               cache.evict({ fieldName: 'topClients' });
             },
           });
+          snackMessage({ message: '오늘 사방넷 데이터를 모두 받아왔습니다.', severity: 'success' });
         }, 2000);
-        snackMessage({ message: '오늘 사방넷 데이터를 모두 받아왔습니다.', severity: 'success' });
       },
       onError: () => {
         snackMessage({ message: '오늘 사방넷 데이터를 모두 받아왔습니다.', severity: 'success' });
@@ -61,12 +72,12 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
         </Typography>
 
         <Button
-          disabled={loading}
+          disabled={delayLoading}
           onClick={handleClickLoadSabang}
           color="inherit"
           sx={{ width: 'fit-content', ml: 'auto', mr: 1 }}
           variant="outlined"
-          endIcon={<RotatingIcon loading={loading} />}
+          endIcon={<RotatingIcon loading={delayLoading} />}
         >
           사방넷
         </Button>
