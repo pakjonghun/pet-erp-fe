@@ -20,6 +20,23 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
   const handleClickLoadSabang = async () => {
     loadSabangData({
       onCompleted: async (res) => {
+        setTimeout(() => {
+          client.refetchQueries({
+            updateCache(cache) {
+              cache.evict({ fieldName: 'wholeSales' });
+              cache.evict({ fieldName: 'dashboardProduct' });
+              cache.evict({ fieldName: 'dashboardProducts' });
+              cache.evict({ fieldName: 'dashboardClients' });
+              cache.evict({ fieldName: 'dashboardClient' });
+              cache.evict({ fieldName: 'stocks' });
+              cache.evict({ fieldName: 'stocksState' });
+              cache.evict({ fieldName: 'productCountStocks' });
+              cache.evict({ fieldName: 'productSales' });
+              cache.evict({ fieldName: 'productSale' });
+              cache.evict({ fieldName: 'topClients' });
+            },
+          });
+        }, 2000);
         snackMessage({ message: '오늘 사방넷 데이터를 모두 받아왔습니다.', severity: 'success' });
       },
       onError: () => {
