@@ -131,7 +131,8 @@ const SettingMenuTrigger = () => {
           settingMenuKeys.map((item) => {
             const menu = SettingMenus[item];
             const canDisplay =
-              menu.role.length == 0 || menu.role.some((item) => role.includes(item));
+              menu.role.length == 0 || menu.role.some((item) => !!role?.includes(item));
+
             if (!canDisplay) return <></>;
             return (
               <BaseListItem disablePadding key={menu.label}>

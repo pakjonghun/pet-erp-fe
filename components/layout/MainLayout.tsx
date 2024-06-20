@@ -5,7 +5,7 @@ import Header from '@/components/layout/header/MainHeader';
 import MobileNav from '@/components/layout/navigation/MobileNav';
 import NavContent from '@/components/layout/navigation/NavContent';
 import useGetIsPublicPath from '@/hooks/useGetIsPublicPath';
-import { Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useReactiveVar } from '@apollo/client';
 import { authState } from '@/store/isLogin';
