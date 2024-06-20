@@ -41,6 +41,7 @@ const ProductSales = () => {
   };
 
   const rows = (data?.productSales?.data as ProductSaleData[]) ?? [];
+
   const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
   const isEmpty = !isLoading && rows.length === 0;
 
@@ -79,14 +80,14 @@ const ProductSales = () => {
       (acc, cur) => {
         return {
           totalCount: acc.totalCount + (cur?.sales?.accCount ?? 0),
-          totalPayCost: 0 + (cur?.sales?.accPayCost ?? 0),
-          totalProfit: 0 + (cur?.sales?.accProfit ?? 0),
+          totalPayCost: acc.totalPayCost + (cur?.sales?.accPayCost ?? 0),
+          totalProfit: acc.totalProfit + (cur?.sales?.accProfit ?? 0),
         };
       },
       { totalCount: 0, totalPayCost: 0, totalProfit: 0 }
     );
     saleTotal(totalData);
-  }, [data]);
+  }, [data?.productSales]);
 
   return (
     <TablePage sx={{ flex: 1 }}>

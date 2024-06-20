@@ -26,8 +26,7 @@ const TopClients = () => {
   });
 
   const rows = data?.dashboardClients ?? [];
-  const isLoading =
-    networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
+  const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
   const isEmpty = !isLoading && rows.length === 0;
   const { totalCount, totalPayCost, totalProfit } = useReactiveVar(clientTotal);
 
