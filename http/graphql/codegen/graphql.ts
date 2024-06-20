@@ -1084,7 +1084,6 @@ export enum UserRole {
   AdminAccess = 'ADMIN_ACCESS',
   AdminAccount = 'ADMIN_ACCOUNT',
   AdminDelivery = 'ADMIN_DELIVERY',
-  AdminIp = 'ADMIN_IP',
   AdminLog = 'ADMIN_LOG',
   BackDelete = 'BACK_DELETE',
   BackEdit = 'BACK_EDIT',
