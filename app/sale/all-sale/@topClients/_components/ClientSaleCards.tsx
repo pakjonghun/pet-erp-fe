@@ -16,7 +16,7 @@ const ClientSaleCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx })
     <Grid
       sx={{
         ...sx,
-        p: 2,
+        p: 4,
         maxHeight: TABLE_MAX_HEIGHT,
         overflow: 'auto',
       }}

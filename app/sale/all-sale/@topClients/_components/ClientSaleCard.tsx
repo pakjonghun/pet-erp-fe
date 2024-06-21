@@ -14,7 +14,7 @@ interface Props {
 const ClientSaleCard: FC<Props> = ({ clientSaleData, scrollRef }) => {
   const isShowPrevData = useReactiveVar(showPrevSaleData);
   return (
-    <Paper ref={scrollRef} sx={{ position: 'relative', py: 3, px: 4 }}>
+    <Paper ref={scrollRef} sx={{ position: 'relative', py: 1, px: 4 }}>
       <Box>
         <Typography>{clientSaleData.name}</Typography>
         <SaleCard

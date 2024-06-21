@@ -67,7 +67,7 @@ const TopClients = () => {
   }, [data?.dashboardClients]);
 
   return (
-    <TablePage>
+    <TablePage sx={{ height: 600 }}>
       <TableTitle sx={{ ml: 2 }} title={`TOP10 거래처`} />
       <ClientSaleCards
         sx={{

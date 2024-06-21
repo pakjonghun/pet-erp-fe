@@ -15,12 +15,11 @@ const SaleLayout: FC<Props> = ({ productSales, topClients }) => {
         sx={{
           flexDirection: {
             xs: 'column',
-            xl: 'row',
           },
         }}
       >
-        {topClients}
         {productSales}
+        {topClients}
       </Stack>
     </Box>
   );

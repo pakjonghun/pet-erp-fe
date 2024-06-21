@@ -50,7 +50,12 @@ const ProductSaleModal: FC<Props> = ({
           text={recentCreateDate == null ? '알수없음' : recentCreateDate}
         />
       </Stack>
-      <LabelText label="거래처별 판매수량" text={''} />
+
+      <LabelText
+        label="거래처별 판매수량"
+        text={clonedClients.length ? '' : '판매 기록 없음'}
+        sx={{ color: 'gray' }}
+      />
       <Stack direction="row" flexWrap="wrap" rowGap={1} columnGap={2} mt={1}>
         {(clonedClients ?? []).map((client) => {
           return (
@@ -62,7 +67,7 @@ const ProductSaleModal: FC<Props> = ({
           );
         })}
       </Stack>
-      <Box sx={{ bgcolor: 'grey.200', width: '100%', height: 320, color: 'white', mt: 2, pt: 2 }}>
+      {/* <Box sx={{ bgcolor: 'grey.200', width: '100%', height: 320, color: 'white', mt: 2, pt: 2 }}>
         {!!data ? (
           <LineChart
             xAxis={[
@@ -95,7 +100,7 @@ const ProductSaleModal: FC<Props> = ({
         ) : (
           <CommonLoading />
         )}
-      </Box>
+      </Box> */}
     </BaseModal>
   );
 };
