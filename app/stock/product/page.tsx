@@ -180,8 +180,10 @@ const ProductStockPage = () => {
                 }}
                 sx={{
                   my: 2,
+                  width: '100%',
+                  pr: 2,
                 }}
-                label="검색할 제품 이름을 입력하세요."
+                label="제품 이름을 입력하세요."
                 size="small"
               />
             </FormControl>

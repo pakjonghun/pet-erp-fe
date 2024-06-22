@@ -19,7 +19,6 @@ interface Props {
 }
 
 const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) => {
-  const { role } = useReactiveVar(authState);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<any, SelectedOptionItem> = {
     edit: {
@@ -52,7 +51,7 @@ const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) 
   const leadTime = biggestLeadTime < 0 ? null : biggestLeadTime;
 
   return (
-    <Paper ref={scrollRef} sx={{ position: 'relative', py: 3, px: 4 }}>
+    <Paper ref={scrollRef} sx={{ position: 'relative', p: 3 }}>
       <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
         {Object.entries(productOptionMenus).map(([option, menu]) => (
           <OptionMenu key={option} menu={menu} option={option} />
@@ -118,9 +117,9 @@ const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) 
       <LabelText
         label="제품목록"
         text={
-          <Stack direction="row" gap={1} flexWrap="wrap">
+          <Stack sx={{ mt: 1 }} direction="row" gap={1} flexWrap="wrap">
             {client.products.map((item) => {
-              return <Chip key={Math.random()} label={`${item.product.name}(${item.count})`} />;
+              return <Chip key={Math.random()} label={`${item.product.name}(${item.count}EA)`} />;
             })}
           </Stack>
         }

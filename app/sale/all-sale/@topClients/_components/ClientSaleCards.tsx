@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { ProductSaleData, SaleInfos } from '@/http/graphql/codegen/graphql';
+import { SaleInfos } from '@/http/graphql/codegen/graphql';
 import { TABLE_MAX_HEIGHT } from '@/constants';
 import { Grid, SxProps } from '@mui/material';
 import { CommonListProps } from '@/types';
@@ -16,7 +16,7 @@ const ClientSaleCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx })
     <Grid
       sx={{
         ...sx,
-        p: 4,
+        px: 2,
         maxHeight: TABLE_MAX_HEIGHT,
         overflow: 'auto',
       }}

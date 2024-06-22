@@ -71,7 +71,7 @@ const OrderBodyRow: FC<Props> = ({ isSelected, client, scrollRef, onClickOption,
           return (
             <Chip
               key={`${item.__typename}_${index}`}
-              label={`${item.product.name}(${item.count})`}
+              label={`${item.product.name}(${item.count}EA)`}
             />
           );
         })}

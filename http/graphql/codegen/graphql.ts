@@ -60,6 +60,12 @@ export type ClientInfo = {
   averagePayCost?: Maybe<Scalars['Float']['output']>;
 };
 
+export type ClientInfoMenu = {
+  __typename?: 'ClientInfoMenu';
+  accCount?: Maybe<Scalars['Int']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
 export type ClientsInput = {
   clientType?: InputMaybe<Array<ClientType>>;
   keyword: Scalars['String']['input'];
@@ -564,22 +570,6 @@ export type ProductSaleChartOutput = {
   accProfit?: Maybe<Scalars['Int']['output']>;
 };
 
-export type ProductSaleData = {
-  __typename?: 'ProductSaleData';
-  _id: Scalars['ID']['output'];
-  barCode?: Maybe<Scalars['String']['output']>;
-  category?: Maybe<ProductCategory>;
-  clients: Array<ClientInfo>;
-  code: Scalars['String']['output'];
-  leadTime?: Maybe<Scalars['Int']['output']>;
-  name: Scalars['String']['output'];
-  recentCreateDate?: Maybe<Scalars['String']['output']>;
-  salePrice?: Maybe<Scalars['Int']['output']>;
-  sales?: Maybe<SaleInfos>;
-  stock: Scalars['Int']['output'];
-  wonPrice?: Maybe<Scalars['Int']['output']>;
-};
-
 export type ProductSaleInput = {
   from: Scalars['Date']['input'];
   keyword: Scalars['String']['input'];
@@ -590,9 +580,34 @@ export type ProductSaleInput = {
   to: Scalars['Date']['input'];
 };
 
-export type ProductSaleOutput = {
-  __typename?: 'ProductSaleOutput';
-  data: Array<ProductSaleData>;
+export type ProductSaleMenu = {
+  __typename?: 'ProductSaleMenu';
+  _id: Scalars['ID']['output'];
+  accCount?: Maybe<Scalars['Int']['output']>;
+  accPayCost?: Maybe<Scalars['Int']['output']>;
+  accProfit?: Maybe<Scalars['Int']['output']>;
+  accWonCost?: Maybe<Scalars['Int']['output']>;
+  barCode?: Maybe<Scalars['String']['output']>;
+  category?: Maybe<ProductCategory>;
+  clients: Array<ClientInfoMenu>;
+  code: Scalars['String']['output'];
+  leadTime?: Maybe<Scalars['Int']['output']>;
+  name: Scalars['String']['output'];
+  prevAccCount?: Maybe<Scalars['Int']['output']>;
+  prevAccPayCost?: Maybe<Scalars['Int']['output']>;
+  prevAccProfit?: Maybe<Scalars['Int']['output']>;
+  prevAccProfitRate?: Maybe<Scalars['Float']['output']>;
+  prevAccWonCost?: Maybe<Scalars['Int']['output']>;
+  profitRate?: Maybe<Scalars['Float']['output']>;
+  recentCreateDate: Scalars['String']['output'];
+  salePrice?: Maybe<Scalars['Int']['output']>;
+  stock?: Maybe<Scalars['Int']['output']>;
+  wonPrice?: Maybe<Scalars['Int']['output']>;
+};
+
+export type ProductSaleMenuOutput = {
+  __typename?: 'ProductSaleMenuOutput';
+  data: Array<ProductSaleMenu>;
   totalCount: Scalars['Int']['output'];
 };
 
@@ -625,7 +640,7 @@ export type Query = {
   product: Product;
   productCountStocks?: Maybe<ProductCountStocksOutput>;
   productSale?: Maybe<Array<ProductSaleChartOutput>>;
-  productSales?: Maybe<ProductSaleOutput>;
+  productSales?: Maybe<ProductSaleMenuOutput>;
   products: ProductsOutput;
   stocks: StocksOutput;
   stocksOrder: Array<ProductOrder>;
@@ -1358,10 +1373,7 @@ export type ProductSalesQueryVariables = Exact<{
 }>;
 
 
-export type ProductSalesQuery = { __typename?: 'Query', productSales?: { __typename?: 'ProductSaleOutput', totalCount: number, data: Array<{ __typename?: 'ProductSaleData', stock: number, recentCreateDate?: string | null, code: string, name: string, leadTime?: number | null, wonPrice?: number | null, clients: Array<(
-        { __typename?: 'ClientInfo' }
-        & { ' $fragmentRefs'?: { 'ClientInfoFragment': ClientInfoFragment } }
-      )>, sales?: { __typename?: 'SaleInfos', accPayCost?: number | null, accCount?: number | null, name?: string | null, accProfit?: number | null, averagePayCost?: number | null, prevAccPayCost?: number | null, prevAccCount?: number | null, prevAccProfit?: number | null, prevAveragePayCost?: number | null } | null }> } | null };
+export type ProductSalesQuery = { __typename?: 'Query', productSales?: { __typename?: 'ProductSaleMenuOutput', totalCount: number, data: Array<{ __typename?: 'ProductSaleMenu', code: string, barCode?: string | null, name: string, wonPrice?: number | null, salePrice?: number | null, leadTime?: number | null, accPayCost?: number | null, accWonCost?: number | null, accCount?: number | null, accProfit?: number | null, profitRate?: number | null, stock?: number | null, recentCreateDate: string, prevAccCount?: number | null, prevAccPayCost?: number | null, prevAccWonCost?: number | null, prevAccProfit?: number | null, prevAccProfitRate?: number | null, clients: Array<{ __typename?: 'ClientInfoMenu', accCount?: number | null, name?: string | null }> }> } | null };
 
 export type ProductsQueryVariables = Exact<{
   productsInput: ProductsInput;
@@ -1720,7 +1732,7 @@ export const CreateProductDocument = {"kind":"Document","definitions":[{"kind":"
 export const DashboardProductDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"dashboardProduct"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"dashboardProductInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"FindDateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"dashboardProduct"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"dashboardProductInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"dashboardProductInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"current"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"accCount"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"accProfit"}},{"kind":"Field","name":{"kind":"Name","value":"averagePayCost"}}]}},{"kind":"Field","name":{"kind":"Name","value":"previous"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"accCount"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"accProfit"}},{"kind":"Field","name":{"kind":"Name","value":"averagePayCost"}}]}}]}}]}}]} as unknown as DocumentNode<DashboardProductQuery, DashboardProductQueryVariables>;
 export const DashboardProductsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"dashboardProducts"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"dashboardProductsInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"FindDateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"dashboardProducts"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"dashboardProductsInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"dashboardProductsInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"accPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"accCount"}},{"kind":"Field","name":{"kind":"Name","value":"accProfit"}},{"kind":"Field","name":{"kind":"Name","value":"averagePayCost"}},{"kind":"Field","name":{"kind":"Name","value":"averagePayCost"}},{"kind":"Field","name":{"kind":"Name","value":"prevAccPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"prevAccCount"}},{"kind":"Field","name":{"kind":"Name","value":"prevAccProfit"}},{"kind":"Field","name":{"kind":"Name","value":"prevAveragePayCost"}}]}}]}}]} as unknown as DocumentNode<DashboardProductsQuery, DashboardProductsQueryVariables>;
 export const ProductSaleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"productSale"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"productCode"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"productSale"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"productCode"},"value":{"kind":"Variable","name":{"kind":"Name","value":"productCode"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"accPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"accProfit"}}]}}]}}]} as unknown as DocumentNode<ProductSaleQuery, ProductSaleQueryVariables>;
-export const ProductSalesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"productSales"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"productSalesInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ProductSaleInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"productSales"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"productSalesInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"productSalesInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"stock"}},{"kind":"Field","name":{"kind":"Name","value":"recentCreateDate"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"leadTime"}},{"kind":"Field","name":{"kind":"Name","value":"wonPrice"}},{"kind":"Field","name":{"kind":"Name","value":"clients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ClientInfo"}}]}},{"kind":"Field","name":{"kind":"Name","value":"sales"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"accCount"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"accProfit"}},{"kind":"Field","name":{"kind":"Name","value":"averagePayCost"}},{"kind":"Field","name":{"kind":"Name","value":"prevAccPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"prevAccCount"}},{"kind":"Field","name":{"kind":"Name","value":"prevAccProfit"}},{"kind":"Field","name":{"kind":"Name","value":"prevAveragePayCost"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ClientInfo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ClientInfo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"productCode"}},{"kind":"Field","name":{"kind":"Name","value":"mallId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"averagePayCost"}},{"kind":"Field","name":{"kind":"Name","value":"accPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"accCount"}},{"kind":"Field","name":{"kind":"Name","value":"accProfit"}}]}}]} as unknown as DocumentNode<ProductSalesQuery, ProductSalesQueryVariables>;
+export const ProductSalesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"productSales"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"productSalesInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ProductSaleInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"productSales"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"productSalesInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"productSalesInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"barCode"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"wonPrice"}},{"kind":"Field","name":{"kind":"Name","value":"salePrice"}},{"kind":"Field","name":{"kind":"Name","value":"leadTime"}},{"kind":"Field","name":{"kind":"Name","value":"accPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"accWonCost"}},{"kind":"Field","name":{"kind":"Name","value":"accCount"}},{"kind":"Field","name":{"kind":"Name","value":"accProfit"}},{"kind":"Field","name":{"kind":"Name","value":"profitRate"}},{"kind":"Field","name":{"kind":"Name","value":"stock"}},{"kind":"Field","name":{"kind":"Name","value":"recentCreateDate"}},{"kind":"Field","name":{"kind":"Name","value":"clients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accCount"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"prevAccCount"}},{"kind":"Field","name":{"kind":"Name","value":"prevAccPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"prevAccWonCost"}},{"kind":"Field","name":{"kind":"Name","value":"prevAccProfit"}},{"kind":"Field","name":{"kind":"Name","value":"prevAccProfitRate"}}]}}]}}]}}]} as unknown as DocumentNode<ProductSalesQuery, ProductSalesQueryVariables>;
 export const ProductsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"products"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"productsInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ProductsInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"products"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"productsInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"productsInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductFragment"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductCategoryFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ProductCategory"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"barCode"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"wonPrice"}},{"kind":"Field","name":{"kind":"Name","value":"salePrice"}},{"kind":"Field","name":{"kind":"Name","value":"leadTime"}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductCategoryFragment"}}]}}]}}]} as unknown as DocumentNode<ProductsQuery, ProductsQueryVariables>;
 export const RemoveProductDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"removeProduct"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeProduct"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"_id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<RemoveProductMutation, RemoveProductMutationVariables>;
 export const UpdateProductDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateProduct"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"updateProductInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateProductInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateProduct"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"updateProductInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"updateProductInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductCategoryFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ProductCategory"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"barCode"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"wonPrice"}},{"kind":"Field","name":{"kind":"Name","value":"salePrice"}},{"kind":"Field","name":{"kind":"Name","value":"leadTime"}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductCategoryFragment"}}]}}]}}]} as unknown as DocumentNode<UpdateProductMutation, UpdateProductMutationVariables>;

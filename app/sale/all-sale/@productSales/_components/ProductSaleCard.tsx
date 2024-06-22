@@ -1,66 +1,63 @@
 import { FC } from 'react';
 import { Box, Chip, Paper, Stack, Typography } from '@mui/material';
-import { ProductSaleData } from '@/http/graphql/codegen/graphql';
+import { ProductSaleMenu } from '@/http/graphql/codegen/graphql';
 import SaleCard from '@/components/card/SaleCard';
 import { getProfitRate } from '@/utils/sale';
 import { useReactiveVar } from '@apollo/client';
 import { showPrevSaleData } from '@/store/saleStore';
 
 interface Props {
-  productSaleData: ProductSaleData;
+  productSaleData: ProductSaleMenu;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
 const ProductSaleCard: FC<Props> = ({ productSaleData, scrollRef }) => {
   const isShowPrevData = useReactiveVar(showPrevSaleData);
   return (
-    <Paper ref={scrollRef} sx={{ position: 'relative', py: 1, px: 4 }}>
+    <Paper ref={scrollRef} sx={{ position: 'relative', py: 2, px: 4 }}>
       <Box>
-        <Typography>{productSaleData.name}</Typography>
+        <Typography>{`${productSaleData.name} / ${productSaleData.code}`}</Typography>
         <SaleCard
           isShowPrevData={isShowPrevData}
           label="판매수량"
-          current={productSaleData.sales?.accCount ?? 0}
-          previous={productSaleData.sales?.prevAccCount ?? 0}
+          current={productSaleData?.accCount ?? 0}
+          previous={productSaleData?.prevAccCount ?? 0}
           numberType="comma"
         />
         <SaleCard
           isShowPrevData={isShowPrevData}
           label="매출"
-          current={productSaleData.sales?.accPayCost ?? 0}
-          previous={productSaleData.sales?.prevAccPayCost ?? 0}
+          current={productSaleData?.accPayCost ?? 0}
+          previous={productSaleData?.prevAccPayCost ?? 0}
         />
         <SaleCard
           isShowPrevData={isShowPrevData}
           label="수익"
-          current={productSaleData.sales?.accProfit ?? 0}
-          previous={productSaleData.sales?.prevAccProfit ?? 0}
+          current={productSaleData?.accProfit ?? 0}
+          previous={productSaleData?.prevAccProfit ?? 0}
         />
         <SaleCard
           isShowPrevData={isShowPrevData}
           label="수익율"
           numberType="percent"
-          current={getProfitRate(
-            productSaleData?.sales?.accProfit ?? 0,
-            productSaleData?.sales?.accPayCost ?? 0
-          )}
+          current={getProfitRate(productSaleData?.accProfit ?? 0, productSaleData?.accPayCost ?? 0)}
           previous={getProfitRate(
-            productSaleData?.sales?.prevAccProfit ?? 0,
-            productSaleData?.sales?.prevAccPayCost ?? 0
+            productSaleData?.prevAccProfit ?? 0,
+            productSaleData?.prevAccPayCost ?? 0
           )}
         />
         <Stack>
-          <Typography sx={{ mb: 2 }}>{`TOP 5 거래처 : ${
+          <Typography sx={{ mb: 0 }}>{`거래처 : ${
             productSaleData.clients.length === 0 ? '없음' : ''
           }`}</Typography>
 
-          <Stack direction="row" flexWrap="wrap" gap={1}>
+          <Stack direction="row" flexWrap="wrap" gap={1} sx={{ mt: 2 }}>
             {productSaleData.clients.slice(0, 5).map((client) => {
-              if (!!client._id?.mallId) {
+              if (!!client.name) {
                 return (
                   <Chip
-                    key={`${client._id.mallId}_${client._id.productCode}`}
-                    label={client._id.mallId}
+                    key={`${client.name}_${client.__typename}`}
+                    label={client.name}
                     variant="outlined"
                   />
                 );
