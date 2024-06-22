@@ -90,7 +90,7 @@ const ProductSales = () => {
   }, [data?.productSales]);
 
   return (
-    <TablePage sx={{ height: 600 }}>
+    <TablePage sx={{ height: 800 }}>
       {!!selectedProductSale && (
         <ProductSaleModal
           selectedProductSale={selectedProductSale}
