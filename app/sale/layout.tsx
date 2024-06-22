@@ -7,12 +7,7 @@ import SwitchDate from '@/components/calendar/dateSwitch/SwitchDate';
 import { SearchStandard } from '@/components/calendar/dateSwitch/types';
 import { DateRange } from '@/components/calendar/dateFilter/type';
 import { useReactiveVar } from '@apollo/client';
-import {
-  clientTotal,
-  saleRange,
-  saleTotal,
-  showPrevSaleData,
-} from '@/store/saleStore';
+import { clientTotal, saleRange, saleTotal, showPrevSaleData } from '@/store/saleStore';
 import { getToday } from '@/components/calendar/dateFilter/utils';
 import { usePathname } from 'next/navigation';
 import { SaleTabs } from './constants';
@@ -79,9 +74,22 @@ const SaleLayout: FC<Props> = ({ children }) => {
           })}
         </Tabs>
       </SubHeader>
-      <Stack direction="row" justifyContent="space-between">
+      <Stack
+        sx={{
+          display: 'flex',
+          flexDirection: {
+            xs: 'column',
+            md: 'row',
+          },
+          gap: 3,
+          justifyContent: {
+            md: 'space-between',
+          },
+          px: 4,
+        }}
+      >
         <SwitchDate
-          sx={{ pl: 3, mt: 2 }}
+          sx={{ mt: 2 }}
           range={range}
           setRange={setRange}
           searchStandard={searchStandard}

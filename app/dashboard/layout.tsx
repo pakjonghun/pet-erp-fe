@@ -72,7 +72,19 @@ const DashboardLayout: FC<Props> = ({ children }) => {
         </Tabs>
       </SubHeader>
       <Box sx={{ p: 3 }}>
-        <Stack direction="row" justifyContent="space-between">
+        <Stack
+          sx={{
+            display: 'flex',
+            flexDirection: {
+              xs: 'column',
+              md: 'row',
+            },
+            gap: 3,
+            justifyContent: {
+              md: 'space-between',
+            },
+          }}
+        >
           <SwitchDate
             range={{ from, to }}
             setRange={setRange}
