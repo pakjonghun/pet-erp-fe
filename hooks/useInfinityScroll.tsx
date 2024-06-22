@@ -9,15 +9,6 @@ const useInfinityScroll = ({
 }) => {
   const [ref, setRef] = useState<HTMLElement | null>(null);
 
-  const setScrollRef = (node: HTMLElement | null) => {
-    if (node) {
-      const observer = new IntersectionObserver(callback, option);
-      observer.observe(node);
-    }
-
-    setRef(node);
-  };
-
   useEffect(() => {
     if (!ref) return;
 
@@ -29,7 +20,7 @@ const useInfinityScroll = ({
     };
   }, [ref, option, callback]);
 
-  return setScrollRef;
+  return setRef;
 };
 
 export default useInfinityScroll;

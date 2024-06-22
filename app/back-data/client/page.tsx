@@ -82,7 +82,8 @@ const BackDataPage = () => {
       }
     }
   };
-  const scrollRef = useInfinityScroll({ callback });
+  const tableScrollRef = useInfinityScroll({ callback });
+  const cardScrollRef = useInfinityScroll({ callback });
   const isEmpty = !isLoading && rows.length === 0;
 
   const handleUploadExcelFile = (event: ChangeEvent<HTMLInputElement>) => {
@@ -226,7 +227,7 @@ const BackDataPage = () => {
           data={rows}
           isEmpty={isEmpty}
           isLoading={isLoading}
-          scrollRef={scrollRef}
+          scrollRef={cardScrollRef}
         />
         <ScrollTableContainer
           sx={{
@@ -252,7 +253,7 @@ const BackDataPage = () => {
               data={rows}
               isEmpty={isEmpty}
               isLoading={isLoading}
-              scrollRef={scrollRef}
+              scrollRef={tableScrollRef}
             />
           </CommonTable>
         </ScrollTableContainer>
@@ -269,7 +270,7 @@ const BackDataPage = () => {
         <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
           <TableTitle title="선택된 거래처 데이터" />
         </Stack>
-        <ClientCards
+        {/* <ClientCards
           sx={{
             display: {
               xs: 'block',
@@ -280,7 +281,7 @@ const BackDataPage = () => {
           isEmpty={isEmpty}
           isLoading={isLoading}
           scrollRef={scrollRef}
-        />
+        /> */}
         <TableContainer
           sx={{
             px: 2,
@@ -295,7 +296,7 @@ const BackDataPage = () => {
               </CommonHeaderRow>
             </TableHead>
             {selectedClient ? (
-              <TableRow hover ref={scrollRef}>
+              <TableRow hover ref={null}>
                 {parsedClient.map((item, index) => (
                   <Cell key={`${Math.random()}_${index}`} sx={{ minWidth: 200 }}>
                     {item}

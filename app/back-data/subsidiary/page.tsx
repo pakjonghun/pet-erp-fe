@@ -82,7 +82,8 @@ const BackDataPage = () => {
       }
     }
   };
-  const scrollRef = useInfinityScroll({ callback });
+  const tableScrollRef = useInfinityScroll({ callback });
+  const cardScrollRef = useInfinityScroll({ callback });
 
   const handleUploadExcelFile = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -232,7 +233,7 @@ const BackDataPage = () => {
           isLoading={isLoading}
           data={rows}
           isEmpty={isEmpty}
-          scrollRef={scrollRef}
+          scrollRef={cardScrollRef}
         />
         <ScrollTableContainer
           sx={{
@@ -257,7 +258,7 @@ const BackDataPage = () => {
               isLoading={isLoading}
               data={rows}
               isEmpty={isEmpty}
-              scrollRef={scrollRef}
+              scrollRef={tableScrollRef}
             />
           </CommonTable>
         </ScrollTableContainer>
@@ -290,7 +291,7 @@ const BackDataPage = () => {
               </CommonHeaderRow>
             </TableHead>
             {!!selectedSubsidiary ? (
-              <TableRow hover ref={scrollRef}>
+              <TableRow hover ref={null}>
                 {parsedRowData.map((item, index) => (
                   <Cell key={`${selectedSubsidiary._id}_${index}`} sx={{ minWidth: 200 }}>
                     {item}

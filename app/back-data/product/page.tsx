@@ -81,7 +81,8 @@ const ProductPage = () => {
       }
     }
   };
-  const scrollRef = useInfinityScroll({ callback });
+  const tableScrollRef = useInfinityScroll({ callback });
+  const cardScrollRef = useInfinityScroll({ callback });
 
   const handleUploadExcelFile = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -229,7 +230,7 @@ const ProductPage = () => {
           isLoading={isLoading}
           data={rows}
           isEmpty={isEmpty}
-          scrollRef={scrollRef}
+          scrollRef={cardScrollRef}
         />
         <ScrollTableContainer
           sx={{
@@ -255,7 +256,7 @@ const ProductPage = () => {
               isLoading={isLoading}
               data={rows}
               isEmpty={isEmpty}
-              scrollRef={scrollRef}
+              scrollRef={tableScrollRef}
             />
           </CommonTable>
         </ScrollTableContainer>
@@ -283,7 +284,7 @@ const ProductPage = () => {
             </TableHead>
             <CommonTableBody>
               {!!selectedProduct ? (
-                <TableRow hover ref={scrollRef}>
+                <TableRow hover ref={null}>
                   {parsedRowData.map((item, index) => (
                     <Cell key={`${selectedProduct._id}_${index}`} sx={{ minWidth: 200 }}>
                       {item}

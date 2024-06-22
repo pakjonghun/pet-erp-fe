@@ -74,7 +74,8 @@ const OrderPage = () => {
       });
     }
   };
-  const scrollRef = useInfinityScroll({ callback });
+  const tableScrollRef = useInfinityScroll({ callback });
+  const cardScrollRef = useInfinityScroll({ callback });
   const isEmpty = !isLoading && rows.length === 0;
 
   const [openCreateClient, setOpenCreateClient] = useState(false);
@@ -190,7 +191,7 @@ const OrderPage = () => {
           data={rows as ProductOrder[]}
           isEmpty={isEmpty}
           isLoading={isLoading}
-          scrollRef={scrollRef}
+          scrollRef={cardScrollRef}
         />
         <ScrollTableContainer
           sx={{
@@ -215,7 +216,7 @@ const OrderPage = () => {
               data={rows as ProductOrder[]}
               isEmpty={isEmpty}
               isLoading={isLoading}
-              scrollRef={scrollRef}
+              scrollRef={tableScrollRef}
             />
           </CommonTable>
         </ScrollTableContainer>
@@ -250,7 +251,7 @@ const OrderPage = () => {
               </CommonHeaderRow>
             </TableHead>
             {!!selectedOrder ? (
-              <TableRow hover ref={scrollRef}>
+              <TableRow hover ref={null}>
                 {parsedOrder.map((item, index) => (
                   <Cell key={`${selectedOrder._id}_${index}`} sx={{ minWidth: 200 }}>
                     {item}

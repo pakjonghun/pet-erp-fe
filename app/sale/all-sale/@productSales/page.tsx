@@ -67,7 +67,8 @@ const ProductSales = () => {
       }
     }
   };
-  const scrollRef = useInfinityScroll({ callback });
+  const tableScrollRef = useInfinityScroll({ callback });
+  const cardScrollRef = useInfinityScroll({ callback });
 
   const sortController = {
     order,
@@ -150,7 +151,7 @@ const ProductSales = () => {
         data={rows}
         isEmpty={isEmpty}
         isLoading={isLoading}
-        scrollRef={scrollRef}
+        scrollRef={cardScrollRef}
         setSelectedProductSale={setSelectedProductSale}
       />
       <ProductSaleTable
@@ -158,7 +159,7 @@ const ProductSales = () => {
         data={rows}
         isEmpty={isEmpty}
         isLoading={isLoading}
-        scrollRef={scrollRef}
+        scrollRef={tableScrollRef}
       />
     </TablePage>
   );

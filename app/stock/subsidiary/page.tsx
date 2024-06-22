@@ -80,7 +80,8 @@ const SubsidiaryStockPage = () => {
       }
     }
   };
-  const scrollRef = useInfinityScroll({ callback });
+  const tableScrollRef = useInfinityScroll({ callback });
+  const cardScrollRef = useInfinityScroll({ callback });
   const isEmpty = !isLoading && rows.length === 0;
 
   const [openAddStock, setOpenAddStock] = useState(false);
@@ -215,7 +216,7 @@ const SubsidiaryStockPage = () => {
           data={rows}
           isEmpty={isEmpty}
           isLoading={isLoading}
-          scrollRef={scrollRef}
+          scrollRef={cardScrollRef}
         />
         <ScrollTableContainer
           sx={{
@@ -242,7 +243,7 @@ const SubsidiaryStockPage = () => {
               data={rows}
               isEmpty={isEmpty}
               isLoading={isLoading}
-              scrollRef={scrollRef}
+              scrollRef={tableScrollRef}
             />
           </CommonTable>
         </ScrollTableContainer>

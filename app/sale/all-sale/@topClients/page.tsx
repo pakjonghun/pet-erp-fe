@@ -54,7 +54,8 @@ const TopClients = () => {
       }
     }
   };
-  const scrollRef = useInfinityScroll({ callback });
+  const tableScrollRef = useInfinityScroll({ callback });
+  const cardScrollRef = useInfinityScroll({ callback });
 
   useEffect(() => {
     const totalData = rows.reduce(
@@ -94,7 +95,7 @@ const TopClients = () => {
         data={rows}
         isEmpty={isEmpty}
         isLoading={isLoading}
-        scrollRef={scrollRef}
+        scrollRef={cardScrollRef}
       />
       <ScrollTableContainer
         sx={{
@@ -134,7 +135,7 @@ const TopClients = () => {
             data={rows}
             isEmpty={isEmpty}
             isLoading={isLoading}
-            scrollRef={scrollRef}
+            scrollRef={tableScrollRef}
           />
         </CommonTable>
       </ScrollTableContainer>

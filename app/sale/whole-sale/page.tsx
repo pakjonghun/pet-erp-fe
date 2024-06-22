@@ -83,7 +83,8 @@ const WholeSalePage = () => {
       });
     }
   };
-  const scrollRef = useInfinityScroll({ callback });
+  const tableScrollRef = useInfinityScroll({ callback });
+  const cardScrollRef = useInfinityScroll({ callback });
 
   const [openCreateProduct, setOpenCreateProduct] = useState(false);
   const [selectedWholeSale, setSelectedWholeSale] = useState<null | WholeSaleItem>(null);
@@ -189,7 +190,7 @@ const WholeSalePage = () => {
           isLoading={isLoading}
           data={rows}
           isEmpty={isEmpty}
-          scrollRef={scrollRef}
+          scrollRef={cardScrollRef}
         />
         <ScrollTableContainer
           sx={{
@@ -213,7 +214,7 @@ const WholeSalePage = () => {
               isLoading={isLoading}
               data={rows}
               isEmpty={isEmpty}
-              scrollRef={scrollRef}
+              scrollRef={tableScrollRef}
             />
           </CommonTable>
         </ScrollTableContainer>
@@ -246,7 +247,7 @@ const WholeSalePage = () => {
             </TableHead>
 
             {!!selectedWholeSale ? (
-              <TableRow hover ref={scrollRef}>
+              <TableRow hover ref={null}>
                 {parsedRowData.map((item, index) => (
                   <Cell key={`${selectedWholeSale._id}_${index}`} sx={{ minWidth: 200 }}>
                     {item}
