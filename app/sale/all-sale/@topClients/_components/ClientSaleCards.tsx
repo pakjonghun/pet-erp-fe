@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { SaleInfos } from '@/http/graphql/codegen/graphql';
+import { ClientSaleMenu } from '@/http/graphql/codegen/graphql';
 import { TABLE_MAX_HEIGHT } from '@/constants';
 import { Grid, SxProps } from '@mui/material';
 import { CommonListProps } from '@/types';
@@ -7,11 +7,19 @@ import EmptyItem from '@/components/ui/listItem/EmptyItem';
 import LoadingCard from '@/components/ui/loading/LoadingCard';
 import ClientSaleCard from './ClientSaleCard';
 
-interface Props extends CommonListProps<SaleInfos> {
+interface Props extends CommonListProps<ClientSaleMenu> {
+  setSelectedClient: (selectedClient: null | ClientSaleMenu) => void;
   sx?: SxProps;
 }
 
-const ClientSaleCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx }) => {
+const ClientSaleCards: FC<Props> = ({
+  data,
+  isLoading,
+  isEmpty,
+  scrollRef,
+  setSelectedClient,
+  sx,
+}) => {
   return (
     <Grid
       sx={{
@@ -28,7 +36,13 @@ const ClientSaleCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx })
       {data.map((item, index) => {
         const isLast = index === data.length - 1;
         return (
-          <Grid key={`${item.name}_${index}`} item xs={12} lg={6}>
+          <Grid
+            onClick={() => setSelectedClient(item)}
+            key={`${item.name}_${index}`}
+            item
+            xs={12}
+            lg={6}
+          >
             <ClientSaleCard clientSaleData={item} scrollRef={isLast ? scrollRef : null} />
           </Grid>
         );

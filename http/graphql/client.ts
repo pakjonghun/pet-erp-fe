@@ -223,6 +223,11 @@ export const client = new ApolloClient({
             keyArgs: ['productSalesInput', ['keyword', 'from', 'to', 'sort', 'order']],
             merge,
           },
+
+          saleMenuClients: {
+            keyArgs: ['saleMenuClientsInput', ['from', 'to']],
+            merge,
+          },
         },
       },
     },

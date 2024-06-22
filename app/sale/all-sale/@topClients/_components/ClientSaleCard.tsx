@@ -1,13 +1,13 @@
 import { FC } from 'react';
 import { Box, Paper, Typography } from '@mui/material';
-import { SaleInfos } from '@/http/graphql/codegen/graphql';
+import { ClientSaleMenu } from '@/http/graphql/codegen/graphql';
 import SaleCard from '@/components/card/SaleCard';
 import { getProfitRate } from '@/utils/sale';
 import { useReactiveVar } from '@apollo/client';
 import { showPrevSaleData } from '@/store/saleStore';
 
 interface Props {
-  clientSaleData: SaleInfos;
+  clientSaleData: ClientSaleMenu;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 

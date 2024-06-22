@@ -1,7 +1,7 @@
 'use client';
 
 import { FC } from 'react';
-import { SaleInfos } from '@/http/graphql/codegen/graphql';
+import { ClientSaleMenu } from '@/http/graphql/codegen/graphql';
 import Cell from '@/components/table/Cell';
 import EmptyRow from '@/components/table/EmptyRow';
 import { TableRow } from '@mui/material';
@@ -11,26 +11,33 @@ import { CommonListProps } from '@/types';
 import { CommonTableBody } from '@/components/commonStyles';
 import { useReactiveVar } from '@apollo/client';
 import { showPrevSaleData } from '@/store/saleStore';
+import LoadingRow from '@/components/table/LoadingRow';
 
-interface Props extends CommonListProps<SaleInfos> {}
+interface Props extends CommonListProps<ClientSaleMenu> {
+  setSelectedClient: (selectedClient: null | ClientSaleMenu) => void;
+}
 
 const ClientSaleTableBodySection: FC<Props> = ({
   data,
   isEmpty,
   isLoading,
   scrollRef,
+  setSelectedClient,
 }) => {
   const isShowSalePrevData = useReactiveVar(showPrevSaleData);
 
   return (
     <CommonTableBody>
       <EmptyRow colSpan={5} isEmpty={isEmpty} />
+      <LoadingRow colSpan={5} isLoading={isLoading} />
       {data.map((row, index) => {
         const isLast = index === data.length - 1;
         return (
+          //@ts-ignore
           <TableRow
+            onClick={() => setSelectedClient(row)}
             hover
-            // ref={isLast ? scrollRef : null}
+            ref={isLast ? scrollRef : null}
             key={index}
           >
             <Cell sx={{ minWidth: 200 }}>{row.name}</Cell>
@@ -54,10 +61,7 @@ const ClientSaleTableBodySection: FC<Props> = ({
               isShowPrevData={isShowSalePrevData}
               numberType="percent"
               current={getProfitRate(row?.accProfit ?? 0, row?.accPayCost ?? 0)}
-              previous={getProfitRate(
-                row?.prevAccProfit ?? 0,
-                row?.prevAccPayCost ?? 0
-              )}
+              previous={getProfitRate(row?.prevAccProfit ?? 0, row?.prevAccPayCost ?? 0)}
             />
           </TableRow>
         );

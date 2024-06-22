@@ -151,6 +151,7 @@ const ProductSales = () => {
         isEmpty={isEmpty}
         isLoading={isLoading}
         scrollRef={scrollRef}
+        setSelectedProductSale={setSelectedProductSale}
       />
       <ProductSaleTable
         setSelectedProductSale={setSelectedProductSale}
