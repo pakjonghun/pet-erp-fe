@@ -77,10 +77,10 @@ const EditSelfRoleModal: FC<Props> = ({ myInfo, open, onClose }) => {
         권한 수정
       </Typography>
       <Typography sx={{ color: (theme) => theme.palette.warning.dark }}>
-        ADMIN 계정만 권한을 수정할 수 있습니다.
+        계정관리권한이 있는 계정만 계정권한을 수정 할 수 있습니다.
       </Typography>
       <Typography sx={{ mb: 2, color: (theme) => theme.palette.warning.dark }}>
-        다른권한으로 수정시 다시 권한수정이 불가능합니다.
+        계정관리 권한을 해제하면 계정권한을 수정할 수 없습니다.
       </Typography>
       {Array.from(roleList).map(([title, elements]) => {
         const hangleTitle = roleTitleToHangle[title];
