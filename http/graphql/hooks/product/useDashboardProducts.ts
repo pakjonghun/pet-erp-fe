@@ -25,6 +25,7 @@ export const useDashboardProducts = (dashboardProductsInput: FindDateInput) => {
     variables: {
       dashboardProductsInput,
     },
+    fetchPolicy: 'no-cache',
     notifyOnNetworkStatusChange: true,
   });
 };
