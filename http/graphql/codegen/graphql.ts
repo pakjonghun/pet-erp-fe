@@ -1159,6 +1159,7 @@ export enum UserRole {
   SaleCreate = 'SALE_CREATE',
   SaleDelete = 'SALE_DELETE',
   SaleEdit = 'SALE_EDIT',
+  StockConfirm = 'STOCK_CONFIRM',
   StockIn = 'STOCK_IN',
   StockOut = 'STOCK_OUT'
 }
