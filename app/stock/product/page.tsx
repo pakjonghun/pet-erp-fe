@@ -15,7 +15,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Search } from '@mui/icons-material';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import AddProductStockModal from './_components/AddProductStockModal';
 import OutProductStockModal from './_components/OutProductStockModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
@@ -35,12 +35,61 @@ import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 import CollapseRow from './_components/CollapseRow';
 import EmptyRow from '@/components/table/EmptyRow';
 import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
+import CheckIcon from '@mui/icons-material/Check';
+import UploadButton from '@/components/ui/button/UploadButtont';
+import { snackMessage } from '@/store/snackMessage';
+import { client } from '@/http/graphql/client';
+import { useUploadStock } from '@/http/rest/hooks/file/useUploadStock';
 
 const ProductStockPage = () => {
   const { data: userData } = useGetMyInfo();
   const myRole = userData?.myInfo.role ?? [];
   const canIn = myRole.includes(UserRole.StockIn);
   const canOut = myRole.includes(UserRole.StockOut);
+  const canStockConfirm = myRole.includes(UserRole.StockOut);
+  const [fileKey, setFileKey] = useState(new Date());
+  const { mutate: uploadFile, isPending } = useUploadStock();
+
+  const handleChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const formBody = new FormData();
+    formBody.append('file', file);
+
+    uploadFile(
+      { service: 'storage', formBody },
+      {
+        onSuccess: () => {
+          snackMessage({
+            message: '창고 업로드가 완료되었습니다.',
+            severity: 'success',
+          });
+          client.refetchQueries({
+            updateCache(cache) {
+              cache.evict({ fieldName: 'subsidiaryStocks' });
+              cache.evict({ fieldName: 'subsidiaryStocksState' });
+              cache.evict({ fieldName: 'subsidiaryCountStocks' });
+              cache.evict({ fieldName: 'stocks' });
+              cache.evict({ fieldName: 'productCountStocks' });
+              cache.evict({ fieldName: 'stocksState' });
+            },
+          });
+          // refetch();
+        },
+        onError: (err) => {
+          const message = err.response?.data.message;
+          snackMessage({
+            message: message ?? '창고 업로드가 실패했습니다.',
+            severity: 'error',
+          });
+        },
+        onSettled: () => {
+          setFileKey(new Date());
+        },
+      }
+    );
+  };
 
   const { data: storageData } = useStorages({
     keyword: '',
@@ -132,6 +181,15 @@ const ProductStockPage = () => {
         <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
           <TableTitle title="제품 재고관리" />
           <Stack direction="row" alignItems="center" gap={2}>
+            {canStockConfirm && (
+              <UploadButton
+                fileKey={fileKey}
+                loading={isPending}
+                text="재고 겨산"
+                onChange={handleChangeFile}
+              />
+            )}
+
             {canIn && (
               <ActionButton
                 icon={<AddCircleOutlineIcon />}
