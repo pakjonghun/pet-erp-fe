@@ -24,5 +24,6 @@ export const useDashboardClients = (dashboardClientsInput: FindDateInput) => {
     variables: {
       dashboardClientsInput,
     },
+    fetchPolicy: 'no-cache',
   });
 };
