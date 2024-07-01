@@ -9,3 +9,5 @@ export const DashboardTabs = {
     label: '인사이트',
   },
 };
+
+export const TABLE_HEIGHT = '800px';

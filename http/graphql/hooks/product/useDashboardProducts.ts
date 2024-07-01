@@ -5,17 +5,20 @@ import { FindDateInput } from '../../codegen/graphql';
 const dashboardProducts = graphql(`
   query dashboardProducts($dashboardProductsInput: FindDateInput!) {
     dashboardProducts(dashboardProductsInput: $dashboardProductsInput) {
-      _id
-      name
-      accPayCost
-      accCount
-      accProfit
-      averagePayCost
-      averagePayCost
-      prevAccPayCost
-      prevAccCount
-      prevAccProfit
-      prevAveragePayCost
+      data {
+        _id
+        name
+        accPayCost
+        accCount
+        accProfit
+        averagePayCost
+        averagePayCost
+        prevAccPayCost
+        prevAccCount
+        prevAccProfit
+        prevAveragePayCost
+      }
+      totalCount
     }
   }
 `);
@@ -25,7 +28,7 @@ export const useDashboardProducts = (dashboardProductsInput: FindDateInput) => {
     variables: {
       dashboardProductsInput,
     },
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
   });
 };

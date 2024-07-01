@@ -160,13 +160,34 @@ export const client = new ApolloClient({
       }
     `),
     typePolicies: {
+      SaleInfos: {
+        keyFields: () => {
+          return [
+            '_id',
+            'name',
+            'accPayCost',
+            'accCount',
+            'accProfit',
+            'prevAccPayCost',
+            'prevAccCount',
+            'prevAccProfit',
+          ];
+        },
+      },
       Query: {
         fields: {
           logs: {
             keyArgs: ['findLogsQuery', ['keyword', 'from', 'to', 'keywordTarget']],
             merge,
           },
-
+          dashboardProducts: {
+            keyArgs: ['dashboardProductsInput', ['from', 'to', 'idenifier']],
+            merge,
+          },
+          dashboardClients: {
+            keyArgs: ['dashboardClientsInput', ['from', 'to', 'idenifier']],
+            merge,
+          },
           topClients: {
             keyArgs: ['topClientInput', ['from', 'to']],
             merge,

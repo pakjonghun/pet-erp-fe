@@ -5,16 +5,20 @@ import { FindDateInput } from '../../codegen/graphql';
 const dashboardClients = graphql(`
   query dashboardClients($dashboardClientsInput: FindDateInput!) {
     dashboardClients(dashboardClientsInput: $dashboardClientsInput) {
-      name
-      accPayCost
-      accCount
-      accProfit
-      averagePayCost
-      averagePayCost
-      prevAccPayCost
-      prevAccCount
-      prevAccProfit
-      prevAveragePayCost
+      data {
+        _id
+        name
+        accPayCost
+        accCount
+        accProfit
+        averagePayCost
+        averagePayCost
+        prevAccPayCost
+        prevAccCount
+        prevAccProfit
+        prevAveragePayCost
+      }
+      totalCount
     }
   }
 `);
@@ -24,6 +28,6 @@ export const useDashboardClients = (dashboardClientsInput: FindDateInput) => {
     variables: {
       dashboardClientsInput,
     },
-    fetchPolicy: 'no-cache',
+    notifyOnNetworkStatusChange: true,
   });
 };
