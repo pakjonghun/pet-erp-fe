@@ -139,6 +139,7 @@ export const client = new ApolloClient({
         manager
         managerTel
         inActive
+        storageId
       }
 
       fragment ClientInfo on ClientInfo {

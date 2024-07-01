@@ -1,6 +1,7 @@
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
   Autocomplete,
+  AutocompleteRenderInputParams,
   Button,
   FormControl,
   FormControlLabel,
@@ -19,12 +20,14 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { modalSizeProps } from '@/components/commonStyles';
 import { useCreateClient } from '@/http/graphql/hooks/client/useCreateClient';
-import { ClientType } from '@/http/graphql/codegen/graphql';
+import { ClientType, Storage } from '@/http/graphql/codegen/graphql';
 import { filterEmptyValues } from '@/utils/common';
 import { clientTypes } from '../constants';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { CLIENT_PREFIX } from '@/constants';
 import { client } from '@/http/graphql/client';
+import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
+import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 
 interface Props {
   open: boolean;
@@ -52,6 +55,14 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
       inActive: true,
     },
   });
+
+  const { data: storageData, networkStatus } = useStorages({
+    keyword: '',
+    limit: 100,
+    skip: 0,
+  });
+  const storageList = (storageData?.storages.data as Storage[]) ?? [];
+  const storageNameList = storageList.map((item) => item.name);
 
   const onSubmit = (values: CreateClientForm) => {
     const newValues = filterEmptyValues(values) as CreateClientForm;
@@ -272,6 +283,37 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
                 />
               </FormControl>
             )}
+          />
+          <Controller
+            control={control}
+            name="storageName"
+            render={({ field }) => {
+              return (
+                <SearchAutoComplete
+                  inputValue={field.value ?? ''}
+                  onInputChange={field.onChange}
+                  loading={networkStatus <= 3}
+                  options={storageNameList}
+                  setValue={field.onChange}
+                  value={field.value ?? ''}
+                  scrollRef={() => {}}
+                  renderSearchInput={(params: AutocompleteRenderInputParams) => {
+                    return (
+                      <FormControl fullWidth>
+                        <TextField
+                          {...params}
+                          {...field}
+                          label="출고 창고선택"
+                          error={!!errors.storageName?.message}
+                          helperText={errors.storageName?.message ?? ''}
+                          size="small"
+                        />
+                      </FormControl>
+                    );
+                  }}
+                />
+              );
+            }}
           />
         </FormGroup>
         <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">

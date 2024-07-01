@@ -5,11 +5,12 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { Client } from '@/http/graphql/codegen/graphql';
+import { Client, Storage } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import { SelectOption } from '../../types';
 import { ClientTypeToHangle } from '../constants';
 import { getFixedTwo } from '@/utils/sale';
+import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 
 interface Props {
   isSelected: boolean;
@@ -19,13 +20,7 @@ interface Props {
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const ClientBodyRow: FC<Props> = ({
-  isSelected,
-  client,
-  scrollRef,
-  onClickOption,
-  onClickRow,
-}) => {
+const ClientBodyRow: FC<Props> = ({ isSelected, client, scrollRef, onClickOption, onClickRow }) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<SelectOption, SelectedOptionItem> = {
     edit: {
@@ -46,6 +41,16 @@ const ClientBodyRow: FC<Props> = ({
     },
   };
 
+  const { data: storages } = useStorages({
+    keyword: '',
+    limit: 1000,
+    skip: 0,
+  });
+
+  const targetStorage = ((storages?.storages.data as Storage[]) ?? []).find(
+    (item) => item._id === client?.storageId
+  );
+
   const createRow = (client: Client) => {
     return [
       client.name,
@@ -57,6 +62,7 @@ const ClientBodyRow: FC<Props> = ({
       client.manager ?? EMPTY,
       client.managerTel ?? EMPTY,
       client.inActive ? '거래중' : '거래종료',
+      targetStorage?.name ?? EMPTY,
     ];
   };
 
@@ -70,11 +76,7 @@ const ClientBodyRow: FC<Props> = ({
       hover
       ref={scrollRef}
     >
-      <Menu
-        anchorEl={menuAnchor}
-        open={!!menuAnchor}
-        onClose={() => setMenuAnchor(null)}
-      >
+      <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
         {Object.entries(productOptionMenus).map(([option, menu]) => (
           <OptionMenu key={option} menu={menu} option={option} />
         ))}
@@ -88,16 +90,6 @@ const ClientBodyRow: FC<Props> = ({
           {item}
         </Cell>
       ))}
-      {/* 
-      <Cell sx={{ minWidth: 50 }}>
-        <IconButton
-          onClick={(event) => {
-            setMenuAnchor(event.currentTarget);
-          }}
-        >
-          <MoreHorizIcon />
-        </IconButton>
-      </Cell> */}
     </TableRow>
   );
 };

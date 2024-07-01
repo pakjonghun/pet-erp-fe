@@ -1,11 +1,12 @@
 import { FC } from 'react';
-import { Client } from '@/http/graphql/codegen/graphql';
+import { Client, Storage } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
 import ModalTitle from '@/components/ui/typograph/ModalTitle';
 import { Stack, Button } from '@mui/material';
 import BasePopover from '@/components/ui/modal/BasePopover';
 import { EMPTY } from '@/constants';
 import { getFixedTwo } from '@/utils/sale';
+import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 
 interface Props {
   open: boolean;
@@ -26,6 +27,16 @@ const ClientDetailPopover: FC<Props> = ({
   onClickDelete,
   onClickEdit,
 }) => {
+  const { data: storages } = useStorages({
+    keyword: '',
+    limit: 1000,
+    skip: 0,
+  });
+
+  const targetStorage = ((storages?.storages.data as Storage[]) ?? []).find(
+    (item) => item._id === selectedClient?.storageId
+  );
+
   return (
     <BasePopover onClose={onClose} position={position} open={open} anchorEl={anchorEl}>
       <ModalTitle text="거래처 세부내용" />
@@ -45,6 +56,7 @@ const ClientDetailPopover: FC<Props> = ({
         <LabelText label="관리자" text={selectedClient.manager ?? EMPTY} />
         <LabelText label="연락처" text={selectedClient.managerTel ?? EMPTY} />
         <LabelText label="거래여부" text={selectedClient.inActive ? '거래중' : '거래종료'} />
+        <LabelText label="출고창고" text={targetStorage?.name ?? EMPTY} />
       </Stack>
       <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
         <Button color="error" variant="outlined" onClick={onClickDelete}>

@@ -2,6 +2,7 @@ import { FC, useEffect } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
   Autocomplete,
+  AutocompleteRenderInputParams,
   Button,
   FormControl,
   FormControlLabel,
@@ -13,21 +14,20 @@ import {
   Typography,
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
-import {
-  CreateClientForm,
-  createClientSchema,
-} from '../_validations/createClientValidation';
+import { CreateClientForm, createClientSchema } from '../_validations/createClientValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { modalSizeProps } from '@/components/commonStyles';
-import { Client, ClientType } from '@/http/graphql/codegen/graphql';
+import { Client, ClientType, Storage } from '@/http/graphql/codegen/graphql';
 import { emptyValueToNull } from '@/utils/common';
 import { clientTypes } from '../constants';
 import { useUpdateClient } from '@/http/graphql/hooks/client/useEditClient';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { CLIENT_PREFIX } from '@/constants';
 import { client } from '@/http/graphql/client';
+import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
+import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 
 interface Props {
   open: boolean;
@@ -36,13 +36,21 @@ interface Props {
   setSelectedClient: (item: Client | null) => void;
 }
 
-const EditPClientModal: FC<Props> = ({
-  open,
-  selectedClient,
-  onClose,
-  setSelectedClient,
-}) => {
+const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelectedClient }) => {
   const [editClient, { loading }] = useUpdateClient();
+
+  const { data: storages, networkStatus } = useStorages({
+    keyword: '',
+    limit: 1000,
+    skip: 0,
+  });
+
+  const storageList = (storages?.storages.data as Storage[]) ?? [];
+  const storageNameList = storageList.map((item) => item.name);
+
+  const targetStorage = ((storages?.storages.data as Storage[]) ?? []).find(
+    (item) => item._id === selectedClient?.storageId
+  );
 
   const {
     reset,
@@ -54,10 +62,7 @@ const EditPClientModal: FC<Props> = ({
     defaultValues: {
       code: selectedClient.code,
       name: selectedClient.name,
-      feeRate:
-        selectedClient.feeRate == null
-          ? undefined
-          : selectedClient.feeRate * 100,
+      feeRate: selectedClient.feeRate == null ? undefined : selectedClient.feeRate * 100,
       clientType: selectedClient.clientType ?? '',
       businessName: selectedClient.businessName ?? '',
       businessNumber: selectedClient.businessNumber ?? '',
@@ -69,13 +74,12 @@ const EditPClientModal: FC<Props> = ({
   });
 
   useEffect(() => {
+    if (networkStatus <= 3) return;
+
     reset({
       code: selectedClient.code,
       name: selectedClient.name,
-      feeRate:
-        selectedClient.feeRate == null
-          ? undefined
-          : selectedClient.feeRate * 100,
+      feeRate: selectedClient.feeRate == null ? undefined : selectedClient.feeRate * 100,
       clientType: selectedClient.clientType ?? '',
       businessName: selectedClient.businessName ?? '',
       businessNumber: selectedClient.businessNumber ?? '',
@@ -83,20 +87,18 @@ const EditPClientModal: FC<Props> = ({
       manager: selectedClient.manager ?? '',
       managerTel: selectedClient.managerTel ?? '',
       inActive: !!selectedClient.inActive,
+      storageName: targetStorage?.name,
     });
-  }, [selectedClient]);
+  }, [selectedClient, networkStatus]);
 
   const onSubmit = (values: CreateClientForm) => {
-    const { code, name, ...newValues } = emptyValueToNull(
-      values
-    ) as CreateClientForm;
+    const { code, name, ...newValues } = emptyValueToNull(values) as CreateClientForm;
     editClient({
       variables: {
         updateClientInput: {
           ...newValues,
           _id: selectedClient._id,
-          feeRate:
-            newValues.feeRate == null ? null : Number(newValues.feeRate) / 100,
+          feeRate: newValues.feeRate == null ? null : Number(newValues.feeRate) / 100,
         },
       },
       onCompleted: (res) => {
@@ -211,9 +213,7 @@ const EditPClientModal: FC<Props> = ({
                   label="수수료 비율(0~100사이 숫자)"
                   error={!!errors.feeRate?.message}
                   helperText={errors.feeRate?.message ?? ''}
-                  endAdornment={
-                    <InputAdornment position="end">%</InputAdornment>
-                  }
+                  endAdornment={<InputAdornment position="end">%</InputAdornment>}
                 />
               </FormControl>
             )}
@@ -318,16 +318,43 @@ const EditPClientModal: FC<Props> = ({
               </FormControl>
             )}
           />
+          <Controller
+            control={control}
+            name="storageName"
+            render={({ field }) => {
+              return (
+                <SearchAutoComplete
+                  inputValue={field.value ?? ''}
+                  onInputChange={field.onChange}
+                  loading={networkStatus <= 3}
+                  options={storageNameList}
+                  setValue={field.onChange}
+                  value={field.value ?? ''}
+                  scrollRef={() => {}}
+                  renderSearchInput={(params: AutocompleteRenderInputParams) => {
+                    return (
+                      <FormControl fullWidth>
+                        <TextField
+                          {...params}
+                          {...field}
+                          label="출고 창고선택"
+                          error={!!errors.storageName?.message}
+                          helperText={errors.storageName?.message ?? ''}
+                          size="small"
+                        />
+                      </FormControl>
+                    );
+                  }}
+                />
+              );
+            }}
+          />
         </FormGroup>
         <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
-          <Button
-            type="submit"
-            endIcon={loading ? <CommonLoading /> : ''}
-            variant="contained"
-          >
+          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
             수정
           </Button>
         </Stack>

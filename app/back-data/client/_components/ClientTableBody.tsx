@@ -27,60 +27,15 @@ const ClientTableBody: FC<Props> = ({
 }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  // const [selectedClient, setSelectedClient] = useState<null | Client>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
 
-  const handleClickOption = (
-    option: SelectOption | null,
-    client: Client | null
-  ) => {
+  const handleClickOption = (option: SelectOption | null, client: Client | null) => {
     setSelectedClient(client);
     setOptionType(option);
   };
 
-  // const handleClickEdit = () => {
-  //   handleClosePopover();
-  //   handleClickOption('edit', selectedClient);
-  // };
-
-  // const handleClickDelete = () => {
-  //   handleClosePopover();
-  //   handleClickOption('delete', selectedClient);
-  // };
-
-  // const handleClosePopover = () => {
-  // setPopoverAnchor(null);
-  // setSelectedClient(null);
-  // };
-
   return (
     <CommonTableBody>
-      {/* {selectedClient && (
-        <RemoveClientModal
-          open={optionType === 'delete'}
-          onClose={() => handleClickOption(null, null)}
-          selectedClient={selectedClient}
-        />
-      )}
-
-      {selectedClient && (
-        <EditPClientModal
-          open={optionType === 'edit'}
-          onClose={() => handleClickOption(null, null)}
-          selectedClient={selectedClient}
-        />
-      )}
-      {selectedClient && (
-        <ClientDetailPopover
-          onClose={handleClosePopover}
-          position={popoverPosition}
-          open={!!popoverAnchor}
-          anchorEl={popoverAnchor}
-          onClickDelete={handleClickDelete}
-          onClickEdit={handleClickEdit}
-          selectedClient={selectedClient}
-        />
-      )} */}
       <EmptyRow colSpan={ClientHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
         const client = item as unknown as Client;

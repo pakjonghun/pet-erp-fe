@@ -33,7 +33,7 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { ClientHeaderList, ClientTypeToHangle } from './constants';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { Client, UserRole } from '@/http/graphql/codegen/graphql';
+import { Client, Storage, UserRole } from '@/http/graphql/codegen/graphql';
 import { client } from '@/http/graphql/client';
 import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 import RemoveClientModal from './_components/RemoveClientModal';
@@ -43,6 +43,7 @@ import Cell from '@/components/table/Cell';
 import { getFixedTwo } from '@/utils/sale';
 import EmptyRow from '@/components/table/EmptyRow';
 import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
+import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 
 const BackDataPage = () => {
   const { data: userData } = useGetMyInfo();
@@ -153,6 +154,16 @@ const BackDataPage = () => {
     setOptionType('delete');
   };
 
+  const { data: storages } = useStorages({
+    keyword: '',
+    limit: 1000,
+    skip: 0,
+  });
+
+  const targetStorage = ((storages?.storages.data as Storage[]) ?? []).find(
+    (item) => item._id === selectedClient?.storageId
+  );
+
   const createRow = (client: Client) => {
     return [
       client.name,
@@ -164,6 +175,7 @@ const BackDataPage = () => {
       client.manager ?? EMPTY,
       client.managerTel ?? EMPTY,
       client.inActive ? '거래중' : '거래종료',
+      targetStorage?.name ?? EMPTY,
     ];
   };
 
@@ -270,18 +282,6 @@ const BackDataPage = () => {
         <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
           <TableTitle title="선택된 거래처 데이터" />
         </Stack>
-        {/* <ClientCards
-          sx={{
-            display: {
-              xs: 'block',
-              md: 'none',
-            },
-          }}
-          data={rows}
-          isEmpty={isEmpty}
-          isLoading={isLoading}
-          scrollRef={scrollRef}
-        /> */}
         <TableContainer
           sx={{
             px: 2,
@@ -304,12 +304,16 @@ const BackDataPage = () => {
                 ))}
               </TableRow>
             ) : (
-              <EmptyRow colSpan={9} isEmpty={!selectedClient} message="선택된 데이터가 없습니다." />
+              <EmptyRow
+                colSpan={ClientHeaderList.length}
+                isEmpty={!selectedClient}
+                message="선택된 데이터가 없습니다."
+              />
             )}
           </CommonTable>
         </TableContainer>
         {!!selectedClient && (
-          <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
+          <Stack direction="row" gap={1} sx={{ mt: 2, pr: 2 }} justifyContent="flex-end">
             {canDelete && (
               <Button color="error" variant="outlined" onClick={handleClickDelete}>
                 삭제

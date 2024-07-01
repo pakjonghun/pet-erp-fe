@@ -28,7 +28,6 @@ import { modalSizeProps } from '@/components/commonStyles';
 import { filterEmptyValues } from '@/utils/common';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { client } from '@/http/graphql/client';
-import BaseSelect from '@/components/ui/select/BaseSelect';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 import { Storage } from '@/http/graphql/codegen/graphql';
 
@@ -271,7 +270,7 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
                   options={storageNameList}
                   setValue={field.onChange}
                   value={field.value ?? ''}
-                  scrollRef={scrollRef}
+                  scrollRef={() => {}}
                   renderSearchInput={(params: AutocompleteRenderInputParams) => {
                     return (
                       <FormControl fullWidth>
