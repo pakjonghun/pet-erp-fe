@@ -36,10 +36,12 @@ const GroupList: FC<Props> = ({ id, tagName, productList, changeTagName, removeG
     from: from,
     to: to.endOf('day'),
     productCodeList,
+    limit: 100000,
+    skip: 0,
   });
 
   const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
-  const productInsightList = insightData?.dashboardProducts;
+  const productInsightList = insightData?.dashboardProducts?.data;
   const productInsightsByCode = new Map<string, SaleInfos>();
   productInsightList?.forEach((item) => {
     if (!item._id) return;
