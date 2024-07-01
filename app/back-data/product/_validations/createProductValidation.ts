@@ -33,6 +33,10 @@ export const createProductSchema = z.object({
     .string({ invalid_type_error: '올바른 카테고리를 입력해주세요.' })
     .optional()
     .nullable(),
+  storageName: z
+    .string({ invalid_type_error: '올바른 창고를 입력해주세요.' })
+    .optional()
+    .nullable(),
 });
 
 export type CreateProductForm = z.infer<typeof createProductSchema>;

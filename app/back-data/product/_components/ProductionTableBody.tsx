@@ -30,10 +30,7 @@ const ProductionTableBody: FC<Props> = ({
 
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
 
-  const handleClickOption = (
-    option: SelectOption | null,
-    product: Product | null
-  ) => {
+  const handleClickOption = (option: SelectOption | null, product: Product | null) => {
     setSelectedProduct(product);
     setOptionType(option);
   };
@@ -55,32 +52,6 @@ const ProductionTableBody: FC<Props> = ({
 
   return (
     <CommonTableBody>
-      {/* {selectedProduct && (
-        <RemoveProductModal
-          open={optionType === 'delete'}
-          onClose={() => handleClickOption(null, null)}
-          selectedProduct={selectedProduct}
-        />
-      )}
-
-      {selectedProduct && (
-        <EditProductModal
-          open={optionType === 'edit'}
-          onClose={() => handleClickOption(null, null)}
-          selectedProduct={selectedProduct}
-        />
-      )} */}
-      {/* {selectedProduct && (
-        <ProductDetailPopover
-          onClose={handleClosePopover}
-          position={popoverPosition}
-          open={!!popoverAnchor}
-          anchorEl={popoverAnchor}
-          onClickDelete={handleClickDelete}
-          onClickEdit={handleClickEdit}
-          selectedProduct={selectedProduct}
-        />
-      )} */}
       <EmptyRow colSpan={ProductHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
         const product = item as unknown as Product;

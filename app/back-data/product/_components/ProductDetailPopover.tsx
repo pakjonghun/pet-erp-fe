@@ -1,11 +1,12 @@
 import { FC } from 'react';
-import { Product } from '@/http/graphql/codegen/graphql';
+import { Product, Storage } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
 import ModalTitle from '@/components/ui/typograph/ModalTitle';
 import { getKCWFormat } from '@/utils/common';
 import { Stack, Button } from '@mui/material';
 import BasePopover from '@/components/ui/modal/BasePopover';
 import { EMPTY } from '@/constants';
+import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 
 interface Props {
   open: boolean;
@@ -26,6 +27,16 @@ const ProductDetailPopover: FC<Props> = ({
   onClickDelete,
   onClickEdit,
 }) => {
+  const { data } = useStorages({
+    keyword: '',
+    limit: 1000,
+    skip: 0,
+  });
+
+  const targetStorage = ((data?.storages.data as Storage[]) ?? []).find(
+    (item) => item._id === selectedProduct.storageId
+  );
+
   return (
     <BasePopover onClose={onClose} position={position} open={open} anchorEl={anchorEl}>
       <ModalTitle text="제품 세부내용" />
@@ -51,6 +62,7 @@ const ProductDetailPopover: FC<Props> = ({
           }
         />
         <LabelText label="리드타임" text={selectedProduct.leadTime ?? EMPTY} />
+        <LabelText label="출고 창고" text={targetStorage?.name ?? EMPTY} />
       </Stack>
       <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
         <Button color="error" variant="outlined" onClick={onClickDelete}>

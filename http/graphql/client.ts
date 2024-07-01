@@ -121,6 +121,7 @@ export const client = new ApolloClient({
         wonPrice
         salePrice
         leadTime
+        storageId
         category {
           ...ProductCategoryFragment
         }

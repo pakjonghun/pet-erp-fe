@@ -43,6 +43,7 @@ import { SelectOption } from '../types';
 import EmptyRow from '@/components/table/EmptyRow';
 import { CommonHeaderRow, CommonTable, CommonTableBody } from '@/components/commonStyles';
 import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
+import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 
 const ProductPage = () => {
   const { data: userData } = useGetMyInfo();
@@ -146,6 +147,16 @@ const ProductPage = () => {
   const [openCreateProduct, setOpenCreateProduct] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<null | Product>(null);
 
+  const { data: storages } = useStorages({
+    keyword: '',
+    limit: 1000,
+    skip: 0,
+  });
+
+  const targetStorage = ((storages?.storages.data as Storage[]) ?? []).find(
+    (item) => item._id === selectedProduct?.storageId
+  );
+
   const createRow = (product: Product) => {
     return [
       product.name,
@@ -155,6 +166,7 @@ const ProductPage = () => {
       product.wonPrice == null ? EMPTY : getKCWFormat(product.wonPrice),
       product.salePrice == null ? EMPTY : getKCWFormat(product.salePrice),
       product.leadTime ? `${product.leadTime}일` : EMPTY,
+      targetStorage?.name ?? EMPTY,
     ];
   };
 
@@ -293,7 +305,7 @@ const ProductPage = () => {
                 </TableRow>
               ) : (
                 <EmptyRow
-                  colSpan={7}
+                  colSpan={ProductHeaderList.length}
                   isEmpty={!selectedProduct}
                   message="선택된 데이터가 없습니다."
                 />
@@ -302,7 +314,7 @@ const ProductPage = () => {
           </CommonTable>
         </TableContainer>
         {!!selectedProduct && (
-          <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
+          <Stack direction="row" gap={1} sx={{ mt: 2, pr: 2 }} justifyContent="flex-end">
             {canDelete && (
               <Button color="error" variant="outlined" onClick={handleClickDelete}>
                 삭제

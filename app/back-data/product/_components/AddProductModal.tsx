@@ -28,6 +28,9 @@ import { modalSizeProps } from '@/components/commonStyles';
 import { filterEmptyValues } from '@/utils/common';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { client } from '@/http/graphql/client';
+import BaseSelect from '@/components/ui/select/BaseSelect';
+import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
+import { Storage } from '@/http/graphql/codegen/graphql';
 
 interface Props {
   open: boolean;
@@ -36,6 +39,14 @@ interface Props {
 
 const CreateProductModal: FC<Props> = ({ open, onClose }) => {
   const [createProduct, { loading }] = useCreateProduct();
+
+  const { data: storageData } = useStorages({
+    keyword: '',
+    limit: 100,
+    skip: 0,
+  });
+  const storageList = (storageData?.storages.data as Storage[]) ?? [];
+  const storageNameList = storageList.map((item) => item.name);
 
   const {
     reset,
@@ -62,8 +73,7 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
     skip: 0,
   });
   const rows = data?.categories.data ?? [];
-  const isLoading =
-    networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
+  const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
 
   const setCategory = (selectedCategory: string | null) => {
     if (!selectedCategory) return;
@@ -91,9 +101,7 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
 
   const scrollRef = useInfinityScroll({ callback });
   const onSubmit = (createProductInput: CreateProductForm) => {
-    const newValues = filterEmptyValues(
-      createProductInput
-    ) as CreateProductForm;
+    const newValues = filterEmptyValues(createProductInput) as CreateProductForm;
     createProduct({
       variables: {
         createProductInput: newValues,
@@ -251,16 +259,43 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
               />
             )}
           />
+          <Controller
+            control={control}
+            name="storageName"
+            render={({ field }) => {
+              return (
+                <SearchAutoComplete
+                  inputValue={field.value ?? ''}
+                  onInputChange={field.onChange}
+                  loading={isLoading}
+                  options={storageNameList}
+                  setValue={field.onChange}
+                  value={field.value ?? ''}
+                  scrollRef={scrollRef}
+                  renderSearchInput={(params: AutocompleteRenderInputParams) => {
+                    return (
+                      <FormControl fullWidth>
+                        <TextField
+                          {...params}
+                          {...field}
+                          label="출고 창고선택"
+                          error={!!errors.storageName?.message}
+                          helperText={errors.storageName?.message ?? ''}
+                          size="small"
+                        />
+                      </FormControl>
+                    );
+                  }}
+                />
+              );
+            }}
+          />
         </FormGroup>
         <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
-          <Button
-            type="submit"
-            endIcon={loading ? <CommonLoading /> : ''}
-            variant="contained"
-          >
+          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
             등록
           </Button>
         </Stack>
