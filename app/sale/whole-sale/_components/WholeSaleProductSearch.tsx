@@ -162,7 +162,18 @@ const WholeSaleProductSearch: FC<Props> = ({
               disabled={!currentProduct.storageName}
               value={field.value}
               getOptionDisabled={(option) => {
-                return selectedProductList.some((item) => item.productName === option);
+                const currentItem = selectedProductList[index];
+                for (let i = 0; i < selectedProductList.length; i++) {
+                  if (i === index) continue;
+
+                  const targetItem = selectedProductList[i];
+                  const sameStorage = targetItem.storageName === currentItem.storageName;
+                  if (sameStorage) {
+                    const productName = removeTrailString(option).trim();
+                    return productName === targetItem.productName;
+                  }
+                }
+                return false;
               }}
               fullWidth
               filterSelectedOptions
