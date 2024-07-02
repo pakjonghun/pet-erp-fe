@@ -32,6 +32,7 @@ export const roleToHandle = {
   BACK_EDIT: '백 데이터편집',
   STOCK_IN: '입고 입력',
   STOCK_OUT: '출고 입력',
+  STOCK_SALE_OUT: '사방넷 판매 출고',
   ORDER_CREATE: '발주입력',
   ORDER_EDIT: '발주편집',
   ORDER_DELETE: '발주삭제',

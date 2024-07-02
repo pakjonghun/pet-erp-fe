@@ -7,6 +7,8 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { useLoadSabangData } from '@/http/graphql/hooks/sale/useSabang';
 import { snackMessage } from '@/store/snackMessage';
 import { client } from '@/http/graphql/client';
+import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
+import { UserRole } from '@/http/graphql/codegen/graphql';
 
 interface Props {
   title: string;
@@ -15,6 +17,9 @@ interface Props {
 }
 
 const SubHeader: FC<Props> = ({ title, children, sx }) => {
+  const { data: userData } = useGetMyInfo();
+  const myRole = userData?.myInfo.role ?? [];
+  const canSaleOut = myRole.includes(UserRole.StockSaleOut);
   const [loadSabangData, { loading }] = useLoadSabangData();
   const [delayLoading, setDelayLoading] = useState(false);
 
@@ -66,22 +71,24 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
       }}
       position="static"
     >
-      <Stack direction="row" alignItems="center">
-        <Typography variant="h4" component="h4" sx={{ fontWeight: 600, p: 3, pb: 1 }}>
-          {title}
-        </Typography>
+      {canSaleOut && (
+        <Stack direction="row" alignItems="center">
+          <Typography variant="h4" component="h4" sx={{ fontWeight: 600, p: 3, pb: 1 }}>
+            {title}
+          </Typography>
 
-        <Button
-          disabled={delayLoading}
-          onClick={handleClickLoadSabang}
-          color="inherit"
-          sx={{ width: 'fit-content', ml: 'auto', mr: 1 }}
-          variant="outlined"
-          endIcon={<RotatingIcon loading={delayLoading} />}
-        >
-          사방넷
-        </Button>
-      </Stack>
+          <Button
+            disabled={delayLoading}
+            onClick={handleClickLoadSabang}
+            color="inherit"
+            sx={{ width: 'fit-content', ml: 'auto', mr: 1 }}
+            variant="outlined"
+            endIcon={<RotatingIcon loading={delayLoading} />}
+          >
+            사방넷 판매 출고
+          </Button>
+        </Stack>
+      )}
       {!!children ? children : ''}
     </AppBar>
   );

@@ -1177,7 +1177,8 @@ export enum UserRole {
   SaleDelete = 'SALE_DELETE',
   SaleEdit = 'SALE_EDIT',
   StockIn = 'STOCK_IN',
-  StockOut = 'STOCK_OUT'
+  StockOut = 'STOCK_OUT',
+  StockSaleOut = 'STOCK_SALE_OUT'
 }
 
 export type WholeSaleItem = {
