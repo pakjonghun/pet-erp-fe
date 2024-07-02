@@ -63,7 +63,7 @@ const DashboardTable: FC<Props> = ({ saleInfos, title, fetchMoreData, hasMore, i
           <Button
             disabled={isLoading}
             onClick={fetchMoreData}
-            variant="contained"
+            variant="outlined"
             sx={{ whiteSpace: 'nowrap', ml: 'auto' }}
             endIcon={isLoading ? <CommonLoading /> : <Add />}
           >
