@@ -1,5 +1,6 @@
 export const ProductStockHeaderList = [
   '제품이름',
+  '제품코드',
   '재고수량',
   '최근 1달 판매량',
   '원가',

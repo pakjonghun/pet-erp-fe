@@ -12,10 +12,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 interface Props {
   isSelected: boolean;
   productStock: StockColumn;
-  onClickRow: (
-    event: MouseEvent<HTMLTableCellElement>,
-    stock: StockColumn
-  ) => void;
+  onClickRow: (event: MouseEvent<HTMLTableCellElement>, stock: StockColumn) => void;
   onClickOption: (option: any | null, client: StockColumn | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
@@ -59,11 +56,7 @@ const ProductStockBodyRow: FC<Props> = ({
   const createRow = (stock: StockColumn) => {
     const leftDate = stock.leftDate;
     const leftDateDisplay =
-      leftDate === null
-        ? '알수없음'
-        : leftDate === -1
-        ? '재고없음'
-        : `${leftDate}일`;
+      leftDate === null ? '알수없음' : leftDate === -1 ? '재고없음' : `${leftDate}일`;
 
     let stockHealthy = chip.noon;
 
@@ -94,6 +87,7 @@ const ProductStockBodyRow: FC<Props> = ({
 
     return [
       stock.productName,
+      stock.productCode,
       stock.stockCount,
       getNumberToString(stock.monthSaleCount, 'comma'),
       stock.wonPrice ? getKCWFormat(stock.wonPrice) : EMPTY,
@@ -114,20 +108,12 @@ const ProductStockBodyRow: FC<Props> = ({
         hover
         ref={scrollRef}
       >
-        <Menu
-          anchorEl={menuAnchor}
-          open={!!menuAnchor}
-          onClose={() => setMenuAnchor(null)}
-        >
+        <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
           {Object.entries(productOptionMenus).map(([option, menu]) => (
             <OptionMenu key={option} menu={menu} option={option} />
           ))}
         </Menu>
-        {/* <Cell onClick={() => setOpen((prev) => !prev)}>
-          <IconButton>
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </Cell> */}
+
         {parsedClient.map((item, index) => (
           <Cell
             key={`${productStock.__typename}_${index}`}
@@ -140,16 +126,7 @@ const ProductStockBodyRow: FC<Props> = ({
             {item}
           </Cell>
         ))}
-
-        {/* <OptionCell onClick={setMenuAnchor} /> */}
       </TableRow>
-      {/* {open && (
-        <CollapseRow
-          onClickOption={onClickOption}
-          productStock={productStock}
-          open={open}
-        />
-      )} */}
     </>
   );
 };

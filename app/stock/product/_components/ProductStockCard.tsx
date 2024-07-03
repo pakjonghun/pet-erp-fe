@@ -58,20 +58,26 @@ const ProductStockCard: FC<Props> = ({ stock, scrollRef, onClickOption, onClickR
           <Box sx={{ flex: 1 }}>
             <LabelText label="이름" text={stock.productName} />
           </Box>
+        </Stack>
+
+        <Stack direction="row" justifyContent="space-between" gap={2}>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="재고수량" text={stock.stockCount} />
+            <LabelText label="코드" text={stock.productCode} />
           </Box>
         </Stack>
 
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="최근 1달 판매량" text={stock.monthSaleCount} />
+            <LabelText label="재고수량" text={stock.stockCount} />
           </Box>
           <Box sx={{ flex: 1 }}>
-            <LabelText label="재고소진까지 남은 기간" text={`${stock.leftDate}일`} />
+            <LabelText label="최근 1달 판매량" text={stock.monthSaleCount} />
           </Box>
         </Stack>
         <Stack direction="row" justifyContent="space-between" gap={2}>
+          <Box sx={{ flex: 1 }}>
+            <LabelText label="재고소진까지 남은 기간" text={`${stock.leftDate}일`} />
+          </Box>
           <Box sx={{ flex: 1 }}>
             <LabelText label="리드타임" text={stock.leadTime ?? EMPTY} />
           </Box>

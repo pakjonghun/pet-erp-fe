@@ -24,6 +24,7 @@ export const client = new ApolloClient({
         leftDate
         monthSaleCount
         productName
+        productCode
         wonPrice
       }
 

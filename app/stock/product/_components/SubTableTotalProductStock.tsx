@@ -58,6 +58,7 @@ const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) =
         justifyContent="space-between"
       >
         <LabelText label="제품이름" text={productStock.productName} />
+        <LabelText label="제품코드" text={productStock.productCode} />
         {!!recentCompleteDate && <LabelText label="최근생산 완료예정" text={recentCompleteDate} />}
 
         <Stack direction="row" alignItems="center" gap={2} sx={{ ml: 'auto' }}>

@@ -52,11 +52,17 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
               cache.evict({ fieldName: 'topClients' });
             },
           });
-          snackMessage({ message: '오늘 사방넷 데이터를 모두 받아왔습니다.', severity: 'success' });
+          snackMessage({
+            message: '사방넷 데이터 판매 분량이 출고 처리되었습니다.',
+            severity: 'success',
+          });
         }, 2000);
       },
-      onError: () => {
-        snackMessage({ message: '오늘 사방넷 데이터를 모두 받아왔습니다.', severity: 'success' });
+      onError: (error) => {
+        snackMessage({
+          message: error.message ?? '사방넷 데이터 판매 분량이 출고 처리가 실패했습니다.',
+          severity: 'error',
+        });
       },
     });
   };
