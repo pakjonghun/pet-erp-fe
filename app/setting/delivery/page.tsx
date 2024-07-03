@@ -47,7 +47,6 @@ const ProfilePage = () => {
   }, [data?.deliveryCost, isLoading, reset]);
 
   const onSubmit = (value: SetDeliveryForm) => {
-    console.log(value);
     setDeliveryCost({
       variables: {
         setDeliveryCostInput: value,
