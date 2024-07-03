@@ -47,6 +47,7 @@ const ProfilePage = () => {
   }, [data?.deliveryCost, isLoading, reset]);
 
   const onSubmit = (value: SetDeliveryForm) => {
+    console.log(value);
     setDeliveryCost({
       variables: {
         setDeliveryCostInput: value,
@@ -77,7 +78,16 @@ const ProfilePage = () => {
         text={deliveryCost == null ? EMPTY : getKCWFormat(deliveryCost.deliveryCost)}
       />
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack direction="row" alignItems="center" gap={3}>
+        <Stack
+          sx={{
+            display: 'flex',
+            flexDirection: {
+              xs: 'column',
+              md: 'row',
+            },
+          }}
+          gap={3}
+        >
           <DatePicker
             views={['year', 'month']}
             value={dayjs(date)}
@@ -87,7 +97,7 @@ const ProfilePage = () => {
                 setValue('month', month);
                 setValue('year', year);
               } else {
-                const valueMonth = value.get('month');
+                const valueMonth = value.get('month') + 1;
                 const valueYear = value.get('year');
                 setValue('month', valueMonth);
                 setValue('year', valueYear);
@@ -109,7 +119,12 @@ const ProfilePage = () => {
               return (
                 <FormControl>
                   <TextField
-                    sx={{ width: 'fit-content' }}
+                    sx={{
+                      width: {
+                        xs: '100%',
+                        md: 'fit-content',
+                      },
+                    }}
                     size="small"
                     type={fieldValue == null ? 'text' : 'number'}
                     value={fieldValue == null ? '' : fieldValue}

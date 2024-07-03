@@ -21,7 +21,7 @@ const documents = {
     "\n  mutation removeClient($_id: String!) {\n    removeClient(_id: $_id) {\n      _id\n      name\n    }\n  }\n": types.RemoveClientDocument,
     "\n  mutation updateClient($updateClientInput: UpdateClientInput!) {\n    updateClient(updateClientInput: $updateClientInput) {\n      ...ClientFragment\n    }\n  }\n": types.UpdateClientDocument,
     "\n  query saleMenuClients($saleMenuClientsInput: FindDateScrollInput!) {\n    saleMenuClients(saleMenuClientsInput: $saleMenuClientsInput) {\n      totalCount\n      data {\n        _id\n        name\n        code\n        accPayCost\n        accWonCost\n        accCount\n        accProfit\n        profitRate\n        prevAccCount\n        prevAccPayCost\n        prevAccWonCost\n        prevAccProfit\n        prevProfitRate\n        products {\n          name\n          accCount\n        }\n      }\n    }\n  }\n": types.SaleMenuClientsDocument,
-    "\n  query deliveryCost {\n    deliveryCost {\n      deliveryCost\n      year\n      month\n    }\n  }\n": types.DeliveryCostDocument,
+    "\n  query deliveryCost {\n    deliveryCost {\n      deliveryCost\n      year\n      month\n      monthDeliveryPayCost\n    }\n  }\n": types.DeliveryCostDocument,
     "\n  mutation setDeliveryCost($setDeliveryCostInput: SetDeliveryCostInput!) {\n    setDeliveryCost(setDeliveryCostInput: $setDeliveryCostInput) {\n      deliveryCost\n      year\n      month\n    }\n  }\n": types.SetDeliveryCostDocument,
     "\n  mutation createFactory($createFactoryInput: CreateFactoryInput!) {\n    createFactory(createFactoryInput: $createFactoryInput) {\n      ...FactoryFragment\n    }\n  }\n": types.CreateFactoryDocument,
     "\n  mutation updateFactory($updateFactoryInput: UpdateFactoryInput!) {\n    updateFactory(updateFactoryInput: $updateFactoryInput) {\n      ...FactoryFragment\n    }\n  }\n": types.UpdateFactoryDocument,
@@ -127,7 +127,7 @@ export function graphql(source: "\n  query saleMenuClients($saleMenuClientsInput
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query deliveryCost {\n    deliveryCost {\n      deliveryCost\n      year\n      month\n    }\n  }\n"): (typeof documents)["\n  query deliveryCost {\n    deliveryCost {\n      deliveryCost\n      year\n      month\n    }\n  }\n"];
+export function graphql(source: "\n  query deliveryCost {\n    deliveryCost {\n      deliveryCost\n      year\n      month\n      monthDeliveryPayCost\n    }\n  }\n"): (typeof documents)["\n  query deliveryCost {\n    deliveryCost {\n      deliveryCost\n      year\n      month\n      monthDeliveryPayCost\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
