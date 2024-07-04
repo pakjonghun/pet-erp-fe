@@ -13,7 +13,7 @@ interface Props {
 
 const BaseModal: FC<Props> = ({ open, children, onClose, sx }) => {
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={open}>
       <PopupContainer
         sx={{
           overflow: 'auto',
