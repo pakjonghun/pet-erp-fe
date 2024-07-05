@@ -82,7 +82,7 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
 
   const handleClickSaleOut = async () => {
     outSale({
-      onCompleted: async () => {
+      onCompleted: async (res) => {
         setTimeout(() => {
           client.refetchQueries({
             updateCache(cache) {
@@ -99,8 +99,14 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
               cache.evict({ fieldName: 'topClients' });
             },
           });
+          console.log(res);
+          const defaultMessage = '사방넷 판매 제품을 출고처리했습니다.';
+          const totalErrorMessage = res.outSaleData?.totalErrors;
           snackMessage({
-            message: '사방넷 판매 제품을 출고처리했습니다.',
+            message:
+              defaultMessage +
+              '\n' +
+              (totalErrorMessage ? `고쳐야 할 에러도 발견되었습니다. ${totalErrorMessage}` : ''),
             severity: 'success',
           });
         }, 2000);
