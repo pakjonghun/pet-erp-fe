@@ -142,7 +142,7 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
           variant="outlined"
           endIcon={<RotatingIcon loading={delayLoading} />}
         >
-          사방넷 동기화
+          사방넷 데이터 가져오기
         </Button>
         {canSaleOut && (
           <Button
