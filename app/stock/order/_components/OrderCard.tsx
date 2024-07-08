@@ -1,3 +1,4 @@
+import DoneIcon from '@mui/icons-material/Done';
 import { Box, Chip, IconButton, Menu, Paper, Stack } from '@mui/material';
 import React, { FC, MouseEvent, useState } from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -8,8 +9,6 @@ import { ProductOrder, UserRole } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
 import dayjs from 'dayjs';
-import { useReactiveVar } from '@apollo/client';
-import { authState } from '@/store/isLogin';
 
 interface Props {
   client: ProductOrder;
@@ -29,6 +28,15 @@ const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) 
       },
       label: '편집',
       icon: <Edit />,
+    },
+    complete: {
+      role: [UserRole.OrderEdit],
+      callback: () => {
+        onClickOption('complete', client);
+        setMenuAnchor(null);
+      },
+      label: '발주완료',
+      icon: <DoneIcon />,
     },
     delete: {
       role: [UserRole.OrderDelete],
@@ -52,19 +60,24 @@ const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) 
 
   return (
     <Paper ref={scrollRef} sx={{ position: 'relative', p: 3 }}>
-      <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
-        {Object.entries(productOptionMenus).map(([option, menu]) => (
-          <OptionMenu key={option} menu={menu} option={option} />
-        ))}
-      </Menu>
-      <IconButton
-        sx={{ position: 'absolute', right: 3, top: 3 }}
-        onClick={(event) => {
-          setMenuAnchor(event.currentTarget);
-        }}
-      >
-        <MoreHorizIcon />
-      </IconButton>
+      {!client.isDone && (
+        <>
+          <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
+            {Object.entries(productOptionMenus).map(([option, menu]) => (
+              <OptionMenu key={option} menu={menu} option={option} />
+            ))}
+          </Menu>
+          <IconButton
+            sx={{ position: 'absolute', right: 3, top: 3 }}
+            onClick={(event) => {
+              setMenuAnchor(event.currentTarget);
+            }}
+          >
+            <MoreHorizIcon />
+          </IconButton>
+        </>
+      )}
+
       <Box
         onClick={(event) => onClickRow(event, client)}
         sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}

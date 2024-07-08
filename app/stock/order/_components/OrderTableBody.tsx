@@ -26,25 +26,9 @@ const OrderTableBody: FC<Props> = ({
 }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  // const [selectedOrder, setSelectedOrder] = useState<null | ProductOrder>(null);
-  // const [optionType, setOptionType] = useState<null | any>(null);
 
-  const handleClickOption = (
-    option: any | null,
-    client: ProductOrder | null
-  ) => {
+  const handleClickOption = (option: any | null, client: ProductOrder | null) => {
     setSelectedOrder(client);
-    // setOptionType(option);
-  };
-
-  const handleClickEdit = () => {
-    handleClosePopover();
-    handleClickOption('edit', selectedOrder);
-  };
-
-  const handleClickDelete = () => {
-    handleClosePopover();
-    handleClickOption('delete', selectedOrder);
   };
 
   const handleClosePopover = () => {

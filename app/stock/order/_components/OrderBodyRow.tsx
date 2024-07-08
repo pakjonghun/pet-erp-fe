@@ -7,8 +7,6 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { ProductOrder, UserRole } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import dayjs from 'dayjs';
-import { useReactiveVar } from '@apollo/client';
-import { authState } from '@/store/isLogin';
 
 interface Props {
   isSelected: boolean;
@@ -52,12 +50,12 @@ const OrderBodyRow: FC<Props> = ({ isSelected, client, scrollRef, onClickOption,
     const leadTime = biggestLeadTime < 0 ? null : biggestLeadTime;
 
     return [
+      order.isDone ? '완료' : '발주중',
       order?.orderDate ? dayjs(order?.orderDate).format('YYYY-MM-DD') : EMPTY,
       order?.factory?.name ?? '',
       order.payCost,
       order.notPayCost,
       order.totalPayCost,
-      order.isDone ? '지불 완료' : '미지불',
       order?.orderDate
         ? leadTime == null
           ? '제품 리드타임 미입력'

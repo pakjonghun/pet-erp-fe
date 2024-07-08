@@ -20,10 +20,7 @@ import { modalSizeProps } from '@/components/commonStyles';
 import { Factory, ProductOrder } from '@/http/graphql/codegen/graphql';
 import { filterEmptyValues } from '@/utils/common';
 import NumberInput from '@/components/ui/input/NumberInput';
-import {
-  CreateOrderForm,
-  createOrderSchema,
-} from '../_validation/createOrderValidation';
+import { CreateOrderForm, createOrderSchema } from '../_validation/createOrderValidation';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import OrderProduct from './OrderProduct';
 import { PlusOne } from '@mui/icons-material';
@@ -42,12 +39,7 @@ interface Props {
   onClose: () => void;
 }
 
-const EditOrderModal: FC<Props> = ({
-  open,
-  selectedOrder,
-  onClose,
-  setSelectedOrder,
-}) => {
+const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose, setSelectedOrder }) => {
   const [updateProductOrder, { loading }] = useUpdateProductOrder();
   const {
     reset,
@@ -152,8 +144,7 @@ const EditOrderModal: FC<Props> = ({
   });
 
   const factories = (data?.factories.data as Factory[]) ?? [];
-  const isLoading =
-    networkStatus === 2 || networkStatus === 3 || networkStatus === 1;
+  const isLoading = networkStatus === 2 || networkStatus === 3 || networkStatus === 1;
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -197,7 +188,7 @@ const EditOrderModal: FC<Props> = ({
           gap={3}
         >
           <Typography>발주 데이터를 편집합니다..</Typography>
-          <Controller
+          {/* <Controller
             control={control}
             name="isDone"
             render={({ field }) => {
@@ -208,7 +199,7 @@ const EditOrderModal: FC<Props> = ({
                 />
               );
             }}
-          />
+          /> */}
         </Stack>
 
         <FormGroup sx={modalSizeProps}>
@@ -253,19 +244,12 @@ const EditOrderModal: FC<Props> = ({
                   loading={false}
                   loadingText="로딩중"
                   noOptionsText="검색 결과가 없습니다."
-                  renderInput={(params) => (
-                    <TextField {...params} label="공장" required />
-                  )}
+                  renderInput={(params) => <TextField {...params} label="공장" required />}
                   renderOption={(props, item, state) => {
                     const { key, ...rest } = props as any;
                     const isLast = state.index === factories.length - 1;
                     return (
-                      <Box
-                        component="li"
-                        ref={isLast ? factoryRef : null}
-                        key={item}
-                        {...rest}
-                      >
+                      <Box component="li" ref={isLast ? factoryRef : null} key={item} {...rest}>
                         {item}
                       </Box>
                     );
@@ -346,11 +330,7 @@ const EditOrderModal: FC<Props> = ({
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
-          <Button
-            type="submit"
-            endIcon={loading ? <CommonLoading /> : ''}
-            variant="contained"
-          >
+          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
             편집
           </Button>
         </Stack>

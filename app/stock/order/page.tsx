@@ -37,6 +37,7 @@ import RemoveOrderModal from '../_components/RemoveOrderModal';
 import Cell from '@/components/table/Cell';
 import EmptyRow from '@/components/table/EmptyRow';
 import dayjs from 'dayjs';
+import CompleteModal from '../_components/CompleteModal';
 
 const OrderPage = () => {
   const { role } = useReactiveVar(authState);
@@ -138,13 +139,32 @@ const OrderPage = () => {
       {selectedOrder && (
         <RemoveOrderModal
           open={optionType === 'delete'}
+          onClose={() => setOptionType(null)}
+          selectedOrder={selectedOrder}
+        />
+      )}
+
+      {selectedOrder && (
+        <EditOrderModal
+          setSelectedOrder={setSelectedOrder}
+          open={optionType === 'edit'}
+          onClose={() => setOptionType(null)}
+          selectedOrder={selectedOrder}
+        />
+      )}
+
+      {selectedOrder && (
+        <CompleteModal
+          open={optionType === 'complete'}
           onClose={() => {
             setOptionType(null);
             setSelectedOrder(null);
           }}
           selectedOrder={selectedOrder}
+          setSelectedOrder={setSelectedOrder}
         />
       )}
+
       <TablePage sx={{ flex: 1 }}>
         {openCreateClient && (
           <AddOrderModal open={openCreateClient} onClose={() => setOpenCreateClient(false)} />
@@ -263,7 +283,7 @@ const OrderPage = () => {
             )}
           </CommonTable>
         </TableContainer>
-        {!!selectedOrder && (
+        {!!selectedOrder && !selectedOrder.isDone && (
           <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
             {canDelete && (
               <Button
@@ -284,6 +304,16 @@ const OrderPage = () => {
                 }}
               >
                 편집
+              </Button>
+            )}
+            {canEdit && (
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setOptionType('complete');
+                }}
+              >
+                발주완료
               </Button>
             )}
           </Stack>

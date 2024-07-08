@@ -41,6 +41,7 @@ const OrderDetailPopover: FC<Props> = ({
     <BasePopover onClose={onClose} position={position} open={open} anchorEl={anchorEl}>
       <ModalTitle text="발주 세부내용" />
       <Stack gap={1}>
+        <LabelText label="발주완료여부" text={selectedOrder.isDone ? '완료' : '발주중'} />
         <LabelText
           label="발주 날짜"
           text={
@@ -50,11 +51,10 @@ const OrderDetailPopover: FC<Props> = ({
         <LabelText label="공장" text={selectedOrder?.factory?.name ?? ''} />
         <LabelText label="공장 연락처" text={selectedOrder?.factory?.phoneNumber ?? '' ?? EMPTY} />
         <LabelText label="공장 주소" text={selectedOrder?.factory?.address ?? EMPTY} />
-
         <LabelText label="계약금" text={selectedOrder.payCost} />
         <LabelText label="잔금" text={selectedOrder.notPayCost} />
         <LabelText label="전체금액" text={selectedOrder.totalPayCost} />
-        <LabelText label="잔금 지불여부" text={selectedOrder.isDone ? '지불완료' : '미지불'} />
+
         <LabelText
           label="생산완료 예정일"
           text={

@@ -168,7 +168,7 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
           gap={3}
         >
           <Typography>새로운 발주를 등록합니다.</Typography>
-          <Controller
+          {/* <Controller
             control={control}
             name="isDone"
             render={({ field }) => {
@@ -179,7 +179,7 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
                 />
               );
             }}
-          />
+          /> */}
         </Stack>
 
         <FormGroup sx={modalSizeProps}>
