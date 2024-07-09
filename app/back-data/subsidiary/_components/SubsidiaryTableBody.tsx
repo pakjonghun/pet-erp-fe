@@ -1,11 +1,7 @@
 import { FC, useState } from 'react';
 import { Subsidiary } from '@/http/graphql/codegen/graphql';
-import { TableBody } from '@mui/material';
 import EmptyRow from '@/components/table/EmptyRow';
 import { SelectOption } from '../../types';
-import RemoveSubsidiaryModal from './RemoveSubsidiaryModal';
-import EditSubsidiaryModal from './EditSubsidiaryModal';
-import ProductDetailPopover from './SubsidiaryDetailPopover';
 import LoadingRow from '@/components/table/LoadingRow';
 import { SubsidiaryHeaderList } from '../constants';
 import SubsidiaryBodyRow from './SubsidiaryBodyRow';

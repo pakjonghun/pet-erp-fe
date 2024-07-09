@@ -4,11 +4,9 @@ import {
   Autocomplete,
   Box,
   Button,
-  FormControlLabel,
   FormGroup,
   FormLabel,
   Stack,
-  Switch,
   TextField,
   Typography,
 } from '@mui/material';
@@ -168,18 +166,6 @@ const AddOrderModal: FC<Props> = ({ open, onClose, product }) => {
           gap={3}
         >
           <Typography>새로운 발주를 등록합니다.</Typography>
-          {/* <Controller
-            control={control}
-            name="isDone"
-            render={({ field }) => {
-              return (
-                <FormControlLabel
-                  label={field.value ? '잔금 지불완료' : '잔금 미지불'}
-                  control={<Switch {...field} />}
-                />
-              );
-            }}
-          /> */}
         </Stack>
 
         <FormGroup sx={modalSizeProps}>

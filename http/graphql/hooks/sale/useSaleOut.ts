@@ -1,4 +1,4 @@
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { graphql } from '../../codegen';
 
 const saleOut = graphql(`

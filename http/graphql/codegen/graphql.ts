@@ -117,6 +117,7 @@ export type ClientsOutput = {
 
 export type CompleteOrderInput = {
   _id: Scalars['String']['input'];
+  storageName: Scalars['String']['input'];
 };
 
 export type CreateCategoryInput = {

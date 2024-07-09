@@ -4,11 +4,9 @@ import {
   Box,
   Button,
   Checkbox,
-  FormControl,
   FormControlLabel,
   FormGroup,
   FormLabel,
-  SelectChangeEvent,
   Stack,
   Typography,
 } from '@mui/material';

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { ProductOrder, UserRole } from '@/http/graphql/codegen/graphql';
+import { ProductOrder } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
 import ModalTitle from '@/components/ui/typograph/ModalTitle';
 import { Stack, Button, Chip } from '@mui/material';
@@ -26,8 +26,6 @@ const OrderDetailPopover: FC<Props> = ({
   onClickDelete,
   onClickEdit,
 }) => {
-  // const { role } = useReactiveVar(authState);
-  // const cannotModify = role === UserRole.Staff;
   const allHasNoLeadTime = selectedOrder.products.every((item) => item.product.leadTime == null);
   const biggestLeadTime = allHasNoLeadTime
     ? -1

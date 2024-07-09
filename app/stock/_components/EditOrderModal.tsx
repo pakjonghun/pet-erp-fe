@@ -4,11 +4,9 @@ import {
   Autocomplete,
   Box,
   Button,
-  FormControlLabel,
   FormGroup,
   FormLabel,
   Stack,
-  Switch,
   TextField,
   Typography,
 } from '@mui/material';
@@ -188,18 +186,6 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose, setSelectedOr
           gap={3}
         >
           <Typography>발주 데이터를 편집합니다..</Typography>
-          {/* <Controller
-            control={control}
-            name="isDone"
-            render={({ field }) => {
-              return (
-                <FormControlLabel
-                  label={field.value ? '잔금 지불완료' : '잔금 미지불'}
-                  control={<Switch checked={!!field.value} {...field} />}
-                />
-              );
-            }}
-          /> */}
         </Stack>
 
         <FormGroup sx={modalSizeProps}>

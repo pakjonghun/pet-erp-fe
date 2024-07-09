@@ -1,14 +1,10 @@
 import { FC, useState } from 'react';
 import { ProductOrder } from '@/http/graphql/codegen/graphql';
-import { TableBody } from '@mui/material';
 import EmptyRow from '@/components/table/EmptyRow';
 import OrderBodyRow from './OrderBodyRow';
 import LoadingRow from '@/components/table/LoadingRow';
 import { OrderHeaderList } from '../constants';
 import { CommonListProps } from '@/types';
-import EditOrderModal from '../../_components/EditOrderModal';
-import RemoveOrderModal from '../../_components/RemoveOrderModal';
-import OrderDetailPopover from './OrderDetailPopover';
 import { CommonTableBody } from '@/components/commonStyles';
 
 interface Props extends CommonListProps<ProductOrder> {
@@ -29,11 +25,6 @@ const OrderTableBody: FC<Props> = ({
 
   const handleClickOption = (option: any | null, client: ProductOrder | null) => {
     setSelectedOrder(client);
-  };
-
-  const handleClosePopover = () => {
-    setPopoverAnchor(null);
-    setSelectedOrder(null);
   };
 
   return (
