@@ -129,7 +129,30 @@ export const client = new ApolloClient({
         isFreeDeliveryFee
       }
 
-      fragment ClientFragment on Client {
+      fragment OutClientFragment on OutClient {
+        _id
+        code
+        name
+        feeRate
+        clientType
+        businessName
+        businessNumber
+        payDate
+        manager
+        managerTel
+        inActive
+        storageId
+        deliveryFreeProductCodeList {
+          name
+          code
+        }
+        deliveryNotFreeProductCodeList {
+          name
+          code
+        }
+      }
+
+      fragment ClientFragment on OutClient {
         _id
         code
         name

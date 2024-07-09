@@ -48,8 +48,6 @@ const CompleteModal: FC<Props> = ({ open, selectedOrder, onClose, setSelectedOrd
     },
   });
 
-  console.log('errors : ', errors);
-
   useEffect(() => {
     reset({
       _id: selectedOrder._id,
@@ -57,7 +55,6 @@ const CompleteModal: FC<Props> = ({ open, selectedOrder, onClose, setSelectedOrd
     });
   }, [selectedOrder, reset]);
   const onSubmit = (values: CompleteOrderForm) => {
-    console.log('complete');
     completeOrder({
       variables: {
         completeOrderInput: values,

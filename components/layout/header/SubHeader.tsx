@@ -99,7 +99,6 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
               cache.evict({ fieldName: 'topClients' });
             },
           });
-          console.log(res);
           const defaultMessage = '사방넷 판매 제품을 출고처리했습니다.';
           const totalErrorMessage = res.outSaleData?.totalErrors;
           snackMessage({

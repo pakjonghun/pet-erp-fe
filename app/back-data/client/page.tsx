@@ -7,6 +7,7 @@ import TablePage from '@/components/table/TablePage';
 import TableTitle from '@/components/ui/typograph/TableTitle';
 import {
   Button,
+  Chip,
   FormControl,
   FormGroup,
   InputAdornment,
@@ -33,7 +34,7 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { ClientHeaderList, ClientTypeToHangle } from './constants';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { Client, Storage, UserRole } from '@/http/graphql/codegen/graphql';
+import { Client, OutClient, Storage, UserRole } from '@/http/graphql/codegen/graphql';
 import { client } from '@/http/graphql/client';
 import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 import RemoveClientModal from './_components/RemoveClientModal';
@@ -62,7 +63,7 @@ const BackDataPage = () => {
     limit: LIMIT,
   });
 
-  const rows = (data?.clients.data as Client[]) ?? [];
+  const rows = (data?.clients.data as OutClient[]) ?? [];
   const isLoading = networkStatus == 3 || networkStatus == 1;
 
   const callback: IntersectionObserverCallback = (entries) => {
@@ -142,7 +143,7 @@ const BackDataPage = () => {
     });
   };
 
-  const [selectedClient, setSelectedClient] = useState<null | Client>(null);
+  const [selectedClient, setSelectedClient] = useState<null | OutClient>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
   const [openCreateClient, setOpenCreateClient] = useState(false);
 
@@ -164,7 +165,7 @@ const BackDataPage = () => {
     (item) => item._id === selectedClient?.storageId
   );
 
-  const createRow = (client: Client) => {
+  const createRow = (client: OutClient) => {
     return [
       client.name,
       client.businessName ?? EMPTY,
@@ -176,6 +177,24 @@ const BackDataPage = () => {
       client.managerTel ?? EMPTY,
       client.inActive ? '거래중' : '거래종료',
       targetStorage?.name ?? EMPTY,
+      client.deliveryFreeProductCodeList ? (
+        <Stack direction="column" gap={1}>
+          {client.deliveryFreeProductCodeList.map((item) => (
+            <Chip key={Math.random().toString()} label={item.name || EMPTY} />
+          ))}
+        </Stack>
+      ) : (
+        ''
+      ),
+      client.deliveryNotFreeProductCodeList ? (
+        <Stack direction="column" gap={1}>
+          {client.deliveryNotFreeProductCodeList.map((item) => (
+            <Chip key={Math.random().toString()} label={item.name || EMPTY} />
+          ))}
+        </Stack>
+      ) : (
+        ''
+      ),
     ];
   };
 

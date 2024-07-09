@@ -1,8 +1,9 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
   Autocomplete,
   AutocompleteRenderInputParams,
+  Box,
   Button,
   FormControl,
   FormControlLabel,
@@ -19,21 +20,24 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { modalSizeProps } from '@/components/commonStyles';
-import { Client, ClientType, Storage } from '@/http/graphql/codegen/graphql';
+import { ClientType, OutClient, Storage } from '@/http/graphql/codegen/graphql';
 import { emptyValueToNull } from '@/utils/common';
 import { clientTypes } from '../constants';
 import { useUpdateClient } from '@/http/graphql/hooks/client/useEditClient';
 import NumberInput from '@/components/ui/input/NumberInput';
-import { CLIENT_PREFIX } from '@/constants';
+import { CLIENT_PREFIX, LIMIT } from '@/constants';
 import { client } from '@/http/graphql/client';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
+import useTextDebounce from '@/hooks/useTextDebounce';
+import { useProducts } from '@/http/graphql/hooks/product/useProducts';
+import useInfinityScroll from '@/hooks/useInfinityScroll';
 
 interface Props {
   open: boolean;
-  selectedClient: Client;
+  selectedClient: OutClient;
   onClose: () => void;
-  setSelectedClient: (item: Client | null) => void;
+  setSelectedClient: (item: OutClient | null) => void;
 }
 
 const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelectedClient }) => {
@@ -51,6 +55,41 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
   const targetStorage = ((storages?.storages.data as Storage[]) ?? []).find(
     (item) => item._id === selectedClient?.storageId
   );
+
+  const [productKeyword, setProductKeyword] = useState('');
+  const delayedProductKeyword = useTextDebounce(productKeyword);
+
+  const {
+    data: products,
+    networkStatus: productNetwork,
+    fetchMore: productFetchMore,
+  } = useProducts({
+    keyword: delayedProductKeyword,
+    limit: LIMIT,
+    skip: 0,
+  });
+  const productRows = products?.products.data ?? [];
+  const cachedOptions = productRows;
+  const isProductLoading = productNetwork == 1 || productNetwork == 2 || productNetwork == 3;
+  const productCallback: IntersectionObserverCallback = (entries) => {
+    if (entries[0].isIntersecting) {
+      if (isProductLoading) return;
+
+      const totalCount = products?.products.totalCount;
+      if (totalCount != null && totalCount > productRows.length) {
+        productFetchMore({
+          variables: {
+            productsInput: {
+              keyword: delayedProductKeyword,
+              limit: LIMIT,
+              skip: productRows.length,
+            },
+          },
+        });
+      }
+    }
+  };
+  const productScrollRef = useInfinityScroll({ callback: productCallback });
 
   const {
     reset,
@@ -70,6 +109,8 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
       manager: selectedClient.manager ?? '',
       managerTel: selectedClient.managerTel ?? '',
       inActive: !!selectedClient.inActive,
+      deliveryFreeProductCodeList: selectedClient.deliveryFreeProductCodeList ?? [],
+      deliveryNotFreeProductCodeList: selectedClient.deliveryNotFreeProductCodeList ?? [],
     },
   });
 
@@ -88,6 +129,8 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
       managerTel: selectedClient.managerTel ?? '',
       inActive: !!selectedClient.inActive,
       storageName: targetStorage?.name,
+      deliveryFreeProductCodeList: selectedClient.deliveryFreeProductCodeList ?? [],
+      deliveryNotFreeProductCodeList: selectedClient.deliveryNotFreeProductCodeList ?? [],
     });
   }, [selectedClient, networkStatus]);
 
@@ -98,6 +141,10 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
         updateClientInput: {
           ...newValues,
           _id: selectedClient._id,
+          deliveryFreeProductCodeList:
+            values.deliveryFreeProductCodeList?.map((item) => item.code) ?? [],
+          deliveryNotFreeProductCodeList:
+            values.deliveryNotFreeProductCodeList?.map((item) => item.code) ?? [],
           feeRate: newValues.feeRate == null ? null : Number(newValues.feeRate) / 100,
         },
       },
@@ -107,7 +154,7 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
           severity: 'success',
         });
 
-        setSelectedClient(res.updateClient as Client);
+        setSelectedClient(res.updateClient as OutClient);
 
         client.refetchQueries({
           updateCache(cache) {
@@ -134,7 +181,7 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        거래처 수정
+        거래처 편집
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack
@@ -144,7 +191,7 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
           gap={3}
           sx={{ mb: 3 }}
         >
-          <Typography noWrap>새로운 거래처을 입력합니다.</Typography>
+          <Typography noWrap>거래처 정보를 편집합니다..</Typography>
           <Controller
             control={control}
             name="inActive"
@@ -349,13 +396,116 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
               );
             }}
           />
+
+          <Controller
+            control={control}
+            name="deliveryFreeProductCodeList"
+            render={({ field }) => {
+              return (
+                <Autocomplete
+                  multiple
+                  options={cachedOptions}
+                  loading={isProductLoading}
+                  getOptionLabel={(item) => `${item.name}(${item.code})`}
+                  fullWidth
+                  disableCloseOnSelect
+                  defaultValue={[]}
+                  inputValue={productKeyword}
+                  onInputChange={(_, newValue) => setProductKeyword(newValue)}
+                  noOptionsText="검색 결과가 없습니다."
+                  loadingText="로딩중입니다."
+                  onChange={(_, value) => field.onChange(value)}
+                  value={field.value ?? []}
+                  renderOption={(props, item, state) => {
+                    const { key, ...rest } = props as any;
+                    const isLast = state.index === cachedOptions.length - 1;
+                    return (
+                      <Box
+                        component="li"
+                        ref={isLast ? productScrollRef : null}
+                        key={item}
+                        {...rest}
+                      >
+                        {`${item.name}(${item.code})`}
+                      </Box>
+                    );
+                  }}
+                  renderInput={(params: AutocompleteRenderInputParams) => {
+                    return (
+                      <FormControl fullWidth>
+                        <TextField
+                          {...params}
+                          name={field.name}
+                          label="배송비 무료 제품선택"
+                          error={!!errors.deliveryFreeProductCodeList?.message}
+                          helperText={errors.deliveryFreeProductCodeList?.message ?? ''}
+                          size="small"
+                        />
+                      </FormControl>
+                    );
+                  }}
+                />
+              );
+            }}
+          />
+          <Controller
+            control={control}
+            name="deliveryNotFreeProductCodeList"
+            render={({ field }) => {
+              return (
+                <Autocomplete
+                  multiple
+                  options={cachedOptions}
+                  loading={isProductLoading}
+                  getOptionLabel={(item) => `${item.name}(${item.code})`}
+                  fullWidth
+                  disableCloseOnSelect
+                  defaultValue={[]}
+                  inputValue={productKeyword}
+                  onInputChange={(_, newValue) => setProductKeyword(newValue)}
+                  noOptionsText="검색 결과가 없습니다."
+                  loadingText="로딩중입니다."
+                  onChange={(_, value) => field.onChange(value)}
+                  value={field.value ?? []}
+                  renderOption={(props, item, state) => {
+                    const { key, ...rest } = props as any;
+                    const isLast = state.index === cachedOptions.length - 1;
+                    return (
+                      <Box
+                        component="li"
+                        ref={isLast ? productScrollRef : null}
+                        key={item}
+                        {...rest}
+                      >
+                        {`${item.name}(${item.code})`}
+                      </Box>
+                    );
+                  }}
+                  renderInput={(params: AutocompleteRenderInputParams) => {
+                    return (
+                      <FormControl fullWidth>
+                        <TextField
+                          {...params}
+                          name={field.name}
+                          label="배송비 유료 제품선택"
+                          error={!!errors.deliveryNotFreeProductCodeList?.message}
+                          helperText={errors.deliveryNotFreeProductCodeList?.message ?? ''}
+                          size="small"
+                        />
+                      </FormControl>
+                    );
+                  }}
+                />
+              );
+            }}
+          />
         </FormGroup>
         <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
           <Button type="button" variant="outlined" onClick={handleClose}>
             취소
           </Button>
           <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
-            수정
+            편집
           </Button>
         </Stack>
       </form>

@@ -197,7 +197,6 @@ const ProductPage = () => {
   };
 
   const handleChangeIsDeliveryFee = (checked: boolean) => {
-    console.log('checked : ', checked);
     if (!selectedProduct) return;
     updateProduct({
       variables: {

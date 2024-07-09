@@ -1,20 +1,16 @@
 import { FC, useState } from 'react';
-import { Client } from '@/http/graphql/codegen/graphql';
-import { TableBody } from '@mui/material';
+import { OutClient } from '@/http/graphql/codegen/graphql';
 import EmptyRow from '@/components/table/EmptyRow';
 import ClientBodyRow from './ClientBodyRow';
-import RemoveClientModal from './RemoveClientModal';
-import ClientDetailPopover from './ClientDetailPopover';
 import { SelectOption } from '../../types';
 import LoadingRow from '@/components/table/LoadingRow';
 import { ClientHeaderList } from '../constants';
-import EditPClientModal from './EditPClientModal';
 import { CommonListProps } from '@/types';
 import { CommonTableBody } from '@/components/commonStyles';
 
-interface Props extends CommonListProps<Client> {
-  selectedClient: Client | null;
-  setSelectedClient: (item: Client | null) => void;
+interface Props extends CommonListProps<OutClient> {
+  selectedClient: OutClient | null;
+  setSelectedClient: (item: OutClient | null) => void;
 }
 
 const ClientTableBody: FC<Props> = ({
@@ -29,7 +25,7 @@ const ClientTableBody: FC<Props> = ({
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
 
-  const handleClickOption = (option: SelectOption | null, client: Client | null) => {
+  const handleClickOption = (option: SelectOption | null, client: OutClient | null) => {
     setSelectedClient(client);
     setOptionType(option);
   };
@@ -38,13 +34,13 @@ const ClientTableBody: FC<Props> = ({
     <CommonTableBody>
       <EmptyRow colSpan={ClientHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
-        const client = item as unknown as Client;
+        const client = item as unknown as OutClient;
         const isLast = index === data.length - 1;
         const isSelected = selectedClient?._id == client._id;
         return (
           <ClientBodyRow
             isSelected={isSelected}
-            onClickRow={(event, client: Client) => {
+            onClickRow={(event, client: OutClient) => {
               setPopoverPosition({ left: event.clientX, top: event.clientY });
               setPopoverAnchor(event.currentTarget);
               setSelectedClient(client);

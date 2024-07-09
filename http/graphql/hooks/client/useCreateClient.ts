@@ -1,11 +1,11 @@
 import { useMutation } from '@apollo/client';
 import { graphql } from '../../codegen';
-import { Client, ClientFragmentFragmentDoc } from '../../codegen/graphql';
+import { OutClient, OutClientFragmentFragmentDoc } from '../../codegen/graphql';
 
 const createClient = graphql(`
   mutation createClient($createClientInput: CreateClientInput!) {
     createClient(createClientInput: $createClientInput) {
-      ...ClientFragment
+      ...OutClientFragment
     }
   }
 `);
@@ -17,8 +17,8 @@ export const useCreateClient = () => {
         fields: {
           clients: (existingClients = { totalCount: 0, data: [] }) => {
             const newClientRef = cache.writeFragment({
-              data: data?.createClient as Client,
-              fragment: ClientFragmentFragmentDoc,
+              data: data?.createClient as OutClient,
+              fragment: OutClientFragmentFragmentDoc,
             });
             return {
               totalCount: existingClients + 1,

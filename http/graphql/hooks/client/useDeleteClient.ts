@@ -15,7 +15,7 @@ export const useRemoveClient = () => {
     notifyOnNetworkStatusChange: true,
     update(cache, { data }) {
       const id = data?.removeClient._id;
-      const type = data?.removeClient.__typename;
+      const type = 'OutClient';
       cache.evict({ id: `${type}:${id}` });
       cache.gc();
       cache.modify({

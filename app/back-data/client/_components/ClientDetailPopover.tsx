@@ -1,8 +1,8 @@
 import { FC } from 'react';
-import { Client, Storage } from '@/http/graphql/codegen/graphql';
+import { OutClient, Storage } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
 import ModalTitle from '@/components/ui/typograph/ModalTitle';
-import { Stack, Button } from '@mui/material';
+import { Stack, Button, Chip } from '@mui/material';
 import BasePopover from '@/components/ui/modal/BasePopover';
 import { EMPTY } from '@/constants';
 import { getFixedTwo } from '@/utils/sale';
@@ -12,7 +12,7 @@ interface Props {
   open: boolean;
   anchorEl: null | HTMLElement;
   position: { left: number; top: number };
-  selectedClient: Client;
+  selectedClient: OutClient;
   onClose: () => void;
   onClickDelete: () => void;
   onClickEdit: () => void;
@@ -57,6 +57,34 @@ const ClientDetailPopover: FC<Props> = ({
         <LabelText label="연락처" text={selectedClient.managerTel ?? EMPTY} />
         <LabelText label="거래여부" text={selectedClient.inActive ? '거래중' : '거래종료'} />
         <LabelText label="출고창고" text={targetStorage?.name ?? EMPTY} />
+        <LabelText
+          label="무료배송 제품"
+          text={
+            selectedClient.deliveryFreeProductCodeList ? (
+              <Stack direction="row" flexWrap="wrap" gap={1}>
+                {selectedClient.deliveryFreeProductCodeList.map((item) => (
+                  <Chip key={Math.random()} label={item.name || EMPTY} />
+                ))}
+              </Stack>
+            ) : (
+              ''
+            )
+          }
+        />
+        <LabelText
+          label="유료배송 제품"
+          text={
+            selectedClient.deliveryNotFreeProductCodeList ? (
+              <Stack direction="row" flexWrap="wrap" gap={1}>
+                {selectedClient.deliveryNotFreeProductCodeList.map((item) => (
+                  <Chip key={Math.random()} label={item.name || EMPTY} />
+                ))}
+              </Stack>
+            ) : (
+              ''
+            )
+          }
+        />
       </Stack>
       <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
         <Button color="error" variant="outlined" onClick={onClickDelete}>

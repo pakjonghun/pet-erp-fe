@@ -41,11 +41,9 @@ const ProfilePage = () => {
     },
   });
 
-  console.log(console.log('data.deliveryCost : ', data?.deliveryCost?.monthDeliveryPayCost));
   useEffect(() => {
     if (!data?.deliveryCost || isLoading) return;
     reset(data.deliveryCost);
-    console.log('data.deliveryCost : ', data.deliveryCost);
   }, [data?.deliveryCost, isLoading, reset]);
 
   const onSubmit = (value: SetDeliveryForm) => {

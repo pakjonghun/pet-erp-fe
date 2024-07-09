@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Client, Product } from '@/http/graphql/codegen/graphql';
+import { OutClient } from '@/http/graphql/codegen/graphql';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import { snackMessage } from '@/store/snackMessage';
@@ -9,7 +9,7 @@ import { client } from '@/http/graphql/client';
 
 interface Props {
   open: boolean;
-  selectedClient: Client;
+  selectedClient: OutClient;
   onClose: () => void;
 }
 

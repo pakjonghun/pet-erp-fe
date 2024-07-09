@@ -34,7 +34,6 @@ const ProductSaleTable: FC<Props> = ({
           xs: 'none',
           md: 'flex',
         },
-        height: '100%',
         ...sx,
       }}
     >

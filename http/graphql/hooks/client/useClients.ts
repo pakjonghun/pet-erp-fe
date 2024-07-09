@@ -7,7 +7,7 @@ const clients = graphql(`
     clients(clientsInput: $clientsInput) {
       totalCount
       data {
-        ...ClientFragment
+        ...OutClientFragment
       }
     }
   }
