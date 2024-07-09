@@ -1,12 +1,8 @@
 import { FC, useState } from 'react';
 import { Product } from '@/http/graphql/codegen/graphql';
-import { TableBody } from '@mui/material';
 import EmptyRow from '@/components/table/EmptyRow';
 import ProductBodyRow from './ProductBodyRow';
 import { SelectOption } from '../../types';
-import RemoveProductModal from './RemoveProductModal';
-import EditProductModal from './EditProductModal';
-import ProductDetailPopover from './ProductDetailPopover';
 import LoadingRow from '@/components/table/LoadingRow';
 import { ProductHeaderList } from '../constants';
 import { CommonListProps } from '@/types';
@@ -33,21 +29,6 @@ const ProductionTableBody: FC<Props> = ({
   const handleClickOption = (option: SelectOption | null, product: Product | null) => {
     setSelectedProduct(product);
     setOptionType(option);
-  };
-
-  const handleClickEdit = () => {
-    handleClosePopover();
-    handleClickOption('edit', selectedProduct);
-  };
-
-  const handleClickDelete = () => {
-    handleClosePopover();
-    handleClickOption('delete', selectedProduct);
-  };
-
-  const handleClosePopover = () => {
-    setPopoverAnchor(null);
-    setSelectedProduct(null);
   };
 
   return (

@@ -63,6 +63,10 @@ const ProductDetailPopover: FC<Props> = ({
         />
         <LabelText label="리드타임" text={selectedProduct.leadTime ?? EMPTY} />
         <LabelText label="출고 창고" text={targetStorage?.name ?? EMPTY} />
+        <LabelText
+          label="착불여부"
+          text={selectedProduct.isFreeDeliveryFee ? '무료배송' : '유료배송'}
+        />
       </Stack>
       <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
         <Button color="error" variant="outlined" onClick={onClickDelete}>

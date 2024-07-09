@@ -8,9 +8,11 @@ import TableTitle from '@/components/ui/typograph/TableTitle';
 import {
   Button,
   FormControl,
+  FormControlLabel,
   FormGroup,
   InputAdornment,
   Stack,
+  Switch,
   TableContainer,
   TableHead,
   TableRow,
@@ -44,6 +46,7 @@ import EmptyRow from '@/components/table/EmptyRow';
 import { CommonHeaderRow, CommonTable, CommonTableBody } from '@/components/commonStyles';
 import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
+import { useUpdateProduct } from '@/http/graphql/hooks/product/useUpdateProduct';
 
 const ProductPage = () => {
   const { data: userData } = useGetMyInfo();
@@ -167,11 +170,23 @@ const ProductPage = () => {
       product.salePrice == null ? EMPTY : getKCWFormat(product.salePrice),
       product.leadTime ? `${product.leadTime}일` : EMPTY,
       targetStorage?.name ?? EMPTY,
+      <FormControlLabel
+        key={Math.random()}
+        sx={{ width: 'fit-content' }}
+        control={
+          <Switch
+            checked={!!selectedProduct?.isFreeDeliveryFee}
+            onChange={(_, checked) => handleChangeIsDeliveryFee(checked)}
+          />
+        }
+        label={product.isFreeDeliveryFee ? '무료배송' : '유료배송'}
+      />,
     ];
   };
 
   const parsedRowData = selectedProduct ? createRow(selectedProduct) : [];
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
+  const [updateProduct, { loading }] = useUpdateProduct();
 
   const handleClickEdit = () => {
     setOptionType('edit');
@@ -179,6 +194,46 @@ const ProductPage = () => {
 
   const handleClickDelete = () => {
     setOptionType('delete');
+  };
+
+  const handleChangeIsDeliveryFee = (checked: boolean) => {
+    console.log('checked : ', checked);
+    if (!selectedProduct) return;
+    updateProduct({
+      variables: {
+        updateProductInput: {
+          isFreeDeliveryFee: checked,
+          _id: selectedProduct._id,
+        },
+      },
+      onCompleted: (res) => {
+        snackMessage({
+          message: '제품편집이 완료되었습니다.',
+          severity: 'success',
+        });
+        setSelectedProduct(res.updateProduct as Product);
+
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'wholeSales' });
+            cache.evict({ fieldName: 'dashboardClients' });
+            cache.evict({ fieldName: 'stocks' });
+            cache.evict({ fieldName: 'stocksState' });
+            cache.evict({ fieldName: 'productCountStocks' });
+            cache.evict({ fieldName: 'productSales' });
+            cache.evict({ fieldName: 'productSale' });
+            cache.evict({ fieldName: 'topClients' });
+          },
+        });
+      },
+      onError: (err) => {
+        const message = err.message;
+        snackMessage({
+          message: message ?? '제품편집이 실패했습니다.',
+          severity: 'error',
+        });
+      },
+    });
   };
 
   return (

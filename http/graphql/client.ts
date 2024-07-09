@@ -126,6 +126,7 @@ export const client = new ApolloClient({
         category {
           ...ProductCategoryFragment
         }
+        isFreeDeliveryFee
       }
 
       fragment ClientFragment on Client {

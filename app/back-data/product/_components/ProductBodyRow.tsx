@@ -65,6 +65,7 @@ const ProductBodyRow: FC<Props> = ({
       product.salePrice == null ? EMPTY : getKCWFormat(product.salePrice),
       product.leadTime ? `${product.leadTime}일` : EMPTY,
       targetStorage?.name ?? EMPTY,
+      product.isFreeDeliveryFee ? '무료배송' : '유료배송',
     ];
   };
 

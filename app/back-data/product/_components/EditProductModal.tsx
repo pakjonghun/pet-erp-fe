@@ -4,9 +4,11 @@ import {
   AutocompleteRenderInputParams,
   Button,
   FormControl,
+  FormControlLabel,
   FormGroup,
   InputAdornment,
   Stack,
+  Switch,
   TextField,
   Typography,
 } from '@mui/material';
@@ -29,7 +31,6 @@ import { modalSizeProps } from '@/components/commonStyles';
 import { emptyValueToNull } from '@/utils/common';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { client } from '@/http/graphql/client';
-import { useFragment } from '@apollo/client';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 
 interface Props {
@@ -58,6 +59,7 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose, setSelect
       name: selectedProduct.name,
       salePrice: selectedProduct.salePrice,
       wonPrice: selectedProduct.wonPrice,
+      isFreeDeliveryFee: selectedProduct.isFreeDeliveryFee,
     },
   });
 
@@ -86,6 +88,7 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose, setSelect
       salePrice: selectedProduct.salePrice,
       wonPrice: selectedProduct.wonPrice,
       storageName,
+      isFreeDeliveryFee: selectedProduct.isFreeDeliveryFee,
     });
   }, [selectedProduct, storageNetworkStatus]);
 
@@ -177,6 +180,20 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose, setSelect
       <Typography sx={{ mb: 3 }}>제품을 편집합니다.</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={modalSizeProps}>
+          <Controller
+            control={control}
+            name="isFreeDeliveryFee"
+            render={({ field }) => {
+              return (
+                <FormControlLabel
+                  key={Math.random()}
+                  sx={{ width: 'fit-content' }}
+                  control={<Switch checked={!!field.value} {...field} />}
+                  label={field.value ? '무료배송' : '유료배송'}
+                />
+              );
+            }}
+          />
           <Controller
             control={control}
             name="code"

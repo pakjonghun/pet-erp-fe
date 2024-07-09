@@ -37,6 +37,8 @@ export const createProductSchema = z.object({
     .string({ invalid_type_error: '올바른 창고를 입력해주세요.' })
     .optional()
     .nullable(),
+
+  isFreeDeliveryFee: z.boolean().optional().nullable(),
 });
 
 export type CreateProductForm = z.infer<typeof createProductSchema>;
