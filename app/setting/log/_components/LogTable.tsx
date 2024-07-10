@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { TableHead, TableRow } from '@mui/material';
 import { FindLogsDto, Log } from '@/http/graphql/codegen/graphql';
 import { useFindLogs } from '@/http/graphql/hooks/log/useFindLogs';
@@ -16,10 +16,15 @@ interface Props {
 }
 
 const LogTable: FC<Props> = ({ findLogsQuery }) => {
-  const { data, networkStatus, fetchMore } = useFindLogs(findLogsQuery);
+  const { data, networkStatus, fetchMore, refetch } = useFindLogs(findLogsQuery);
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
   const createRow = (log: Omit<Log, '__typename'>) => {
     const copyData = Object.assign({}, log);
-    copyData.createdAt = dayjs(log.createdAt).format('YYYY. MM. DD.');
+    copyData.createdAt = dayjs(log.createdAt).format('YYYY. MM. DD. HH:MM');
     return copyData;
   };
 
@@ -59,7 +64,10 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
         <CommonTableBody>
           <EmptyRow colSpan={4} isEmpty={isEmpty} />
           {rows.map((row, index) => {
-            const result = parseToJSON(row.description);
+            let result = row.description;
+            if (row.description.includes('{')) {
+              result = parseToJSON(row.description);
+            }
 
             return (
               <TableRow hover key={row._id} ref={index === rows.length - 1 ? scrollRef : null}>
