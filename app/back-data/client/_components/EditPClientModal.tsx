@@ -93,6 +93,7 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
 
   const {
     reset,
+    watch,
     control,
     handleSubmit,
     formState: { errors },
@@ -404,6 +405,12 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
               return (
                 <Autocomplete
                   multiple
+                  getOptionDisabled={(option) =>
+                    !!watch('deliveryNotFreeProductCodeList')?.some(
+                      (item) => item.code === option.code
+                    )
+                  }
+                  isOptionEqualToValue={(item1, item2) => item1.code == item2.code}
                   options={cachedOptions}
                   loading={isProductLoading}
                   getOptionLabel={(item) => `${item.name}(${item.code})`}
@@ -455,6 +462,11 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
               return (
                 <Autocomplete
                   multiple
+                  getOptionDisabled={(option) =>
+                    !!watch('deliveryFreeProductCodeList')?.some(
+                      (item) => item.code === option.code
+                    )
+                  }
                   options={cachedOptions}
                   loading={isProductLoading}
                   getOptionLabel={(item) => `${item.name}(${item.code})`}

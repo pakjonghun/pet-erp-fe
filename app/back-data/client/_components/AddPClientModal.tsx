@@ -44,6 +44,7 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
   const {
     reset,
     control,
+    watch,
     handleSubmit,
     formState: { errors },
   } = useForm<CreateClientForm>({
@@ -366,6 +367,11 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
               return (
                 <Autocomplete
                   multiple
+                  getOptionDisabled={(option) =>
+                    !!watch('deliveryNotFreeProductCodeList')?.some(
+                      (item) => item.code === option.code
+                    )
+                  }
                   options={cachedOptions}
                   loading={isProductLoading}
                   getOptionLabel={(item) => `${item.name}(${item.code})`}
@@ -428,6 +434,11 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
                   noOptionsText="검색 결과가 없습니다."
                   loadingText="로딩중입니다."
                   onChange={(_, value) => field.onChange(value)}
+                  getOptionDisabled={(option) =>
+                    !!watch('deliveryFreeProductCodeList')?.some(
+                      (item) => item.code === option.code
+                    )
+                  }
                   // value={field.value ?? []}
                   renderOption={(props, item, state) => {
                     const { key, ...rest } = props as any;
