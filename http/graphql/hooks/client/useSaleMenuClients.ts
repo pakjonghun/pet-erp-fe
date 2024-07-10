@@ -20,6 +20,8 @@ const saleMenuClients = graphql(`
         prevAccWonCost
         prevAccProfit
         prevProfitRate
+        prevDeliveryCost
+        deliveryCost
         products {
           name
           accCount

@@ -29,6 +29,8 @@ const productSales = graphql(`
         prevAccWonCost
         prevAccProfit
         prevAccProfitRate
+        prevDeliveryCost
+        deliveryCost
       }
     }
   }

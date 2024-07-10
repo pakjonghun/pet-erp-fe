@@ -17,6 +17,7 @@ const dashboardProducts = graphql(`
         prevAccCount
         prevAccProfit
         prevAveragePayCost
+        deliveryCost
       }
       totalCount
     }

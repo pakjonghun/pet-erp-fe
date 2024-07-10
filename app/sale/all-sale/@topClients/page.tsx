@@ -63,7 +63,7 @@ const TopClients = () => {
         return {
           totalCount: acc.totalCount + (cur?.accCount ?? 0),
           totalPayCost: acc.totalPayCost + (cur?.accPayCost ?? 0),
-          totalProfit: acc.totalProfit + (cur?.accProfit ?? 0),
+          totalProfit: acc.totalProfit + ((cur?.accProfit ?? 0) - (cur?.deliveryCost ?? 0)),
         };
       },
       { totalCount: 0, totalPayCost: 0, totalProfit: 0 }

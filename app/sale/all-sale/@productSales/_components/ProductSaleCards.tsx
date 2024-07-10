@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { ProductSaleMenu } from '@/http/graphql/codegen/graphql';
-import { TABLE_MAX_HEIGHT } from '@/constants';
 import { Grid, SxProps } from '@mui/material';
 import { CommonListProps } from '@/types';
 import EmptyItem from '@/components/ui/listItem/EmptyItem';

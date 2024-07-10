@@ -54,14 +54,20 @@ const ClientSaleTableBodySection: FC<Props> = ({
             />
             <SaleTableCell
               isShowPrevData={isShowSalePrevData}
-              current={row.accProfit ?? 0}
-              previous={row.prevAccProfit ?? 0}
+              current={(row.accProfit ?? 0) - (row.deliveryCost ?? 0)}
+              previous={(row.prevAccProfit ?? 0) - (row.prevDeliveryCost ?? 0)}
             />
             <SaleTableCell
               isShowPrevData={isShowSalePrevData}
               numberType="percent"
-              current={getProfitRate(row?.accProfit ?? 0, row?.accPayCost ?? 0)}
-              previous={getProfitRate(row?.prevAccProfit ?? 0, row?.prevAccPayCost ?? 0)}
+              current={getProfitRate(
+                (row.accProfit ?? 0) - (row.deliveryCost ?? 0),
+                row?.accPayCost ?? 0
+              )}
+              previous={getProfitRate(
+                (row.prevAccProfit ?? 0) - (row.prevDeliveryCost ?? 0),
+                row?.prevAccPayCost ?? 0
+              )}
             />
           </TableRow>
         );

@@ -33,16 +33,19 @@ const ClientSaleCard: FC<Props> = ({ clientSaleData, scrollRef }) => {
         <SaleCard
           isShowPrevData={isShowPrevData}
           label="수익"
-          current={clientSaleData?.accProfit ?? 0}
-          previous={clientSaleData?.prevAccProfit ?? 0}
+          current={(clientSaleData?.accProfit ?? 0) - (clientSaleData?.deliveryCost ?? 0)}
+          previous={(clientSaleData?.prevAccProfit ?? 0) - (clientSaleData?.prevDeliveryCost ?? 0)}
         />
         <SaleCard
           isShowPrevData={isShowPrevData}
           label="수익율"
           numberType="percent"
-          current={getProfitRate(clientSaleData?.accProfit ?? 0, clientSaleData?.accPayCost ?? 0)}
+          current={getProfitRate(
+            (clientSaleData?.accProfit ?? 0) - (clientSaleData?.deliveryCost ?? 0),
+            clientSaleData?.accPayCost ?? 0
+          )}
           previous={getProfitRate(
-            clientSaleData?.prevAccProfit ?? 0,
+            (clientSaleData?.prevAccProfit ?? 0) - (clientSaleData?.prevDeliveryCost ?? 0),
             clientSaleData?.prevAccPayCost ?? 0
           )}
         />

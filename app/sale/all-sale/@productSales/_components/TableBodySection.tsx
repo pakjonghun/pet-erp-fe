@@ -60,14 +60,20 @@ const TableBodySection: FC<Props> = ({
             />
             <SaleTableCell
               isShowPrevData={isShowPrevData}
-              current={row.accProfit ?? 0}
-              previous={row.prevAccProfit ?? 0}
+              current={(row.accProfit ?? 0) - (row.deliveryCost ?? 0)}
+              previous={(row.prevAccProfit ?? 0) - (row.prevDeliveryCost ?? 0)}
             />
             <SaleTableCell
               isShowPrevData={isShowPrevData}
               numberType="percent"
-              current={getProfitRate(row?.accProfit ?? 0, row?.accPayCost ?? 0)}
-              previous={getProfitRate(row?.prevAccProfit ?? 0, row?.prevAccPayCost ?? 0)}
+              current={getProfitRate(
+                (row.accProfit ?? 0) - (row.deliveryCost ?? 0),
+                row?.accPayCost ?? 0
+              )}
+              previous={getProfitRate(
+                (row.prevAccProfit ?? 0) - (row.prevDeliveryCost ?? 0),
+                row?.prevAccPayCost ?? 0
+              )}
             />
             <Cell sx={{ width: '30%' }}>
               <Stack direction="row" flexWrap="wrap" gap={1}>

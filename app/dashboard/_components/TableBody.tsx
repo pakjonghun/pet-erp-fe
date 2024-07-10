@@ -36,14 +36,20 @@ const DashboardTableBody: FC<Props> = ({ saleInfos }) => {
           />
           <SaleTableCell
             isShowPrevData={isShowPrevData}
-            current={saleInfo.accProfit ?? 0}
-            previous={saleInfo.prevAccProfit ?? 0}
+            current={(saleInfo.accProfit ?? 0) - (saleInfo.deliveryCost ?? 0)}
+            previous={(saleInfo.prevAccProfit ?? 0) - (saleInfo.prevDeliveryCost ?? 0)}
             numberType="currency"
           />
           <SaleTableCell
             isShowPrevData={isShowPrevData}
-            current={getProfitRate(saleInfo?.accProfit ?? 0, saleInfo?.accPayCost ?? 0)}
-            previous={getProfitRate(saleInfo?.prevAccProfit ?? 0, saleInfo?.prevAccPayCost ?? 0)}
+            current={getProfitRate(
+              (saleInfo.accProfit ?? 0) - (saleInfo.deliveryCost ?? 0),
+              saleInfo?.accPayCost ?? 0
+            )}
+            previous={getProfitRate(
+              (saleInfo.prevAccProfit ?? 0) - (saleInfo.prevDeliveryCost ?? 0),
+              saleInfo?.prevAccPayCost ?? 0
+            )}
             numberType="percent"
           />
         </TableRow>

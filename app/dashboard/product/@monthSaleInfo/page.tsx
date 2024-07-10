@@ -49,8 +49,14 @@ const DateSaleInfoPage = () => {
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
           <DashboardCardContent
             label={`수익`}
-            current={monthData?.dashboardProduct?.current?.accProfit ?? 0}
-            previous={monthData?.dashboardProduct?.previous?.accProfit ?? 0}
+            current={
+              (monthData?.dashboardProduct?.current?.accProfit ?? 0) -
+              (monthData?.dashboardProduct?.current?.deliveryCost ?? 0)
+            }
+            previous={
+              (monthData?.dashboardProduct?.previous?.accProfit ?? 0) -
+              (monthData?.dashboardProduct?.previous?.deliveryCost ?? 0)
+            }
           />
         </Grid>
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -58,11 +64,13 @@ const DateSaleInfoPage = () => {
             numberType="percent"
             label={`수익율`}
             current={getProfitRate(
-              monthData?.dashboardProduct?.current?.accProfit ?? 0,
+              (monthData?.dashboardProduct?.current?.accProfit ?? 0) -
+                (monthData?.dashboardProduct?.current?.deliveryCost ?? 0),
               monthData?.dashboardProduct?.current?.accPayCost ?? 0
             )}
             previous={getProfitRate(
-              monthData?.dashboardProduct?.previous?.accProfit ?? 0,
+              (monthData?.dashboardProduct?.previous?.accProfit ?? 0) -
+                (monthData?.dashboardProduct?.previous?.deliveryCost ?? 0),
               monthData?.dashboardProduct?.previous?.accPayCost ?? 0
             )}
           />
