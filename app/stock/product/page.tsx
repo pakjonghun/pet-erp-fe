@@ -75,6 +75,7 @@ const ProductStockPage = () => {
               keyword,
               skip: rows.length,
               limit: LIMIT,
+              storageName: storageOption == '모두선택' ? undefined : storageOption,
             },
           },
         });
