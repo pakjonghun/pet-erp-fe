@@ -18,6 +18,16 @@ export const client = new ApolloClient({
         month
       }
 
+      fragment OptionFragment on OutputOption {
+        id
+        name
+        count
+        productCodeList {
+          code
+          name
+        }
+      }
+
       fragment StockColumnFragment on StockColumn {
         stockCount
         leadTime
@@ -271,9 +281,12 @@ export const client = new ApolloClient({
             keyArgs: ['productSalesInput', ['keyword', 'from', 'to', 'sort', 'order']],
             merge,
           },
-
           saleMenuClients: {
             keyArgs: ['saleMenuClientsInput', ['from', 'to']],
+            merge,
+          },
+          options: {
+            keyArgs: ['optionsInput', ['keyword']],
             merge,
           },
         },
