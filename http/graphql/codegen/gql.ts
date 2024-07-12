@@ -52,6 +52,7 @@ const documents = {
     "\n  mutation removeOrder($_id: String!) {\n    removeOrder(_id: $_id) {\n      ...ProductOrderFragment\n    }\n  }\n": types.RemoveOrderDocument,
     "\n  mutation loadSabangData {\n    loadSabangData {\n      month\n    }\n  }\n": types.LoadSabangDataDocument,
     "\n  mutation outSaleData {\n    outSaleData {\n      hasNoCountSale\n      hasNoProductCodeSale\n      hasNoMatchClientSale\n      hasNoMatchStorageSale\n      hasNoStockSale\n      hasNoMatchStorageProductStockSale\n      totalErrors\n    }\n  }\n": types.OutSaleDataDocument,
+    "\n  query saleOutCheck {\n    saleOutCheck {\n      isChecked\n    }\n  }\n": types.SaleOutCheckDocument,
     "\n  mutation addStock($addStocksInput: CreateStockInput!) {\n    addStock(addStocksInput: $addStocksInput) {\n      _id\n    }\n  }\n": types.AddStockDocument,
     "\n  mutation outStock($outStocksInput: CreateStockInput!) {\n    outStock(outStocksInput: $outStocksInput) {\n      _id\n    }\n  }\n": types.OutStockDocument,
     "\n  query productCountStocks($productCountStocksInput: ProductCountStocksInput!) {\n    productCountStocks(productCountStocksInput: $productCountStocksInput) {\n      totalCount\n      data {\n        name\n        count\n        salePrice\n        wonPrice\n        code\n      }\n    }\n  }\n": types.ProductCountStocksDocument,
@@ -255,6 +256,10 @@ export function graphql(source: "\n  mutation loadSabangData {\n    loadSabangDa
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation outSaleData {\n    outSaleData {\n      hasNoCountSale\n      hasNoProductCodeSale\n      hasNoMatchClientSale\n      hasNoMatchStorageSale\n      hasNoStockSale\n      hasNoMatchStorageProductStockSale\n      totalErrors\n    }\n  }\n"): (typeof documents)["\n  mutation outSaleData {\n    outSaleData {\n      hasNoCountSale\n      hasNoProductCodeSale\n      hasNoMatchClientSale\n      hasNoMatchStorageSale\n      hasNoStockSale\n      hasNoMatchStorageProductStockSale\n      totalErrors\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query saleOutCheck {\n    saleOutCheck {\n      isChecked\n    }\n  }\n"): (typeof documents)["\n  query saleOutCheck {\n    saleOutCheck {\n      isChecked\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

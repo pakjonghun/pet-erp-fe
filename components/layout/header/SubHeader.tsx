@@ -1,7 +1,16 @@
 'use client';
 
 import { FC, ReactNode, useEffect, useState } from 'react';
-import { AppBar, Stack, SxProps, Typography, keyframes, makeStyles, styled } from '@mui/material';
+import {
+  AppBar,
+  Badge,
+  Stack,
+  SxProps,
+  Typography,
+  keyframes,
+  makeStyles,
+  styled,
+} from '@mui/material';
 import { Button } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useLoadSabangData } from '@/http/graphql/hooks/sale/useSabang';
@@ -10,6 +19,8 @@ import { client } from '@/http/graphql/client';
 import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 import { UserRole } from '@/http/graphql/codegen/graphql';
 import { useSaleOut } from '@/http/graphql/hooks/sale/useSaleOut';
+import { useSaleOutCheck } from '@/http/graphql/hooks/sale/useSaleoutCheck';
+import CheckAlarm from './CheckAlarm';
 
 interface Props {
   title: string;
@@ -148,10 +159,11 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
             disabled={delayOutLoading || delayLoading}
             onClick={handleClickSaleOut}
             color="inherit"
-            sx={{ width: 'fit-content', ml: 'auto', mr: 1 }}
+            sx={{ position: 'relative', width: 'fit-content', ml: 'auto', mr: 1 }}
             variant="outlined"
             endIcon={<RotatingIcon loading={delayOutLoading} />}
           >
+            <CheckAlarm />
             사방넷 판매 출고
           </Button>
         )}
