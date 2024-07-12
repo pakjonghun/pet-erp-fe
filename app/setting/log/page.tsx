@@ -8,10 +8,10 @@ import { Box, InputAdornment, TextField } from '@mui/material';
 import CommonDateFilter from '@/components/calendar/dateFilter/CommonDateFilter';
 import { DateRange } from '@/components/calendar/dateFilter/type';
 import { getStringRange, getThisMonth } from '@/components/calendar/dateFilter/utils';
-import LogTable from './_components/LogTable';
 import { LIMIT } from '@/constants';
 import TableTitle from '@/components/ui/typograph/TableTitle';
 import TablePage from '@/components/table/TablePage';
+import CommonLogTable from './_components/CommonLogTable';
 
 const LogPage = () => {
   const { from, to } = getThisMonth();
@@ -89,7 +89,7 @@ const LogPage = () => {
           }}
         />
       </Box>
-      <LogTable findLogsQuery={findLogsQuery} />
+      <CommonLogTable findLogsQuery={findLogsQuery} />
     </TablePage>
   );
 };

@@ -1,7 +1,6 @@
 import { FC, useEffect } from 'react';
 import { TableHead, TableRow } from '@mui/material';
-import { FindLogsDto, Log } from '@/http/graphql/codegen/graphql';
-import { useFindLogs } from '@/http/graphql/hooks/log/useFindLogs';
+import { FindStockLogs, Log } from '@/http/graphql/codegen/graphql';
 import dayjs from 'dayjs';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import LoadingRow from '@/components/table/LoadingRow';
@@ -10,13 +9,14 @@ import Cell from '@/components/table/Cell';
 import HeadCell from '@/components/table/HeadCell';
 import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 import { CommonHeaderRow, CommonTable, CommonTableBody } from '@/components/commonStyles';
+import { useFindStockLogs } from '@/http/graphql/hooks/log/useFindStockLogs';
 
 interface Props {
-  findLogsQuery: FindLogsDto;
+  findStockLogs: FindStockLogs;
 }
 
-const LogTable: FC<Props> = ({ findLogsQuery }) => {
-  const { data, networkStatus, fetchMore, refetch } = useFindLogs(findLogsQuery);
+const StockLogTable: FC<Props> = ({ findStockLogs }) => {
+  const { data, networkStatus, fetchMore, refetch } = useFindStockLogs(findStockLogs);
 
   useEffect(() => {
     refetch();
@@ -24,19 +24,19 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
 
   const createRow = (log: Omit<Log, '__typename'>) => {
     const copyData = Object.assign({}, log);
-    copyData.createdAt = dayjs(log.createdAt).format('YYYY. MM. DD. HH:MM');
+    copyData.createdAt = dayjs(log.createdAt).format('YYYY. MM. DD. HH:mm');
     return copyData;
   };
 
-  const rows = data?.logs?.data?.map((row) => createRow(row as Log)) ?? [];
+  const rows = data?.stockLogs?.data?.map((row) => createRow(row as Log)) ?? [];
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
-      const totalCount = data?.logs.totalCount;
+      const totalCount = data?.stockLogs.totalCount;
       if (totalCount && totalCount > rows.length) {
         fetchMore({
           variables: {
-            findLogsQuery: {
-              ...findLogsQuery,
+            findStockLogs: {
+              ...findStockLogs,
               skip: rows.length,
             },
           },
@@ -85,7 +85,7 @@ const LogTable: FC<Props> = ({ findLogsQuery }) => {
   );
 };
 
-export default LogTable;
+export default StockLogTable;
 
 function parseToJSON(data: string) {
   const blackListTypeList = ['array', 'object'];

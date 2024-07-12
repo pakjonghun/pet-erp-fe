@@ -28,6 +28,7 @@ const documents = {
     "\n  query factories($factoriesInput: FactoriesInput!) {\n    factories(factoriesInput: $factoriesInput) {\n      totalCount\n      data {\n        ...FactoryFragment\n      }\n    }\n  }\n": types.FactoriesDocument,
     "\n  mutation removeFactory($_id: String!) {\n    removeFactory(_id: $_id) {\n      ...FactoryFragment\n    }\n  }\n": types.RemoveFactoryDocument,
     "\n  query logs($findLogsQuery: FindLogsDTO!) {\n    logs(findLogsQuery: $findLogsQuery) {\n      totalCount\n      data {\n        ...LogFragment\n      }\n    }\n  }\n": types.LogsDocument,
+    "\n  query stockLogs($findStockLogs: FindStockLogs!) {\n    stockLogs(findStockLogs: $findStockLogs) {\n      totalCount\n      data {\n        ...LogFragment\n      }\n    }\n  }\n": types.StockLogsDocument,
     "\n  mutation createOption($createOptionInput: CreateOptionInput!) {\n    createOption(createOptionInput: $createOptionInput) {\n      ...OptionFragment\n    }\n  }\n": types.CreateOptionDocument,
     "\n  query options($optionsInput: OptionsInput!) {\n    options(optionsInput: $optionsInput) {\n      totalCount\n      data {\n        id\n        name\n        count\n        productCodeList {\n          code\n          name\n        }\n      }\n    }\n  }\n": types.OptionsDocument,
     "\n  mutation removeOption($id: String!) {\n    removeOption(id: $id) {\n      _id\n      id\n      name\n    }\n  }\n": types.RemoveOptionDocument,
@@ -158,6 +159,10 @@ export function graphql(source: "\n  mutation removeFactory($_id: String!) {\n  
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query logs($findLogsQuery: FindLogsDTO!) {\n    logs(findLogsQuery: $findLogsQuery) {\n      totalCount\n      data {\n        ...LogFragment\n      }\n    }\n  }\n"): (typeof documents)["\n  query logs($findLogsQuery: FindLogsDTO!) {\n    logs(findLogsQuery: $findLogsQuery) {\n      totalCount\n      data {\n        ...LogFragment\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query stockLogs($findStockLogs: FindStockLogs!) {\n    stockLogs(findStockLogs: $findStockLogs) {\n      totalCount\n      data {\n        ...LogFragment\n      }\n    }\n  }\n"): (typeof documents)["\n  query stockLogs($findStockLogs: FindStockLogs!) {\n    stockLogs(findStockLogs: $findStockLogs) {\n      totalCount\n      data {\n        ...LogFragment\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

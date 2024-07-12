@@ -217,6 +217,10 @@ export const client = new ApolloClient({
             keyArgs: ['findLogsQuery', ['keyword', 'from', 'to', 'keywordTarget']],
             merge,
           },
+          stockLogs: {
+            keyArgs: ['findStockLogs', ['keyword', 'from', 'to', 'productCode']],
+            merge,
+          },
           dashboardProducts: {
             keyArgs: ['dashboardProductsInput', ['from', 'to', 'idenifier']],
             merge,
