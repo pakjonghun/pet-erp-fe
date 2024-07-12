@@ -15,7 +15,7 @@ const CheckAlarm = () => {
       getSaleOutTime();
       const shouldCheck = getSaleOutTime();
       setShouldCheck(shouldCheck);
-    }, 1000);
+    }, 60000);
     return () => {
       clearInterval(timer);
     };
