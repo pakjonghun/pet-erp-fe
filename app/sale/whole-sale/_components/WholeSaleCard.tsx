@@ -11,8 +11,6 @@ import { SelectOption } from '@/app/back-data/types';
 import { getKCWFormat, getNumberWithComma } from '@/utils/common';
 import { getProfitRate } from '@/utils/sale';
 import dayjs from 'dayjs';
-import { useReactiveVar } from '@apollo/client';
-import { authState } from '@/store/isLogin';
 
 interface Props {
   sale: WholeSaleItem;
@@ -22,11 +20,10 @@ interface Props {
 }
 
 const WholeSaleCard: FC<Props> = ({ sale, scrollRef, onClickOption, onClickRow }) => {
-  const { role } = useReactiveVar(authState);
-  const cannotModify = role == UserRole.Staff;
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<SelectOption, SelectedOptionItem> = {
     edit: {
+      role: [UserRole.SaleEdit],
       callback: () => {
         onClickOption('edit', sale);
         setMenuAnchor(null);
@@ -35,6 +32,7 @@ const WholeSaleCard: FC<Props> = ({ sale, scrollRef, onClickOption, onClickRow }
       icon: <Edit />,
     },
     delete: {
+      role: [UserRole.SaleDelete],
       callback: () => {
         onClickOption('delete', sale);
         setMenuAnchor(null);
@@ -54,16 +52,14 @@ const WholeSaleCard: FC<Props> = ({ sale, scrollRef, onClickOption, onClickRow }
           <OptionMenu key={option} menu={menu} option={option} />
         ))}
       </Menu>
-      {!cannotModify && (
-        <IconButton
-          sx={{ position: 'absolute', right: 3, top: 3 }}
-          onClick={(event) => {
-            setMenuAnchor(event.currentTarget);
-          }}
-        >
-          <MoreHorizIcon />
-        </IconButton>
-      )}
+      <IconButton
+        sx={{ position: 'absolute', right: 3, top: 3 }}
+        onClick={(event) => {
+          setMenuAnchor(event.currentTarget);
+        }}
+      >
+        <MoreHorizIcon />
+      </IconButton>
 
       <Stack gap={2}>
         <Stack direction="row" justifyContent="space-between" gap={2}>

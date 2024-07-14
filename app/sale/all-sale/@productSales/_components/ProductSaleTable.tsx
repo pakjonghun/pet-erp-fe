@@ -2,15 +2,17 @@ import { FC } from 'react';
 import HeadCell from '@/components/table/HeadCell';
 import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 import { getNumberWithComma, getKCWFormat } from '@/utils/common';
-import { SxProps, Table, TableHead, TableRow } from '@mui/material';
+import { SxProps, TableHead } from '@mui/material';
 import TableBodySection from './TableBodySection';
 import { useReactiveVar } from '@apollo/client';
 import { saleTotal } from '@/store/saleStore';
-import { ProductSaleData } from '@/http/graphql/codegen/graphql';
 import { CommonListProps } from '@/types';
+import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
+import { ProductSaleMenu } from '@/http/graphql/codegen/graphql';
+import { getProfitRate } from '@/utils/sale';
 
-interface Props extends CommonListProps<ProductSaleData> {
-  setSelectedProductSale: (product: ProductSaleData | null) => void;
+interface Props extends CommonListProps<ProductSaleMenu> {
+  setSelectedProductSale: (product: ProductSaleMenu | null) => void;
   sx?: SxProps;
 }
 
@@ -23,6 +25,7 @@ const ProductSaleTable: FC<Props> = ({
   sx,
 }) => {
   const { totalCount, totalProfit, totalPayCost } = useReactiveVar(saleTotal);
+  const profitRate = getProfitRate(totalProfit, totalPayCost);
 
   return (
     <ScrollTableContainer
@@ -34,49 +37,29 @@ const ProductSaleTable: FC<Props> = ({
         ...sx,
       }}
     >
-      <Table stickyHeader>
+      <CommonTable stickyHeader>
         <TableHead>
-          <TableRow>
-            <HeadCell text="이름" />
+          <CommonHeaderRow>
+            <HeadCell text="이름/코드" />
             <HeadCell
-              sx={{ textAlign: 'right' }}
-              text={
-                <>
-                  판매수량
-                  <br />({getNumberWithComma(totalCount)})
-                </>
-              }
+              sx={{ textAlign: 'right', whiteSpace: 'nowrap' }}
+              text={<>판매수량 ({getNumberWithComma(totalCount)})</>}
             />
             <HeadCell
-              sx={{ textAlign: 'right' }}
-              text={
-                <>
-                  매출
-                  <br />({getKCWFormat(totalPayCost)})
-                </>
-              }
+              sx={{ textAlign: 'right', whiteSpace: 'nowrap' }}
+              text={<>매출({getKCWFormat(totalPayCost)})</>}
             />
 
             <HeadCell
-              sx={{ textAlign: 'right' }}
-              text={
-                <>
-                  수익
-                  <br />({getKCWFormat(totalProfit)})
-                </>
-              }
+              sx={{ textAlign: 'right', whiteSpace: 'nowrap' }}
+              text={<>수익({getKCWFormat(totalProfit)})</>}
             />
             <HeadCell
-              sx={{ textAlign: 'right' }}
-              text={
-                <>
-                  수익율
-                  <br />({getKCWFormat(totalProfit)})
-                </>
-              }
+              sx={{ textAlign: 'right', whiteSpace: 'nowrap' }}
+              text={<>{`수익율(${profitRate}%`})</>}
             />
             <HeadCell text="거래처" />
-          </TableRow>
+          </CommonHeaderRow>
         </TableHead>
         <TableBodySection
           data={data}
@@ -85,7 +68,7 @@ const ProductSaleTable: FC<Props> = ({
           scrollRef={scrollRef}
           setSelectedProductSale={setSelectedProductSale}
         />
-      </Table>
+      </CommonTable>
     </ScrollTableContainer>
   );
 };

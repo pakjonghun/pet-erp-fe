@@ -26,7 +26,8 @@ const SettingLayout: FC<Props> = ({ children }) => {
         <Tabs value={currentTabIndex == -1 ? 0 : currentTabIndex} indicatorColor="primary">
           {tabs.map((tab) => {
             const tabItem = SettingTabs[tab];
-            const canDisplay = tabItem.role.length == 0 || tabItem.role.includes(role);
+            const canDisplay =
+              tabItem.role.length == 0 || tabItem.role.some((item) => role.includes(item));
             if (!canDisplay) return <></>;
             return (
               <Tab

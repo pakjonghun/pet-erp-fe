@@ -11,6 +11,7 @@ import { CreateProductForm } from '../_validations/createProductStockList';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 import { Storage } from '@/http/graphql/codegen/graphql';
 import { useSubsidiaries } from '@/http/graphql/hooks/subsidiary/useSubsidiaries';
+import { removeTrailString } from '@/utils/common';
 
 interface Props {
   isSubsidiary: boolean;
@@ -44,7 +45,8 @@ const StockProduct: FC<Props> = ({
     },
     !isSubsidiary
   );
-  const subsidiaryRows = subsidiaryData?.subsidiaries.data.map((item) => item.name) ?? [];
+  const subsidiaryRows =
+    subsidiaryData?.subsidiaries.data.map((item) => `${item.name}(${item.code})`) ?? [];
   const isLoadingSubsidiary =
     subsidiaryNetwork == 3 || subsidiaryNetwork == 1 || subsidiaryNetwork == 2;
 
@@ -79,7 +81,7 @@ const StockProduct: FC<Props> = ({
     isSubsidiary
   );
 
-  const rows = data?.products.data.map((item) => item.name) ?? [];
+  const rows = data?.products.data.map((item) => `${item.name}(${item.code})`) ?? [];
   const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
 
   const callback: IntersectionObserverCallback = (entries) => {
@@ -172,7 +174,7 @@ const StockProduct: FC<Props> = ({
               loadingText="로딩중"
               noOptionsText="검색 결과가 없습니다."
               renderInput={(params) => <TextField {...params} label="창고" required />}
-              renderOption={(props, item, state) => {
+              renderOption={(props, item, state, ownerState) => {
                 const { key, ...rest } = props as any;
                 const isLast = state.index === storageRows.length - 1;
                 return (
@@ -190,47 +192,49 @@ const StockProduct: FC<Props> = ({
         name={`stocks.${index}.productName`}
         render={({ field }) => {
           return (
-            <Autocomplete
-              disabled={isProductFreeze}
-              value={field.value}
-              fullWidth
-              sx={{ minWidth: 200 }}
-              filterSelectedOptions
-              size="small"
-              options={isSubsidiary ? subsidiaryRows : rows}
-              isOptionEqualToValue={(item1, item2) => item1 === item2}
-              inputValue={productKeyword}
-              onInputChange={(_, value) => setProductKeyword(value)}
-              loading={isLoading}
-              loadingText="로딩중"
-              noOptionsText="검색 결과가 없습니다."
-              onChange={(_, value) => {
-                field.onChange(value);
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label={isSubsidiary ? '부자재 이름' : '제품 이름'}
-                  error={!!error?.productName?.message}
-                  helperText={error?.productName?.message ?? ''}
-                />
-              )}
-              renderOption={(props, item, state) => {
-                const { key, ...rest } = props as any;
-                const isLast = state.index === rows.length - 1;
-                return (
-                  <Box
-                    sx={{ zIndex: 100000 }}
-                    component="li"
-                    ref={isLast ? scrollRef : null}
-                    key={item}
-                    {...rest}
-                  >
-                    {item}
-                  </Box>
-                );
-              }}
-            />
+            <>
+              <Autocomplete
+                disabled={isProductFreeze}
+                value={field.value}
+                fullWidth
+                sx={{ minWidth: 300 }}
+                filterSelectedOptions
+                size="small"
+                options={isSubsidiary ? subsidiaryRows : rows}
+                isOptionEqualToValue={(item1, item2) => item1 === item2}
+                inputValue={productKeyword}
+                onInputChange={(_, value) => setProductKeyword(value)}
+                loading={isLoading}
+                loadingText="로딩중"
+                noOptionsText="검색 결과가 없습니다."
+                onChange={(_, value) => {
+                  field.onChange(removeTrailString(value));
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label={isSubsidiary ? '부자재 이름(코드)' : '제품 이름(코드)'}
+                    error={!!error?.productName?.message}
+                    helperText={error?.productName?.message ?? ''}
+                  />
+                )}
+                renderOption={(props, item, state) => {
+                  const { key, ...rest } = props as any;
+                  const isLast = state.index === rows.length - 1;
+                  return (
+                    <Box
+                      sx={{ zIndex: 100000 }}
+                      component="li"
+                      ref={isLast ? scrollRef : null}
+                      key={item}
+                      {...rest}
+                    >
+                      {item}
+                    </Box>
+                  );
+                }}
+              />
+            </>
           );
         }}
       />

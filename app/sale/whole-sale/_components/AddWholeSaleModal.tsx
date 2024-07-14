@@ -29,13 +29,14 @@ import { PlusOne } from '@mui/icons-material';
 import WholeSaleProductSearch from './WholeSaleProductSearch';
 import LabelText from '@/components/ui/typograph/LabelText';
 import { EMPTY, LIMIT } from '@/constants';
-import { getProfitRate } from '@/utils/sale';
+import { getNumberToString, getProfitRate } from '@/utils/sale';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { DatePicker } from '@mui/x-date-pickers';
 import { useCreateWholeSale } from '@/http/graphql/hooks/wholeSale/useCreateWholeSale';
 import dayjs from 'dayjs';
 import { client } from '@/http/graphql/client';
+import NumberInput from '@/components/ui/input/NumberInput';
 
 export const initProductItem: CreateWholeSaleProductForm = {
   storageName: '',
@@ -65,7 +66,6 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
     keyword: delayedClientKeyword,
     limit: LIMIT,
     skip: 0,
-    clientType: [ClientType.WholeSale, ClientType.Offline],
   });
 
   const isClientLoading = clientNetwork === 1 || clientNetwork === 2 || clientNetwork === 3;
@@ -109,6 +109,7 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
       telephoneNumber1: '',
       productList: [],
       isDone: false,
+      deliveryBoxCount: 1,
     },
   });
 
@@ -116,7 +117,6 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
     control,
     name: 'productList',
   });
-
   const onSubmit = (createProductInput: CreateWholeSaleForm) => {
     const newValues = filterEmptyValues(createProductInput) as CreateWholeSaleForm;
     createWholeSale({
@@ -125,7 +125,7 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
       },
       onCompleted: () => {
         snackMessage({
-          message: '도매 판매등록이 완료되었습니다.',
+          message: '비 사방넷 판매 등록이 완료되었습니다.',
           severity: 'success',
         });
         client.refetchQueries({
@@ -146,7 +146,7 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
       onError: (err) => {
         const message = err.message;
         snackMessage({
-          message: message ?? '도매 판매등록이 실패했습니다.',
+          message: message ?? '비 사방넷 판매 등록이 실패했습니다.',
           severity: 'error',
         });
       },
@@ -154,11 +154,14 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
   };
 
   const handleClose = () => {
-    // reset();
     onClose();
   };
 
   const handleAddProduct = () => {
+    if (productList.length === 0) {
+      clearErrors('productList');
+    }
+
     append(initProductItem);
   };
 
@@ -187,10 +190,10 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        도매 판매 등록
+        비 사방넷 판매 등록
       </Typography>
 
-      <Typography sx={{ mb: 3 }}>새로운 도매 판매를 등록합니다.</Typography>
+      <Typography sx={{ mb: 3 }}>새로운 비 사방넷 판매를 등록합니다.</Typography>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup
@@ -200,7 +203,7 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
           }}
         >
           <Stack direction="row" gap={3} alignItems="center">
-            <FormLabel>도매 거래처 정보 입력</FormLabel>
+            <FormLabel>거래처 정보 입력</FormLabel>
             <Controller
               control={control}
               name="isDone"
@@ -214,6 +217,7 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
               }}
             />
           </Stack>
+
           <Stack
             sx={{
               flexDirection: {
@@ -222,7 +226,6 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
               },
               alignItems: {
                 xs: 'flex-start',
-                md: 'center',
               },
             }}
             gap={3}
@@ -259,7 +262,7 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        label="도매 거래처"
+                        label="거래처"
                         required
                         error={!!errors.mallId?.message}
                         helperText={errors.mallId?.message ?? ''}
@@ -307,14 +310,32 @@ const AddWholeSaleModal: FC<Props> = ({ open, onClose }) => {
                 );
               }}
             />
+            <Controller
+              control={control}
+              name={'deliveryBoxCount'}
+              render={({ field }) => {
+                return (
+                  <NumberInput
+                    sx={{ minWidth: 70, width: '100%' }}
+                    helperText={errors?.deliveryBoxCount?.message ?? ''}
+                    error={!!errors?.deliveryBoxCount?.message}
+                    label="송장 개수"
+                    field={field}
+                  />
+                );
+              }}
+            />
           </Stack>
         </FormGroup>
         {!!telNumber && <LabelText label="연락처 : " text={telNumber ?? EMPTY} />}
         {productList.length > 0 && (
           <Stack direction="row" sx={{ mt: 2 }} gap={3} alignItems="center">
-            <LabelText label="판매가" text={totalPayCost} />
-            <LabelText label="원가" text={totalWonCost} />
-            <LabelText label="수익" text={totalPayCost - totalWonCost} />
+            <LabelText label="판매가" text={getNumberToString(totalPayCost, 'currency')} />
+            <LabelText label="원가" text={getNumberToString(totalWonCost, 'currency')} />
+            <LabelText
+              label="수익"
+              text={getNumberToString(totalPayCost - totalWonCost, 'currency')}
+            />
             <LabelText
               label="수익율"
               text={getProfitRate(totalPayCost - totalWonCost, totalPayCost) + '%'}

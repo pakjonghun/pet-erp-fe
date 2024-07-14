@@ -23,7 +23,7 @@ const RemoveWholeSaleModal: FC<Props> = ({ open, selectedWholeSale, onClose }) =
       },
       onCompleted: () => {
         snackMessage({
-          message: `${selectedWholeSale.mallId}거래처와 도매 거래 삭제되었습니다.`,
+          message: `${selectedWholeSale.mallId}거래처와 거래 삭제되었습니다.`,
           severity: 'success',
         });
         client.refetchQueries({
@@ -42,8 +42,7 @@ const RemoveWholeSaleModal: FC<Props> = ({ open, selectedWholeSale, onClose }) =
       },
       onError: (err) => {
         snackMessage({
-          message:
-            err.message ?? `${selectedWholeSale.mallId}거래처와 도매 거래 삭제가 실패했습니다.`,
+          message: err.message ?? `${selectedWholeSale.mallId}거래처와 거래 삭제가 실패했습니다.`,
           severity: 'error',
         });
         onClose();
@@ -54,7 +53,7 @@ const RemoveWholeSaleModal: FC<Props> = ({ open, selectedWholeSale, onClose }) =
   return (
     <BaseModal onClose={onClose} open={open}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        도매 판매삭제
+        비 사방넷 판매 삭제
       </Typography>
       <Typography sx={{ color: (theme) => theme.palette.warning.dark }}>
         삭제된 판매는 복구가 불가능합니다.

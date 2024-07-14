@@ -7,26 +7,30 @@ const productSales = graphql(`
     productSales(productSalesInput: $productSalesInput) {
       totalCount
       data {
+        code
+        barCode
+        name
+        wonPrice
+        salePrice
+        leadTime
+        accPayCost
+        accWonCost
+        accCount
+        accProfit
+        profitRate
         stock
         recentCreateDate
-        code
-        name
-        leadTime
-        wonPrice
         clients {
-          ...ClientInfo
-        }
-        sales {
-          accPayCost
           accCount
           name
-          accProfit
-          averagePayCost
-          prevAccPayCost
-          prevAccCount
-          prevAccProfit
-          prevAveragePayCost
         }
+        prevAccCount
+        prevAccPayCost
+        prevAccWonCost
+        prevAccProfit
+        prevAccProfitRate
+        prevDeliveryCost
+        deliveryCost
       }
     }
   }

@@ -13,13 +13,20 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 interface Props {
+  isSelected: boolean;
   productStock: SubsidiaryStockColumn;
   onClickRow: (event: MouseEvent<HTMLTableCellElement>, stock: SubsidiaryStockColumn) => void;
   onClickOption: (option: any | null, client: SubsidiaryStockColumn | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption, onClickRow }) => {
+const ProductStockBodyRow: FC<Props> = ({
+  isSelected,
+  productStock,
+  scrollRef,
+  onClickOption,
+  onClickRow,
+}) => {
   const [open, setOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
 
@@ -59,35 +66,31 @@ const ProductStockBodyRow: FC<Props> = ({ productStock, scrollRef, onClickOption
   const parsedClient = createRow(productStock);
 
   return (
-    <>
-      <TableRow hover ref={scrollRef}>
-        <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
-          {Object.entries(productOptionMenus).map(([option, menu]) => (
-            <OptionMenu key={option} menu={menu} option={option} />
-          ))}
-        </Menu>
-        <Cell onClick={() => setOpen((prev) => !prev)}>
-          <IconButton>{open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}</IconButton>
-        </Cell>
-        {parsedClient.map((item, index) => (
-          <Cell
-            key={`${productStock.__typename}_${index}`}
-            onClick={(event) => {
-              onClickRow(event, productStock);
-              setOpen((prev) => !prev);
-            }}
-            sx={{ minWidth: 200 }}
-          >
-            {item}
-          </Cell>
+    <TableRow
+      sx={(theme) => ({
+        bgcolor: isSelected ? theme.palette.action.hover : '',
+      })}
+      hover
+      ref={scrollRef}
+    >
+      <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
+        {Object.entries(productOptionMenus).map(([option, menu]) => (
+          <OptionMenu key={option} menu={menu} option={option} />
         ))}
-
-        <OptionCell onClick={setMenuAnchor} />
-      </TableRow>
-      {open && (
-        <CollapseRow onClickOption={onClickOption} productStock={productStock} open={open} />
-      )}
-    </>
+      </Menu>
+      {parsedClient.map((item, index) => (
+        <Cell
+          key={`${productStock.__typename}_${index}`}
+          onClick={(event) => {
+            onClickRow(event, productStock);
+            setOpen((prev) => !prev);
+          }}
+          sx={{ minWidth: 200 }}
+        >
+          {item}
+        </Cell>
+      ))}
+    </TableRow>
   );
 };
 

@@ -1,23 +1,30 @@
 import { FC } from 'react';
-import { ProductSaleData } from '@/http/graphql/codegen/graphql';
-import { TABLE_MAX_HEIGHT } from '@/constants';
+import { ProductSaleMenu } from '@/http/graphql/codegen/graphql';
 import { Grid, SxProps } from '@mui/material';
 import { CommonListProps } from '@/types';
 import EmptyItem from '@/components/ui/listItem/EmptyItem';
 import LoadingCard from '@/components/ui/loading/LoadingCard';
 import ProductSaleCard from './ProductSaleCard';
 
-interface Props extends CommonListProps<ProductSaleData> {
+interface Props extends CommonListProps<ProductSaleMenu> {
+  setSelectedProductSale: (product: ProductSaleMenu | null) => void;
   sx?: SxProps;
 }
 
-const ProductSaleCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx }) => {
+const ProductSaleCards: FC<Props> = ({
+  data,
+  isLoading,
+  isEmpty,
+  scrollRef,
+  setSelectedProductSale,
+  sx,
+}) => {
   return (
     <Grid
       sx={{
         ...sx,
-        p: 2,
-        maxHeight: TABLE_MAX_HEIGHT,
+        px: 2,
+        maxHeight: 600,
         overflow: 'auto',
       }}
       container
@@ -28,7 +35,7 @@ const ProductSaleCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx }
       {data.map((item, index) => {
         const isLast = index === data.length - 1;
         return (
-          <Grid key={item._id} item xs={12} lg={6}>
+          <Grid onClick={() => setSelectedProductSale(item)} key={item._id} item xs={12} lg={6}>
             <ProductSaleCard productSaleData={item} scrollRef={isLast ? scrollRef : null} />
           </Grid>
         );

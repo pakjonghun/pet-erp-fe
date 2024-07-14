@@ -5,6 +5,23 @@ const updateWholeSale = graphql(`
   mutation updateWholeSale($updateWholeSaleInput: UpdateWholeSaleInput!) {
     updateWholeSale(updateWholeSaleInput: $updateWholeSaleInput) {
       _id
+      mallId
+      saleAt
+      telephoneNumber1
+      totalPayCost
+      totalWonCost
+      totalCount
+      isDone
+      deliveryCost
+      deliveryBoxCount
+      productList {
+        storageName
+        productName
+        productCode
+        count
+        payCost
+        wonCost
+      }
     }
   }
 `);

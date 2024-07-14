@@ -5,7 +5,7 @@ import { SelectOption } from '../../types';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { Subsidiary } from '@/http/graphql/codegen/graphql';
+import { Subsidiary, UserRole } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
 
@@ -20,6 +20,7 @@ const SubsidiaryCard: FC<Props> = ({ subsidiary, scrollRef, onClickOption, onCli
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const subsidiaryOptionMenus: Record<SelectOption, SelectedOptionItem> = {
     edit: {
+      role: [UserRole.BackEdit],
       callback: () => {
         onClickOption('edit', subsidiary);
         setMenuAnchor(null);
@@ -28,6 +29,7 @@ const SubsidiaryCard: FC<Props> = ({ subsidiary, scrollRef, onClickOption, onCli
       icon: <Edit />,
     },
     delete: {
+      role: [UserRole.BackDelete],
       callback: () => {
         onClickOption('delete', subsidiary);
         setMenuAnchor(null);

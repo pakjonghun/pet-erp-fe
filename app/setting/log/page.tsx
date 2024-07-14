@@ -42,7 +42,7 @@ const LogPage = () => {
 
   return (
     <TablePage>
-      <TableTitle title={`로그 관리`} />
+      <TableTitle sx={{ px: 2 }} title={`로그 관리`} />
       <Box
         sx={{
           display: 'flex',

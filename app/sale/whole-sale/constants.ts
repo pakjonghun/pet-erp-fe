@@ -1,5 +1,5 @@
 export const WholeSaleHeaderList = [
-  '도매판매 거래처',
+  '판매 거래처',
   '판매날짜',
   '판매수량 합계',
   '원가합계',
@@ -8,5 +8,4 @@ export const WholeSaleHeaderList = [
   '수익율',
   '정산여부',
   '제품목록',
-  '',
 ];

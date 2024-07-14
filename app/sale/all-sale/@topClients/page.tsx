@@ -1,54 +1,61 @@
 'use client';
 
-import { Table, TableBody, TableHead, TableRow } from '@mui/material';
-import Cell from '@/components/table/Cell';
-import EmptyRow from '@/components/table/EmptyRow';
+import { TableHead } from '@mui/material';
 import { getKCWFormat, getNumberWithComma } from '@/utils/common';
 import TableTitle from '@/components/ui/typograph/TableTitle';
 import HeadCell from '@/components/table/HeadCell';
 import TablePage from '@/components/table/TablePage';
-import { LIMIT, TABLE_MAX_HEIGHT } from '@/constants';
+import { LIMIT } from '@/constants';
 import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { useReactiveVar } from '@apollo/client';
 import { clientTotal, saleRange } from '@/store/saleStore';
-import { useEffect } from 'react';
-import { useDashboardClients } from '@/http/graphql/hooks/client/useDashboardClients';
+import { useEffect, useState } from 'react';
 import ClientSaleTableBodySection from './_components/ClientSaleTableBodySection';
 import ClientSaleCards from './_components/ClientSaleCards';
+import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
+import { useSaleMenuClients } from '@/http/graphql/hooks/client/useSaleMenuClients';
+import { ClientSaleMenu } from '@/http/graphql/codegen/graphql';
+import { getProfitRate } from '@/utils/sale';
+import ClientSaleModal from './_components/ClientSaleModa';
 
 const TopClients = () => {
   const { from, to } = useReactiveVar(saleRange);
-  const { data, fetchMore, networkStatus } = useDashboardClients({
+  const { data, fetchMore, networkStatus } = useSaleMenuClients({
     from: from.toISOString(),
     to: to.toISOString(),
+    limit: LIMIT,
+    skip: 0,
   });
 
-  const rows = data?.dashboardClients ?? [];
+  const rows = (data?.saleMenuClients.data as ClientSaleMenu[]) ?? [];
   const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
   const isEmpty = !isLoading && rows.length === 0;
   const { totalCount, totalPayCost, totalProfit } = useReactiveVar(clientTotal);
+  const [selectedClient, setSelectedClient] = useState<null | ClientSaleMenu>(null);
+  const profitRate = getProfitRate(totalProfit, totalPayCost);
 
-  // const callback: IntersectionObserverCallback = (entries) => {
-  //   if (entries[0].isIntersecting) {
-  //     if (isLoading) return;
+  const callback: IntersectionObserverCallback = (entries) => {
+    if (entries[0].isIntersecting) {
+      if (isLoading) return;
 
-  //     const totalCount = data?.dashboardClients?.totalCount;
-  //     if (totalCount != null && totalCount > rows.length) {
-  //       fetchMore({
-  //         variables: {
-  //           topClientInput: {
-  //             skip: rows.length,
-  //             limit: LIMIT,
-  //             from: from.toISOString(),
-  //             to: to.toISOString(),
-  //           },
-  //         },
-  //       });
-  //     }
-  //   }
-  // };
-  // const scrollRef = useInfinityScroll({ callback });
+      const totalCount = data?.saleMenuClients?.totalCount;
+      if (totalCount != null && totalCount > rows.length) {
+        fetchMore({
+          variables: {
+            saleMenuClientsInput: {
+              skip: rows.length,
+              limit: LIMIT,
+              from: from.toISOString(),
+              to: to.toISOString(),
+            },
+          },
+        });
+      }
+    }
+  };
+  const tableScrollRef = useInfinityScroll({ callback });
+  const cardScrollRef = useInfinityScroll({ callback });
 
   useEffect(() => {
     const totalData = rows.reduce(
@@ -56,28 +63,39 @@ const TopClients = () => {
         return {
           totalCount: acc.totalCount + (cur?.accCount ?? 0),
           totalPayCost: acc.totalPayCost + (cur?.accPayCost ?? 0),
-          totalProfit: acc.totalProfit + (cur?.accProfit ?? 0),
+          totalProfit: acc.totalProfit + ((cur?.accProfit ?? 0) - (cur?.deliveryCost ?? 0)),
         };
       },
       { totalCount: 0, totalPayCost: 0, totalProfit: 0 }
     );
 
     clientTotal(totalData);
-  }, [data?.dashboardClients]);
+  }, [data?.saleMenuClients]);
 
   return (
-    <TablePage>
-      <TableTitle title={`TOP10 거래처`} />
+    <TablePage sx={{ height: '100%' }}>
+      {!!selectedClient && (
+        <ClientSaleModal
+          onClose={() => {
+            setSelectedClient(null);
+          }}
+          open={!!selectedClient}
+          selectedClient={selectedClient}
+        />
+      )}
+      <TableTitle sx={{ ml: 2 }} title={`거래처`} />
       <ClientSaleCards
+        setSelectedClient={setSelectedClient}
         sx={{
           display: {
             md: 'none',
           },
+          mt: 1,
         }}
         data={rows}
         isEmpty={isEmpty}
         isLoading={isLoading}
-        scrollRef={null}
+        scrollRef={cardScrollRef}
       />
       <ScrollTableContainer
         sx={{
@@ -85,60 +103,41 @@ const TopClients = () => {
             xs: 'none',
             md: 'block',
           },
-          maxHeight: `calc(${TABLE_MAX_HEIGHT} + 71.98px)`,
+          height: 300,
         }}
       >
-        <Table stickyHeader>
+        <CommonTable stickyHeader>
           <TableHead>
-            <TableRow hover>
+            <CommonHeaderRow hover>
               <HeadCell text="이름" />
               <HeadCell
-                sx={{ textAlign: 'right' }}
-                text={
-                  <>
-                    판매수량
-                    <br />({getNumberWithComma(totalCount)})
-                  </>
-                }
+                sx={{ textAlign: 'right', whiteSpace: 'nowrap' }}
+                text={<>판매수량({getNumberWithComma(totalCount)})</>}
               />
               <HeadCell
-                sx={{ textAlign: 'right' }}
-                text={
-                  <>
-                    매출
-                    <br />({getKCWFormat(totalPayCost)})
-                  </>
-                }
+                sx={{ textAlign: 'right', whiteSpace: 'nowrap' }}
+                text={<>매출({getKCWFormat(totalPayCost)})</>}
               />
 
               <HeadCell
-                sx={{ textAlign: 'right' }}
-                text={
-                  <>
-                    수익
-                    <br />({getKCWFormat(totalProfit)})
-                  </>
-                }
+                sx={{ textAlign: 'right', whiteSpace: 'nowrap' }}
+                text={<>수익 ({getKCWFormat(totalProfit)})</>}
               />
               <HeadCell
-                sx={{ textAlign: 'right' }}
-                text={
-                  <>
-                    수익율
-                    <br />({getKCWFormat(totalProfit)})
-                  </>
-                }
+                sx={{ textAlign: 'right', whiteSpace: 'nowrap' }}
+                text={<>수익율({profitRate}%)</>}
               />
-            </TableRow>
+            </CommonHeaderRow>
           </TableHead>
 
           <ClientSaleTableBodySection
+            setSelectedClient={setSelectedClient}
             data={rows}
             isEmpty={isEmpty}
             isLoading={isLoading}
-            scrollRef={null}
+            scrollRef={tableScrollRef}
           />
-        </Table>
+        </CommonTable>
       </ScrollTableContainer>
     </TablePage>
   );

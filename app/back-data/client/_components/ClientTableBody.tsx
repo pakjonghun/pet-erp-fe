@@ -1,79 +1,46 @@
 import { FC, useState } from 'react';
-import { Client } from '@/http/graphql/codegen/graphql';
-import { TableBody } from '@mui/material';
+import { OutClient } from '@/http/graphql/codegen/graphql';
 import EmptyRow from '@/components/table/EmptyRow';
 import ClientBodyRow from './ClientBodyRow';
-import RemoveClientModal from './RemoveClientModal';
-import ClientDetailPopover from './ClientDetailPopover';
 import { SelectOption } from '../../types';
 import LoadingRow from '@/components/table/LoadingRow';
 import { ClientHeaderList } from '../constants';
-import EditPClientModal from './EditPClientModal';
 import { CommonListProps } from '@/types';
+import { CommonTableBody } from '@/components/commonStyles';
 
-interface Props extends CommonListProps<Client> {}
+interface Props extends CommonListProps<OutClient> {
+  selectedClient: OutClient | null;
+  setSelectedClient: (item: OutClient | null) => void;
+}
 
-const ClientTableBody: FC<Props> = ({ isLoading, isEmpty, data, scrollRef }) => {
+const ClientTableBody: FC<Props> = ({
+  selectedClient,
+  setSelectedClient,
+  isLoading,
+  isEmpty,
+  data,
+  scrollRef,
+}) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  const [selectedClient, setSelectedClient] = useState<null | Client>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
 
-  const handleClickOption = (option: SelectOption | null, client: Client | null) => {
+  const handleClickOption = (option: SelectOption | null, client: OutClient | null) => {
     setSelectedClient(client);
     setOptionType(option);
   };
 
-  const handleClickEdit = () => {
-    handleClosePopover();
-    handleClickOption('edit', selectedClient);
-  };
-
-  const handleClickDelete = () => {
-    handleClosePopover();
-    handleClickOption('delete', selectedClient);
-  };
-
-  const handleClosePopover = () => {
-    setPopoverAnchor(null);
-    setSelectedClient(null);
-  };
-
   return (
-    <TableBody>
-      {selectedClient && (
-        <RemoveClientModal
-          open={optionType === 'delete'}
-          onClose={() => handleClickOption(null, null)}
-          selectedClient={selectedClient}
-        />
-      )}
-
-      {selectedClient && (
-        <EditPClientModal
-          open={optionType === 'edit'}
-          onClose={() => handleClickOption(null, null)}
-          selectedClient={selectedClient}
-        />
-      )}
-      {selectedClient && (
-        <ClientDetailPopover
-          onClose={handleClosePopover}
-          position={popoverPosition}
-          open={!!popoverAnchor}
-          anchorEl={popoverAnchor}
-          onClickDelete={handleClickDelete}
-          onClickEdit={handleClickEdit}
-          selectedClient={selectedClient}
-        />
-      )}
+    <CommonTableBody>
       <EmptyRow colSpan={ClientHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
-        const client = item as unknown as Client;
+        const client = item as unknown as OutClient;
         const isLast = index === data.length - 1;
+        const isSelected = selectedClient?._id == client._id;
         return (
           <ClientBodyRow
-            onClickRow={(event, client: Client) => {
+            isSelected={isSelected}
+            onClickRow={(event, client: OutClient) => {
               setPopoverPosition({ left: event.clientX, top: event.clientY });
               setPopoverAnchor(event.currentTarget);
               setSelectedClient(client);
@@ -86,7 +53,7 @@ const ClientTableBody: FC<Props> = ({ isLoading, isEmpty, data, scrollRef }) => 
         );
       })}
       <LoadingRow isLoading={isLoading} colSpan={ClientHeaderList.length} />
-    </TableBody>
+    </CommonTableBody>
   );
 };
 

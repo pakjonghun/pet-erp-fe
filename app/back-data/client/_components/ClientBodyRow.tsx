@@ -1,23 +1,25 @@
 import Cell from '@/components/table/Cell';
-import { IconButton, Menu, TableRow } from '@mui/material';
+import { Chip, Menu, Stack, TableRow } from '@mui/material';
 import React, { FC, MouseEvent, useState } from 'react';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { Client } from '@/http/graphql/codegen/graphql';
+import { Client, OutClient, Storage } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import { SelectOption } from '../../types';
 import { ClientTypeToHangle } from '../constants';
+import { getFixedTwo } from '@/utils/sale';
+import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 
 interface Props {
-  client: Client;
-  onClickRow: (event: MouseEvent<HTMLTableCellElement>, client: Client) => void;
-  onClickOption: (option: SelectOption | null, client: Client | null) => void;
+  isSelected: boolean;
+  client: OutClient;
+  onClickRow: (event: MouseEvent<HTMLTableCellElement>, client: OutClient) => void;
+  onClickOption: (option: SelectOption | null, client: OutClient | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const ClientBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) => {
+const ClientBodyRow: FC<Props> = ({ isSelected, client, scrollRef, onClickOption, onClickRow }) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<SelectOption, SelectedOptionItem> = {
     edit: {
@@ -38,24 +40,59 @@ const ClientBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow
     },
   };
 
-  const createRow = (client: Client) => {
+  const { data: storages } = useStorages({
+    keyword: '',
+    limit: 1000,
+    skip: 0,
+  });
+
+  const targetStorage = ((storages?.storages.data as Storage[]) ?? []).find(
+    (item) => item._id === client?.storageId
+  );
+
+  const createRow = (client: OutClient) => {
     return [
       client.name,
       client.businessName ?? EMPTY,
       client.code,
-      client.feeRate == null ? EMPTY : client.feeRate * 100 + '%',
+      client.feeRate == null ? EMPTY : getFixedTwo(client.feeRate * 100) + '%',
       ClientTypeToHangle[client.clientType],
       client.payDate ?? EMPTY,
       client.manager ?? EMPTY,
       client.managerTel ?? EMPTY,
       client.inActive ? '거래중' : '거래종료',
+      targetStorage?.name ?? EMPTY,
+      client.deliveryFreeProductCodeList ? (
+        <Stack direction="column" gap={1}>
+          {client.deliveryFreeProductCodeList.map((item) => (
+            <Chip key={Math.random().toString()} label={item.name || EMPTY} />
+          ))}
+        </Stack>
+      ) : (
+        ''
+      ),
+      client.deliveryNotFreeProductCodeList ? (
+        <Stack direction="column" gap={1}>
+          {client.deliveryNotFreeProductCodeList.map((item) => (
+            <Chip key={Math.random().toString()} label={item.name || EMPTY} />
+          ))}
+        </Stack>
+      ) : (
+        ''
+      ),
     ];
   };
 
   const parsedClient = createRow(client);
 
   return (
-    <TableRow hover ref={scrollRef}>
+    <TableRow
+      sx={(theme) => ({
+        bgcolor: isSelected ? theme.palette.action.hover : '',
+      })}
+      hover
+      ref={scrollRef}
+    >
       <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
         {Object.entries(productOptionMenus).map(([option, menu]) => (
           <OptionMenu key={option} menu={menu} option={option} />
@@ -70,16 +107,6 @@ const ClientBodyRow: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow
           {item}
         </Cell>
       ))}
-
-      <Cell sx={{ minWidth: 50 }}>
-        <IconButton
-          onClick={(event) => {
-            setMenuAnchor(event.currentTarget);
-          }}
-        >
-          <MoreHorizIcon />
-        </IconButton>
-      </Cell>
     </TableRow>
   );
 };

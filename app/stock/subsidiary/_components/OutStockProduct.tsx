@@ -17,6 +17,7 @@ import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 import { Storage } from '@/http/graphql/codegen/graphql';
 import { useSubsidiaryCountStocks } from '@/http/graphql/hooks/stock/useSubsidiaryCountStocks';
 import { useProductCountStocks } from '@/http/graphql/hooks/stock/useProductCountStocks';
+import { removeTrailString } from '@/utils/common';
 
 interface Props {
   clearErrors: UseFormClearErrors<CreateProductStockForm>;
@@ -64,7 +65,7 @@ const OutStockProduct: FC<Props> = ({
   const originSubsidiary = originSubsidiaryList.find(
     (item) => item.name === currentProduct.productName
   );
-  const subsidiaryRows = originSubsidiaryList.map((item) => item.name) ?? [];
+  const subsidiaryRows = originSubsidiaryList.map((item) => `${item.name}(${item.code})`) ?? [];
 
   const isLoadingSubsidiary =
     subsidiaryNetwork == 3 || subsidiaryNetwork == 1 || subsidiaryNetwork == 2;
@@ -103,7 +104,7 @@ const OutStockProduct: FC<Props> = ({
   );
 
   const originProductList = data?.productCountStocks?.data ?? [];
-  const rows = originProductList.map((item) => item.name) ?? [];
+  const rows = originProductList.map((item) => `${item.name}(${item.code})`) ?? [];
   const originProduct = originProductList.find(
     (product) => product.name === currentProduct.productName
   );
@@ -186,7 +187,7 @@ const OutStockProduct: FC<Props> = ({
             <Autocomplete
               fullWidth
               sx={{
-                minWidth: 200,
+                minWidth: 300,
               }}
               value={field.value}
               onChange={(_, value) => field.onChange(value)}
@@ -222,7 +223,7 @@ const OutStockProduct: FC<Props> = ({
               disabled={isProductFreeze || !currentProduct.storageName}
               value={field.value}
               fullWidth
-              sx={{ minWidth: 200 }}
+              sx={{ minWidth: 300 }}
               filterSelectedOptions
               size="small"
               options={isSubsidiary ? subsidiaryRows : rows}
@@ -233,12 +234,12 @@ const OutStockProduct: FC<Props> = ({
               loadingText="로딩중"
               noOptionsText="검색 결과가 없습니다."
               onChange={(_, value) => {
-                field.onChange(value);
+                field.onChange(removeTrailString(value));
               }}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label={isSubsidiary ? '부자재 이름' : '제품 이름'}
+                  label={isSubsidiary ? '부자재 이름(코드)' : '제품 이름(코드)'}
                   error={!!error?.productName?.message}
                   helperText={error?.productName?.message ?? ''}
                 />

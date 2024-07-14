@@ -1,12 +1,8 @@
 import { FC, MouseEvent, useState } from 'react';
 import Cell from '@/components/table/Cell';
-import { Chip, IconButton, Menu, TableRow } from '@mui/material';
+import { Chip, Menu, TableRow } from '@mui/material';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
-import CollapseRow from './CollapseRow';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import OptionCell from './OptionCell';
 import { StockColumn } from '@/http/graphql/codegen/graphql';
 import { getNumberToString } from '@/utils/sale';
 import { getKCWFormat } from '@/utils/common';
@@ -14,22 +10,21 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 interface Props {
+  isSelected: boolean;
   productStock: StockColumn;
-  onClickRow: (
-    event: MouseEvent<HTMLTableCellElement>,
-    stock: StockColumn
-  ) => void;
+  onClickRow: (event: MouseEvent<HTMLTableCellElement>, stock: StockColumn) => void;
   onClickOption: (option: any | null, client: StockColumn | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
 const ProductStockBodyRow: FC<Props> = ({
+  isSelected,
   productStock,
   scrollRef,
   onClickOption,
   onClickRow,
 }) => {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
 
   const productOptionMenus: Record<any, SelectedOptionItem> = {
@@ -61,11 +56,7 @@ const ProductStockBodyRow: FC<Props> = ({
   const createRow = (stock: StockColumn) => {
     const leftDate = stock.leftDate;
     const leftDateDisplay =
-      leftDate === null
-        ? '알수없음'
-        : leftDate === -1
-        ? '재고없음'
-        : `${leftDate}일`;
+      leftDate === null ? '알수없음' : leftDate === -1 ? '재고없음' : `${leftDate}일`;
 
     let stockHealthy = chip.noon;
 
@@ -96,6 +87,7 @@ const ProductStockBodyRow: FC<Props> = ({
 
     return [
       stock.productName,
+      stock.productCode,
       stock.stockCount,
       getNumberToString(stock.monthSaleCount, 'comma'),
       stock.wonPrice ? getKCWFormat(stock.wonPrice) : EMPTY,
@@ -109,43 +101,32 @@ const ProductStockBodyRow: FC<Props> = ({
 
   return (
     <>
-      <TableRow hover ref={scrollRef}>
-        <Menu
-          anchorEl={menuAnchor}
-          open={!!menuAnchor}
-          onClose={() => setMenuAnchor(null)}
-        >
+      <TableRow
+        sx={(theme) => ({
+          bgcolor: isSelected ? theme.palette.action.hover : '',
+        })}
+        hover
+        ref={scrollRef}
+      >
+        <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
           {Object.entries(productOptionMenus).map(([option, menu]) => (
             <OptionMenu key={option} menu={menu} option={option} />
           ))}
         </Menu>
-        <Cell onClick={() => setOpen((prev) => !prev)}>
-          <IconButton>
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </Cell>
+
         {parsedClient.map((item, index) => (
           <Cell
             key={`${productStock.__typename}_${index}`}
             onClick={(event) => {
               onClickRow(event, productStock);
-              setOpen((prev) => !prev);
+              // setOpen((prev) => !prev);
             }}
             sx={{ minWidth: 200 }}
           >
             {item}
           </Cell>
         ))}
-
-        <OptionCell onClick={setMenuAnchor} />
       </TableRow>
-      {open && (
-        <CollapseRow
-          onClickOption={onClickOption}
-          productStock={productStock}
-          open={open}
-        />
-      )}
     </>
   );
 };

@@ -28,6 +28,8 @@ import { modalSizeProps } from '@/components/commonStyles';
 import { filterEmptyValues } from '@/utils/common';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { client } from '@/http/graphql/client';
+import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
+import { Storage } from '@/http/graphql/codegen/graphql';
 
 interface Props {
   open: boolean;
@@ -36,6 +38,14 @@ interface Props {
 
 const CreateProductModal: FC<Props> = ({ open, onClose }) => {
   const [createProduct, { loading }] = useCreateProduct();
+
+  const { data: storageData } = useStorages({
+    keyword: '',
+    limit: 100,
+    skip: 0,
+  });
+  const storageList = (storageData?.storages.data as Storage[]) ?? [];
+  const storageNameList = storageList.map((item) => item.name);
 
   const {
     reset,
@@ -89,7 +99,6 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
   };
 
   const scrollRef = useInfinityScroll({ callback });
-
   const onSubmit = (createProductInput: CreateProductForm) => {
     const newValues = filterEmptyValues(createProductInput) as CreateProductForm;
     createProduct({
@@ -97,7 +106,10 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
         createProductInput: newValues,
       },
       onCompleted: () => {
-        snackMessage({ message: '제품등록이 완료되었습니다.', severity: 'success' });
+        snackMessage({
+          message: '제품등록이 완료되었습니다.',
+          severity: 'success',
+        });
         client.refetchQueries({
           updateCache(cache) {
             cache.evict({ fieldName: 'productSales' });
@@ -108,7 +120,10 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
       },
       onError: (err) => {
         const message = err.message;
-        snackMessage({ message: message ?? '제품등록이 실패했습니다.', severity: 'error' });
+        snackMessage({
+          message: message ?? '제품등록이 실패했습니다.',
+          severity: 'error',
+        });
       },
     });
   };
@@ -242,6 +257,37 @@ const CreateProductModal: FC<Props> = ({ open, onClose }) => {
                 }}
               />
             )}
+          />
+          <Controller
+            control={control}
+            name="storageName"
+            render={({ field }) => {
+              return (
+                <SearchAutoComplete
+                  inputValue={field.value ?? ''}
+                  onInputChange={field.onChange}
+                  loading={isLoading}
+                  options={storageNameList}
+                  setValue={field.onChange}
+                  value={field.value ?? ''}
+                  scrollRef={() => {}}
+                  renderSearchInput={(params: AutocompleteRenderInputParams) => {
+                    return (
+                      <FormControl fullWidth>
+                        <TextField
+                          {...params}
+                          {...field}
+                          label="출고 창고선택"
+                          error={!!errors.storageName?.message}
+                          helperText={errors.storageName?.message ?? ''}
+                          size="small"
+                        />
+                      </FormControl>
+                    );
+                  }}
+                />
+              );
+            }}
           />
         </FormGroup>
         <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">

@@ -1,35 +1,22 @@
 import Cell from '@/components/table/Cell';
-import { Chip, IconButton, Menu, Stack, TableRow } from '@mui/material';
+import { Chip, Menu, Stack, TableRow } from '@mui/material';
 import React, { FC, MouseEvent, useState } from 'react';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { ProductOrder, UserRole } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import dayjs from 'dayjs';
-import { useReactiveVar } from '@apollo/client';
-import { authState } from '@/store/isLogin';
 
 interface Props {
+  isSelected: boolean;
   client: ProductOrder;
-  onClickRow: (
-    event: MouseEvent<HTMLTableCellElement>,
-    client: ProductOrder
-  ) => void;
+  onClickRow: (event: MouseEvent<HTMLTableCellElement>, client: ProductOrder) => void;
   onClickOption: (option: any | null, client: ProductOrder | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
-const OrderBodyRow: FC<Props> = ({
-  client,
-  scrollRef,
-  onClickOption,
-  onClickRow,
-}) => {
-  const { role } = useReactiveVar(authState);
-  const cannotModify = role === UserRole.Staff;
-
+const OrderBodyRow: FC<Props> = ({ isSelected, client, scrollRef, onClickOption, onClickRow }) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<any, SelectedOptionItem> = {
     edit: {
@@ -51,27 +38,24 @@ const OrderBodyRow: FC<Props> = ({
   };
 
   const createRow = (order: ProductOrder) => {
-    const allHasNoLeadTime = order.products.every(
-      (item) => item.product.leadTime == null
-    );
+    const allHasNoLeadTime = order.products.every((item) => item.product.leadTime == null);
 
     const biggestLeadTime = allHasNoLeadTime
       ? -1
       : order.products.reduce(
-          (acc, cur) =>
-            (cur.product.leadTime ?? 0) > acc ? cur.product.leadTime ?? 0 : acc,
+          (acc, cur) => ((cur.product.leadTime ?? 0) > acc ? cur.product.leadTime ?? 0 : acc),
           -Infinity
         );
 
     const leadTime = biggestLeadTime < 0 ? null : biggestLeadTime;
 
     return [
+      order.isDone ? '완료' : '발주중',
       order?.orderDate ? dayjs(order?.orderDate).format('YYYY-MM-DD') : EMPTY,
       order?.factory?.name ?? '',
       order.payCost,
       order.notPayCost,
       order.totalPayCost,
-      order.isDone ? '지불 완료' : '미지불',
       order?.orderDate
         ? leadTime == null
           ? '제품 리드타임 미입력'
@@ -85,7 +69,7 @@ const OrderBodyRow: FC<Props> = ({
           return (
             <Chip
               key={`${item.__typename}_${index}`}
-              label={`${item.product.name}(${item.count})`}
+              label={`${item.product.name}(${item.count}EA)`}
             />
           );
         })}
@@ -96,12 +80,14 @@ const OrderBodyRow: FC<Props> = ({
   const parsedClient = createRow(client);
 
   return (
-    <TableRow hover ref={scrollRef}>
-      <Menu
-        anchorEl={menuAnchor}
-        open={!!menuAnchor}
-        onClose={() => setMenuAnchor(null)}
-      >
+    <TableRow
+      sx={(theme) => ({
+        bgcolor: isSelected ? theme.palette.action.hover : '',
+      })}
+      hover
+      ref={scrollRef}
+    >
+      <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
         {Object.entries(productOptionMenus).map(([option, menu]) => (
           <OptionMenu key={option} menu={menu} option={option} />
         ))}
@@ -115,18 +101,6 @@ const OrderBodyRow: FC<Props> = ({
           {item}
         </Cell>
       ))}
-
-      <Cell sx={{ minWidth: 50 }}>
-        {!cannotModify && (
-          <IconButton
-            onClick={(event) => {
-              setMenuAnchor(event.currentTarget);
-            }}
-          >
-            <MoreHorizIcon />
-          </IconButton>
-        )}
-      </Cell>
     </TableRow>
   );
 };

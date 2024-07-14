@@ -1,5 +1,6 @@
 'use client';
 
+import WebStoriesOutlinedIcon from '@mui/icons-material/WebStoriesOutlined';
 import { MouseEvent, useState } from 'react';
 import { Box, IconButton, Typography } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -18,7 +19,6 @@ import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import { useReactiveVar } from '@apollo/client';
 import { authState } from '@/store/isLogin';
 import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
-import LabelText from '@/components/ui/typograph/LabelText';
 
 const SettingMenuTrigger = () => {
   const { role } = useReactiveVar(authState);
@@ -69,7 +69,7 @@ const SettingMenuTrigger = () => {
         router.push('/setting/delivery');
         setSettingMenuAnchor(null);
       },
-      role: [UserRole.Admin, UserRole.Manager] as string[],
+      role: [UserRole.AdminDelivery] as string[],
       label: '택배비용 관리',
       icon: <LocalShippingOutlinedIcon />,
     },
@@ -78,9 +78,18 @@ const SettingMenuTrigger = () => {
         router.push('/setting/account');
         setSettingMenuAnchor(null);
       },
-      role: [UserRole.Admin] as string[],
+      role: [UserRole.AdminAccount] as string[],
       label: '계정 관리',
       icon: <PeopleOutlineOutlinedIcon />,
+    },
+    log: {
+      callback: () => {
+        router.push('/setting/log');
+        setSettingMenuAnchor(null);
+      },
+      role: [UserRole.AdminLog] as string[],
+      label: '로그 조회',
+      icon: <WebStoriesOutlinedIcon />,
     },
   };
   const { data } = useGetMyInfo();
@@ -121,7 +130,9 @@ const SettingMenuTrigger = () => {
         {[
           settingMenuKeys.map((item) => {
             const menu = SettingMenus[item];
-            const canDisplay = menu.role.length == 0 || menu.role.includes(role);
+            const canDisplay =
+              menu.role.length == 0 || menu.role.some((item) => !!role?.includes(item));
+
             if (!canDisplay) return <></>;
             return (
               <BaseListItem disablePadding key={menu.label}>

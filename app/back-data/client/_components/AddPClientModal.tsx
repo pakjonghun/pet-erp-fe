@@ -1,6 +1,8 @@
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
   Autocomplete,
+  AutocompleteRenderInputParams,
+  Box,
   Button,
   FormControl,
   FormControlLabel,
@@ -11,7 +13,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { CreateClientForm, createClientSchema } from '../_validations/createClientValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,12 +21,17 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { modalSizeProps } from '@/components/commonStyles';
 import { useCreateClient } from '@/http/graphql/hooks/client/useCreateClient';
-import { ClientType } from '@/http/graphql/codegen/graphql';
+import { ClientType, Storage } from '@/http/graphql/codegen/graphql';
 import { filterEmptyValues } from '@/utils/common';
 import { clientTypes } from '../constants';
 import NumberInput from '@/components/ui/input/NumberInput';
-import { CLIENT_PREFIX } from '@/constants';
+import { CLIENT_PREFIX, LIMIT } from '@/constants';
 import { client } from '@/http/graphql/client';
+import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
+import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
+import useTextDebounce from '@/hooks/useTextDebounce';
+import { useProducts } from '@/http/graphql/hooks/product/useProducts';
+import useInfinityScroll from '@/hooks/useInfinityScroll';
 
 interface Props {
   open: boolean;
@@ -37,6 +44,7 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
   const {
     reset,
     control,
+    watch,
     handleSubmit,
     formState: { errors },
   } = useForm<CreateClientForm>({
@@ -50,8 +58,52 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
       manager: '',
       managerTel: '',
       inActive: true,
+      deliveryFreeProductCodeList: [],
+      deliveryNotFreeProductCodeList: [],
     },
   });
+  const { data: storageData, networkStatus } = useStorages({
+    keyword: '',
+    limit: 100,
+    skip: 0,
+  });
+  const storageList = (storageData?.storages.data as Storage[]) ?? [];
+  const storageNameList = storageList.map((item) => item.name);
+
+  const [productKeyword, setProductKeyword] = useState('');
+  const delayedProductKeyword = useTextDebounce(productKeyword);
+
+  const {
+    data: products,
+    networkStatus: productNetwork,
+    fetchMore: productFetchMore,
+  } = useProducts({
+    keyword: delayedProductKeyword,
+    limit: LIMIT,
+    skip: 0,
+  });
+  const productRows = products?.products.data ?? [];
+  const cachedOptions = productRows;
+  const isProductLoading = productNetwork == 1 || productNetwork == 2 || productNetwork == 3;
+  const productCallback: IntersectionObserverCallback = (entries) => {
+    if (entries[0].isIntersecting) {
+      if (isProductLoading) return;
+
+      const totalCount = products?.products.totalCount;
+      if (totalCount != null && totalCount > productRows.length) {
+        productFetchMore({
+          variables: {
+            productsInput: {
+              keyword: delayedProductKeyword,
+              limit: LIMIT,
+              skip: productRows.length,
+            },
+          },
+        });
+      }
+    }
+  };
+  const productScrollRef = useInfinityScroll({ callback: productCallback });
 
   const onSubmit = (values: CreateClientForm) => {
     const newValues = filterEmptyValues(values) as CreateClientForm;
@@ -59,6 +111,10 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
       variables: {
         createClientInput: {
           ...newValues,
+          deliveryFreeProductCodeList:
+            values.deliveryFreeProductCodeList?.map((item) => item.code) ?? [],
+          deliveryNotFreeProductCodeList:
+            values.deliveryNotFreeProductCodeList?.map((item) => item.code) ?? [],
           feeRate: values.feeRate == null ? null : values.feeRate / 100,
         },
       },
@@ -104,7 +160,7 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
           gap={3}
           sx={{ mb: 3 }}
         >
-          <Typography>새로운 거래처을 입력합니다.</Typography>
+          <Typography>새로운 거래처를 입력합니다.</Typography>
           <Controller
             control={control}
             name="inActive"
@@ -272,6 +328,149 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
                 />
               </FormControl>
             )}
+          />
+          <Controller
+            control={control}
+            name="storageName"
+            render={({ field }) => {
+              return (
+                <SearchAutoComplete
+                  inputValue={field.value ?? ''}
+                  onInputChange={field.onChange}
+                  loading={networkStatus <= 3}
+                  options={storageNameList}
+                  setValue={field.onChange}
+                  value={field.value ?? ''}
+                  scrollRef={() => {}}
+                  renderSearchInput={(params: AutocompleteRenderInputParams) => {
+                    return (
+                      <FormControl fullWidth>
+                        <TextField
+                          {...params}
+                          {...field}
+                          label="출고 창고선택"
+                          error={!!errors.storageName?.message}
+                          helperText={errors.storageName?.message ?? ''}
+                          size="small"
+                        />
+                      </FormControl>
+                    );
+                  }}
+                />
+              );
+            }}
+          />
+          <Controller
+            control={control}
+            name="deliveryFreeProductCodeList"
+            render={({ field }) => {
+              return (
+                <Autocomplete
+                  multiple
+                  getOptionDisabled={(option) =>
+                    !!watch('deliveryNotFreeProductCodeList')?.some(
+                      (item) => item.code === option.code
+                    )
+                  }
+                  options={cachedOptions}
+                  loading={isProductLoading}
+                  getOptionLabel={(item) => `${item.name}(${item.code})`}
+                  fullWidth
+                  disableCloseOnSelect
+                  defaultValue={[]}
+                  inputValue={productKeyword}
+                  onInputChange={(_, newValue) => setProductKeyword(newValue)}
+                  noOptionsText="검색 결과가 없습니다."
+                  loadingText="로딩중입니다."
+                  onChange={(_, value) => field.onChange(value)}
+                  // value={field.value ?? []}
+                  renderOption={(props, item, state) => {
+                    const { key, ...rest } = props as any;
+                    const isLast = state.index === cachedOptions.length - 1;
+                    return (
+                      <Box
+                        component="li"
+                        ref={isLast ? productScrollRef : null}
+                        key={item}
+                        {...rest}
+                      >
+                        {`${item.name}(${item.code})`}
+                      </Box>
+                    );
+                  }}
+                  renderInput={(params: AutocompleteRenderInputParams) => {
+                    return (
+                      <FormControl fullWidth>
+                        <TextField
+                          {...params}
+                          name={field.name}
+                          label="배송비 무료 제품선택"
+                          error={!!errors.deliveryFreeProductCodeList?.message}
+                          helperText={errors.deliveryFreeProductCodeList?.message ?? ''}
+                          size="small"
+                        />
+                      </FormControl>
+                    );
+                  }}
+                />
+              );
+            }}
+          />
+          <Controller
+            control={control}
+            name="deliveryNotFreeProductCodeList"
+            render={({ field }) => {
+              return (
+                <Autocomplete
+                  multiple
+                  options={cachedOptions}
+                  loading={isProductLoading}
+                  getOptionLabel={(item) => `${item.name}(${item.code})`}
+                  fullWidth
+                  disableCloseOnSelect
+                  defaultValue={[]}
+                  inputValue={productKeyword}
+                  onInputChange={(_, newValue) => setProductKeyword(newValue)}
+                  noOptionsText="검색 결과가 없습니다."
+                  loadingText="로딩중입니다."
+                  onChange={(_, value) => field.onChange(value)}
+                  getOptionDisabled={(option) =>
+                    !!watch('deliveryFreeProductCodeList')?.some(
+                      (item) => item.code === option.code
+                    )
+                  }
+                  // value={field.value ?? []}
+                  renderOption={(props, item, state) => {
+                    const { key, ...rest } = props as any;
+                    const isLast = state.index === cachedOptions.length - 1;
+                    return (
+                      <Box
+                        component="li"
+                        ref={isLast ? productScrollRef : null}
+                        key={item}
+                        {...rest}
+                      >
+                        {`${item.name}(${item.code})`}
+                      </Box>
+                    );
+                  }}
+                  renderInput={(params: AutocompleteRenderInputParams) => {
+                    return (
+                      <FormControl fullWidth>
+                        <TextField
+                          {...params}
+                          name={field.name}
+                          label="배송비 유료 제품선택"
+                          error={!!errors.deliveryNotFreeProductCodeList?.message}
+                          helperText={errors.deliveryNotFreeProductCodeList?.message ?? ''}
+                          size="small"
+                        />
+                      </FormControl>
+                    );
+                  }}
+                />
+              );
+            }}
           />
         </FormGroup>
         <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">

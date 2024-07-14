@@ -4,9 +4,11 @@ import {
   AutocompleteRenderInputParams,
   Button,
   FormControl,
+  FormControlLabel,
   FormGroup,
   InputAdornment,
   Stack,
+  Switch,
   TextField,
   Typography,
 } from '@mui/material';
@@ -24,19 +26,21 @@ import { LIMIT, PRODUCT_PREFIX } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 import { useUpdateProduct } from '@/http/graphql/hooks/product/useUpdateProduct';
-import { Product } from '@/http/graphql/codegen/graphql';
+import { Product, Storage } from '@/http/graphql/codegen/graphql';
 import { modalSizeProps } from '@/components/commonStyles';
 import { emptyValueToNull } from '@/utils/common';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { client } from '@/http/graphql/client';
+import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 
 interface Props {
   selectedProduct: Product;
+  setSelectedProduct: (item: Product | null) => void;
   open: boolean;
   onClose: () => void;
 }
 
-const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
+const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose, setSelectedProduct }) => {
   const [updateProduct, { loading }] = useUpdateProduct();
 
   const {
@@ -55,8 +59,38 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
       name: selectedProduct.name,
       salePrice: selectedProduct.salePrice,
       wonPrice: selectedProduct.wonPrice,
+      isFreeDeliveryFee: selectedProduct.isFreeDeliveryFee,
     },
   });
+
+  const { data: storageData, networkStatus: storageNetworkStatus } = useStorages({
+    keyword: '',
+    limit: 100,
+    skip: 0,
+  });
+  const storageList = (storageData?.storages.data as Storage[]) ?? [];
+  const storageNameList = storageList.map((item) => item.name);
+  const storageById = new Map<string, Storage>(storageList.map((item) => [item._id, item]));
+
+  useEffect(() => {
+    if (storageNetworkStatus <= 3) return;
+
+    const storageName = selectedProduct.storageId
+      ? storageById.get(selectedProduct.storageId)?.name
+      : null;
+
+    reset({
+      barCode: selectedProduct.barCode ?? '',
+      category: selectedProduct.category?.name as string,
+      code: selectedProduct.code,
+      leadTime: selectedProduct.leadTime,
+      name: selectedProduct.name,
+      salePrice: selectedProduct.salePrice,
+      wonPrice: selectedProduct.wonPrice,
+      storageName,
+      isFreeDeliveryFee: selectedProduct.isFreeDeliveryFee,
+    });
+  }, [selectedProduct, storageNetworkStatus]);
 
   const categoryKeyword = watch('category');
   const delayedCategoryKeyword = useTextDebounce(categoryKeyword ?? '');
@@ -102,8 +136,13 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
           _id: selectedProduct._id,
         },
       },
-      onCompleted: () => {
-        snackMessage({ message: '제품편집이 완료되었습니다.', severity: 'success' });
+      onCompleted: (res) => {
+        snackMessage({
+          message: '제품편집이 완료되었습니다.',
+          severity: 'success',
+        });
+        setSelectedProduct(res.updateProduct as Product);
+
         client.refetchQueries({
           updateCache(cache) {
             cache.evict({ fieldName: 'wholeSales' });
@@ -120,7 +159,10 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
       },
       onError: (err) => {
         const message = err.message;
-        snackMessage({ message: message ?? '제품편집이 실패했습니다.', severity: 'error' });
+        snackMessage({
+          message: message ?? '제품편집이 실패했습니다.',
+          severity: 'error',
+        });
       },
     });
   };
@@ -138,6 +180,20 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
       <Typography sx={{ mb: 3 }}>제품을 편집합니다.</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={modalSizeProps}>
+          <Controller
+            control={control}
+            name="isFreeDeliveryFee"
+            render={({ field }) => {
+              return (
+                <FormControlLabel
+                  key={Math.random()}
+                  sx={{ width: 'fit-content' }}
+                  control={<Switch checked={!!field.value} {...field} />}
+                  label={field.value ? '무료배송' : '유료배송'}
+                />
+              );
+            }}
+          />
           <Controller
             control={control}
             name="code"
@@ -253,6 +309,37 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
                 }}
               />
             )}
+          />
+          <Controller
+            control={control}
+            name="storageName"
+            render={({ field }) => {
+              return (
+                <SearchAutoComplete
+                  inputValue={field.value ?? ''}
+                  onInputChange={field.onChange}
+                  loading={isLoading}
+                  options={storageNameList}
+                  setValue={field.onChange}
+                  value={field.value ?? ''}
+                  scrollRef={scrollRef}
+                  renderSearchInput={(params: AutocompleteRenderInputParams) => {
+                    return (
+                      <FormControl fullWidth>
+                        <TextField
+                          {...params}
+                          {...field}
+                          label="출고 창고선택"
+                          error={!!errors.storageName?.message}
+                          helperText={errors.storageName?.message ?? ''}
+                          size="small"
+                        />
+                      </FormControl>
+                    );
+                  }}
+                />
+              );
+            }}
           />
         </FormGroup>
         <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">

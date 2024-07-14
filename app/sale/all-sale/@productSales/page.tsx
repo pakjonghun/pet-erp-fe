@@ -1,8 +1,7 @@
 'use client';
 
 import TableTitle from '@/components/ui/typograph/TableTitle';
-import { FormControl, FormGroup, TextField, InputAdornment, Button, Stack } from '@mui/material';
-import { ProductSaleData } from '@/http/graphql/codegen/graphql';
+import { FormControl, FormGroup, TextField, InputAdornment, Stack } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import useTextDebounce from '@/hooks/useTextDebounce';
@@ -17,13 +16,14 @@ import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { saleRange, saleTotal } from '@/store/saleStore';
 import { OrderValue } from '@/types';
 import HeaderSortButton from '@/components/ui/button/HeaderSortButton';
+import { ProductSaleMenu } from '@/http/graphql/codegen/graphql';
 
 const ProductSales = () => {
-  const [sort, setSort] = useState('createdAt');
-  const [order, setOrder] = useState<OrderValue>(1);
+  const [sort, setSort] = useState('accCount');
+  const [order, setOrder] = useState<OrderValue>(-1);
   const [keyword, setKeyword] = useState('');
   const delayedKeyword = useTextDebounce(keyword);
-  const [selectedProductSale, setSelectedProductSale] = useState<null | ProductSaleData>(null);
+  const [selectedProductSale, setSelectedProductSale] = useState<null | ProductSaleMenu>(null);
   const { from, to } = useReactiveVar(saleRange);
   const { data, networkStatus, fetchMore } = useProductSales({
     keyword: delayedKeyword,
@@ -40,7 +40,8 @@ const ProductSales = () => {
     setSort(sortValue);
   };
 
-  const rows = (data?.productSales?.data as ProductSaleData[]) ?? [];
+  const rows = (data?.productSales?.data as ProductSaleMenu[]) ?? [];
+
   const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
   const isEmpty = !isLoading && rows.length === 0;
 
@@ -66,7 +67,8 @@ const ProductSales = () => {
       }
     }
   };
-  const scrollRef = useInfinityScroll({ callback });
+  const tableScrollRef = useInfinityScroll({ callback });
+  const cardScrollRef = useInfinityScroll({ callback });
 
   const sortController = {
     order,
@@ -78,19 +80,18 @@ const ProductSales = () => {
     const totalData = rows.reduce(
       (acc, cur) => {
         return {
-          totalCount: acc.totalCount + (cur?.sales?.accCount ?? 0),
-          totalPayCost: 0 + (cur?.sales?.accPayCost ?? 0),
-          totalProfit: 0 + (cur?.sales?.accProfit ?? 0),
+          totalCount: acc.totalCount + (cur?.accCount ?? 0),
+          totalPayCost: acc.totalPayCost + (cur?.accPayCost ?? 0),
+          totalProfit: acc.totalProfit + ((cur?.accProfit ?? 0) - (cur?.deliveryCost ?? 0)),
         };
       },
       { totalCount: 0, totalPayCost: 0, totalProfit: 0 }
     );
-
     saleTotal(totalData);
-  }, [data?.productSales?.data]);
+  }, [data?.productSales]);
 
   return (
-    <TablePage sx={{ flex: 1 }}>
+    <TablePage sx={{ height: 800 }}>
       {!!selectedProductSale && (
         <ProductSaleModal
           selectedProductSale={selectedProductSale}
@@ -98,14 +99,27 @@ const ProductSales = () => {
           onClose={() => setSelectedProductSale(null)}
         />
       )}
-      <Stack direction="row" alignItems="center">
-        <TableTitle title="판매 매출현황" />
-        <HeaderSortButton
-          sx={{ mt: 1 }}
-          text="자산순"
-          textValue="totalAssetCost"
-          sortController={sortController}
-        />
+      <Stack direction="column">
+        <TableTitle sx={{ ml: 2 }} title="판매 매출현황" />
+        <Stack sx={{ px: 2, mt: 1 }} direction="row" flexWrap="wrap">
+          <HeaderSortButton
+            text="자산순"
+            textValue="totalAssetCost"
+            sortController={sortController}
+          />
+          <HeaderSortButton
+            text="판매수량순"
+            textValue="accCount"
+            sortController={sortController}
+          />
+          <HeaderSortButton text="매출순" textValue="accPayCost" sortController={sortController} />
+          <HeaderSortButton text="수익순" textValue="accProfit" sortController={sortController} />
+          <HeaderSortButton
+            text="수익율순"
+            textValue="profitRate"
+            sortController={sortController}
+          />
+        </Stack>
       </Stack>
 
       <FormGroup sx={{ ml: 2 }}>
@@ -119,8 +133,11 @@ const ProductSales = () => {
                 </InputAdornment>
               ),
             }}
-            sx={{ width: 270, my: 2 }}
-            label="검색할 제품 이름을 입력하세요."
+            sx={{
+              width: 300,
+              my: 2,
+            }}
+            label="제품 이름이나 코드를 입력하세요."
             size="small"
           />
         </FormControl>
@@ -134,14 +151,15 @@ const ProductSales = () => {
         data={rows}
         isEmpty={isEmpty}
         isLoading={isLoading}
-        scrollRef={scrollRef}
+        scrollRef={cardScrollRef}
+        setSelectedProductSale={setSelectedProductSale}
       />
       <ProductSaleTable
         setSelectedProductSale={setSelectedProductSale}
         data={rows}
         isEmpty={isEmpty}
         isLoading={isLoading}
-        scrollRef={scrollRef}
+        scrollRef={tableScrollRef}
       />
     </TablePage>
   );

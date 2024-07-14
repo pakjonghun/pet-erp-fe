@@ -51,7 +51,7 @@ const CategoryPage = () => {
 
     fetchMore({
       variables: {
-        categoriesInput: {
+        subsidiaryCategoriesInput: {
           keyword: delayKeyword,
           limit: LIMIT,
           skip: rows.length,

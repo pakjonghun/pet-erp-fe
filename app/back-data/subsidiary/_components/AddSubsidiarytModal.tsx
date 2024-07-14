@@ -1,7 +1,6 @@
 import { FC, useMemo, useState } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
-  Autocomplete,
   AutocompleteRenderInputParams,
   Button,
   FormControl,
@@ -40,7 +39,6 @@ const AddSubsidiaryModal: FC<Props> = ({ open, onClose }) => {
 
   const {
     reset,
-    setValue,
     control,
     watch,
     getValues,

@@ -8,11 +8,19 @@ interface Props {
   current: number;
   previous: number;
   label: string;
+  isShowPrevData?: boolean;
   numberType?: NumberType;
+
   sx?: SxProps;
 }
 
-const SaleCard: FC<Props> = ({ label, current, previous, numberType = 'currency', sx }) => {
+const SaleCard: FC<Props> = ({
+  label,
+  current,
+  previous,
+  numberType = 'currency',
+  isShowPrevData = false,
+}) => {
   const currentNumberString = getNumberToString(current, numberType);
   const compareNumber = getFixedTwo(current - previous);
   const compareNumberString = getNumberToString(compareNumber, numberType);
@@ -24,7 +32,11 @@ const SaleCard: FC<Props> = ({ label, current, previous, numberType = 'currency'
         <Typography>{currentNumberString}</Typography>
         <Typography
           variant="subtitle2"
-          sx={{ display: 'flex', alignItems: 'center', color: getColor(compareNumber) }}
+          sx={{
+            display: isShowPrevData ? 'flex' : 'none',
+            alignItems: 'center',
+            color: getColor(compareNumber),
+          }}
         >
           {getArrow(compareNumber)}
           {compareNumberString}

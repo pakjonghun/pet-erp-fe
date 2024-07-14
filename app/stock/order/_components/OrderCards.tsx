@@ -9,6 +9,7 @@ import { CommonListProps } from '@/types';
 import EditOrderModal from '../../_components/EditOrderModal';
 import RemoveOrderModal from '../../_components/RemoveOrderModal';
 import OrderDetailPopover from './OrderDetailPopover';
+import CompleteModal from '../../_components/CompleteModal';
 
 interface Props extends CommonListProps<ProductOrder> {
   sx?: SxProps;
@@ -55,7 +56,17 @@ const OrderCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx }) => {
 
       {selectedOrder && (
         <EditOrderModal
+          setSelectedOrder={setSelectedOrder}
           open={optionType === 'edit'}
+          onClose={() => handleClickOption(null, null)}
+          selectedOrder={selectedOrder}
+        />
+      )}
+
+      {selectedOrder && (
+        <CompleteModal
+          setSelectedOrder={setSelectedOrder}
+          open={optionType === 'complete'}
           onClose={() => handleClickOption(null, null)}
           selectedOrder={selectedOrder}
         />

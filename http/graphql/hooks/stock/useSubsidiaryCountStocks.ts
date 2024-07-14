@@ -9,6 +9,7 @@ const subsidiaryCountStocks = graphql(`
       data {
         name
         count
+        code
       }
     }
   }

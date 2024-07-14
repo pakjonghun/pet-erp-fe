@@ -10,7 +10,9 @@ export const ClientHeaderList = [
   '담당자 이름',
   '연락처',
   '거래여부',
-  '',
+  '출고창고',
+  '택배비 무료제품',
+  '택배비 유료제품',
 ];
 
 export const ClientTypeToHangle = {

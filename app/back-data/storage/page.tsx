@@ -53,7 +53,7 @@ const StoragePage = () => {
 
     fetchMore({
       variables: {
-        categoriesInput: {
+        storagesInput: {
           keyword: delayKeyword,
           limit: LIMIT,
           skip: rows.length,

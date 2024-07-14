@@ -18,12 +18,23 @@ export const client = new ApolloClient({
         month
       }
 
+      fragment OptionFragment on OutputOption {
+        id
+        name
+        count
+        productCodeList {
+          code
+          name
+        }
+      }
+
       fragment StockColumnFragment on StockColumn {
         stockCount
         leadTime
         leftDate
         monthSaleCount
         productName
+        productCode
         wonPrice
       }
 
@@ -62,6 +73,7 @@ export const client = new ApolloClient({
         address
         phoneNumber
         note
+        productList
       }
 
       fragment StorageFragment on Storage {
@@ -98,6 +110,7 @@ export const client = new ApolloClient({
         userId
         description
         logType
+        createdAt
       }
 
       fragment ProductCategoryFragment on ProductCategory {
@@ -119,12 +132,14 @@ export const client = new ApolloClient({
         wonPrice
         salePrice
         leadTime
+        storageId
         category {
           ...ProductCategoryFragment
         }
+        isFreeDeliveryFee
       }
 
-      fragment ClientFragment on Client {
+      fragment OutClientFragment on OutClient {
         _id
         code
         name
@@ -136,6 +151,30 @@ export const client = new ApolloClient({
         manager
         managerTel
         inActive
+        storageId
+        deliveryFreeProductCodeList {
+          name
+          code
+        }
+        deliveryNotFreeProductCodeList {
+          name
+          code
+        }
+      }
+
+      fragment ClientFragment on OutClient {
+        _id
+        code
+        name
+        feeRate
+        clientType
+        businessName
+        businessNumber
+        payDate
+        manager
+        managerTel
+        inActive
+        storageId
       }
 
       fragment ClientInfo on ClientInfo {
@@ -158,15 +197,40 @@ export const client = new ApolloClient({
       }
     `),
     typePolicies: {
+      SaleInfos: {
+        keyFields: () => {
+          return [
+            '_id',
+            'name',
+            'accPayCost',
+            'accCount',
+            'accProfit',
+            'prevAccPayCost',
+            'prevAccCount',
+            'prevAccProfit',
+          ];
+        },
+      },
       Query: {
         fields: {
           logs: {
             keyArgs: ['findLogsQuery', ['keyword', 'from', 'to', 'keywordTarget']],
             merge,
           },
-
+          dashboardProducts: {
+            keyArgs: ['dashboardProductsInput', ['from', 'to', 'idenifier']],
+            merge,
+          },
+          dashboardClients: {
+            keyArgs: ['dashboardClientsInput', ['from', 'to', 'idenifier']],
+            merge,
+          },
           topClients: {
             keyArgs: ['topClientInput', ['from', 'to']],
+            merge,
+          },
+          subsidiaries: {
+            keyArgs: ['clientsInput', ['keyword']],
             merge,
           },
           clients: {
@@ -215,6 +279,14 @@ export const client = new ApolloClient({
           },
           productSales: {
             keyArgs: ['productSalesInput', ['keyword', 'from', 'to', 'sort', 'order']],
+            merge,
+          },
+          saleMenuClients: {
+            keyArgs: ['saleMenuClientsInput', ['from', 'to']],
+            merge,
+          },
+          options: {
+            keyArgs: ['optionsInput', ['keyword']],
             merge,
           },
         },

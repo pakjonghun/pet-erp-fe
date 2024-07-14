@@ -36,6 +36,7 @@ import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { client } from '@/http/graphql/client';
 import { useUpdateWholeSale } from '@/http/graphql/hooks/wholeSale/useUpdateWholeSale';
+import NumberInput from '@/components/ui/input/NumberInput';
 
 export const initProductItem: CreateWholeSaleProductForm = {
   storageName: '',
@@ -50,9 +51,10 @@ interface Props {
   open: boolean;
   wholeSale: WholeSaleItem;
   onClose: () => void;
+  setSelectedWholeSale: (item: null | WholeSaleItem) => void;
 }
 
-const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
+const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose, setSelectedWholeSale }) => {
   const [updateWholeSale, { loading }] = useUpdateWholeSale();
   const [clientKeyword, setClientKeyword] = useState('');
   const delayedClientKeyword = useTextDebounce(clientKeyword);
@@ -64,7 +66,6 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
     keyword: delayedClientKeyword,
     limit: LIMIT,
     skip: 0,
-    clientType: [ClientType.WholeSale, ClientType.Offline],
   });
 
   const isClientLoading = clientNetwork === 1 || clientNetwork === 2 || clientNetwork === 3;
@@ -105,6 +106,7 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
     resolver: zodResolver(createWholeSaleSchema),
     defaultValues: {
       ...wholeSale,
+      deliveryBoxCount: wholeSale.deliveryBoxCount ?? 1,
       productList: wholeSale.productList,
       isDone: !!wholeSale.isDone,
       saleAt: new Date(wholeSale.saleAt),
@@ -114,6 +116,7 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
   useEffect(() => {
     reset({
       ...wholeSale,
+      deliveryBoxCount: wholeSale.deliveryBoxCount ?? 1,
       isDone: !!wholeSale.isDone,
       saleAt: new Date(wholeSale.saleAt),
     });
@@ -133,11 +136,14 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
           ...newValues,
         },
       },
-      onCompleted: () => {
+      onCompleted: (res) => {
         snackMessage({
-          message: '도매 판매편집이 완료되었습니다.',
+          message: '비 사방넷 판매 편집이 완료되었습니다.',
           severity: 'success',
         });
+        if (Array.isArray(res.updateWholeSale) && res.updateWholeSale[0]) {
+          setSelectedWholeSale(res.updateWholeSale[0] as WholeSaleItem);
+        }
         client.refetchQueries({
           updateCache(cache) {
             cache.evict({ fieldName: 'wholeSales' });
@@ -155,7 +161,7 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
       onError: (err) => {
         const message = err.message;
         snackMessage({
-          message: message ?? '도매 판매편집이 실패했습니다.',
+          message: message ?? '비 사방넷 판매 편집이 실패했습니다.',
           severity: 'error',
         });
       },
@@ -168,6 +174,9 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
   };
 
   const handleAddProduct = () => {
+    if (productList.length === 0) {
+      clearErrors('productList');
+    }
     append(initProductItem);
   };
 
@@ -196,13 +205,13 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        도매 판매 편집
+        비 사방넷 판매 편집
       </Typography>
-      <Typography sx={{ mb: 3 }}>도매 판매를 편집합니다.</Typography>
+      <Typography sx={{ mb: 3 }}>비 사방넷 판매를 편집합니다.</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={{ ...modalSizeProps, mb: 2 }}>
           <Stack direction="row" gap={3} alignItems="center">
-            <FormLabel>도매 거래처 정보 입력</FormLabel>
+            <FormLabel>거래처 정보 입력</FormLabel>
             <Controller
               control={control}
               name="isDone"
@@ -224,7 +233,6 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
               },
               alignItems: {
                 xs: 'flex-start',
-                md: 'center',
               },
             }}
             gap={3}
@@ -262,7 +270,7 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
                       <TextField
                         {...params}
                         value={field.value}
-                        label="도매 거래처"
+                        label="거래처"
                         required
                         error={!!errors.mallId?.message}
                         helperText={errors.mallId?.message ?? ''}
@@ -310,6 +318,21 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
                 );
               }}
             />
+            <Controller
+              control={control}
+              name={'deliveryBoxCount'}
+              render={({ field }) => {
+                return (
+                  <NumberInput
+                    sx={{ minWidth: 70, width: '100%' }}
+                    helperText={errors?.deliveryBoxCount?.message ?? ''}
+                    error={!!errors?.deliveryBoxCount?.message}
+                    label="송장 개수"
+                    field={field}
+                  />
+                );
+              }}
+            />
           </Stack>
         </FormGroup>
         {!!telNumber && <LabelText label="연락처 : " text={telNumber ?? EMPTY} />}
@@ -338,6 +361,7 @@ const EditWholeSaleModal: FC<Props> = ({ open, wholeSale, onClose }) => {
             {fields.map((product, index) => {
               return (
                 <WholeSaleProductSearch
+                  isEdit
                   setError={setError}
                   clearError={clearErrors}
                   productId={product.id}

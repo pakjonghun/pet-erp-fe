@@ -6,6 +6,7 @@ import ProductStockBodyRow from './ProductStockBodyRow';
 import LoadingRow from '@/components/table/LoadingRow';
 import { ProductStockHeaderList } from '../constants';
 import { CommonListProps } from '@/types';
+import { CommonTableBody } from '@/components/commonStyles';
 
 interface Props extends CommonListProps<StockColumn> {
   openAddStock: () => void;
@@ -29,7 +30,10 @@ const ProductStockTableBody: FC<Props> = ({
 
   const [optionType, setOptionType] = useState<null | string>(null);
 
-  const handleClickOption = (option: any | null, product: StockColumn | null) => {
+  const handleClickOption = (
+    option: any | null,
+    product: StockColumn | null
+  ) => {
     setProductStock(product);
     if (option == 'add') {
       openAddStock();
@@ -56,13 +60,15 @@ const ProductStockTableBody: FC<Props> = ({
   };
 
   return (
-    <TableBody>
+    <CommonTableBody>
       <EmptyRow colSpan={ProductStockHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
         const stock = item as unknown as StockColumn;
         const isLast = index === data.length - 1;
+        const isSelected = productStock?.productName === stock.productName;
         return (
           <ProductStockBodyRow
+            isSelected={isSelected}
             onClickRow={(event, stock: StockColumn) => {
               setPopoverPosition({ left: event.clientX, top: event.clientY });
               setPopoverAnchor(event.currentTarget);
@@ -75,8 +81,11 @@ const ProductStockTableBody: FC<Props> = ({
           />
         );
       })}
-      <LoadingRow isLoading={isLoading} colSpan={ProductStockHeaderList.length} />
-    </TableBody>
+      <LoadingRow
+        isLoading={isLoading}
+        colSpan={ProductStockHeaderList.length}
+      />
+    </CommonTableBody>
   );
 };
 

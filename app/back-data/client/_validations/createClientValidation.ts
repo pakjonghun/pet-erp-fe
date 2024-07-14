@@ -27,6 +27,15 @@ export const createClientSchema = z.object({
   manager: z.string().optional(),
   managerTel: z.string().optional(),
   inActive: z.boolean().optional(),
+  storageName: z.string().optional().nullable(),
+  deliveryFreeProductCodeList: z
+    .array(z.object({ name: z.string(), code: z.string() }))
+    .optional()
+    .nullable(),
+  deliveryNotFreeProductCodeList: z
+    .array(z.object({ name: z.string(), code: z.string() }))
+    .optional()
+    .nullable(),
 });
 
 export type CreateClientForm = z.infer<typeof createClientSchema>;

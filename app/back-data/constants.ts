@@ -20,6 +20,9 @@ export const BackDataTabs = {
   'back-data/factory': {
     label: '공장',
   },
+  'back-data/option': {
+    label: '옵션',
+  },
 };
 
 export const ContextOptions = ['edit', 'delete'] as const;

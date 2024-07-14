@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import {
   CreateWholeSaleForm,
@@ -21,6 +21,7 @@ import { initProductItem } from './AddWholeSaleModal';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 import { Storage } from '@/http/graphql/codegen/graphql';
 import { useProductCountStocks } from '@/http/graphql/hooks/stock/useProductCountStocks';
+import { removeTrailString } from '@/utils/common';
 
 interface Props {
   clearError: UseFormClearErrors<CreateWholeSaleForm>;
@@ -34,6 +35,7 @@ interface Props {
     newItem: FieldArrayWithId<CreateWholeSaleForm, 'productList', 'id'>
   ) => void;
   selectedProductList: CreateWholeSaleProductForm[];
+  isEdit?: boolean;
   error?: FieldErrors<CreateWholeSaleProductForm>;
 }
 
@@ -47,16 +49,21 @@ const WholeSaleProductSearch: FC<Props> = ({
   error,
   clearError,
   setError,
+  isEdit = false,
 }) => {
   const currentProduct = selectedProductList[index];
   const [productKeyword, setProductKeyword] = useState('');
   const delayedProductKeyword = useTextDebounce(productKeyword ?? '');
-  const { data, networkStatus, fetchMore } = useProductCountStocks({
+  const { data, networkStatus, fetchMore, refetch } = useProductCountStocks({
     storageName: currentProduct.storageName,
     keyword: delayedProductKeyword,
     limit: LIMIT,
     skip: 0,
   });
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   const rows = data?.productCountStocks?.data ?? [];
   const currentOriginProduct = rows.find((item) => item.code === currentProduct.productCode);
@@ -108,13 +115,10 @@ const WholeSaleProductSearch: FC<Props> = ({
           xs: 'column',
           md: 'row',
         },
-        alignItems: {
-          xs: 'flex-start',
-          md: 'center',
-        },
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        gap: 2,
       }}
-      justifyContent="space-between"
-      gap={2}
     >
       <Controller
         control={control}
@@ -154,16 +158,27 @@ const WholeSaleProductSearch: FC<Props> = ({
         render={({ field }) => {
           return (
             <Autocomplete
-              sx={{ minWidth: 180 }}
+              sx={{ minWidth: 300 }}
               disabled={!currentProduct.storageName}
               value={field.value}
               getOptionDisabled={(option) => {
-                return selectedProductList.some((item) => item.productName === option);
+                const currentItem = selectedProductList[index];
+                for (let i = 0; i < selectedProductList.length; i++) {
+                  if (i === index) continue;
+
+                  const targetItem = selectedProductList[i];
+                  const sameStorage = targetItem.storageName === currentItem.storageName;
+                  if (sameStorage) {
+                    const productName = removeTrailString(option).trim();
+                    return productName === targetItem.productName;
+                  }
+                }
+                return false;
               }}
               fullWidth
               filterSelectedOptions
               size="small"
-              options={rows.map((item) => item.name)}
+              options={rows.map((item) => `${item.name}(${item.code})`)}
               isOptionEqualToValue={(item1, item2) => item1 === item2}
               inputValue={productKeyword}
               onInputChange={(_, value) => setProductKeyword(value)}
@@ -171,7 +186,8 @@ const WholeSaleProductSearch: FC<Props> = ({
               loadingText="로딩중"
               noOptionsText="검색 결과가 없습니다."
               onChange={(_, value) => {
-                field.onChange(value);
+                const productNameValue = removeTrailString(value);
+                field.onChange(productNameValue);
                 if (!currentProduct) return;
 
                 let newField: FieldArrayWithId<CreateWholeSaleForm, 'productList', 'id'> = {
@@ -181,7 +197,7 @@ const WholeSaleProductSearch: FC<Props> = ({
                 };
 
                 if (value != null) {
-                  const selectedProduct = rows.find((item) => item.name === value);
+                  const selectedProduct = rows.find((item) => item.name === productNameValue);
 
                   if (!selectedProduct) return;
 
@@ -200,7 +216,7 @@ const WholeSaleProductSearch: FC<Props> = ({
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="제품 이름"
+                  label="제품 이름(코드)"
                   error={!!error?.productName?.message}
                   helperText={error?.productName?.message ?? ''}
                 />
@@ -224,19 +240,22 @@ const WholeSaleProductSearch: FC<Props> = ({
         render={({ field }) => {
           return (
             <NumberInput
-              sx={{ minWidth: 70, width: '100%' }}
+              sx={{ minWidth: 100, width: '100%' }}
               field={field}
               onChange={(value) => {
+                field.onChange(value);
                 if (!currentOriginProduct) return;
 
-                if (value != null && value > currentOriginProduct.count) {
-                  setError(`productList.${index}.count`, {
-                    message: `제품 재고가 ${currentOriginProduct.count}EA 남아 있습니다.`,
-                  });
-                } else {
-                  clearError(`productList.${index}.count`);
-                }
                 field.onChange(value);
+                clearError(`productList.${index}.count`);
+
+                if (value != null) {
+                  if (value > currentOriginProduct.count && !isEdit) {
+                    setError(`productList.${index}.count`, {
+                      message: `제품 재고가 ${currentOriginProduct.count}EA 남아 있습니다.`,
+                    });
+                  }
+                }
               }}
               label="판매수량"
               error={!!error?.count?.message}
@@ -251,7 +270,7 @@ const WholeSaleProductSearch: FC<Props> = ({
         render={({ field }) => {
           return (
             <NumberInput
-              sx={{ minWidth: 70, width: '100%' }}
+              sx={{ minWidth: 150, width: '100%' }}
               helperText={error?.payCost?.message ?? ''}
               error={!!error?.payCost?.message}
               label="판매가"

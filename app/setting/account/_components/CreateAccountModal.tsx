@@ -2,13 +2,14 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
+  Box,
   Button,
+  Checkbox,
   FormControl,
+  FormControlLabel,
   FormGroup,
+  FormLabel,
   InputAdornment,
-  InputLabel,
-  MenuItem,
-  Select,
   Stack,
   TextField,
   Typography,
@@ -23,6 +24,36 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { modalSizeProps } from '@/components/commonStyles';
 
+export const roleToHandle = {
+  ['ADMIN' as string]: '어드민',
+  MANAGER: '관리자',
+  STAFF: '스텝',
+  BACK_DELETE: '백 데이터삭제',
+  BACK_EDIT: '백 데이터편집',
+  STOCK_IN: '입고 입력',
+  STOCK_OUT: '출고 입력',
+  STOCK_SALE_OUT: '사방넷 판매 출고',
+  ORDER_CREATE: '발주입력',
+  ORDER_EDIT: '발주편집',
+  ORDER_DELETE: '발주삭제',
+  SALE_CREATE: '비 사방넷 판매입력',
+  SALE_EDIT: '비 사방넷 판매편집',
+  SALE_DELETE: '비 사방넷 판매삭제',
+  ADMIN_ACCESS: '올엑세스 권한',
+  ADMIN_IP: '접속 아이피 설정',
+  ADMIN_ACCOUNT: '계정관리',
+  ADMIN_DELIVERY: '택배비용 관리',
+  ADMIN_LOG: '사용이력 조회',
+};
+
+export const roleTitleToHangle: Record<string, string> = {
+  ADMIN: '어드민',
+  BACK: '백데이터',
+  STOCK: '재고',
+  ORDER: '발주',
+  SALE: '판매',
+};
+
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -31,6 +62,16 @@ interface Props {
 const CreateAccountModal: FC<Props> = ({ open, onClose }) => {
   const [createAccount, { loading }] = useCreateAccount();
   const [visible, setVisible] = useState(false);
+
+  const roleList = new Map<string, string[]>();
+
+  Object.values(UserRole).forEach((item) => {
+    const split = item.split('_');
+    const title = split[0];
+    const target = roleList.get(title);
+    const newElement = target ? [...target, item] : [item];
+    roleList.set(title, newElement);
+  });
 
   const {
     reset,
@@ -43,7 +84,7 @@ const CreateAccountModal: FC<Props> = ({ open, onClose }) => {
       id: '',
       password: '',
       passwordConfirm: '',
-      role: UserRole.Staff,
+      role: [] as UserRole[],
     },
   });
 
@@ -147,15 +188,45 @@ const CreateAccountModal: FC<Props> = ({ open, onClose }) => {
             name="role"
             control={control}
             render={({ field }) => (
-              <FormControl required>
-                <InputLabel>권한</InputLabel>
-                <Select {...field} label="권한" id="role_change_select">
-                  {Object.values(UserRole).map((role) => (
-                    <MenuItem value={role} key={role}>
-                      {role}
-                    </MenuItem>
-                  ))}
-                </Select>
+              <FormControl>
+                <Typography sx={{ mb: 1 }} variant="subtitle1">
+                  권한설정
+                </Typography>
+                {Array.from(roleList).map(([title, elements]) => {
+                  const hangleTitle = roleTitleToHangle[title];
+                  return (
+                    <Box sx={{ mb: 1 }} key={title}>
+                      <FormGroup sx={{ pl: 2 }}>
+                        <FormLabel>{hangleTitle}</FormLabel>
+                        <Stack direction="row" flexWrap="wrap">
+                          {elements.map((role) => {
+                            const label = roleToHandle[role];
+                            return (
+                              <FormControlLabel
+                                sx={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  height: 26,
+                                }}
+                                onChange={(_, checked) => {
+                                  const newValue = checked
+                                    ? [...field.value, role]
+                                    : field.value.filter((item) => item !== role);
+                                  field.onChange(newValue);
+                                }}
+                                value={role}
+                                key={role}
+                                label={label}
+                                control={<Checkbox />}
+                              />
+                            );
+                          })}
+                        </Stack>
+                      </FormGroup>
+                    </Box>
+                  );
+                })}
               </FormControl>
             )}
           />

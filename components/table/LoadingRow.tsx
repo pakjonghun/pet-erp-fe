@@ -8,6 +8,8 @@ interface Props {
 }
 
 const LoadingRow: FC<Props> = ({ isLoading, colSpan }) => {
+  if (!isLoading) return <></>;
+
   return (
     <TableRow>
       <TableCell align="center" colSpan={colSpan}>

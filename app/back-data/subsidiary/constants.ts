@@ -5,5 +5,4 @@ export const SubsidiaryHeaderList = [
   '원가',
   '리드타임(일)',
   '사용되는 제품목록',
-  '',
 ];

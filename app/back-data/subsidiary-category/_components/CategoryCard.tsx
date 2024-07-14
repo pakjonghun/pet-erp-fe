@@ -2,13 +2,19 @@ import { FC, useState } from 'react';
 import { Paper, Typography, Stack, Button } from '@mui/material';
 import DeleteCategoryModal from './DeleteCategoryModal';
 import EditCategoryModal from './EditCategoryModal';
-import { SubsidiaryCategory } from '@/http/graphql/codegen/graphql';
+import { SubsidiaryCategory, UserRole } from '@/http/graphql/codegen/graphql';
+import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 
 interface Props {
   item: SubsidiaryCategory;
 }
 
 const CategoryCard: FC<Props> = ({ item: { _id, name } }) => {
+  const { data: userData } = useGetMyInfo();
+  const myRole = userData?.myInfo.role ?? [];
+  const canDelete = myRole.includes(UserRole.BackDelete);
+  const canEdit = myRole.includes(UserRole.BackEdit);
+
   const [openDelete, setOpenDelete] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
@@ -51,12 +57,16 @@ const CategoryCard: FC<Props> = ({ item: { _id, name } }) => {
         {name}
       </Typography>
       <Stack direction="row" gap={1}>
-        <Button onClick={() => setOpenDelete(true)} color="error" variant="outlined">
-          삭제
-        </Button>
-        <Button onClick={() => setOpenEdit(true)} variant="contained">
-          수정
-        </Button>
+        {canDelete && (
+          <Button onClick={() => setOpenDelete(true)} color="error" variant="outlined">
+            삭제
+          </Button>
+        )}
+        {canEdit && (
+          <Button onClick={() => setOpenEdit(true)} variant="contained">
+            수정
+          </Button>
+        )}
       </Stack>
     </Paper>
   );

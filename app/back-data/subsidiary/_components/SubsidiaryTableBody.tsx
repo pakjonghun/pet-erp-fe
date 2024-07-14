@@ -1,22 +1,29 @@
 import { FC, useState } from 'react';
 import { Subsidiary } from '@/http/graphql/codegen/graphql';
-import { TableBody } from '@mui/material';
 import EmptyRow from '@/components/table/EmptyRow';
 import { SelectOption } from '../../types';
-import RemoveSubsidiaryModal from './RemoveSubsidiaryModal';
-import EditSubsidiaryModal from './EditSubsidiaryModal';
-import ProductDetailPopover from './SubsidiaryDetailPopover';
 import LoadingRow from '@/components/table/LoadingRow';
 import { SubsidiaryHeaderList } from '../constants';
 import SubsidiaryBodyRow from './SubsidiaryBodyRow';
 import { CommonListProps } from '@/types';
+import { CommonTableBody } from '@/components/commonStyles';
 
-interface Props extends CommonListProps<Subsidiary> {}
+interface Props extends CommonListProps<Subsidiary> {
+  selectedSubsidiary: Subsidiary | null;
+  setSelectedSubsidiary: (value: Subsidiary | null) => void;
+}
 
-const SubsidiaryTableBody: FC<Props> = ({ data, isLoading, isEmpty, scrollRef }) => {
+const SubsidiaryTableBody: FC<Props> = ({
+  selectedSubsidiary,
+  setSelectedSubsidiary,
+  data,
+  isLoading,
+  isEmpty,
+  scrollRef,
+}) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  const [selectedSubsidiary, setSelectedSubsidiary] = useState<null | Subsidiary>(null);
+
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
 
   const handleClickOption = (option: SelectOption | null, subsidiary: Subsidiary | null) => {
@@ -40,8 +47,8 @@ const SubsidiaryTableBody: FC<Props> = ({ data, isLoading, isEmpty, scrollRef })
   };
 
   return (
-    <TableBody>
-      {selectedSubsidiary && (
+    <CommonTableBody>
+      {/* {selectedSubsidiary && (
         <RemoveSubsidiaryModal
           open={optionType === 'delete'}
           onClose={() => handleClickOption(null, null)}
@@ -66,12 +73,14 @@ const SubsidiaryTableBody: FC<Props> = ({ data, isLoading, isEmpty, scrollRef })
           onClickEdit={handleClickEdit}
           selectedSubsidiary={selectedSubsidiary}
         />
-      )}
+      )} */}
       <EmptyRow colSpan={SubsidiaryHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
+        const isSelected = item._id === selectedSubsidiary?._id;
         const isLast = index === data.length - 1;
         return (
           <SubsidiaryBodyRow
+            isSelected={isSelected}
             onClickRow={(event, subsidiary: Subsidiary) => {
               setPopoverPosition({ left: event.clientX, top: event.clientY });
               setPopoverAnchor(event.currentTarget);
@@ -85,7 +94,7 @@ const SubsidiaryTableBody: FC<Props> = ({ data, isLoading, isEmpty, scrollRef })
         );
       })}
       <LoadingRow isLoading={isLoading} colSpan={SubsidiaryHeaderList.length} />
-    </TableBody>
+    </CommonTableBody>
   );
 };
 

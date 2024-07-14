@@ -4,16 +4,17 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { Client } from '@/http/graphql/codegen/graphql';
+import { OutClient, UserRole } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
 import { SelectOption } from '../../types';
 import { ClientTypeToHangle } from '../constants';
+import { getFixedTwo } from '@/utils/sale';
 
 interface Props {
-  client: Client;
-  onClickRow: (event: MouseEvent<HTMLSpanElement>, client: Client) => void;
-  onClickOption: (option: SelectOption | null, client: Client | null) => void;
+  client: OutClient;
+  onClickRow: (event: MouseEvent<HTMLSpanElement>, client: OutClient) => void;
+  onClickOption: (option: SelectOption | null, client: OutClient | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
@@ -21,6 +22,7 @@ const ClientCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow })
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<SelectOption, SelectedOptionItem> = {
     edit: {
+      role: [UserRole.BackEdit],
       callback: () => {
         onClickOption('edit', client);
         setMenuAnchor(null);
@@ -29,6 +31,7 @@ const ClientCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow })
       icon: <Edit />,
     },
     delete: {
+      role: [UserRole.BackDelete],
       callback: () => {
         onClickOption('delete', client);
         setMenuAnchor(null);
@@ -75,7 +78,7 @@ const ClientCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow })
           <Box sx={{ flex: 1 }}>
             <LabelText
               label="수수료율"
-              text={client.feeRate == null ? EMPTY : client.feeRate * 100 + '%'}
+              text={client.feeRate == null ? EMPTY : getFixedTwo(client.feeRate * 100) + '%'}
             />
           </Box>
           <Box sx={{ flex: 1 }}>

@@ -7,6 +7,7 @@ const deliveryCost = graphql(`
       deliveryCost
       year
       month
+      monthDeliveryPayCost
     }
   }
 `);

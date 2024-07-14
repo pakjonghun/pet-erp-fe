@@ -1,3 +1,4 @@
+import DoneIcon from '@mui/icons-material/Done';
 import { Box, Chip, IconButton, Menu, Paper, Stack } from '@mui/material';
 import React, { FC, MouseEvent, useState } from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -8,8 +9,6 @@ import { ProductOrder, UserRole } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import LabelText from '@/components/ui/typograph/LabelText';
 import dayjs from 'dayjs';
-import { useReactiveVar } from '@apollo/client';
-import { authState } from '@/store/isLogin';
 
 interface Props {
   client: ProductOrder;
@@ -19,11 +18,10 @@ interface Props {
 }
 
 const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) => {
-  const { role } = useReactiveVar(authState);
-  const cannotModify = role == UserRole.Staff;
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<any, SelectedOptionItem> = {
     edit: {
+      role: [UserRole.OrderEdit],
       callback: () => {
         onClickOption('edit', client);
         setMenuAnchor(null);
@@ -31,7 +29,17 @@ const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) 
       label: '편집',
       icon: <Edit />,
     },
+    complete: {
+      role: [UserRole.OrderEdit],
+      callback: () => {
+        onClickOption('complete', client);
+        setMenuAnchor(null);
+      },
+      label: '발주완료',
+      icon: <DoneIcon />,
+    },
     delete: {
+      role: [UserRole.OrderDelete],
       callback: () => {
         onClickOption('delete', client);
         setMenuAnchor(null);
@@ -51,22 +59,25 @@ const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) 
   const leadTime = biggestLeadTime < 0 ? null : biggestLeadTime;
 
   return (
-    <Paper ref={scrollRef} sx={{ position: 'relative', py: 3, px: 4 }}>
-      <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
-        {Object.entries(productOptionMenus).map(([option, menu]) => (
-          <OptionMenu key={option} menu={menu} option={option} />
-        ))}
-      </Menu>
-      {!cannotModify && (
-        <IconButton
-          sx={{ position: 'absolute', right: 3, top: 3 }}
-          onClick={(event) => {
-            setMenuAnchor(event.currentTarget);
-          }}
-        >
-          <MoreHorizIcon />
-        </IconButton>
+    <Paper ref={scrollRef} sx={{ position: 'relative', p: 3 }}>
+      {!client.isDone && (
+        <>
+          <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
+            {Object.entries(productOptionMenus).map(([option, menu]) => (
+              <OptionMenu key={option} menu={menu} option={option} />
+            ))}
+          </Menu>
+          <IconButton
+            sx={{ position: 'absolute', right: 3, top: 3 }}
+            onClick={(event) => {
+              setMenuAnchor(event.currentTarget);
+            }}
+          >
+            <MoreHorizIcon />
+          </IconButton>
+        </>
       )}
+
       <Box
         onClick={(event) => onClickRow(event, client)}
         sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
@@ -119,9 +130,9 @@ const OrderCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow }) 
       <LabelText
         label="제품목록"
         text={
-          <Stack direction="row" gap={1} flexWrap="wrap">
+          <Stack sx={{ mt: 1 }} direction="row" gap={1} flexWrap="wrap">
             {client.products.map((item) => {
-              return <Chip key={Math.random()} label={`${item.product.name}(${item.count})`} />;
+              return <Chip key={Math.random()} label={`${item.product.name}(${item.count}EA)`} />;
             })}
           </Stack>
         }

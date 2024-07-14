@@ -1,6 +1,14 @@
-import { FC } from 'react';
+import { FC, useMemo, useState } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
-import { Button, FormGroup, Stack, TextField, Typography } from '@mui/material';
+import {
+  AutocompleteRenderInputParams,
+  Button,
+  FormControl,
+  FormGroup,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
@@ -10,6 +18,11 @@ import { modalSizeProps } from '@/components/commonStyles';
 import { useCreateFactory } from '@/http/graphql/hooks/factory/useCreateFactory';
 import { filterEmptyValues } from '@/utils/common';
 import { client } from '@/http/graphql/client';
+import MultiAutoComplete from '@/components/ui/select/MultiAutoComplete';
+import useTextDebounce from '@/hooks/useTextDebounce';
+import { useProducts } from '@/http/graphql/hooks/product/useProducts';
+import { LIMIT } from '@/constants';
+import useInfinityScroll from '@/hooks/useInfinityScroll';
 
 interface Props {
   open: boolean;
@@ -31,9 +44,48 @@ const CreateFactoryModal: FC<Props> = ({ open, onClose }) => {
       address: '',
       note: '',
       phoneNumber: '',
+      productList: [],
     },
     mode: 'onSubmit',
   });
+
+  const [productKeyword, setProductKeyword] = useState('');
+  const delayedProductKeyword = useTextDebounce(productKeyword);
+
+  const {
+    data: products,
+    networkStatus: productNetwork,
+    fetchMore: productFetchMore,
+  } = useProducts({
+    keyword: delayedProductKeyword,
+    limit: LIMIT,
+    skip: 0,
+  });
+  const productRows = products?.products.data ?? [];
+  const cachedOptions = useMemo(
+    () => productRows.map((row) => row.name) ?? [],
+    [products?.products.data]
+  );
+  const isProductLoading = productNetwork == 1 || productNetwork == 2 || productNetwork == 3;
+  const productCallback: IntersectionObserverCallback = (entries) => {
+    if (entries[0].isIntersecting) {
+      if (isProductLoading) return;
+
+      const totalCount = products?.products.totalCount;
+      if (totalCount != null && totalCount > productRows.length) {
+        productFetchMore({
+          variables: {
+            productsInput: {
+              keyword: delayedProductKeyword,
+              limit: LIMIT,
+              skip: productRows.length,
+            },
+          },
+        });
+      }
+    }
+  };
+  const productScrollRef = useInfinityScroll({ callback: productCallback });
 
   const onSubmit = (values: CreateStorageForm) => {
     const filterEmpty = filterEmptyValues(values) as CreateStorageForm;
@@ -129,6 +181,35 @@ const CreateFactoryModal: FC<Props> = ({ open, onClose }) => {
               />
             )}
           />
+          {/* <Controller
+            control={control}
+            name="productList"
+            render={({ field }) => (
+              <MultiAutoComplete
+                inputValue={productKeyword}
+                onInputChange={(_, newValue) => setProductKeyword(newValue)}
+                loading={isProductLoading}
+                onChange={(value) => field.onChange(value)}
+                value={field.value ?? []}
+                scrollRef={productScrollRef}
+                options={cachedOptions}
+                renderSearchInput={(params: AutocompleteRenderInputParams) => {
+                  return (
+                    <FormControl fullWidth>
+                      <TextField
+                        {...params}
+                        name={field.name}
+                        label="생산 제품목록 선택"
+                        error={!!errors.productList?.message}
+                        helperText={errors.productList?.message ?? ''}
+                        size="small"
+                      />
+                    </FormControl>
+                  );
+                }}
+              />
+            )}
+          /> */}
           <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
             <Button type="button" variant="outlined" onClick={handleClose}>
               취소

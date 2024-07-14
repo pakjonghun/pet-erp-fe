@@ -224,7 +224,7 @@ const EditProductModal: FC<Props> = ({ open, selectedProduct, onClose }) => {
                 options={rows.map((row) => row.name!)}
                 setValue={(value) => field.onChange(value)}
                 value={field.value ?? ''}
-                scrollRef={scrollRef}
+                scrollRef={() => {}}
                 renderSearchInput={(params: AutocompleteRenderInputParams) => {
                   return (
                     <FormControl fullWidth>

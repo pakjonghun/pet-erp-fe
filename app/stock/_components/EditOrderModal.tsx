@@ -4,11 +4,9 @@ import {
   Autocomplete,
   Box,
   Button,
-  FormControlLabel,
   FormGroup,
   FormLabel,
   Stack,
-  Switch,
   TextField,
   Typography,
 } from '@mui/material';
@@ -35,10 +33,11 @@ import { client } from '@/http/graphql/client';
 interface Props {
   selectedOrder: ProductOrder;
   open: boolean;
+  setSelectedOrder: (item: null | ProductOrder) => void;
   onClose: () => void;
 }
 
-const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
+const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose, setSelectedOrder }) => {
   const [updateProductOrder, { loading }] = useUpdateProductOrder();
   const {
     reset,
@@ -92,11 +91,13 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
           ...newValues,
         },
       },
-      onCompleted: () => {
+      onCompleted: (res) => {
         snackMessage({
           message: '발주데이터 편집이 완료되었습니다.',
           severity: 'success',
         });
+
+        setSelectedOrder(res.updateOrder as ProductOrder);
 
         client.refetchQueries({
           updateCache(cache) {
@@ -185,18 +186,6 @@ const EditOrderModal: FC<Props> = ({ open, selectedOrder, onClose }) => {
           gap={3}
         >
           <Typography>발주 데이터를 편집합니다..</Typography>
-          <Controller
-            control={control}
-            name="isDone"
-            render={({ field }) => {
-              return (
-                <FormControlLabel
-                  label={field.value ? '잔금 지불완료' : '잔금 미지불'}
-                  control={<Switch checked={!!field.value} {...field} />}
-                />
-              );
-            }}
-          />
         </Stack>
 
         <FormGroup sx={modalSizeProps}>

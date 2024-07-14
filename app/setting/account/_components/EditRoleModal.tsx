@@ -1,6 +1,15 @@
 'use client';
 
-import { Button, FormControl, SelectChangeEvent, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  FormLabel,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { FC, useState } from 'react';
 import BaseModal from '../../../../components/ui/modal/BaseModal';
 import { UserRole } from '@/http/graphql/codegen/graphql';
@@ -8,7 +17,7 @@ import { snackMessage } from '@/store/snackMessage';
 import CommonLoading from '../../../../components/ui/loading/CommonLoading';
 import { SelectedUser } from '../type';
 import { useUpdateUser } from '@/http/graphql/hooks/users/updateUserProfile';
-import BaseSelect from '@/components/ui/select/BaseSelect';
+import { roleTitleToHangle, roleToHandle } from './CreateAccountModal';
 
 interface Props {
   selectedUser: SelectedUser;
@@ -17,12 +26,23 @@ interface Props {
 }
 
 const EditRoleModal: FC<Props> = ({ selectedUser, open, onClose }) => {
+  const roleList = new Map<string, UserRole[]>();
+
+  Object.values(UserRole).forEach((item) => {
+    const split = item.split('_');
+    const title = split[0];
+    const target = roleList.get(title);
+    const newElement = target ? [...target, item] : [item];
+    roleList.set(title, newElement);
+  });
+
   const [updateUser, { loading }] = useUpdateUser();
 
-  const [role, setRole] = useState<UserRole>(selectedUser.role);
+  const [role, setRole] = useState<UserRole[]>(selectedUser.role);
 
-  const onChangeRole = (event: SelectChangeEvent) => {
-    setRole(event.target.value as UserRole);
+  const onChangeRole = (checked: boolean, newRole: UserRole) => {
+    const newValue = checked ? [...role, newRole] : role.filter((item) => item !== newRole);
+    setRole(newValue);
   };
 
   const handleClose = () => {
@@ -59,18 +79,41 @@ const EditRoleModal: FC<Props> = ({ selectedUser, open, onClose }) => {
       <Typography sx={{ color: (theme) => theme.palette.warning.dark }}>
         해당 계정의 권한을 선택된 권한으로 수정합니다.
       </Typography>
-      <Typography sx={{ color: (theme) => theme.palette.warning.dark }}>
+      <Typography sx={{ mb: 2, color: (theme) => theme.palette.warning.dark }}>
         권한 수정후 다시 로그인 해야 권한이 적용됩니다.
       </Typography>
-      <FormControl sx={{ mt: 3 }} fullWidth>
-        <BaseSelect
-          label="권한"
-          defaultValue={role}
-          value={role}
-          onChangeValue={onChangeRole}
-          optionItems={Object.values(UserRole)}
-        />
-      </FormControl>
+      {Array.from(roleList).map(([title, elements]) => {
+        const hangleTitle = roleTitleToHangle[title];
+        return (
+          <Box sx={{ mb: 1 }} key={title}>
+            <FormGroup>
+              <FormLabel>{hangleTitle}</FormLabel>
+              <Stack direction="row" flexWrap="wrap">
+                {elements.map((elem) => {
+                  const label = roleToHandle[elem];
+                  return (
+                    <FormControlLabel
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: 26,
+                      }}
+                      onChange={(_, checked) => {
+                        onChangeRole(checked, elem);
+                      }}
+                      value={elem}
+                      key={elem}
+                      label={label}
+                      control={<Checkbox defaultChecked={role.includes(elem)} />}
+                    />
+                  );
+                })}
+              </Stack>
+            </FormGroup>
+          </Box>
+        );
+      })}
       <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
         <Button variant="outlined" onClick={handleClose}>
           취소

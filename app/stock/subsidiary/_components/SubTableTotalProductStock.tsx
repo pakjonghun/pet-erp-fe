@@ -1,21 +1,15 @@
 import { FC } from 'react';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import {
-  TableRow,
-  TableCell,
-  Table,
-  TableHead,
-  TableContainer,
-  TableBody,
-  Typography,
-  Stack,
-} from '@mui/material';
-import { SubsidiaryStockColumn } from '@/http/graphql/codegen/graphql';
+import { TableRow, TableCell, TableHead, TableContainer, Typography, Stack } from '@mui/material';
+import { SubsidiaryStockColumn, UserRole } from '@/http/graphql/codegen/graphql';
 import ActionButton from '@/components/ui/button/ActionButton';
 import EmptyRow from '@/components/table/EmptyRow';
 import LabelText from '@/components/ui/typograph/LabelText';
 import { useSubsidiaryStocksState } from '@/http/graphql/hooks/stock/useSubsidiaryStocksState';
+import { CommonHeaderRow, CommonTable, CommonTableBody } from '@/components/commonStyles';
+import LoadingRow from '@/components/table/LoadingRow';
+import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 
 interface Props {
   productStock: SubsidiaryStockColumn;
@@ -23,6 +17,11 @@ interface Props {
 }
 
 const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) => {
+  const { data: userData } = useGetMyInfo();
+  const myRole = userData?.myInfo.role ?? [];
+  const canIn = myRole.includes(UserRole.StockIn);
+  const canOut = myRole.includes(UserRole.StockOut);
+
   const { networkStatus, data } = useSubsidiaryStocksState(productStock.productName);
 
   const rows = data?.subsidiaryStocksState ?? [];
@@ -42,24 +41,28 @@ const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) =
         <LabelText label="부자재이름" text={productStock.productName} />
 
         <Stack direction="row" alignItems="center" gap={2} sx={{ ml: 'auto' }}>
-          <ActionButton
-            size="small"
-            icon={<AddCircleOutlineIcon />}
-            text="입고"
-            onClick={() => onClickOption('add', productStock)}
-          />
-          <ActionButton
-            size="small"
-            icon={<RemoveCircleOutlineIcon />}
-            text="출고"
-            onClick={() => onClickOption('out', productStock)}
-          />
+          {canIn && (
+            <ActionButton
+              size="small"
+              icon={<AddCircleOutlineIcon />}
+              text="입고"
+              onClick={() => onClickOption('add', productStock)}
+            />
+          )}
+          {canOut && (
+            <ActionButton
+              size="small"
+              icon={<RemoveCircleOutlineIcon />}
+              text="출고"
+              onClick={() => onClickOption('out', productStock)}
+            />
+          )}
         </Stack>
       </Stack>
       <Typography variant="caption" sx={{ ml: 2, display: 'inline-block' }}>
         모든 창고의 부자재 현황 입니다.
       </Typography>
-      <Table sx={{ mt: 2 }} size="small">
+      <CommonTable sx={{ mt: 2 }} size="small">
         <TableHead
           sx={{
             '.MuiTableCell-root': {
@@ -67,14 +70,15 @@ const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) =
             },
           }}
         >
-          <TableRow>
+          <CommonHeaderRow>
             <TableCell>위치</TableCell>
             <TableCell>수량</TableCell>
             <TableCell>자산합계</TableCell>
-          </TableRow>
+          </CommonHeaderRow>
         </TableHead>
-        <TableBody>
+        <CommonTableBody>
           <EmptyRow colSpan={5} isEmpty={isEmpty} message="검색된 데이터가 없습니다." />
+          <LoadingRow isLoading={isLoading} colSpan={5} />
           {rows.map((row, index) => {
             return (
               <TableRow key={`${row.__typename}_${index}`}>
@@ -84,8 +88,8 @@ const SubTableTotalProductStock: FC<Props> = ({ productStock, onClickOption }) =
               </TableRow>
             );
           })}
-        </TableBody>
-      </Table>
+        </CommonTableBody>
+      </CommonTable>
     </TableContainer>
   );
 };

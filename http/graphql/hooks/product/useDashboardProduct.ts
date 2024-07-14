@@ -11,6 +11,7 @@ const dashboardProduct = graphql(`
         name
         accProfit
         averagePayCost
+        deliveryCost
       }
       previous {
         accPayCost
@@ -18,6 +19,7 @@ const dashboardProduct = graphql(`
         name
         accProfit
         averagePayCost
+        deliveryCost
       }
     }
   }

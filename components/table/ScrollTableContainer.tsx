@@ -13,6 +13,7 @@ const ScrollTableContainer: FC<Props> = ({ children, sx }) => {
       sx={{
         overflow: 'auto',
         maxHeight: TABLE_MAX_HEIGHT,
+        px: 2,
         ...sx,
       }}
     >

@@ -51,7 +51,7 @@ const StockLayout: FC<Props> = ({ children }) => {
           })}
         </Tabs>
       </SubHeader>
-      <Box sx={{ p: 3 }}>{children}</Box>
+      {children}
     </Box>
   );
 };

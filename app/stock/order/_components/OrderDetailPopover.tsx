@@ -1,13 +1,11 @@
 import { FC } from 'react';
-import { ProductOrder, UserRole } from '@/http/graphql/codegen/graphql';
+import { ProductOrder } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
 import ModalTitle from '@/components/ui/typograph/ModalTitle';
 import { Stack, Button, Chip } from '@mui/material';
 import BasePopover from '@/components/ui/modal/BasePopover';
 import { EMPTY } from '@/constants';
 import dayjs from 'dayjs';
-import { authState } from '@/store/isLogin';
-import { useReactiveVar } from '@apollo/client';
 
 interface Props {
   open: boolean;
@@ -28,8 +26,6 @@ const OrderDetailPopover: FC<Props> = ({
   onClickDelete,
   onClickEdit,
 }) => {
-  const { role } = useReactiveVar(authState);
-  const cannotModify = role === UserRole.Staff;
   const allHasNoLeadTime = selectedOrder.products.every((item) => item.product.leadTime == null);
   const biggestLeadTime = allHasNoLeadTime
     ? -1
@@ -43,6 +39,7 @@ const OrderDetailPopover: FC<Props> = ({
     <BasePopover onClose={onClose} position={position} open={open} anchorEl={anchorEl}>
       <ModalTitle text="발주 세부내용" />
       <Stack gap={1}>
+        <LabelText label="발주완료여부" text={selectedOrder.isDone ? '완료' : '발주중'} />
         <LabelText
           label="발주 날짜"
           text={
@@ -52,11 +49,10 @@ const OrderDetailPopover: FC<Props> = ({
         <LabelText label="공장" text={selectedOrder?.factory?.name ?? ''} />
         <LabelText label="공장 연락처" text={selectedOrder?.factory?.phoneNumber ?? '' ?? EMPTY} />
         <LabelText label="공장 주소" text={selectedOrder?.factory?.address ?? EMPTY} />
-
         <LabelText label="계약금" text={selectedOrder.payCost} />
         <LabelText label="잔금" text={selectedOrder.notPayCost} />
         <LabelText label="전체금액" text={selectedOrder.totalPayCost} />
-        <LabelText label="잔금 지불여부" text={selectedOrder.isDone ? '지불완료' : '미지불'} />
+
         <LabelText
           label="생산완료 예정일"
           text={
@@ -80,16 +76,14 @@ const OrderDetailPopover: FC<Props> = ({
           }
         />
       </Stack>
-      {!cannotModify && (
-        <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
-          <Button color="error" variant="outlined" onClick={onClickDelete}>
-            삭제
-          </Button>
-          <Button variant="contained" onClick={onClickEdit}>
-            편집
-          </Button>
-        </Stack>
-      )}
+      <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
+        <Button color="error" variant="outlined" onClick={onClickDelete}>
+          삭제
+        </Button>
+        <Button variant="contained" onClick={onClickEdit}>
+          편집
+        </Button>
+      </Stack>
     </BasePopover>
   );
 };

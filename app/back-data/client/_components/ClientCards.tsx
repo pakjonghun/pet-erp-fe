@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Client } from '@/http/graphql/codegen/graphql';
+import { OutClient } from '@/http/graphql/codegen/graphql';
 import { TABLE_MAX_HEIGHT } from '@/constants';
 import { Grid, SxProps } from '@mui/material';
 import RemoveClientModal from './RemoveClientModal';
@@ -11,17 +11,17 @@ import LoadingCard from '../../../../components/ui/loading/LoadingCard';
 import EditPClientModal from './EditPClientModal';
 import { CommonListProps } from '@/types';
 
-interface Props extends CommonListProps<Client> {
+interface Props extends CommonListProps<OutClient> {
   sx?: SxProps;
 }
 
 const ClientCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  const [selectedClient, setSelectedClient] = useState<null | Client>(null);
+  const [selectedClient, setSelectedClient] = useState<null | OutClient>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
 
-  const handleClickOption = (option: SelectOption | null, client: Client | null) => {
+  const handleClickOption = (option: SelectOption | null, client: OutClient | null) => {
     setSelectedClient(client);
     setOptionType(option);
   };
@@ -63,6 +63,7 @@ const ClientCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx }) => 
       )}
       {selectedClient && (
         <EditPClientModal
+          setSelectedClient={setSelectedClient}
           open={optionType === 'edit'}
           onClose={() => handleClickOption(null, null)}
           selectedClient={selectedClient}
@@ -81,12 +82,12 @@ const ClientCards: FC<Props> = ({ isLoading, isEmpty, data, scrollRef, sx }) => 
       )}
 
       {data.map((item, index) => {
-        const client = item as unknown as Client;
+        const client = item as unknown as OutClient;
         const isLast = index === data.length - 1;
         return (
           <Grid key={client._id} item xs={12} lg={6}>
             <ClientCard
-              onClickRow={(event, client: Client) => {
+              onClickRow={(event, client: OutClient) => {
                 setPopoverPosition({ left: event.clientX, top: event.clientY });
                 setPopoverAnchor(event.currentTarget);
                 setSelectedClient(client);

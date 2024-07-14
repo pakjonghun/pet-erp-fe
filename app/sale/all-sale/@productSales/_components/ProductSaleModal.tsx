@@ -3,7 +3,7 @@
 import { FC } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import BaseModal from '../../../../../components/ui/modal/BaseModal';
-import { ProductSaleData } from '@/http/graphql/codegen/graphql';
+import { ProductSaleMenu } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';
 import { useProductSaleChart } from '@/http/graphql/hooks/product/useProductSaleChart';
 import { LineChart } from '@mui/x-charts/LineChart';
@@ -13,13 +13,13 @@ import { getKCWFormat, getNumberWithComma } from '@/utils/common';
 import { EMPTY } from '@/constants';
 
 interface Props {
-  selectedProductSale: ProductSaleData;
+  selectedProductSale: ProductSaleMenu;
   open: boolean;
   onClose: () => void;
 }
 
 const ProductSaleModal: FC<Props> = ({
-  selectedProductSale: { clients, name, leadTime, wonPrice, code, sales, stock, recentCreateDate },
+  selectedProductSale: { clients, name, leadTime, wonPrice, code, stock, recentCreateDate },
   open,
   onClose,
 }) => {
@@ -28,11 +28,6 @@ const ProductSaleModal: FC<Props> = ({
   const accProfits = data?.productSale?.map((item) => item.accProfit) ?? [];
   const accPayCosts = data?.productSale?.map((item) => item.accPayCost) ?? [];
   const clonedClients = clients.map((client) => Object.assign({}, client));
-  clonedClients.sort((a, b) => {
-    if (a?.accCount == null || b?.accCount == null) return 0;
-    if (a.accCount > b.accCount) return -1;
-    else return 1;
-  });
 
   return (
     <BaseModal open={open} onClose={onClose}>
@@ -50,19 +45,24 @@ const ProductSaleModal: FC<Props> = ({
           text={recentCreateDate == null ? '알수없음' : recentCreateDate}
         />
       </Stack>
-      <LabelText label="거래처별 판매수량" text={''} />
+
+      <LabelText
+        label="거래처별 판매수량"
+        text={clonedClients.length > 0 ? '' : '판매 기록 없음'}
+        sx={{ color: 'gray' }}
+      />
       <Stack direction="row" flexWrap="wrap" rowGap={1} columnGap={2} mt={1}>
         {(clonedClients ?? []).map((client) => {
           return (
             <LabelText
-              key={client?._id?.mallId ?? ''}
-              label={client?._id?.mallId ?? ''}
+              key={client?.name ?? ''}
+              label={client?.name ?? ''}
               text={getNumberWithComma(client.accCount ?? 0)}
             />
           );
         })}
       </Stack>
-      <Box sx={{ bgcolor: 'grey.200', width: '100%', height: 320, color: 'white', mt: 2, pt: 2 }}>
+      {/* <Box sx={{ bgcolor: 'grey.200', width: '100%', height: 320, color: 'white', mt: 2, pt: 2 }}>
         {!!data ? (
           <LineChart
             xAxis={[
@@ -95,7 +95,7 @@ const ProductSaleModal: FC<Props> = ({
         ) : (
           <CommonLoading />
         )}
-      </Box>
+      </Box> */}
     </BaseModal>
   );
 };

@@ -4,7 +4,7 @@ import { graphql } from '../../codegen';
 const updateClient = graphql(`
   mutation updateClient($updateClientInput: UpdateClientInput!) {
     updateClient(updateClientInput: $updateClientInput) {
-      ...ClientFragment
+      ...OutClientFragment
     }
   }
 `);
