@@ -7,13 +7,7 @@ const options = graphql(`
     options(optionsInput: $optionsInput) {
       totalCount
       data {
-        id
-        name
-        count
-        productCodeList {
-          code
-          name
-        }
+        ...OptionFragment
       }
     }
   }

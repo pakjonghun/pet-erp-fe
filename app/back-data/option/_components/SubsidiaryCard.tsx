@@ -63,20 +63,16 @@ const SubsidiaryCard: FC<Props> = ({ option, scrollRef, onClickOption, onClickRo
             <LabelText label="이름" text={option.name} />
           </Box>
         </Stack>
-
-        <Stack direction="row" justifyContent="space-between" gap={2}>
-          <Box sx={{ flex: 1 }}>
-            <LabelText label="제품개수" text={option.count} />
-          </Box>
-        </Stack>
-
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <LabelText
             label="사용되는 제품 리스트"
             text={
               <Stack direction="row" gap={1} flexWrap="wrap">
-                {(option.productCodeList ?? []).map((product) => (
-                  <Chip key={product.code} label={product.name} />
+                {(option.productOptionList ?? []).map((option) => (
+                  <Chip
+                    key={option.productCode.code}
+                    label={`${option.productCode.name}(${option.productCode.code})`}
+                  />
                 ))}
               </Stack>
             }

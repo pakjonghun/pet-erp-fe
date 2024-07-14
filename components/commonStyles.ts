@@ -1,12 +1,4 @@
-import {
-  SxProps,
-  Tab,
-  Table,
-  TableBody,
-  TableRow,
-  styled,
-} from '@mui/material';
-import TablePage from './table/TablePage';
+import { SxProps, Tab, Table, TableBody, TableRow, styled } from '@mui/material';
 
 export const modalSizeProps: SxProps = {
   minWidth: {
@@ -16,18 +8,16 @@ export const modalSizeProps: SxProps = {
   gap: 2,
 };
 
-export const NormalTab = styled(Tab)<{ fontSize: number }>(
-  ({ theme, fontSize }) => {
-    return {
-      transition: 'all .3s',
-      fontSize,
-      '&:hover': theme.palette.action.selected,
-      '&.Mui-selected': {
-        fontWeight: 800,
-      },
-    };
-  }
-);
+export const NormalTab = styled(Tab)<{ fontSize: number }>(({ theme, fontSize }) => {
+  return {
+    transition: 'all .3s',
+    fontSize,
+    '&:hover': theme.palette.action.selected,
+    '&.Mui-selected': {
+      fontWeight: 800,
+    },
+  };
+});
 
 export const CommonTable = styled(Table)({
   '& th, tr, td': {

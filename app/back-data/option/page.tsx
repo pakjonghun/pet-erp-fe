@@ -1,6 +1,5 @@
 'use client';
 
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import HeadCell from '@/components/table/HeadCell';
 import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 import TablePage from '@/components/table/TablePage';
@@ -19,21 +18,15 @@ import {
   Typography,
 } from '@mui/material';
 import { PlusOneOutlined, Search } from '@mui/icons-material';
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import CreateOptionModal from './_components/AddOptionModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
-import { useUploadExcelFile } from '@/http/rest/hooks/file/useUploadExcelFile';
-import { snackMessage } from '@/store/snackMessage';
-import UploadButton from '@/components/ui/button/UploadButtont';
 import { LIMIT } from '@/constants';
 import ActionButton from '@/components/ui/button/ActionButton';
-import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFile';
-import CommonLoading from '@/components/ui/loading/CommonLoading';
-import { SubsidiaryHeaderList } from './constants';
+import { OptionHeaderList } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import OptionCards from './_components/OptionCards';
 import SubsidiaryTableBody from './_components/SubsidiaryTableBody';
-import { client } from '@/http/graphql/client';
 import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 import { SelectOption } from '../types';
 import { OutputOption, UserRole } from '@/http/graphql/codegen/graphql';
@@ -50,12 +43,10 @@ const BackDataPage = () => {
   const canDelete = myRole.includes(UserRole.BackDelete);
   const canEdit = myRole.includes(UserRole.BackEdit);
 
-  const { mutateAsync: uploadOption, isPending } = useUploadExcelFile();
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
-  const [fileKey, setFileKey] = useState(new Date());
 
-  const { data, networkStatus, fetchMore, refetch } = useOptions({
+  const { data, networkStatus, fetchMore } = useOptions({
     keyword: delayKeyword,
     skip: 0,
     limit: LIMIT,
@@ -84,61 +75,6 @@ const BackDataPage = () => {
   const tableScrollRef = useInfinityScroll({ callback });
   const cardScrollRef = useInfinityScroll({ callback });
 
-  const handleUploadExcelFile = async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const formBody = new FormData();
-    formBody.append('file', file);
-    await uploadOption(
-      { service: 'option', formBody },
-      {
-        onSuccess: () => {
-          snackMessage({
-            message: '옵션 업로드가 완료되었습니다.',
-            severity: 'success',
-          });
-        },
-        onError: (error) => {
-          const message = error.response?.data.message;
-          snackMessage({
-            message: message ?? '옵션 업로드가 실패하였습니다.',
-            severity: 'error',
-          });
-        },
-        onSettled: () => {
-          setFileKey(new Date());
-        },
-      }
-    );
-
-    client.refetchQueries({
-      updateCache(cache) {
-        cache.evict({ fieldName: 'options' });
-      },
-    });
-  };
-
-  const { mutate: download, isPending: isDownloading } = useDownloadExcelFile();
-
-  const handleDownload = () => {
-    download('option', {
-      onSuccess: () => {
-        snackMessage({
-          message: '옵션 다운로드가 완료되었습니다.',
-          severity: 'success',
-        });
-      },
-      onError: (err) => {
-        const message = err.message;
-        snackMessage({
-          message: message ?? '옵션 다운로드가 실패하였습니다.',
-          severity: 'error',
-        });
-      },
-    });
-  };
-
   const [openCreateOption, setOpenCreateOption] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState<null | OutputOption>(null);
@@ -155,10 +91,14 @@ const BackDataPage = () => {
     return [
       option.id,
       option.name,
-      option.count,
-      <Stack key={Math.random()} direction="column" gap={1}>
-        {(option.productCodeList ?? []).map((product) => {
-          return <Chip key={`${product.code}_${product.name}`} label={product.name} />;
+      <Stack key={Math.random()} direction="row" flexWrap="wrap" gap={1}>
+        {(option.productOptionList ?? []).map((option) => {
+          return (
+            <Chip
+              key={`${option.productCode.name}_${option.productCode.code}`}
+              label={`${option.productCode.name}(${option.count}EA)`}
+            />
+          );
         })}
       </Stack>,
     ];
@@ -175,18 +115,6 @@ const BackDataPage = () => {
         <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
           <TableTitle title="옵션 백데이터" />
           <Stack direction="row" alignItems="center" gap={2}>
-            <UploadButton
-              fileKey={fileKey}
-              loading={isPending}
-              onChange={handleUploadExcelFile}
-              text="옵션 업로드"
-            />
-            <ActionButton
-              icon={isDownloading ? <CommonLoading /> : <FileDownloadIcon />}
-              text="옵션 다운로드"
-              onClick={handleDownload}
-            />
-
             <ActionButton
               icon={<PlusOneOutlined />}
               text="옵션 입력"
@@ -238,7 +166,7 @@ const BackDataPage = () => {
           <CommonTable stickyHeader>
             <TableHead>
               <CommonHeaderRow>
-                {SubsidiaryHeaderList.map((item, index) => (
+                {OptionHeaderList.map((item, index) => (
                   <HeadCell key={`${index}_${item}`} text={item} />
                 ))}
               </CommonHeaderRow>
@@ -276,7 +204,7 @@ const BackDataPage = () => {
           <CommonTable stickyHeader>
             <TableHead>
               <CommonHeaderRow>
-                {SubsidiaryHeaderList.map((item, index) => (
+                {OptionHeaderList.map((item, index) => (
                   <HeadCell key={`${index}_${item}`} text={item} />
                 ))}
               </CommonHeaderRow>

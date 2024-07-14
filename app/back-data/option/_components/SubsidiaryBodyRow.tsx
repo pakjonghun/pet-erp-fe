@@ -47,10 +47,14 @@ const SubsidiaryBodyRow: FC<Props> = ({
     return [
       subsidiary.id,
       subsidiary.name,
-      subsidiary.count,
-      <Stack key={Math.random()} direction="column" gap={1}>
-        {(subsidiary.productCodeList ?? []).map((subsidiary) => {
-          return <Chip key={subsidiary.code} label={subsidiary.name} />;
+      <Stack key={Math.random()} direction="row" flexWrap="wrap" gap={1}>
+        {(subsidiary.productOptionList ?? []).map((subsidiary) => {
+          return (
+            <Chip
+              key={subsidiary.productCode.name}
+              label={`(${subsidiary.productCode.name}(${subsidiary.count})EA`}
+            />
+          );
         })}
       </Stack>,
     ];

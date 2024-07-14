@@ -1,9 +1,7 @@
-import { FC, useMemo, useState } from 'react';
+import PlusOneIcon from '@mui/icons-material/PlusOne';
+import { FC } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
-  Autocomplete,
-  AutocompleteRenderInputParams,
-  Box,
   Button,
   FormControl,
   FormGroup,
@@ -12,19 +10,18 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
-import useTextDebounce from '@/hooks/useTextDebounce';
-import { LIMIT, PRODUCT_PREFIX } from '@/constants';
-import useInfinityScroll from '@/hooks/useInfinityScroll';
+import { PRODUCT_PREFIX } from '@/constants';
 import { modalSizeProps } from '@/components/commonStyles';
-import NumberInput from '@/components/ui/input/NumberInput';
 import { CreateOptionForm, createOptionSchema } from '../_validations/createSubsidiaryValidation';
-import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 import { client } from '@/http/graphql/client';
 import { useCreateOption } from '@/http/graphql/hooks/option/useCreateOption';
+import { initProductOption } from '../constants';
+import ProductOption from './ProductOption';
+import { OptionProductInput } from '@/http/graphql/codegen/graphql';
 
 interface Props {
   open: boolean;
@@ -37,63 +34,33 @@ const AddOptionModal: FC<Props> = ({ open, onClose }) => {
   const {
     reset,
     control,
-    getValues,
     handleSubmit,
+    clearErrors,
+    watch,
     formState: { errors },
   } = useForm<CreateOptionForm>({
     resolver: zodResolver(createOptionSchema),
     defaultValues: {
-      count: 1,
       id: '',
       name: '',
-      productCodeList: [],
+      productOptionList: [],
     },
   });
 
-  const [productKeyword, setProductKeyword] = useState('');
-  const delayedProductKeyword = useTextDebounce(productKeyword);
+  const productOptionListErrorMessage = errors.productOptionList?.message;
 
-  const {
-    data: products,
-    networkStatus: productNetwork,
-    fetchMore: productFetchMore,
-  } = useProducts({
-    keyword: delayedProductKeyword,
-    limit: LIMIT,
-    skip: 0,
-  });
-  const productRows = products?.products.data ?? [];
-  const cachedProductList = useMemo(
-    () => productRows.map((row: any) => ({ code: row.code, name: row.name })) ?? [],
-    [products?.products.data]
-  );
-  const isProductLoading = productNetwork == 1 || productNetwork == 2 || productNetwork == 3;
-  const productCallback: IntersectionObserverCallback = (entries) => {
-    if (entries[0].isIntersecting) {
-      if (isProductLoading) return;
-
-      const totalCount = products?.products.totalCount;
-      if (totalCount != null && totalCount > productRows.length) {
-        productFetchMore({
-          variables: {
-            productsInput: {
-              keyword: delayedProductKeyword,
-              limit: LIMIT,
-              skip: productRows.length,
-            },
-          },
-        });
-      }
-    }
-  };
-  const productScrollRef = useInfinityScroll({ callback: productCallback });
-
-  const onSubmit = ({ productCodeList, ...rest }: CreateOptionForm) => {
+  const onSubmit = ({ productOptionList, ...rest }: CreateOptionForm) => {
     createOption({
       variables: {
         createOptionInput: {
           ...rest,
-          productCodeList: productCodeList.map((item) => item.code),
+          productOptionList: productOptionList.map((o) => {
+            const result: OptionProductInput = {
+              productCode: o.productCode.code,
+              count: o.count,
+            };
+            return result;
+          }),
         },
       },
       onCompleted: () => {
@@ -117,6 +84,18 @@ const AddOptionModal: FC<Props> = ({ open, onClose }) => {
     reset();
     onClose();
   };
+
+  const { append, remove, fields } = useFieldArray({
+    control,
+    name: 'productOptionList',
+  });
+
+  const handleAppendOption = () => {
+    clearErrors('productOptionList');
+    append(initProductOption);
+  };
+
+  const selectedOptions = watch('productOptionList');
 
   return (
     <BaseModal open={open} onClose={handleClose}>
@@ -163,64 +142,28 @@ const AddOptionModal: FC<Props> = ({ open, onClose }) => {
               </FormControl>
             )}
           />
-          <Controller
-            control={control}
-            name="count"
-            render={({ field }) => (
-              <NumberInput
-                field={field}
-                label="제품 개수"
-                error={!!errors.count?.message}
-                helperText={errors.count?.message ?? ''}
+          <Button onClick={handleAppendOption} variant="outlined" endIcon={<PlusOneIcon />}>
+            옵션을 적용할 제품 추가
+          </Button>
+          {!!productOptionListErrorMessage ? (
+            <Typography variant="body1" color="error">
+              {productOptionListErrorMessage}
+            </Typography>
+          ) : (
+            <></>
+          )}
+          {fields.map((field, index) => {
+            return (
+              <ProductOption
+                selectedOptions={selectedOptions}
+                key={`${index}_${Math.random()}`}
+                control={control}
+                index={index}
+                error={errors}
+                remove={remove}
               />
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="productCodeList"
-            render={({ field }) => (
-              <Autocomplete
-                fullWidth
-                disableCloseOnSelect
-                getOptionLabel={(item) => `${item.name}(${item.code})`}
-                isOptionEqualToValue={(item1, item2) => item1.code === item2.code}
-                defaultValue={field.value}
-                value={field.value}
-                inputValue={productKeyword}
-                onInputChange={(_, value) => setProductKeyword(value)}
-                noOptionsText="검색 결과가 없습니다."
-                loadingText="로딩중입니다."
-                loading={loading}
-                onChange={(_, value) => field.onChange(value)}
-                multiple
-                options={cachedProductList}
-                renderInput={(params: AutocompleteRenderInputParams) => {
-                  return (
-                    <FormControl fullWidth>
-                      <TextField
-                        {...params}
-                        name={field.name}
-                        label="옵션을 적용할수 있는 제품 선택"
-                        error={!!errors.productCodeList?.message}
-                        helperText={errors.productCodeList?.message ?? ''}
-                        size="small"
-                      />
-                    </FormControl>
-                  );
-                }}
-                renderOption={(props, item, state) => {
-                  const { key, ...rest } = props as any;
-                  const isLast = state.index === cachedProductList.length - 1;
-                  return (
-                    <Box component="li" ref={isLast ? productScrollRef : null} key={item} {...rest}>
-                      {`${item.name}(${item.code})`}
-                    </Box>
-                  );
-                }}
-              />
-            )}
-          />
+            );
+          })}
         </FormGroup>
         <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
           <Button type="button" variant="outlined" onClick={handleClose}>

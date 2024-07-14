@@ -21,10 +21,12 @@ export const client = new ApolloClient({
       fragment OptionFragment on OutputOption {
         id
         name
-        count
-        productCodeList {
-          code
-          name
+        productOptionList {
+          productCode {
+            code
+            name
+          }
+          count
         }
       }
 

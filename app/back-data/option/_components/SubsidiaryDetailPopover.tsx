@@ -30,13 +30,17 @@ const SubsidiaryDetailPopover: FC<Props> = ({
       <Stack sx={{ maxWidth: 200 }}>
         <LabelText label="아이디" text={selectedOption.id} />
         <LabelText label="이름" text={selectedOption.name} />
-        <LabelText label="제품개수" text={selectedOption.count} />
         <LabelText
           label="사용되는 제품목록"
           text={
             <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1 }}>
-              {(selectedOption.productCodeList ?? [])?.map((product) => {
-                return <Chip key={product.code} label={product.name} />;
+              {(selectedOption.productOptionList ?? [])?.map((option) => {
+                return (
+                  <Chip
+                    key={`${option.productCode.name}_${Math.random()}`}
+                    label={`${option.productCode.name}(${option.count})`}
+                  />
+                );
               })}
             </Stack>
           }
