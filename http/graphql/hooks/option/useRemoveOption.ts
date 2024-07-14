@@ -5,6 +5,7 @@ const removeOption = graphql(`
   mutation removeOption($id: String!) {
     removeOption(id: $id) {
       _id
+      id
       name
     }
   }
@@ -14,7 +15,7 @@ export const useRemoveOption = () => {
   return useMutation(removeOption, {
     notifyOnNetworkStatusChange: true,
     update(cache, { data }) {
-      const id = data?.removeOption._id;
+      const id = data?.removeOption.id;
       const type = 'OutputOption';
       cache.evict({ id: `${type}:${id}` });
       cache.gc();

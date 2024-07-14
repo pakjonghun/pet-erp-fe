@@ -20,29 +20,27 @@ import {
 } from '@mui/material';
 import { PlusOneOutlined, Search } from '@mui/icons-material';
 import { ChangeEvent, useState } from 'react';
-import CreateSubsidiaryModal from './_components/AddSubsidiarytModal';
+import CreateOptionModal from './_components/AddOptionModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { useUploadExcelFile } from '@/http/rest/hooks/file/useUploadExcelFile';
 import { snackMessage } from '@/store/snackMessage';
 import UploadButton from '@/components/ui/button/UploadButtont';
-import { EMPTY, LIMIT } from '@/constants';
+import { LIMIT } from '@/constants';
 import ActionButton from '@/components/ui/button/ActionButton';
 import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFile';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { SubsidiaryHeaderList } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { useSubsidiaries } from '@/http/graphql/hooks/subsidiary/useSubsidiaries';
-import SubsidiaryCards from './_components/SubsidiaryCards';
+import OptionCards from './_components/OptionCards';
 import SubsidiaryTableBody from './_components/SubsidiaryTableBody';
 import { client } from '@/http/graphql/client';
 import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 import { SelectOption } from '../types';
-import { OutputOption, Subsidiary, UserRole } from '@/http/graphql/codegen/graphql';
+import { OutputOption, UserRole } from '@/http/graphql/codegen/graphql';
 import RemoveSubsidiaryModal from './_components/RemoveSubsidiaryModal';
-import EditSubsidiaryModal from './_components/EditSubsidiaryModal';
+import EditSubsidiaryModal from './_components/EditOptionModal';
 import Cell from '@/components/table/Cell';
 import EmptyRow from '@/components/table/EmptyRow';
-import { getKCWFormat } from '@/utils/common';
 import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 import { useOptions } from '@/http/graphql/hooks/option/useOptions';
 
@@ -52,7 +50,7 @@ const BackDataPage = () => {
   const canDelete = myRole.includes(UserRole.BackDelete);
   const canEdit = myRole.includes(UserRole.BackEdit);
 
-  const { mutate: uploadOption, isPending } = useUploadExcelFile();
+  const { mutateAsync: uploadOption, isPending } = useUploadExcelFile();
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
   const [fileKey, setFileKey] = useState(new Date());
@@ -86,13 +84,13 @@ const BackDataPage = () => {
   const tableScrollRef = useInfinityScroll({ callback });
   const cardScrollRef = useInfinityScroll({ callback });
 
-  const handleUploadExcelFile = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleUploadExcelFile = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     const formBody = new FormData();
     formBody.append('file', file);
-    uploadOption(
+    await uploadOption(
       { service: 'option', formBody },
       {
         onSuccess: () => {
@@ -100,14 +98,6 @@ const BackDataPage = () => {
             message: '옵션 업로드가 완료되었습니다.',
             severity: 'success',
           });
-          client.refetchQueries({
-            updateCache(cache) {
-              cache.evict({ fieldName: 'options' });
-              cache.evict({ fieldName: 'products' });
-            },
-          });
-
-          refetch();
         },
         onError: (error) => {
           const message = error.response?.data.message;
@@ -121,6 +111,12 @@ const BackDataPage = () => {
         },
       }
     );
+
+    client.refetchQueries({
+      updateCache(cache) {
+        cache.evict({ fieldName: 'options' });
+      },
+    });
   };
 
   const { mutate: download, isPending: isDownloading } = useDownloadExcelFile();
@@ -174,10 +170,7 @@ const BackDataPage = () => {
     <>
       <TablePage sx={{ flex: 1 }}>
         {openCreateOption && (
-          <CreateSubsidiaryModal
-            open={openCreateOption}
-            onClose={() => setOpenCreateOption(false)}
-          />
+          <CreateOptionModal open={openCreateOption} onClose={() => setOpenCreateOption(false)} />
         )}
         <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
           <TableTitle title="옵션 백데이터" />
@@ -212,8 +205,8 @@ const BackDataPage = () => {
                   </InputAdornment>
                 ),
               }}
-              sx={{ width: 270, my: 2 }}
-              label="검색할 옵션 이름을 입력하세요."
+              sx={{ maxWidth: 340, my: 2 }}
+              label="검색할 옵션 이름이나 아이디를 입력하세요."
               size="small"
             />
           </FormControl>
@@ -221,7 +214,7 @@ const BackDataPage = () => {
         <Typography sx={{ p: 3 }}>
           {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
         </Typography>
-        <SubsidiaryCards
+        <OptionCards
           sx={{
             display: {
               xs: 'block',

@@ -8,6 +8,12 @@ const options = graphql(`
       totalCount
       data {
         id
+        name
+        count
+        productCodeList {
+          code
+          name
+        }
       }
     }
   }

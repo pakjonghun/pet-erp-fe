@@ -1,7 +1,9 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
+  Autocomplete,
   AutocompleteRenderInputParams,
+  Box,
   Button,
   FormControl,
   FormGroup,
@@ -17,18 +19,11 @@ import { snackMessage } from '@/store/snackMessage';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT, PRODUCT_PREFIX } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 import { modalSizeProps } from '@/components/commonStyles';
-import { emptyValueToNull } from '@/utils/common';
 import NumberInput from '@/components/ui/input/NumberInput';
-import {
-  CreateSubsidiaryForm,
-  createSubsidiarySchema,
-} from '../_validations/createSubsidiaryValidation';
-import MultiAutoComplete from '@/components/ui/select/MultiAutoComplete';
+import { CreateOptionForm, createOptionSchema } from '../_validations/createSubsidiaryValidation';
 import { useProducts } from '@/http/graphql/hooks/product/useProducts';
-import { OutputOption, Subsidiary } from '@/http/graphql/codegen/graphql';
-import { client } from '@/http/graphql/client';
+import { OutputOption } from '@/http/graphql/codegen/graphql';
 import { useUpdateOption } from '@/http/graphql/hooks/option/useUpdateOption';
 
 interface Props {
@@ -49,12 +44,10 @@ const AddSubsidiaryModal: FC<Props> = ({
   const {
     reset,
     control,
-    watch,
-    getValues,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateSubsidiaryForm>({
-    resolver: zodResolver(createSubsidiarySchema),
+  } = useForm<CreateOptionForm>({
+    resolver: zodResolver(createOptionSchema),
     defaultValues: {
       id: selectedSubsidiary.id,
       name: selectedSubsidiary.name,
@@ -85,6 +78,10 @@ const AddSubsidiaryModal: FC<Props> = ({
     skip: 0,
   });
   const productRows = products?.products.data ?? [];
+  const cachedProductList = useMemo(
+    () => productRows.map((row) => ({ code: row.code, name: row.name })) ?? [],
+    [products?.products.data]
+  );
   const isProductLoading = productNetwork == 1 || productNetwork == 2 || productNetwork == 3;
   const productCallback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -106,39 +103,32 @@ const AddSubsidiaryModal: FC<Props> = ({
   };
   const productScrollRef = useInfinityScroll({ callback: productCallback });
 
-  const onSubmit = (values: CreateSubsidiaryForm) => {
-    const productList = getValues('productList');
-    const { code, ...newValues } = emptyValueToNull({
-      ...values,
-      productList,
-    }) as CreateSubsidiaryForm;
-
+  const onSubmit = ({ productCodeList, ...rest }: CreateOptionForm) => {
     updateSubsidiary({
       variables: {
-        updateSubsidiaryInput: {
-          ...newValues,
-          _id: selectedSubsidiary._id,
+        updateOptionInput: {
+          ...rest,
+          id: selectedSubsidiary.id,
+          productCodeList: productCodeList.map((item) => item.code),
         },
       },
       onCompleted: (res) => {
         snackMessage({
-          message: '부자재편집이 완료되었습니다.',
+          message: '옵션 편집이 완료되었습니다.',
           severity: 'success',
         });
-        setSelectedSubsidiary(res.updateSubsidiary as Subsidiary);
-        client.refetchQueries({
-          updateCache(cache) {
-            cache.evict({ fieldName: 'subsidiaryStocks' });
-            cache.evict({ fieldName: 'subsidiaryStocksState' });
-            cache.evict({ fieldName: 'subsidiaryCountStocks' });
-          },
-        });
+        setSelectedSubsidiary(res.updateOption as OutputOption);
+        // client.refetchQueries({
+        //   updateCache(cache) {
+        //     cache.evict({ fieldName: 'options' });
+        //   },
+        // });
         handleClose();
       },
       onError: (err) => {
         const message = err.message;
         snackMessage({
-          message: message ?? '부자재편집이 실패했습니다.',
+          message: message ?? '옵션 편집이 실패했습니다.',
           severity: 'error',
         });
       },
@@ -153,14 +143,14 @@ const AddSubsidiaryModal: FC<Props> = ({
   return (
     <BaseModal open={open} onClose={handleClose}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        부자재 업데이트
+        옵션 업데이트
       </Typography>
-      <Typography sx={{ mb: 3 }}>새로운 부자재을 업데이트합니다.</Typography>
+      <Typography sx={{ mb: 3 }}>새로운 옵션 을 업데이트합니다.</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup sx={modalSizeProps}>
           <Controller
             control={control}
-            name="code"
+            name="id"
             render={({ field }) => (
               <FormControl required>
                 <TextField
@@ -168,9 +158,9 @@ const AddSubsidiaryModal: FC<Props> = ({
                   disabled
                   size="small"
                   required
-                  label="부자재코드(편집 불가)"
-                  error={!!errors.code?.message}
-                  helperText={errors.code?.message ?? ''}
+                  label="옵션 아이디(편집 불가)"
+                  error={!!errors.id?.message}
+                  helperText={errors.id?.message ?? ''}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">{`${PRODUCT_PREFIX} - `}</InputAdornment>
@@ -189,7 +179,7 @@ const AddSubsidiaryModal: FC<Props> = ({
                   size="small"
                   {...field}
                   required
-                  label="부자재이름"
+                  label="옵션 이름"
                   error={!!errors.name?.message}
                   helperText={errors.name?.message ?? ''}
                 />
@@ -198,80 +188,57 @@ const AddSubsidiaryModal: FC<Props> = ({
           />
           <Controller
             control={control}
-            name="wonPrice"
+            name="count"
             render={({ field }) => (
               <NumberInput
                 field={field}
-                label="원가"
-                error={!!errors.wonPrice?.message}
-                helperText={errors.wonPrice?.message ?? ''}
+                label="제품 개수"
+                error={!!errors.count?.message}
+                helperText={errors.count?.message ?? ''}
               />
             )}
           />
+
           <Controller
             control={control}
-            name="leadTime"
+            name="productCodeList"
             render={({ field }) => (
-              <NumberInput
-                field={field}
-                label="리드타임(일)"
-                error={!!errors.leadTime?.message}
-                helperText={errors.leadTime?.message ?? ''}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="category"
-            render={({ field }) => (
-              <SearchAutoComplete
-                inputValue={field.value ?? ''}
-                onInputChange={(event) => field.onChange(event)}
-                loading={isCategoryLoading}
-                setValue={(value) => field.onChange(value)}
-                value={field.value ?? ''}
-                scrollRef={categoryScrollRef}
-                options={categoryRows.map((item) => item?.name ?? '') ?? []}
-                renderSearchInput={(params: AutocompleteRenderInputParams) => {
-                  return (
-                    <FormControl fullWidth>
-                      <TextField
-                        {...params}
-                        label="분류"
-                        error={!!errors.category?.message}
-                        helperText={errors.category?.message ?? ''}
-                        size="small"
-                      />
-                    </FormControl>
-                  );
-                }}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="productList"
-            render={({ field }) => (
-              <MultiAutoComplete
+              <Autocomplete
+                fullWidth
+                disableCloseOnSelect
+                getOptionLabel={(item) => `${item.name}(${item.code})`}
+                isOptionEqualToValue={(item1, item2) => item1.code === item2.code}
+                defaultValue={field.value}
+                value={field.value}
                 inputValue={productKeyword}
-                onInputChange={(_, newValue) => setProductKeyword(newValue)}
-                loading={isProductLoading}
-                onChange={(value) => field.onChange(value)}
-                value={field.value ?? []}
-                scrollRef={productScrollRef}
-                options={productRows.map((row) => row.name) ?? []}
-                renderSearchInput={(params: AutocompleteRenderInputParams) => {
+                onInputChange={(_, value) => setProductKeyword(value)}
+                noOptionsText="검색 결과가 없습니다."
+                loadingText="로딩중입니다."
+                loading={loading}
+                onChange={(_, value) => field.onChange(value)}
+                multiple
+                options={cachedProductList}
+                renderInput={(params: AutocompleteRenderInputParams) => {
                   return (
                     <FormControl fullWidth>
                       <TextField
                         {...params}
                         name={field.name}
-                        label="부자재를 사용하는 제품 선택"
-                        error={!!errors.productList?.message}
-                        helperText={errors.productList?.message ?? ''}
+                        label="옵션을 적용할수 있는 제품 선택"
+                        error={!!errors.productCodeList?.message}
+                        helperText={errors.productCodeList?.message ?? ''}
                         size="small"
                       />
                     </FormControl>
+                  );
+                }}
+                renderOption={(props, item, state) => {
+                  const { key, ...rest } = props as any;
+                  const isLast = state.index === cachedProductList.length - 1;
+                  return (
+                    <Box component="li" ref={isLast ? productScrollRef : null} key={item} {...rest}>
+                      {`${item.name}(${item.code})`}
+                    </Box>
                   );
                 }}
               />

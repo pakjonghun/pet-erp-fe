@@ -29,8 +29,8 @@ const documents = {
     "\n  mutation removeFactory($_id: String!) {\n    removeFactory(_id: $_id) {\n      ...FactoryFragment\n    }\n  }\n": types.RemoveFactoryDocument,
     "\n  query logs($findLogsQuery: FindLogsDTO!) {\n    logs(findLogsQuery: $findLogsQuery) {\n      totalCount\n      data {\n        ...LogFragment\n      }\n    }\n  }\n": types.LogsDocument,
     "\n  mutation createOption($createOptionInput: CreateOptionInput!) {\n    createOption(createOptionInput: $createOptionInput) {\n      ...OptionFragment\n    }\n  }\n": types.CreateOptionDocument,
-    "\n  query options($optionsInput: OptionsInput!) {\n    options(optionsInput: $optionsInput) {\n      totalCount\n      data {\n        id\n      }\n    }\n  }\n": types.OptionsDocument,
-    "\n  mutation removeOption($id: String!) {\n    removeOption(id: $id) {\n      _id\n      name\n    }\n  }\n": types.RemoveOptionDocument,
+    "\n  query options($optionsInput: OptionsInput!) {\n    options(optionsInput: $optionsInput) {\n      totalCount\n      data {\n        id\n        name\n        count\n        productCodeList {\n          code\n          name\n        }\n      }\n    }\n  }\n": types.OptionsDocument,
+    "\n  mutation removeOption($id: String!) {\n    removeOption(id: $id) {\n      _id\n      id\n      name\n    }\n  }\n": types.RemoveOptionDocument,
     "\n  mutation updateOption($updateOptionInput: UpdateOptionInput!) {\n    updateOption(updateOptionInput: $updateOptionInput) {\n      ...OptionFragment\n    }\n  }\n": types.UpdateOptionDocument,
     "\n  mutation createCategory($createCategoryInput: CreateCategoryInput!) {\n    createCategory(createCategoryInput: $createCategoryInput) {\n      _id\n      name\n    }\n  }\n": types.CreateCategoryDocument,
     "\n  mutation updateCategory($updateCategoryInput: UpdateCategoryInput!) {\n    updateCategory(updateCategoryInput: $updateCategoryInput) {\n      _id\n      name\n    }\n  }\n": types.UpdateCategoryDocument,
@@ -165,11 +165,11 @@ export function graphql(source: "\n  mutation createOption($createOptionInput: C
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query options($optionsInput: OptionsInput!) {\n    options(optionsInput: $optionsInput) {\n      totalCount\n      data {\n        id\n      }\n    }\n  }\n"): (typeof documents)["\n  query options($optionsInput: OptionsInput!) {\n    options(optionsInput: $optionsInput) {\n      totalCount\n      data {\n        id\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query options($optionsInput: OptionsInput!) {\n    options(optionsInput: $optionsInput) {\n      totalCount\n      data {\n        id\n        name\n        count\n        productCodeList {\n          code\n          name\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query options($optionsInput: OptionsInput!) {\n    options(optionsInput: $optionsInput) {\n      totalCount\n      data {\n        id\n        name\n        count\n        productCodeList {\n          code\n          name\n        }\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation removeOption($id: String!) {\n    removeOption(id: $id) {\n      _id\n      name\n    }\n  }\n"): (typeof documents)["\n  mutation removeOption($id: String!) {\n    removeOption(id: $id) {\n      _id\n      name\n    }\n  }\n"];
+export function graphql(source: "\n  mutation removeOption($id: String!) {\n    removeOption(id: $id) {\n      _id\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  mutation removeOption($id: String!) {\n    removeOption(id: $id) {\n      _id\n      id\n      name\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

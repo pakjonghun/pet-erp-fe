@@ -35,7 +35,7 @@ const SubsidiaryTableBody: FC<Props> = ({
     <CommonTableBody>
       <EmptyRow colSpan={SubsidiaryHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
-        const isSelected = item._id === selectedSubsidiary?._id;
+        const isSelected = item.id === selectedSubsidiary?.id;
         const isLast = index === data.length - 1;
         return (
           <SubsidiaryBodyRow
