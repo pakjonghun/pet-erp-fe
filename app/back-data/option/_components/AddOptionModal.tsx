@@ -64,7 +64,7 @@ const AddOptionModal: FC<Props> = ({ open, onClose }) => {
   });
   const productRows = products?.products.data ?? [];
   const cachedProductList = useMemo(
-    () => productRows.map((row) => ({ code: row.code, name: row.name })) ?? [],
+    () => productRows.map((row: any) => ({ code: row.code, name: row.name })) ?? [],
     [products?.products.data]
   );
   const isProductLoading = productNetwork == 1 || productNetwork == 2 || productNetwork == 3;
