@@ -137,11 +137,6 @@ const AddSubsidiaryModal: FC<Props> = ({
                   label="옵션 아이디(편집 불가)"
                   error={!!errors.id?.message}
                   helperText={errors.id?.message ?? ''}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">{`${PRODUCT_PREFIX} - `}</InputAdornment>
-                    ),
-                  }}
                 />
               </FormControl>
             )}

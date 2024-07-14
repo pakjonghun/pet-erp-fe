@@ -117,11 +117,6 @@ const AddOptionModal: FC<Props> = ({ open, onClose }) => {
                   label="옵션 아이디"
                   error={!!errors.id?.message}
                   helperText={errors.id?.message ?? ''}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">{`${PRODUCT_PREFIX} - `}</InputAdornment>
-                    ),
-                  }}
                 />
               </FormControl>
             )}
