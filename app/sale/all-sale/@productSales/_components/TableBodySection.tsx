@@ -75,12 +75,13 @@ const TableBodySection: FC<Props> = ({
                 row?.prevAccPayCost ?? 0
               )}
             />
-            <Cell sx={{ width: '30%' }}>
-              <Stack direction="row" flexWrap="wrap" gap={1}>
+            <Cell sx={{ width: '50%' }}>
+              <Stack direction="row" flexWrap="wrap" gap={0}>
                 {row.clients.map((client) => {
                   if (!!client.name) {
                     return (
                       <Chip
+                        size="small"
                         key={`${client.name}_${client.__typename}`}
                         label={client.name}
                         variant="outlined"
