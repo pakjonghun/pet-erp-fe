@@ -304,7 +304,7 @@ const ProductPage = () => {
               xs: 'none',
               md: 'block',
             },
-            height: '30vh',
+            height: '40vh',
             px: 2,
           }}
         >
