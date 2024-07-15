@@ -73,7 +73,7 @@ const TopClients = () => {
   }, [data?.saleMenuClients]);
 
   return (
-    <TablePage sx={{ height: '100%' }}>
+    <TablePage sx={{ minHeight: 700 }}>
       {!!selectedClient && (
         <ClientSaleModal
           onClose={() => {
@@ -103,7 +103,6 @@ const TopClients = () => {
             xs: 'none',
             md: 'block',
           },
-          height: 300,
         }}
       >
         <CommonTable stickyHeader>
