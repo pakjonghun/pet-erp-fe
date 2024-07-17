@@ -36,12 +36,13 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
   const [outSale, { loading: outSaleLoading }] = useSaleOut();
   const [delayLoading, setDelayLoading] = useState(false);
   const [delayOutLoading, setDelayOutLoading] = useState(false);
+  const loadingDelay = 700;
 
   useEffect(() => {
     if (!loading) {
       setTimeout(() => {
         setDelayLoading(loading);
-      }, 2000);
+      }, loadingDelay);
     } else {
       setDelayLoading(loading);
     }
@@ -51,7 +52,7 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
     if (!outSaleLoading) {
       setTimeout(() => {
         setDelayOutLoading(outSaleLoading);
-      }, 2000);
+      }, loadingDelay);
     } else {
       setDelayOutLoading(outSaleLoading);
     }
@@ -89,7 +90,7 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
             }`,
             severity: 'success',
           });
-        }, 800);
+        }, loadingDelay);
       },
       onError: (error) => {
         snackMessage({
@@ -128,7 +129,7 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
               (totalErrorMessage ? `고쳐야 할 에러도 발견되었습니다. ${totalErrorMessage}` : ''),
             severity: 'success',
           });
-        }, 2000);
+        }, loadingDelay);
       },
       onError: (error) => {
         snackMessage({
