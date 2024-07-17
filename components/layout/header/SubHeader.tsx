@@ -89,7 +89,7 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
             }`,
             severity: 'success',
           });
-        }, 2000);
+        }, 800);
       },
       onError: (error) => {
         snackMessage({
