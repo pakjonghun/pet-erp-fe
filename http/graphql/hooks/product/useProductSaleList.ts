@@ -16,8 +16,6 @@ const productSales = graphql(`
         accPayCost
         accWonCost
         accCount
-        accProfit
-        profitRate
         stock
         recentCreateDate
         clients {
@@ -27,10 +25,10 @@ const productSales = graphql(`
         prevAccCount
         prevAccPayCost
         prevAccWonCost
-        prevAccProfit
-        prevAccProfitRate
-        prevDeliveryCost
-        deliveryCost
+        prevAccDeliveryCost
+        accDeliveryCost
+        accTotalPayment
+        prevAccTotalPayment
       }
     }
   }

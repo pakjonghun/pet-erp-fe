@@ -1,7 +1,7 @@
 'use client';
 import DashboardCard from '@/app/dashboard/_components/Card';
 import DashboardCardContent from '@/app/dashboard/_components/CardContent';
-import { getProfitRate } from '@/utils/sale';
+import { getProfit, getProfitRate } from '@/utils/sale';
 import { useDashboardProduct } from '@/http/graphql/hooks/product/useDashboardProduct';
 import { saleRange } from '@/store/saleStore';
 import { useReactiveVar } from '@apollo/client';
@@ -18,6 +18,11 @@ const DateSaleInfoPage = () => {
   const month = from.format('MM월');
   const isLoading = networkStatus === 2 || networkStatus === 3 || networkStatus === 1;
 
+  const current = monthData?.dashboardProduct?.current;
+  const currentProfit = current ? getProfit(current) : 0;
+  const prev = monthData?.dashboardProduct?.previous;
+  const prevProfit = prev ? getProfit(prev) : 0;
+
   if (isLoading) {
     return <Skeleton variant="rounded" width="100%" height="100%" sx={{ minHeight: '139px' }} />;
   }
@@ -33,8 +38,8 @@ const DateSaleInfoPage = () => {
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
           <DashboardCardContent
             label={`매출`}
-            current={monthData?.dashboardProduct?.current?.accPayCost ?? 0}
-            previous={monthData?.dashboardProduct?.previous?.accPayCost ?? 0}
+            current={monthData?.dashboardProduct?.current?.accTotalPayment ?? 0}
+            previous={monthData?.dashboardProduct?.previous?.accTotalPayment ?? 0}
           />
         </Grid>
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -47,32 +52,14 @@ const DateSaleInfoPage = () => {
         </Grid>
 
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
-          <DashboardCardContent
-            label={`수익`}
-            current={
-              (monthData?.dashboardProduct?.current?.accProfit ?? 0) -
-              (monthData?.dashboardProduct?.current?.deliveryCost ?? 0)
-            }
-            previous={
-              (monthData?.dashboardProduct?.previous?.accProfit ?? 0) -
-              (monthData?.dashboardProduct?.previous?.deliveryCost ?? 0)
-            }
-          />
+          <DashboardCardContent label={`수익`} current={currentProfit} previous={prevProfit} />
         </Grid>
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
           <DashboardCardContent
             numberType="percent"
             label={`수익율`}
-            current={getProfitRate(
-              (monthData?.dashboardProduct?.current?.accProfit ?? 0) -
-                (monthData?.dashboardProduct?.current?.deliveryCost ?? 0),
-              monthData?.dashboardProduct?.current?.accPayCost ?? 0
-            )}
-            previous={getProfitRate(
-              (monthData?.dashboardProduct?.previous?.accProfit ?? 0) -
-                (monthData?.dashboardProduct?.previous?.deliveryCost ?? 0),
-              monthData?.dashboardProduct?.previous?.accPayCost ?? 0
-            )}
+            current={getProfitRate(currentProfit, current?.accPayCost ?? 0)}
+            previous={getProfitRate(prevProfit, prev?.accPayCost ?? 0)}
           />
         </Grid>
       </Grid>

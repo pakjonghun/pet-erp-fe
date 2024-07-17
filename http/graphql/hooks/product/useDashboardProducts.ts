@@ -10,14 +10,12 @@ const dashboardProducts = graphql(`
         name
         accPayCost
         accCount
-        accProfit
-        averagePayCost
-        averagePayCost
         prevAccPayCost
         prevAccCount
-        prevAccProfit
-        prevAveragePayCost
-        deliveryCost
+        accDeliveryCost
+        accTotalPayment
+        accWonCost
+        prevAccWonCost
       }
       totalCount
     }

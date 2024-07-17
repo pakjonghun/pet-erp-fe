@@ -24,7 +24,7 @@ const ProductSaleTable: FC<Props> = ({
   setSelectedProductSale,
   sx,
 }) => {
-  const { totalCount, totalProfit, totalPayCost } = useReactiveVar(saleTotal);
+  const { totalCount, totalProfit, totalPayCost, totalPayment } = useReactiveVar(saleTotal);
   const profitRate = getProfitRate(totalProfit, totalPayCost);
 
   return (
@@ -47,9 +47,8 @@ const ProductSaleTable: FC<Props> = ({
             />
             <HeadCell
               sx={{ textAlign: 'right', whiteSpace: 'nowrap' }}
-              text={<>매출({getKCWFormat(totalPayCost)})</>}
+              text={<>매출({getKCWFormat(totalPayment)})</>}
             />
-
             <HeadCell
               sx={{ textAlign: 'right', whiteSpace: 'nowrap' }}
               text={<>수익({getKCWFormat(totalProfit)})</>}

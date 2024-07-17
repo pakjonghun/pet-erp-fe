@@ -32,6 +32,10 @@ const ClientSaleTableBodySection: FC<Props> = ({
       <LoadingRow colSpan={5} isLoading={isLoading} />
       {data.map((row, index) => {
         const isLast = index === data.length - 1;
+        const currentProfit =
+          (row.accPayCost ?? 0) - (row.accWonCost ?? 0) - (row.accDeliveryCost ?? 0);
+        const prevProfit =
+          (row.prevAccPayCost ?? 0) - (row.prevAccWonCost ?? 0) - (row.prevAccDeliveryCost ?? 0);
         return (
           //@ts-ignore
           <TableRow
@@ -49,25 +53,19 @@ const ClientSaleTableBodySection: FC<Props> = ({
             />
             <SaleTableCell
               isShowPrevData={isShowSalePrevData}
-              current={row.accPayCost ?? 0}
-              previous={row.prevAccPayCost ?? 0}
+              current={row.accTotalPayment ?? 0}
+              previous={row.prevAccTotalPayment ?? 0}
             />
             <SaleTableCell
               isShowPrevData={isShowSalePrevData}
-              current={(row.accProfit ?? 0) - (row.deliveryCost ?? 0)}
-              previous={(row.prevAccProfit ?? 0) - (row.prevDeliveryCost ?? 0)}
+              current={currentProfit}
+              previous={prevProfit}
             />
             <SaleTableCell
               isShowPrevData={isShowSalePrevData}
               numberType="percent"
-              current={getProfitRate(
-                (row.accProfit ?? 0) - (row.deliveryCost ?? 0),
-                row?.accPayCost ?? 0
-              )}
-              previous={getProfitRate(
-                (row.prevAccProfit ?? 0) - (row.prevDeliveryCost ?? 0),
-                row?.prevAccPayCost ?? 0
-              )}
+              current={getProfitRate(currentProfit, row?.accPayCost ?? 0)}
+              previous={getProfitRate(prevProfit, row?.prevAccPayCost ?? 0)}
             />
           </TableRow>
         );

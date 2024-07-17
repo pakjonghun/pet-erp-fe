@@ -12,7 +12,7 @@ import { Product, SaleInfos } from '@/http/graphql/codegen/graphql';
 import { useReactiveVar } from '@apollo/client';
 import { saleRange, showPrevData } from '@/store/saleStore';
 import { useDashboardProducts } from '@/http/graphql/hooks/product/useDashboardProducts';
-import { getNumberToString } from '@/utils/sale';
+import { getNumberToString, getProfitListItem } from '@/utils/sale';
 import { Cancel } from '@mui/icons-material';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 
@@ -54,17 +54,21 @@ const GroupList: FC<Props> = ({ id, tagName, productList, changeTagName, removeG
 
   const selectedProductInsightList = checked.map((item) => {
     return productInsightsByCode.get(item);
-  });
+  }) as SaleInfos[];
 
-  const footerTotal = selectedProductInsightList.reduce(
+  const footerTotal = selectedProductInsightList.reduce<
+    SaleInfos & { accProfit: number; prevAccProfit: number }
+  >(
     (acc, cur) => {
+      const { current, prev } = cur ? getProfitListItem(cur) : { current: 0, prev: 0 };
+
       const nextValue = {
         accCount: (acc?.accCount ?? 0) + (cur?.accCount ?? 0),
-        accPayCost: (acc?.accPayCost ?? 0) + (cur?.accPayCost ?? 0),
-        accProfit: (acc?.accProfit ?? 0) + (cur?.accProfit ?? 0),
+        accPayCost: (acc?.accTotalPayment ?? 0) + (cur?.accTotalPayment ?? 0),
+        accProfit: current,
         prevAccCount: (acc?.prevAccCount ?? 0) + (cur?.prevAccCount ?? 0),
-        prevAccProfit: (acc?.prevAccProfit ?? 0) + (cur?.prevAccProfit ?? 0),
-        prevAccPayCost: (acc?.prevAccPayCost ?? 0) + (cur?.prevAccPayCost ?? 0),
+        prevAccProfit: prev,
+        prevAccPayCost: (acc?.prevAccTotalPayment ?? 0) + (cur?.prevAccTotalPayment ?? 0),
       };
       return nextValue;
     },
@@ -248,6 +252,9 @@ const GroupList: FC<Props> = ({ id, tagName, productList, changeTagName, removeG
           {productList.map((value) => {
             const labelId = `checkbox-list-label-${value}`;
             const saleData = productInsightsByCode.get(value.code);
+            const { current, prev } = saleData
+              ? getProfitListItem(saleData)
+              : { current: 0, prev: 0 };
 
             return (
               <ListItem sx={{ px: 2 }} key={value._id} disablePadding>
@@ -290,13 +297,13 @@ const GroupList: FC<Props> = ({ id, tagName, productList, changeTagName, removeG
                     <Grid item xs={3}>
                       <ListItemText
                         sx={{ textAlign: 'center' }}
-                        primary={getNumberToString(saleData?.accPayCost ?? 0, 'currency')}
+                        primary={getNumberToString(saleData?.accTotalPayment ?? 0, 'currency')}
                       />
                     </Grid>
                     <Grid item xs={2}>
                       <ListItemText
                         sx={{ textAlign: 'center' }}
-                        primary={getNumberToString(saleData?.accProfit ?? 0, 'currency')}
+                        primary={getNumberToString(current, 'currency')}
                       />
                     </Grid>
                   </Grid>

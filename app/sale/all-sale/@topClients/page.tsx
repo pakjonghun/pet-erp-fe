@@ -31,7 +31,7 @@ const TopClients = () => {
   const rows = (data?.saleMenuClients.data as ClientSaleMenu[]) ?? [];
   const isLoading = networkStatus == 1 || networkStatus == 2 || networkStatus == 3;
   const isEmpty = !isLoading && rows.length === 0;
-  const { totalCount, totalPayCost, totalProfit } = useReactiveVar(clientTotal);
+  const { totalCount, totalPayCost, totalProfit, totalPayment } = useReactiveVar(clientTotal);
   const [selectedClient, setSelectedClient] = useState<null | ClientSaleMenu>(null);
   const profitRate = getProfitRate(totalProfit, totalPayCost);
 
@@ -60,13 +60,17 @@ const TopClients = () => {
   useEffect(() => {
     const totalData = rows.reduce(
       (acc, cur) => {
+        const totalProfit =
+          (cur.accPayCost ?? 0) - (cur.accWonCost ?? 0) - (cur.accDeliveryCost ?? 0);
+
         return {
+          totalPayment: acc.totalPayment + (cur.accTotalPayment ?? 0),
           totalCount: acc.totalCount + (cur?.accCount ?? 0),
           totalPayCost: acc.totalPayCost + (cur?.accPayCost ?? 0),
-          totalProfit: acc.totalProfit + ((cur?.accProfit ?? 0) - (cur?.deliveryCost ?? 0)),
+          totalProfit: acc.totalProfit + totalProfit,
         };
       },
-      { totalCount: 0, totalPayCost: 0, totalProfit: 0 }
+      { totalCount: 0, totalPayCost: 0, totalProfit: 0, totalPayment: 0 }
     );
 
     clientTotal(totalData);
@@ -115,7 +119,7 @@ const TopClients = () => {
               />
               <HeadCell
                 sx={{ textAlign: 'right', whiteSpace: 'nowrap' }}
-                text={<>매출({getKCWFormat(totalPayCost)})</>}
+                text={<>매출({getKCWFormat(totalPayment)})</>}
               />
 
               <HeadCell

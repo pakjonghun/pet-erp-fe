@@ -1,3 +1,4 @@
+import { SaleInfo } from '@/http/graphql/codegen/graphql';
 import dayjs from 'dayjs';
 
 export const getFirstPath = (pathname: string) => {

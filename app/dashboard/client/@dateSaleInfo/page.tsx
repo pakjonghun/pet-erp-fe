@@ -2,7 +2,7 @@
 
 import DashboardCard from '@/app/dashboard/_components/Card';
 import DashboardCardContent from '@/app/dashboard/_components/CardContent';
-import { getProfitRate } from '@/utils/sale';
+import { getProfit, getProfitRate } from '@/utils/sale';
 import { useDashboardClient } from '@/http/graphql/hooks/client/useDashboardClient';
 import { saleRange } from '@/store/saleStore';
 import { useReactiveVar } from '@apollo/client';
@@ -18,6 +18,12 @@ const DateSaleInfoPage = () => {
   const date = from.format('MM월 DD일');
   const isLoading = networkStatus === 2 || networkStatus === 3 || networkStatus === 1;
 
+  const current = todayData?.dashboardClient?.current;
+  const currentProfit = current ? getProfit(current) : 0;
+
+  const prev = todayData?.dashboardClient?.previous;
+  const prevProfit = prev ? getProfit(prev) : 0;
+
   if (isLoading) {
     return <Skeleton variant="rounded" width="100%" height="100%" sx={{ minHeight: '139px' }} />;
   }
@@ -31,8 +37,8 @@ const DateSaleInfoPage = () => {
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
           <DashboardCardContent
             label={`매출`}
-            current={todayData?.dashboardClient?.current?.accPayCost ?? 0}
-            previous={todayData?.dashboardClient?.previous?.accPayCost ?? 0}
+            current={todayData?.dashboardClient?.current?.accTotalPayment ?? 0}
+            previous={todayData?.dashboardClient?.previous?.accTotalPayment ?? 0}
           />
         </Grid>
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -45,32 +51,14 @@ const DateSaleInfoPage = () => {
         </Grid>
 
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
-          <DashboardCardContent
-            label={`수익`}
-            current={
-              (todayData?.dashboardClient?.current?.accProfit ?? 0) -
-              (todayData?.dashboardClient?.current?.deliveryCost ?? 0)
-            }
-            previous={
-              (todayData?.dashboardClient?.previous?.accProfit ?? 0) -
-              (todayData?.dashboardClient?.previous?.deliveryCost ?? 0)
-            }
-          />
+          <DashboardCardContent label={`수익`} current={currentProfit} previous={prevProfit} />
         </Grid>
         <Grid item xs={6} xl={3} sx={{ display: 'flex', justifyContent: 'center' }}>
           <DashboardCardContent
             numberType="percent"
             label={`수익율`}
-            current={getProfitRate(
-              (todayData?.dashboardClient?.current?.accProfit ?? 0) -
-                (todayData?.dashboardClient?.current?.deliveryCost ?? 0),
-              todayData?.dashboardClient?.current?.accPayCost ?? 0
-            )}
-            previous={getProfitRate(
-              (todayData?.dashboardClient?.previous?.accProfit ?? 0) -
-                (todayData?.dashboardClient?.previous?.deliveryCost ?? 0),
-              todayData?.dashboardClient?.previous?.accPayCost ?? 0
-            )}
+            current={getProfitRate(currentProfit, current?.accPayCost ?? 0)}
+            previous={getProfitRate(prevProfit, prev?.accPayCost ?? 0)}
           />
         </Grid>
       </Grid>

@@ -79,13 +79,17 @@ const ProductSales = () => {
   useEffect(() => {
     const totalData = rows.reduce(
       (acc, cur) => {
+        const totalProfit =
+          (cur.accPayCost ?? 0) - (cur.accWonCost ?? 0) - (cur.accDeliveryCost ?? 0);
+
         return {
-          totalCount: acc.totalCount + (cur?.accCount ?? 0),
           totalPayCost: acc.totalPayCost + (cur?.accPayCost ?? 0),
-          totalProfit: acc.totalProfit + ((cur?.accProfit ?? 0) - (cur?.deliveryCost ?? 0)),
+          totalCount: acc.totalCount + (cur?.accCount ?? 0),
+          totalPayment: acc.totalPayment + (cur?.accTotalPayment ?? 0),
+          totalProfit: acc.totalProfit + totalProfit,
         };
       },
-      { totalCount: 0, totalPayCost: 0, totalProfit: 0 }
+      { totalCount: 0, totalPayCost: 0, totalProfit: 0, totalPayment: 0 }
     );
     saleTotal(totalData);
   }, [data?.productSales]);
@@ -112,11 +116,9 @@ const ProductSales = () => {
             textValue="accCount"
             sortController={sortController}
           />
-          <HeaderSortButton text="매출순" textValue="accPayCost" sortController={sortController} />
-          <HeaderSortButton text="수익순" textValue="accProfit" sortController={sortController} />
           <HeaderSortButton
-            text="수익율순"
-            textValue="profitRate"
+            text="매출순"
+            textValue="accTotalPayment"
             sortController={sortController}
           />
         </Stack>

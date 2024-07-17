@@ -6,20 +6,20 @@ const dashboardProduct = graphql(`
   query dashboardProduct($dashboardProductInput: FindDateInput!) {
     dashboardProduct(dashboardProductInput: $dashboardProductInput) {
       current {
+        name
         accPayCost
         accCount
-        name
-        accProfit
-        averagePayCost
-        deliveryCost
+        accDeliveryCost
+        accTotalPayment
+        accWonCost
       }
       previous {
+        name
         accPayCost
         accCount
-        name
-        accProfit
-        averagePayCost
-        deliveryCost
+        accDeliveryCost
+        accTotalPayment
+        accWonCost
       }
     }
   }

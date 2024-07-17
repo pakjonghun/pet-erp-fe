@@ -194,8 +194,8 @@ export const client = new ApolloClient({
         accPayCost
         accCount
         name
-        accProfit
-        averagePayCost
+        accDeliveryCost
+        accTotalPayment
       }
     `),
     typePolicies: {
@@ -206,10 +206,10 @@ export const client = new ApolloClient({
             'name',
             'accPayCost',
             'accCount',
-            'accProfit',
             'prevAccPayCost',
             'prevAccCount',
-            'prevAccProfit',
+            'accDeliveryCost',
+            'accTotalPayment',
           ];
         },
       },

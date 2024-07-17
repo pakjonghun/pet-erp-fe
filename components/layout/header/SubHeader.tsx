@@ -76,8 +76,17 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
               cache.evict({ fieldName: 'topClients' });
             },
           });
+          const errorMessage = res.loadSabangData
+            ?.map((item) => {
+              return item.orderNumber;
+            })
+            .join(', ');
           snackMessage({
-            message: '오늘 사방넷 데이터와 동기화 되었습니다.',
+            message: `오늘 사방넷 데이터와 동기화 되었습니다. ${
+              errorMessage
+                ? `판매가가 0원으로 판매된 건이 있습니다. 주문번호 :  ${errorMessage}`
+                : ''
+            }`,
             severity: 'success',
           });
         }, 2000);

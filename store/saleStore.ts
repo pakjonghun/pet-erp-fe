@@ -7,11 +7,13 @@ export const clientTotal = makeVar({
   totalCount: 0,
   totalPayCost: 0,
   totalProfit: 0,
+  totalPayment: 0,
 });
 export const saleTotal = makeVar({
   totalCount: 0,
   totalPayCost: 0,
   totalProfit: 0,
+  totalPayment: 0,
 });
 
 export const showPrevData = makeVar(false);

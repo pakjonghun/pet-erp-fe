@@ -9,17 +9,17 @@ const dashboardClient = graphql(`
         accPayCost
         accCount
         name
-        accProfit
-        averagePayCost
-        deliveryCost
+        accDeliveryCost
+        accTotalPayment
+        accWonCost
       }
       previous {
         accPayCost
         accCount
         name
-        accProfit
-        averagePayCost
-        deliveryCost
+        accDeliveryCost
+        accTotalPayment
+        accWonCost
       }
     }
   }
