@@ -13,6 +13,16 @@ interface Props {
 
 const ClientSaleCard: FC<Props> = ({ clientSaleData, scrollRef }) => {
   const isShowPrevData = useReactiveVar(showPrevSaleData);
+
+  const currentProfit =
+    (clientSaleData.accPayCost ?? 0) -
+    (clientSaleData.accWonCost ?? 0) -
+    (clientSaleData.accDeliveryCost ?? 0);
+  const prevProfit =
+    (clientSaleData.prevAccPayCost ?? 0) -
+    (clientSaleData.prevAccWonCost ?? 0) -
+    (clientSaleData.prevAccDeliveryCost ?? 0);
+
   return (
     <Paper ref={scrollRef} sx={{ position: 'relative', py: 1, px: 4 }}>
       <Box>
@@ -27,27 +37,21 @@ const ClientSaleCard: FC<Props> = ({ clientSaleData, scrollRef }) => {
         <SaleCard
           isShowPrevData={isShowPrevData}
           label="매출"
-          current={clientSaleData?.accPayCost ?? 0}
-          previous={clientSaleData?.prevAccPayCost ?? 0}
+          current={clientSaleData?.accTotalPayment ?? 0}
+          previous={clientSaleData?.prevAccTotalPayment ?? 0}
         />
         <SaleCard
           isShowPrevData={isShowPrevData}
           label="수익"
-          current={(clientSaleData?.accProfit ?? 0) - (clientSaleData?.deliveryCost ?? 0)}
-          previous={(clientSaleData?.prevAccProfit ?? 0) - (clientSaleData?.prevDeliveryCost ?? 0)}
+          current={currentProfit}
+          previous={prevProfit}
         />
         <SaleCard
           isShowPrevData={isShowPrevData}
           label="수익율"
           numberType="percent"
-          current={getProfitRate(
-            (clientSaleData?.accProfit ?? 0) - (clientSaleData?.deliveryCost ?? 0),
-            clientSaleData?.accPayCost ?? 0
-          )}
-          previous={getProfitRate(
-            (clientSaleData?.prevAccProfit ?? 0) - (clientSaleData?.prevDeliveryCost ?? 0),
-            clientSaleData?.prevAccPayCost ?? 0
-          )}
+          current={getProfitRate(currentProfit, clientSaleData?.accPayCost ?? 0)}
+          previous={getProfitRate(prevProfit, clientSaleData?.prevAccPayCost ?? 0)}
         />
       </Box>
     </Paper>

@@ -35,8 +35,8 @@ const SaleLayout: FC<Props> = ({ children }) => {
   useEffect(() => {
     return () => {
       handleResetDateRange();
-      clientTotal({ totalCount: 0, totalPayCost: 0, totalProfit: 0 });
-      saleTotal({ totalCount: 0, totalPayCost: 0, totalProfit: 0 });
+      clientTotal({ totalCount: 0, totalPayCost: 0, totalProfit: 0, totalPayment: 0 });
+      saleTotal({ totalCount: 0, totalPayCost: 0, totalProfit: 0, totalPayment: 0 });
     };
   }, []);
 
