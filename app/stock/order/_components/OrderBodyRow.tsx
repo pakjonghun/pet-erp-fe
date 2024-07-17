@@ -96,7 +96,7 @@ const OrderBodyRow: FC<Props> = ({ isSelected, client, scrollRef, onClickOption,
         <Cell
           key={`${client._id}_${index}`}
           onClick={(event) => onClickRow(event, client)}
-          sx={{ minWidth: 200 }}
+          // sx={{ minWidth: 200 }}
         >
           {item}
         </Cell>

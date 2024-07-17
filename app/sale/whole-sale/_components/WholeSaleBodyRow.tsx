@@ -94,7 +94,7 @@ const WholeSaleBodyRow: FC<Props> = ({
         <Cell
           key={`${wholeSale._id}_${index}`}
           onClick={(event) => onClickRow(event, wholeSale)}
-          sx={{ minWidth: 200 }}
+          // sx={{ minWidth: 200 }}
         >
           {item}
         </Cell>

@@ -121,7 +121,7 @@ const ProductStockBodyRow: FC<Props> = ({
               onClickRow(event, productStock);
               // setOpen((prev) => !prev);
             }}
-            sx={{ minWidth: 200 }}
+            // sx={{ minWidth: 200 }}
           >
             {item}
           </Cell>

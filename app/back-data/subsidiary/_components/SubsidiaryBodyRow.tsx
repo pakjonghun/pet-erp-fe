@@ -13,14 +13,8 @@ import { SelectOption } from '../../types';
 interface Props {
   isSelected: boolean;
   subsidiary: Subsidiary;
-  onClickRow: (
-    event: MouseEvent<HTMLTableCellElement>,
-    subsidiary: Subsidiary
-  ) => void;
-  onClickOption: (
-    option: SelectOption | null,
-    product: Subsidiary | null
-  ) => void;
+  onClickRow: (event: MouseEvent<HTMLTableCellElement>, subsidiary: Subsidiary) => void;
+  onClickOption: (option: SelectOption | null, product: Subsidiary | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
@@ -76,11 +70,7 @@ const SubsidiaryBodyRow: FC<Props> = ({
       hover
       ref={scrollRef}
     >
-      <Menu
-        anchorEl={menuAnchor}
-        open={!!menuAnchor}
-        onClose={() => setMenuAnchor(null)}
-      >
+      <Menu anchorEl={menuAnchor} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
         {Object.entries(productOptionMenus).map(([option, menu]) => (
           <OptionMenu key={option} menu={menu} option={option} />
         ))}
@@ -89,7 +79,7 @@ const SubsidiaryBodyRow: FC<Props> = ({
         <Cell
           key={`${subsidiary._id}_${index}`}
           onClick={(event) => onClickRow(event, subsidiary)}
-          sx={{ minWidth: 200 }}
+          // sx={{ minWidth: 200 }}
         >
           {item}
         </Cell>

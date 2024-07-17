@@ -79,7 +79,7 @@ const SubsidiaryBodyRow: FC<Props> = ({
         <Cell
           key={`${subsidiary._id}_${index}`}
           onClick={(event) => onClickRow(event, subsidiary)}
-          sx={{ minWidth: 200 }}
+          // sx={{ minWidth: 200 }}
         >
           {item}
         </Cell>

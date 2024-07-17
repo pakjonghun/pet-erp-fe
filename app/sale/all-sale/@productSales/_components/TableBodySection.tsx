@@ -43,7 +43,9 @@ const TableBodySection: FC<Props> = ({
             ref={isLast ? scrollRef : null}
             key={index}
           >
-            <Cell sx={{ minWidth: 200 }}>
+            <Cell
+            // sx={{ minWidth: 200 }}
+            >
               {row.name}
               <br />
               <Typography color="gray" variant="caption">

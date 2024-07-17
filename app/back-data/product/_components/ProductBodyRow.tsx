@@ -82,7 +82,7 @@ const ProductBodyRow: FC<Props> = ({
         <Cell
           key={`${product._id}_${index}`}
           onClick={(event) => onClickRow(event, product)}
-          sx={{ minWidth: 200 }}
+          // sx={{ minWidth: 200 }}
         >
           {item}
         </Cell>

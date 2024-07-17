@@ -249,7 +249,10 @@ const WholeSalePage = () => {
             {!!selectedWholeSale ? (
               <TableRow hover ref={null}>
                 {parsedRowData.map((item, index) => (
-                  <Cell key={`${selectedWholeSale._id}_${index}`} sx={{ minWidth: 200 }}>
+                  <Cell
+                    key={`${selectedWholeSale._id}_${index}`}
+                    // sx={{ minWidth: 200 }}
+                  >
                     {item}
                   </Cell>
                 ))}
