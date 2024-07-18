@@ -32,7 +32,7 @@ const TableBodySection: FC<Props> = ({
       {data.map((row, index) => {
         const isLast = index === data.length - 1;
 
-        const profit = (row.accPayCost ?? 0) - (row.accDeliveryCost ?? 0);
+        const profit = (row.accPayCost ?? 0) - (row.accWonCost ?? 0) - (row.accDeliveryCost ?? 0);
         const prevProfit = (row.prevAccPayCost ?? 0) - (row.prevAccDeliveryCost ?? 0);
 
         return (
@@ -67,7 +67,7 @@ const TableBodySection: FC<Props> = ({
             <SaleTableCell
               isShowPrevData={isShowPrevData}
               numberType="percent"
-              current={getProfitRate(prevProfit, row?.accPayCost ?? 0)}
+              current={getProfitRate(profit, row?.accPayCost ?? 0)}
               previous={getProfitRate(prevProfit, row?.prevAccPayCost ?? 0)}
             />
             <Cell sx={{ width: '50%' }}>
