@@ -43,13 +43,9 @@ const SaleLayout: FC<Props> = ({ children }) => {
   const isShowPrevSaleData = useReactiveVar(showPrevSaleData);
 
   return (
-    <Box sx={{ height: '100%' }}>
+    <Box sx={{ height: 'calc(100vh - 64px)', display: 'flex', flexDirection: 'column' }}>
       <SubHeader title="판매">
-        <Tabs
-          sx={{ mt: 2 }}
-          value={currentTabIndex == -1 ? 0 : currentTabIndex}
-          indicatorColor="primary"
-        >
+        <Tabs value={currentTabIndex == -1 ? 0 : currentTabIndex} indicatorColor="primary">
           {tabs.map((tab) => {
             const tabItem = SaleTabs[tab];
             return (
@@ -74,49 +70,52 @@ const SaleLayout: FC<Props> = ({ children }) => {
           })}
         </Tabs>
       </SubHeader>
-      <Stack
-        sx={{
-          display: 'flex',
-          flexDirection: {
-            xs: 'column',
-            md: 'row',
-          },
-          gap: 3,
-          justifyContent: {
-            md: 'space-between',
-          },
-          px: 4,
-        }}
-      >
-        <SwitchDate
-          sx={{ mt: 2 }}
-          range={range}
-          setRange={setRange}
-          searchStandard={searchStandard}
-          setSearchStandard={setSearchStandard}
-        />
-        <FormControlLabel
-          label={isShowPrevSaleData ? '수익 비교 끄기' : '수익 비교 켜기'}
-          control={
-            <Switch
-              size="small"
-              value={isShowPrevSaleData}
-              checked={isShowPrevSaleData}
-              onChange={(_, checked) => showPrevSaleData(checked)}
-            />
-          }
-        />
-      </Stack>
-      <Stack
-        sx={{
-          flexDirection: {
-            xs: 'column',
-            xl: 'row',
-          },
-        }}
-      >
-        {children}
-      </Stack>
+      <Box sx={{ overflow: 'auto', flex: 1 }}>
+        <Stack
+          sx={{
+            display: 'flex',
+            flexDirection: {
+              xs: 'column',
+              md: 'row',
+            },
+            gap: 3,
+            justifyContent: {
+              md: 'space-between',
+            },
+
+            px: 4,
+          }}
+        >
+          <SwitchDate
+            sx={{ mt: 2 }}
+            range={range}
+            setRange={setRange}
+            searchStandard={searchStandard}
+            setSearchStandard={setSearchStandard}
+          />
+          <FormControlLabel
+            label={isShowPrevSaleData ? '수익 비교 끄기' : '수익 비교 켜기'}
+            control={
+              <Switch
+                size="small"
+                value={isShowPrevSaleData}
+                checked={isShowPrevSaleData}
+                onChange={(_, checked) => showPrevSaleData(checked)}
+              />
+            }
+          />
+        </Stack>
+        <Stack
+          sx={{
+            flexDirection: {
+              xs: 'column',
+              xl: 'row',
+            },
+          }}
+        >
+          {children}
+        </Stack>
+      </Box>
     </Box>
   );
 };

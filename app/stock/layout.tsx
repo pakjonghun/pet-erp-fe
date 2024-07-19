@@ -20,13 +20,16 @@ const StockLayout: FC<Props> = ({ children }) => {
   });
 
   return (
-    <Box sx={{ height: '100%', bgcolor: (theme) => theme.palette.primary.light }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: 'calc(100vh - 64px)',
+        bgcolor: (theme) => theme.palette.primary.light,
+      }}
+    >
       <SubHeader title="재고">
-        <Tabs
-          sx={{ mt: 2 }}
-          value={currentTabIndex == -1 ? 0 : currentTabIndex}
-          indicatorColor="primary"
-        >
+        <Tabs value={currentTabIndex == -1 ? 0 : currentTabIndex} indicatorColor="primary">
           {tabs.map((tab) => {
             const tabItem = StockTabs[tab];
 
@@ -51,7 +54,7 @@ const StockLayout: FC<Props> = ({ children }) => {
           })}
         </Tabs>
       </SubHeader>
-      {children}
+      <Box sx={{ flex: 1, overflow: 'auto' }}>{children}</Box>
     </Box>
   );
 };

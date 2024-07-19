@@ -1,6 +1,6 @@
 'use client';
 
-import { Tab, Tabs } from '@mui/material';
+import { Box, Tab, Tabs } from '@mui/material';
 import React, { FC, ReactNode } from 'react';
 import { SettingTabs } from './constants';
 import Link from 'next/link';
@@ -21,7 +21,7 @@ const SettingLayout: FC<Props> = ({ children }) => {
   const { role } = useReactiveVar(authState);
 
   return (
-    <>
+    <Box sx={{ height: 'calc(100vh - 64px)', display: 'flex', flexDirection: 'column' }}>
       <SubHeader title="설정">
         <Tabs value={currentTabIndex == -1 ? 0 : currentTabIndex} indicatorColor="primary">
           {tabs.map((tab) => {
@@ -50,8 +50,8 @@ const SettingLayout: FC<Props> = ({ children }) => {
           })}
         </Tabs>
       </SubHeader>
-      {children}
-    </>
+      <Box sx={{ flexGrow: 1, overflow: 'auto' }}>{children}</Box>
+    </Box>
   );
 };
 

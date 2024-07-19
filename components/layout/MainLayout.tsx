@@ -49,7 +49,7 @@ const MainLayout: FC<Props> = ({ children }) => {
       >
         <Header isLogin={isLogin} toggleOpen={toggleOpen} />
 
-        <Box sx={{ flex: 1, overflow: 'auto' }}>{children}</Box>
+        <Box sx={{ height: 'calc(100vh - 64px)', flex: 1 }}>{children}</Box>
       </Box>
     </Box>
   );

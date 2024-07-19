@@ -40,7 +40,14 @@ const DashboardLayout: FC<Props> = ({ children }) => {
   }, []);
 
   return (
-    <Box sx={{ height: '100%', bgcolor: (theme) => theme.palette.primary.light }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: 'calc(100vh - 64px)',
+        bgcolor: (theme) => theme.palette.primary.light,
+      }}
+    >
       <SubHeader title="대시보드">
         <Tabs
           sx={{ mt: 2 }}
@@ -71,7 +78,7 @@ const DashboardLayout: FC<Props> = ({ children }) => {
           })}
         </Tabs>
       </SubHeader>
-      <Box sx={{ p: 3 }}>
+      <Box sx={{ p: 3, overflow: 'auto' }}>
         <Stack
           sx={{
             display: 'flex',

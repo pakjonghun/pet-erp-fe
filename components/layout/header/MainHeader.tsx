@@ -7,8 +7,6 @@ import Hero from './Hero';
 import MobileNavTrigger from './MobileNavTrigger';
 import SettingMenuTrigger from './SettingMenuTrigger';
 import HeaderNav from '../navigation/\bHeaderNav';
-import { useSaleOutCheck } from '@/http/graphql/hooks/sale/useSaleoutCheck';
-import { Badge, styled } from '@mui/material';
 
 interface Props {
   isLogin: boolean;
@@ -19,6 +17,7 @@ const MainHeader: FC<Props> = ({ isLogin, toggleOpen }) => {
   return (
     <AppBar
       sx={{
+        height: '64px',
         position: 'relative',
         px: {
           xs: 0,

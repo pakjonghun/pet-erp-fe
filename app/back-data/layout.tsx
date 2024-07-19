@@ -24,7 +24,6 @@ const BackDataLayout: FC<Props> = ({ children }) => {
       <SubHeader title="백데이터">
         <Tabs
           variant="scrollable"
-          sx={{ mt: 2 }}
           value={currentTabIndex == -1 ? 0 : currentTabIndex}
           indicatorColor="primary"
         >
