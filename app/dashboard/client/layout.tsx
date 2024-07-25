@@ -1,5 +1,10 @@
-import { FC, ReactNode } from 'react';
+'use client';
+
+import { FC, ReactNode, useEffect } from 'react';
 import { Grid } from '@mui/material';
+import { useReactiveVar } from '@apollo/client';
+import { saleRange } from '@/store/saleStore';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   dateSaleInfo: ReactNode;
@@ -18,6 +23,16 @@ const ProductLayout: FC<Props> = ({
   rangeSaleInfo,
   rangeSaleInfos,
 }) => {
+  const { from, to } = useReactiveVar(saleRange);
+
+  useEffect(() => {
+    const cache = client.cache;
+    cache.evict({ fieldName: 'dashboardClients' });
+    cache.evict({ fieldName: 'dashboardProducts' });
+    cache.gc();
+    // })
+  }, [from, to]);
+
   return (
     <>
       <Grid container rowSpacing={3} columnSpacing={3} sx={{ mt: 2 }}>
