@@ -45,8 +45,8 @@ const DashboardTableBody: FC<Props> = ({ saleInfos }) => {
             />
             <SaleTableCell
               isShowPrevData={isShowPrevData}
-              current={getProfitRate(current, saleInfo?.accPayCost ?? 0)}
-              previous={getProfitRate(prev, saleInfo?.prevAccPayCost ?? 0)}
+              current={getProfitRate(current, saleInfo?.accTotalPayment ?? 0)}
+              previous={getProfitRate(prev, saleInfo?.prevAccTotalPayment ?? 0)}
               numberType="percent"
             />
           </TableRow>

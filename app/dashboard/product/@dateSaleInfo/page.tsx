@@ -60,8 +60,8 @@ const DateSaleInfoPage = () => {
           <DashboardCardContent
             numberType="percent"
             label={`수익율`}
-            current={getProfitRate(currentProfit, current?.accPayCost ?? 0)}
-            previous={getProfitRate(prevProfit, prev?.accPayCost ?? 0)}
+            current={getProfitRate(currentProfit, current?.accTotalPayment ?? 0)}
+            previous={getProfitRate(prevProfit, prev?.accTotalPayment ?? 0)}
           />
         </Grid>
       </Grid>
