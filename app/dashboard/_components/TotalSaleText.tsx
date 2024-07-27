@@ -12,7 +12,15 @@ const TotalSaleText: FC<Props> = ({
   hasFullText = false,
 }) => {
   return (
-    <Stack gap={1} flexDirection="row">
+    <Stack
+      sx={{
+        gap: 1,
+        my: 1,
+      }}
+      flexDirection="row"
+      flexWrap="wrap"
+      lineHeight={0.7}
+    >
       {hasFullText && <span>{`매출 ${accTotalPayment}`} </span>}
       <span>{`판매수 ${accCount}`} </span>
       <span>{`순이익 ${accProfit}`} </span>

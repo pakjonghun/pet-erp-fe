@@ -274,6 +274,7 @@ export type FindDateInput = {
 
 export type FindDateScrollInput = {
   from: Scalars['Date']['input'];
+  keyword: Scalars['String']['input'];
   limit: Scalars['Int']['input'];
   skip: Scalars['Int']['input'];
   to: Scalars['Date']['input'];
@@ -738,9 +739,7 @@ export type ProductSaleInput = {
   from: Scalars['Date']['input'];
   keyword: Scalars['String']['input'];
   limit: Scalars['Int']['input'];
-  order?: InputMaybe<Scalars['Int']['input']>;
   skip: Scalars['Int']['input'];
-  sort: Scalars['String']['input'];
   to: Scalars['Date']['input'];
 };
 

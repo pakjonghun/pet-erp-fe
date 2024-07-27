@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Tab, Tabs } from '@mui/material';
-import { DASHBOARD_DETAIL_TABS } from '../constants';
+import { DASHBOARD_DETAIL_TABS } from '../../constants';
 
 interface Props {
   tabValue: number;

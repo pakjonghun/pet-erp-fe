@@ -93,8 +93,8 @@ const DashboardLayout: FC<Props> = ({ children }) => {
           }}
         >
           <SwitchDate
-            range={{ from, to }}
-            setRange={setRange}
+            dateRange={{ from, to }}
+            setDateRange={setRange}
             searchStandard={searchStandard}
             setSearchStandard={setSearchStandard}
           />

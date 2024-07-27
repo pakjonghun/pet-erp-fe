@@ -88,8 +88,8 @@ const SaleLayout: FC<Props> = ({ children }) => {
         >
           <SwitchDate
             sx={{ mt: 2 }}
-            range={range}
-            setRange={setRange}
+            dateRange={range}
+            setDateRange={setRange}
             searchStandard={searchStandard}
             setSearchStandard={setSearchStandard}
           />

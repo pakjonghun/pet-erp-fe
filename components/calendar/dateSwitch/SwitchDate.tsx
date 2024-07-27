@@ -22,14 +22,20 @@ import { DateRange } from '../dateFilter/type';
 import { getStringRange } from '../dateFilter/utils';
 
 interface Props {
-  range: DateRange;
-  setRange: (value: DateRange) => void;
+  dateRange: DateRange;
+  setDateRange: (value: DateRange) => void;
   searchStandard: SearchStandard;
   setSearchStandard: (value: SearchStandard) => void;
   sx?: SxProps;
 }
 
-const SwitchDate: FC<Props> = ({ range, searchStandard, setRange, setSearchStandard, sx }) => {
+const SwitchDate: FC<Props> = ({
+  dateRange: range,
+  searchStandard,
+  setDateRange: setRange,
+  setSearchStandard,
+  sx,
+}) => {
   const [filterAnchor, setFilterAnchor] = useState<null | HTMLElement>(null);
 
   const handleChangeStandard = (event: SelectChangeEvent<SearchStandard>) => {

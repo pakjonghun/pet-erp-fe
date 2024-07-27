@@ -29,10 +29,12 @@ const saleMenuClients = graphql(`
   }
 `);
 
-export const useSaleMenuClients = (saleMenuClientsInput: FindDateScrollInput) => {
+export const useSaleMenuClients = (saleMenuClientsInput: FindDateScrollInput, skip?: boolean) => {
   return useQuery(saleMenuClients, {
     variables: {
       saleMenuClientsInput,
     },
+    skip,
+    notifyOnNetworkStatusChange: true,
   });
 };
