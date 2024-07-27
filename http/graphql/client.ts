@@ -1,4 +1,3 @@
-import { Sale } from './codegen/graphql';
 import { BASE_URL } from '@/http/constants';
 import { ApolloClient, InMemoryCache, createHttpLink, gql } from '@apollo/client';
 import { createFragmentRegistry } from '@apollo/client/cache';
@@ -179,17 +178,6 @@ export const client = new ApolloClient({
         storageId
       }
 
-      fragment ClientInfo on ClientInfo {
-        _id {
-          productCode
-          mallId
-        }
-        averagePayCost
-        accPayCost
-        accCount
-        accProfit
-      }
-
       fragment SaleInfo on SaleInfo {
         accPayCost
         accCount
@@ -221,14 +209,6 @@ export const client = new ApolloClient({
           },
           stockLogs: {
             keyArgs: ['findStockLogs', ['keyword', 'from', 'to', 'productCode']],
-            merge,
-          },
-          dashboardProducts: {
-            keyArgs: ['dashboardProductsInput', ['from', 'to', 'idenifier']],
-            merge,
-          },
-          dashboardClients: {
-            keyArgs: ['dashboardClientsInput', ['from', 'to', 'idenifier']],
             merge,
           },
           topClients: {

@@ -3,7 +3,7 @@
 import DashboardCard from '@/app/dashboard/_components/Card';
 import DashboardCardContent from '@/app/dashboard/_components/CardContent';
 import { getProfit, getProfitRate } from '@/utils/sale';
-import { useDashboardClient } from '@/http/graphql/hooks/client/useDashboardClient';
+import { useTotalSale } from '@/http/graphql/hooks/client/useDashboardClient';
 import { saleRange } from '@/store/saleStore';
 import { useReactiveVar } from '@apollo/client';
 import { Grid, Skeleton, Typography } from '@mui/material';
@@ -11,7 +11,7 @@ import { Grid, Skeleton, Typography } from '@mui/material';
 const DateSaleInfoPage = () => {
   const { from } = useReactiveVar(saleRange);
 
-  const { data: todayData, networkStatus } = useDashboardClient({
+  const { data: todayData, networkStatus } = useTotalSale({
     from: from.toISOString(),
     to: from.endOf('day').toISOString(),
   });

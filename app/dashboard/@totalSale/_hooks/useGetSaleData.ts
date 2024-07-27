@@ -2,7 +2,7 @@
 
 import { Dayjs } from 'dayjs';
 import { getNumberToString, getProfit, getProfitRate } from '@/utils/sale';
-import { useDashboardClient } from '@/http/graphql/hooks/client/useDashboardClient';
+import { useTotalSale } from '@/http/graphql/hooks/client/useDashboardClient';
 import { SaleInfo } from '@/http/graphql/codegen/graphql';
 
 interface Props {
@@ -11,12 +11,12 @@ interface Props {
 }
 
 const useGetSaleData = ({ from, to }: Props) => {
-  const { data: todayData, loading } = useDashboardClient({
+  const { data: todayData, loading } = useTotalSale({
     from: from.toISOString(),
     to: to.toISOString(),
   });
 
-  const current = todayData?.dashboardClient?.current as SaleInfo;
+  const current = todayData?.totalSale?.current as SaleInfo;
   const { accTotalPayment, accCount, accProfit, accProfitRate } = getSaleData(current);
 
   const parsedSaleInfo = {

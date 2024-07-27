@@ -58,11 +58,15 @@ const SwitchDate: FC<Props> = ({ range, searchStandard, setRange, setSearchStand
           setRange,
         }}
       />
-      <Stack direction="row" gap={1} justifyContent="flex-end" alignItems="center">
+      <Stack
+        sx={{ cursor: 'pointer' }}
+        onClick={(e) => setFilterAnchor(e.currentTarget)}
+        direction="row"
+        gap={1}
+        justifyContent="flex-end"
+        alignItems="center"
+      >
         <Typography>{getStringRange(range)}</Typography>
-        <IconButton onClick={(e) => setFilterAnchor(e.currentTarget)}>
-          <FilterAltIcon />
-        </IconButton>
       </Stack>
 
       <Stack justifyContent="flex-end" alignItems="center" direction="row" gap={1}>
