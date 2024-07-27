@@ -73,14 +73,16 @@ const SwitchDate: FC<Props> = ({
         justifyContent="flex-end"
         alignItems="center"
       >
-        <Typography>{getStringRange(range)}</Typography>
+        <Typography sx={{ fontSize: 14 }}>{getStringRange(range)}</Typography>
       </Stack>
 
       <Stack justifyContent="flex-end" alignItems="center" direction="row" gap={1}>
         <IconButton onClick={() => handleClickDateArrow('left')}>
-          <ArrowBackIosIcon sx={{ width: 16, height: 16 }} />
+          <ArrowBackIosIcon sx={{ width: 12, height: 12 }} />
         </IconButton>
-        <Typography fontWeight={500}>{dateValue}</Typography>
+        <Typography fontWeight={500} sx={{ fontSize: 14 }}>
+          {dateValue}
+        </Typography>
         <Box>
           <FormControl
             sx={{
@@ -94,9 +96,13 @@ const SwitchDate: FC<Props> = ({
               id="demo-simple-select"
               value={searchStandard}
               onChange={handleChangeStandard}
+              sx={{
+                fontSize: 12,
+                padding: 0,
+              }}
             >
               {searchStandardList.map((standard) => (
-                <MenuItem key={standard} value={standard}>
+                <MenuItem sx={{ fontSize: 14 }} key={standard} value={standard}>
                   {standard}
                 </MenuItem>
               ))}
@@ -104,7 +110,7 @@ const SwitchDate: FC<Props> = ({
           </FormControl>
         </Box>
         <IconButton onClick={() => handleClickDateArrow('right')}>
-          <ArrowForwardIosIcon sx={{ width: 16, height: 16 }} />
+          <ArrowForwardIosIcon sx={{ width: 12, height: 12 }} />
         </IconButton>
       </Stack>
     </Stack>

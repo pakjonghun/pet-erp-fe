@@ -17,18 +17,20 @@ const ClientSaleDetail = () => {
   const [totalDataCount, setTotalDataCount] = useState(0);
   return (
     <>
-      <SearchField
-        keywordInput={{
-          keyword,
-          setKeyword,
-        }}
-        dateInput={{
-          dateRange,
-          setDateRange,
-          searchStandard,
-          setSearchStandard,
-        }}
-      />
+      <CardContent>
+        <SearchField
+          keywordInput={{
+            keyword,
+            setKeyword,
+          }}
+          dateInput={{
+            dateRange,
+            setDateRange,
+            searchStandard,
+            setSearchStandard,
+          }}
+        />
+      </CardContent>
       <CardContent sx={{ display: 'flex', flexDirection: 'column', py: 0 }}>
         <Typography variant="caption">{`검색된 데이터 수 ${totalDataCount}`}</Typography>
         <Typography variant="caption">

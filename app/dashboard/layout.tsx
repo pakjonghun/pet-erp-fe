@@ -34,6 +34,7 @@ const DashboardLayout: FC<Props> = ({ totalSale, saleDetail }) => {
     >
       <SubTitle title="대시보드" />
       <Box sx={{ p: 3, overflow: 'auto' }}>
+        <div id="dashboardDetail"></div>
         <Grid container spacing={2}>
           <Grid item xs={12} xl={6}>
             {totalSale}

@@ -89,6 +89,7 @@ const ClientDetailContent: FC<Props> = ({
       {isLoading && <CommonLoading />}
       {!!selectedClient && (
         <ClientSaleModal
+          initDateRange={{ from, to }}
           onClose={() => {
             setSelectedClient(null);
           }}

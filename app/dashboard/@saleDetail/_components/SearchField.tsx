@@ -3,7 +3,7 @@ import { DateRange } from '@/components/calendar/dateFilter/type';
 import SwitchDate from '@/components/calendar/dateSwitch/SwitchDate';
 import { SearchStandard } from '@/components/calendar/dateSwitch/types';
 import { Search } from '@mui/icons-material';
-import { CardContent, InputAdornment, TextField } from '@mui/material';
+import { InputAdornment, TextField } from '@mui/material';
 
 interface Props {
   dateInput: {
@@ -16,11 +16,12 @@ interface Props {
     keyword: string;
     setKeyword: (value: string) => void;
   };
+  hint?: string;
 }
 
-const SearchField: FC<Props> = ({ dateInput, keywordInput: { keyword, setKeyword } }) => {
+const SearchField: FC<Props> = ({ dateInput, keywordInput: { keyword, setKeyword }, hint }) => {
   return (
-    <CardContent>
+    <>
       <SwitchDate {...dateInput} />
       <TextField
         value={keyword}
@@ -39,10 +40,10 @@ const SearchField: FC<Props> = ({ dateInput, keywordInput: { keyword, setKeyword
           },
           my: 2,
         }}
-        label="이름이나 코드를 입력하세요."
+        label={hint ?? '이름이나 코드를 입력하세요.'}
         size="small"
       />
-    </CardContent>
+    </>
   );
 };
 
