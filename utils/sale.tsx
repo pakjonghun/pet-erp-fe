@@ -3,6 +3,7 @@ import { NumberType } from '@/types';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { SaleInfo, SaleInfos } from '@/http/graphql/codegen/graphql';
+import { EMPTY } from '@/constants';
 
 export const getNumberToString = (number: number, numberType: NumberType) => {
   switch (numberType) {
@@ -13,7 +14,7 @@ export const getNumberToString = (number: number, numberType: NumberType) => {
     case 'percent':
       return `${number}%`;
     default:
-      break;
+      return EMPTY;
   }
 };
 
