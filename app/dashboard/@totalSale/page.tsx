@@ -3,20 +3,20 @@
 import { Card, CardHeader, FormControlLabel, Skeleton, Switch } from '@mui/material';
 import dayjs from 'dayjs';
 import SaleCardContent from './SaleCardContent';
-import useGetSaleData from './_hooks/useGetSaleData';
+import useGetTotalSale from '../_hooks/useGetSaleData';
 
 const TotalSale = () => {
   const today = dayjs();
   const todayFrom = today.startOf('day');
   const todayTo = today.endOf('day');
-  const { loading: todayLoading, saleInfo: todaySaleInfo } = useGetSaleData({
+  const { loading: todayLoading, saleInfo: todaySaleInfo } = useGetTotalSale({
     from: todayFrom,
     to: todayTo,
   });
 
   const monthFrom = today.startOf('month');
   const monthTo = today.endOf('month');
-  const { loading: monthLoading, saleInfo: monthSaleInfo } = useGetSaleData({
+  const { loading: monthLoading, saleInfo: monthSaleInfo } = useGetTotalSale({
     from: monthFrom,
     to: monthTo,
   });

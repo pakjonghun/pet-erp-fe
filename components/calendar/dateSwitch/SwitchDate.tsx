@@ -1,6 +1,5 @@
 'use client';
 
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { FC, useState } from 'react';
 import {
   Box,
@@ -17,7 +16,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { SearchStandard, Direction } from './types';
 import { searchStandardList } from './constants';
-import { getDateValueByStandard, getNextDayjsObj } from './utils';
+import { getDateValueByStandard, getNextDayjsObj, getStandardDayjsObj } from './utils';
 import CommonDateFilter from '../dateFilter/CommonDateFilter';
 import { DateRange } from '../dateFilter/type';
 import { getStringRange } from '../dateFilter/utils';
@@ -36,6 +35,8 @@ const SwitchDate: FC<Props> = ({ range, searchStandard, setRange, setSearchStand
   const handleChangeStandard = (event: SelectChangeEvent<SearchStandard>) => {
     const value = event.target.value as SearchStandard;
     setSearchStandard(value);
+    const nextDateObj = getStandardDayjsObj(value, range.from);
+    setRange(nextDateObj);
   };
 
   const handleClickDateArrow = (direction: Direction) => {

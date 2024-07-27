@@ -9,6 +9,7 @@ import { useReactiveVar } from '@apollo/client';
 import { saleRange } from '@/store/saleStore';
 import { DateRange } from '@/components/calendar/dateFilter/type';
 import { SearchStandard } from '@/components/calendar/dateSwitch/types';
+import TotalSaleCaption from './TotalSaleCaption';
 
 const SaleDetail = () => {
   const { from, to } = useReactiveVar(saleRange);
@@ -19,6 +20,8 @@ const SaleDetail = () => {
   const onChangeTab = (_: any, newValue: number) => {
     setTabValue(newValue);
   };
+
+  console.log('from : ', from.format('YYYY-MM-DD'));
 
   return (
     <Card>
@@ -37,7 +40,7 @@ const SaleDetail = () => {
       <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
         <Typography variant="caption">검색된 데이터 수 100개</Typography>
         <Typography variant="caption">
-          총 판매수 300, 총 매출 300, 총순이익 100, 순이익율 300%
+          <TotalSaleCaption from={from} to={to} />
         </Typography>
       </CardContent>
     </Card>

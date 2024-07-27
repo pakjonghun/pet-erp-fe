@@ -1,23 +1,15 @@
 import React, { FC, ReactNode } from 'react';
 import { CardContent, Stack, Typography } from '@mui/material';
 import { SaleInfoProps } from '../types';
+import TotalSaleText from '../_components/TotalSaleText';
 
 interface Props {
   title: ReactNode;
   saleInfo: SaleInfoProps;
 }
 
-const SaleCardContent: FC<Props> = ({
-  title,
-  saleInfo: { accTotalPayment, accCount, accProfit, accProfitRate },
-}) => {
-  const content = (
-    <Stack gap={1} flexDirection="row">
-      <span>{`판매수 ${accCount}`} </span>
-      <span>{`순이익 ${accProfit}`} </span>
-      <span>{`순이익율 ${accProfitRate}`} </span>
-    </Stack>
-  );
+const SaleCardContent: FC<Props> = ({ title, saleInfo }) => {
+  const content = <TotalSaleText saleInfo={saleInfo} />;
   return (
     <CardContent
       sx={{
@@ -42,7 +34,7 @@ const SaleCardContent: FC<Props> = ({
           component="span"
           sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
         >
-          {accTotalPayment}
+          {saleInfo.accTotalPayment}
         </Typography>
       </Stack>
       <Typography
@@ -56,7 +48,7 @@ const SaleCardContent: FC<Props> = ({
         color="GrayText"
         variant="caption"
       >
-        <span>{content}</span>
+        {content}
       </Typography>
       <Typography
         sx={{
