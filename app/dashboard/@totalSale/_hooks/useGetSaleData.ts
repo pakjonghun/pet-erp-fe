@@ -2,7 +2,7 @@
 
 import { Dayjs } from 'dayjs';
 import { getNumberToString, getProfit, getProfitRate } from '@/utils/sale';
-import { useTotalSale } from '@/http/graphql/hooks/client/useDashboardClient';
+import { useTotalSale } from '@/http/graphql/hooks/sale/useTotalSale';
 import { SaleInfo } from '@/http/graphql/codegen/graphql';
 
 interface Props {
