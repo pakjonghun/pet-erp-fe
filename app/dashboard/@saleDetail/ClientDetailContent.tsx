@@ -56,17 +56,28 @@ const ClientDetailContent: FC<Props> = ({
       }
     }
   };
+
+  const onClickItem = (data: ClientSaleMenu) => {
+    const nextItem =
+      selectedClient?._id === data._id //
+        ? null
+        : data;
+    setSelectedClient(nextItem);
+  };
+
   const tableScrollRef = useInfinityScroll({ callback });
   const cardScrollRef = useInfinityScroll({ callback });
 
   const isLoading = networkStatus <= 3;
 
   return (
-    <Stack direction="column" gap={3}>
+    <Stack direction="column" gap={1}>
       {rows.map((data, index) => {
         const isLast = index + 1 === rows.length;
         return (
           <SaleDetailItem
+            isSelected={selectedClient?._id === data._id}
+            onClickItem={onClickItem}
             scrollRef={isLast ? cardScrollRef : undefined}
             key={data._id}
             index={index + 1}

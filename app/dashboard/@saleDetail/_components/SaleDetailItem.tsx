@@ -1,6 +1,6 @@
 import { ClientSaleMenu } from '@/http/graphql/codegen/graphql';
 import { Grid, Stack, Typography } from '@mui/material';
-import React, { Dispatch, FC, SetStateAction } from 'react';
+import React, { Dispatch, FC, SetStateAction, useState } from 'react';
 import TotalSaleText from '../../_components/TotalSaleText';
 import { getParsedSaleData, getProfit, getProfitRate } from '@/utils/sale';
 
@@ -8,9 +8,11 @@ interface Props {
   scrollRef?: Dispatch<SetStateAction<null | HTMLElement>>;
   index: number;
   data: ClientSaleMenu;
+  isSelected: boolean;
+  onClickItem: (item: ClientSaleMenu) => void;
 }
 
-const SaleDetailItem: FC<Props> = ({ index, data, scrollRef }) => {
+const SaleDetailItem: FC<Props> = ({ isSelected, index, data, scrollRef, onClickItem }) => {
   const profit = getProfit({
     accPayCost: data.accPayCost,
     accWonCost: data.accWonCost,
@@ -18,7 +20,16 @@ const SaleDetailItem: FC<Props> = ({ index, data, scrollRef }) => {
   });
 
   return (
-    <Grid ref={scrollRef} container spacing={2}>
+    <Grid
+      onClick={() => onClickItem(data)}
+      ref={scrollRef}
+      container
+      sx={{
+        py: 2,
+        cursor: 'pointer',
+        bgcolor: (theme) => (isSelected ? theme.palette.action.selected : ''),
+      }}
+    >
       <Grid sx={{ placeContent: 'center' }} item xs={4}>
         <Stack direction="row" gap={1}>
           <Typography sx={{ display: 'flex', alignItems: 'center' }}>{index}</Typography>
