@@ -7,6 +7,7 @@ import SaleDetailItem from './_components/SaleDetailItem';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { ClientSaleMenu } from '@/http/graphql/codegen/graphql';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
+import ClientSaleModal from './_components/ClientDetailModal';
 
 interface Props {
   dateRange: DateRange;
@@ -86,6 +87,15 @@ const ClientDetailContent: FC<Props> = ({
         );
       })}
       {isLoading && <CommonLoading />}
+      {!!selectedClient && (
+        <ClientSaleModal
+          onClose={() => {
+            setSelectedClient(null);
+          }}
+          open={!!selectedClient}
+          selectedClient={selectedClient}
+        />
+      )}
     </Stack>
   );
 };
