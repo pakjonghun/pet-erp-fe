@@ -3,7 +3,6 @@
 import { FC } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import Hero from './Hero';
 import MobileNavTrigger from './MobileNavTrigger';
 import SettingMenuTrigger from './SettingMenuTrigger';
 import HeaderNav from '../navigation/\bHeaderNav';
@@ -30,7 +29,6 @@ const MainHeader: FC<Props> = ({ isLogin, toggleOpen }) => {
     >
       <Toolbar sx={{ display: 'flex', gap: 2 }}>
         {isLogin && <MobileNavTrigger toggleOpen={toggleOpen} />}
-        <Hero isLogin={isLogin} />
         {isLogin && <HeaderNav />}
         {isLogin && <SettingMenuTrigger />}
       </Toolbar>
