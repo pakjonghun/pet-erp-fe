@@ -1,3 +1,4 @@
+import { FC, useState } from 'react';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ReorderIcon from '@mui/icons-material/Reorder';
@@ -15,7 +16,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FC, useState } from 'react';
+
 import SaleOrderList from './SaleOrderList';
 import { SaleOrderSortList } from './constants';
 
@@ -201,6 +202,7 @@ const SaleOrders: FC<Props> = ({ initDateRange }) => {
         </Stack>
       </Stack>
       <SaleOrderList
+        isDateChecked={isDateChecked}
         setSort={setSort}
         setOrder={setOrder}
         sort={sort}

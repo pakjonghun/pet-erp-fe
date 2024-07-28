@@ -12,6 +12,7 @@ import { SaleOrdersNameMapper } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 
 interface Props {
+  isDateChecked: boolean;
   productName: string;
   mallId: string;
   orderNumber: string;
@@ -22,12 +23,20 @@ interface Props {
   setSort: (value: string) => void;
 }
 
-const SaleOrderList: FC<Props> = ({ productName, mallId, orderNumber, dateRange, sort, order }) => {
+const SaleOrderList: FC<Props> = ({
+  isDateChecked,
+  productName,
+  mallId,
+  orderNumber,
+  dateRange,
+  sort,
+  order,
+}) => {
   const { data, fetchMore, networkStatus } = useSaleOrders({
     limit: LIMIT,
     skip: 0,
-    from: dateRange.from.toISOString(),
-    to: dateRange.to.toISOString(),
+    from: isDateChecked ? dateRange.from.toISOString() : undefined,
+    to: isDateChecked ? dateRange.to.toISOString() : undefined,
     mallId,
     productName,
     orderNumber,
@@ -49,8 +58,8 @@ const SaleOrderList: FC<Props> = ({ productName, mallId, orderNumber, dateRange,
             saleOrdersInput: {
               limit: LIMIT,
               skip: rows.length,
-              from: dateRange.from.toISOString(),
-              to: dateRange.to.toISOString(),
+              from: isDateChecked ? dateRange.from.toISOString() : undefined,
+              to: isDateChecked ? dateRange.to.toISOString() : undefined,
               mallId,
               productName,
               orderNumber,
