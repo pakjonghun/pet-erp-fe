@@ -80,8 +80,12 @@ const ClientSaleModal: FC<Props> = ({
         </Stack>
         <CommonAnyTypeTable
           title={`${name} 채널의 제품 판매수 순`}
-          headerList={['이름', '판매수', '매출', '수이익', '순이익율']}
-          rowList={products.map((p) => createTableRow(p))}
+          headerList={['NO', '이름', '판매수', '매출', '수이익', '순이익율']}
+          rowList={products.map((p, i) => {
+            const no = i + 1;
+            const dataList = createTableRow(p);
+            return [no, ...dataList];
+          })}
         />
         <Box sx={{ pr: 3 }}>
           <SaleOrders initDateRange={initDateRange} />

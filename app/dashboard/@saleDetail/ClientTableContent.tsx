@@ -65,21 +65,23 @@ function createTableRow(item: ClientSaleMenu, no: number) {
     getNumberToString(getProfitRate(profit ?? 0, item.accPayCost ?? 0), 'percent'),
     <Stack
       sx={{
-        alignContent: 'center',
-        justifyContent: 'center',
+        alignContent: 'flex-start',
+        // justifyContent: 'center',
         flexDirection: {
           xs: 'column',
-          lg: 'row',
+          // lg: 'row',
         },
         flexWrap: 'wrap',
-        gap: 1,
+        gap: 0.3,
+        width: 'fit-content',
       }}
       key={`${no}_${item.name}`}
     >
       {item.products.slice(0, 3).map((p, i) => {
         return (
           <Chip
-            sx={{ borderRadius: 1 }}
+            size="small"
+            sx={{ borderRadius: 1, width: 'fit-content' }}
             key={Object.values(p).join(', ')}
             label={`${i + 1} ${p.name}(${p.accCount}EA)`}
           />

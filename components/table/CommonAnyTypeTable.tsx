@@ -73,7 +73,11 @@ const CommonAnyTypeTable: FC<Props> = ({
               >
                 {cells.map((cell, index) => {
                   return (
-                    <TableCell align={'center'} key={`${key}_column)_${index}`}>
+                    <TableCell
+                      sx={{ width: index == 1 ? '20%' : 'auto' }}
+                      align={'center'}
+                      key={`${key}_column)_${index}`}
+                    >
                       {cell}
                     </TableCell>
                   );

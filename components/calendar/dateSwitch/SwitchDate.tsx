@@ -55,8 +55,12 @@ const SwitchDate: FC<Props> = ({
   return (
     <Stack
       mr={3}
-      gap={1}
       sx={{
+        gap: {
+          xs: 1,
+          sm: 3,
+          md: 4,
+        },
         alignItems: {
           xs: 'flex-start',
           sm: 'center',
