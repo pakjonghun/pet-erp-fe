@@ -33,13 +33,10 @@ const PopupContainer = forwardRef<HTMLElement, Props>(
           ...sx,
         }}
       >
-        <IconButton
-          onClick={onClose}
-          sx={{ position: 'absolute', right: 3, top: 3 }}
-        >
+        <IconButton onClick={onClose} sx={{ position: 'absolute', right: 3, top: 3 }}>
           <ClearIcon />
         </IconButton>
-        {children}
+        <Box sx={{ height: '100%', overflow: 'auto', mt: 4 }}>{children}</Box>
       </Box>
     );
   }

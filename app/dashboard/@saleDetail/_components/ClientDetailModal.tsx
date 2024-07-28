@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import {
   Box,
   Stack,
@@ -13,16 +13,11 @@ import {
   Typography,
 } from '@mui/material';
 import { ClientSaleMenu } from '@/http/graphql/codegen/graphql';
-import LabelText from '@/components/ui/typograph/LabelText';
-import { getNumberWithComma } from '@/utils/common';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import { DateRange } from '@/components/calendar/dateFilter/type';
 import TotalSaleText from '../../_components/TotalSaleText';
 import { getNumberToString, getParsedSaleData, getProfit, getProfitRate } from '@/utils/sale';
-import SearchField from './SearchField';
-import useTextDebounce from '@/hooks/useTextDebounce';
-import { getToday } from '@/components/calendar/dateFilter/utils';
-import { SearchStandard } from '@/components/calendar/dateSwitch/types';
+import SaleOrders from '../SaleOrders';
 
 interface Props {
   initDateRange: DateRange;
@@ -35,7 +30,6 @@ const ClientSaleModal: FC<Props> = ({
   initDateRange,
   selectedClient: {
     name,
-    code,
     products,
     accCount,
     accDeliveryCost,
@@ -46,15 +40,8 @@ const ClientSaleModal: FC<Props> = ({
   open,
   onClose,
 }) => {
-  const [keyword, setKeyword] = useState('');
-  const delayedKeyword = useTextDebounce(keyword);
-
-  const [dateRange, setDateRange] = useState(initDateRange);
-  const [searchStandard, setSearchStandard] = useState<SearchStandard>('일');
-
-  const from = dateRange.from.format('YYYY-MM-DD');
-  const to = dateRange.to.format('YYYY-MM-DD');
-
+  const from = initDateRange.from.format('YYYY-MM-DD');
+  const to = initDateRange.to.format('YYYY-MM-DD');
   const dateStringRange = from == to ? from : `${from} ~ ${to}`;
 
   const profit = getProfit({
@@ -71,6 +58,7 @@ const ClientSaleModal: FC<Props> = ({
         width: '90%',
         height: '90%',
         borderRadius: 1,
+        px: 2,
       }}
     >
       <Typography variant="h6" component="h6" sx={{ fontWeight: 600 }}>
@@ -105,8 +93,8 @@ const ClientSaleModal: FC<Props> = ({
           <Table
             size="small"
             sx={{
-              border: (theme) => `1px solid ${theme.palette.divider}`,
               '& th, & td': {
+                border: (theme) => `1px solid ${theme.palette.divider}`,
                 py: 1,
                 px: 0.4,
                 fontSize: {
@@ -117,8 +105,12 @@ const ClientSaleModal: FC<Props> = ({
             }}
           >
             <TableHead>
-              {['이름', '판매수', '매출', '수이익', '순이익율'].map((head) => {
-                return <TableCell key={head}>{head}</TableCell>;
+              {['이름', '판매수', '매출', '수이익', '순이익율'].map((head, index) => {
+                return (
+                  <TableCell sx={{ textAlign: index ? 'right' : 'left' }} key={head}>
+                    {head}
+                  </TableCell>
+                );
               })}
             </TableHead>
             <TableBody>
@@ -131,12 +123,16 @@ const ClientSaleModal: FC<Props> = ({
                 return (
                   <TableRow key={product.name}>
                     <TableCell>{product.name}</TableCell>
-                    <TableCell>{getNumberToString(product.accCount ?? 0, 'comma')}</TableCell>
-                    <TableCell>
+                    <TableCell sx={{ textAlign: 'right' }}>
+                      {getNumberToString(product.accCount ?? 0, 'comma')}
+                    </TableCell>
+                    <TableCell sx={{ textAlign: 'right' }}>
                       {getNumberToString(product.accTotalPayment ?? 0, 'comma')}
                     </TableCell>
-                    <TableCell>{getNumberToString(profit ?? 0, 'comma')}</TableCell>
-                    <TableCell>
+                    <TableCell sx={{ textAlign: 'right' }}>
+                      {getNumberToString(profit ?? 0, 'comma')}
+                    </TableCell>
+                    <TableCell sx={{ textAlign: 'right' }}>
                       {getNumberToString(getProfitRate(profit, product.accPayCost ?? 0), 'percent')}
                     </TableCell>
                   </TableRow>
@@ -146,20 +142,7 @@ const ClientSaleModal: FC<Props> = ({
           </Table>
         </TableContainer>
         <Box>
-          <Typography sx={{ fontWeight: 600, mb: 1 }}>{`${name} 주문내역`}</Typography>
-          <SearchField
-            hint="주문번호나 제품이름을 입력하세요."
-            keywordInput={{
-              keyword,
-              setKeyword,
-            }}
-            dateInput={{
-              dateRange,
-              setDateRange,
-              searchStandard,
-              setSearchStandard,
-            }}
-          />
+          <SaleOrders initDateRange={initDateRange} />
         </Box>
       </Stack>
     </BaseModal>

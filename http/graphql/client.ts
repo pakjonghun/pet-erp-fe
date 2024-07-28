@@ -275,6 +275,13 @@ export const client = new ApolloClient({
             keyArgs: ['optionsInput', ['keyword']],
             merge,
           },
+          saleOrders: {
+            keyArgs: [
+              'saleOrdersInput',
+              ['productName', 'mallId', 'from', 'to', 'orderNumber', 'sort', 'order'],
+            ],
+            merge,
+          },
         },
       },
     },

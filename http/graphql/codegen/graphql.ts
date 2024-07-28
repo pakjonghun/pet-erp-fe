@@ -644,6 +644,19 @@ export type OutProduct = {
   name: Scalars['String']['output'];
 };
 
+export type OutSaleOrdersItem = {
+  __typename?: 'OutSaleOrdersItem';
+  count?: Maybe<Scalars['Int']['output']>;
+  deliveryCost?: Maybe<Scalars['Int']['output']>;
+  mallId?: Maybe<Scalars['String']['output']>;
+  orderNumber?: Maybe<Scalars['String']['output']>;
+  payCost?: Maybe<Scalars['Int']['output']>;
+  productName?: Maybe<Scalars['String']['output']>;
+  saleAt?: Maybe<Scalars['Date']['output']>;
+  totalPayment?: Maybe<Scalars['Int']['output']>;
+  wonCost?: Maybe<Scalars['Int']['output']>;
+};
+
 export type OutputOption = {
   __typename?: 'OutputOption';
   _id: Scalars['ID']['output'];
@@ -811,6 +824,7 @@ export type Query = {
   products: ProductsOutput;
   saleDetail?: Maybe<TotalSaleInfo>;
   saleMenuClients: ClientSaleMenuOutput;
+  saleOrders: SaleOrdersOutput;
   saleOutCheck?: Maybe<SaleOutCheck>;
   stockLogs: FindLogsResponseDto;
   stocks: StocksOutput;
@@ -896,6 +910,11 @@ export type QuerySaleDetailArgs = {
 
 export type QuerySaleMenuClientsArgs = {
   saleMenuClientsInput?: InputMaybe<FindDateScrollInput>;
+};
+
+
+export type QuerySaleOrdersArgs = {
+  saleOrdersInput?: InputMaybe<SaleOrdersInput>;
 };
 
 
@@ -1003,6 +1022,24 @@ export type SaleInfo = {
   accTotalPayment?: Maybe<Scalars['Float']['output']>;
   accWonCost?: Maybe<Scalars['Int']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+};
+
+export type SaleOrdersInput = {
+  from?: InputMaybe<Scalars['Date']['input']>;
+  limit: Scalars['Int']['input'];
+  mallId?: InputMaybe<Scalars['String']['input']>;
+  order?: InputMaybe<Scalars['Int']['input']>;
+  orderNumber?: InputMaybe<Scalars['String']['input']>;
+  productName?: InputMaybe<Scalars['String']['input']>;
+  skip: Scalars['Int']['input'];
+  sort?: InputMaybe<Scalars['String']['input']>;
+  to?: InputMaybe<Scalars['Date']['input']>;
+};
+
+export type SaleOrdersOutput = {
+  __typename?: 'SaleOrdersOutput';
+  data?: Maybe<Array<OutSaleOrdersItem>>;
+  totalCount: Scalars['Int']['output'];
 };
 
 export type SaleOutCheck = {
@@ -1680,6 +1717,13 @@ export type LoadSabangDataMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type LoadSabangDataMutation = { __typename?: 'Mutation', loadSabangData?: Array<{ __typename?: 'Sale', orderNumber?: string | null, productName?: string | null, productCode?: string | null, count?: number | null, mallId?: string | null }> | null };
 
+export type SaleOrdersQueryVariables = Exact<{
+  saleOrdersInput: SaleOrdersInput;
+}>;
+
+
+export type SaleOrdersQuery = { __typename?: 'Query', saleOrders: { __typename?: 'SaleOrdersOutput', totalCount: number, data?: Array<{ __typename?: 'OutSaleOrdersItem', count?: number | null, deliveryCost?: number | null, mallId?: string | null, orderNumber?: string | null, payCost?: number | null, productName?: string | null, saleAt?: any | null, totalPayment?: number | null, wonCost?: number | null }> | null } };
+
 export type OutSaleDataMutationVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1995,6 +2039,7 @@ export const UpdateOrderDocument = {"kind":"Document","definitions":[{"kind":"Op
 export const OrdersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"orders"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ordersInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"OrdersInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"orders"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"ordersInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ordersInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductOrderFragment"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductOrderFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ProductOrder"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"factory"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"products"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"leadTime"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"payCost"}},{"kind":"Field","name":{"kind":"Name","value":"notPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"totalPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"isDone"}},{"kind":"Field","name":{"kind":"Name","value":"orderDate"}}]}}]} as unknown as DocumentNode<OrdersQuery, OrdersQueryVariables>;
 export const RemoveOrderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"removeOrder"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeOrder"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"_id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductOrderFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductOrderFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ProductOrder"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"factory"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"products"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"leadTime"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"payCost"}},{"kind":"Field","name":{"kind":"Name","value":"notPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"totalPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"isDone"}},{"kind":"Field","name":{"kind":"Name","value":"orderDate"}}]}}]} as unknown as DocumentNode<RemoveOrderMutation, RemoveOrderMutationVariables>;
 export const LoadSabangDataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"loadSabangData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"loadSabangData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"orderNumber"}},{"kind":"Field","name":{"kind":"Name","value":"productName"}},{"kind":"Field","name":{"kind":"Name","value":"productCode"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"mallId"}}]}}]}}]} as unknown as DocumentNode<LoadSabangDataMutation, LoadSabangDataMutationVariables>;
+export const SaleOrdersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"saleOrders"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"saleOrdersInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SaleOrdersInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"saleOrders"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"saleOrdersInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"saleOrdersInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"deliveryCost"}},{"kind":"Field","name":{"kind":"Name","value":"mallId"}},{"kind":"Field","name":{"kind":"Name","value":"orderNumber"}},{"kind":"Field","name":{"kind":"Name","value":"payCost"}},{"kind":"Field","name":{"kind":"Name","value":"productName"}},{"kind":"Field","name":{"kind":"Name","value":"saleAt"}},{"kind":"Field","name":{"kind":"Name","value":"totalPayment"}},{"kind":"Field","name":{"kind":"Name","value":"wonCost"}}]}}]}}]}}]} as unknown as DocumentNode<SaleOrdersQuery, SaleOrdersQueryVariables>;
 export const OutSaleDataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"outSaleData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"outSaleData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasNoCountSale"}},{"kind":"Field","name":{"kind":"Name","value":"hasNoProductCodeSale"}},{"kind":"Field","name":{"kind":"Name","value":"hasNoMatchClientSale"}},{"kind":"Field","name":{"kind":"Name","value":"hasNoMatchStorageSale"}},{"kind":"Field","name":{"kind":"Name","value":"hasNoStockSale"}},{"kind":"Field","name":{"kind":"Name","value":"hasNoMatchStorageProductStockSale"}},{"kind":"Field","name":{"kind":"Name","value":"totalErrors"}}]}}]}}]} as unknown as DocumentNode<OutSaleDataMutation, OutSaleDataMutationVariables>;
 export const SaleOutCheckDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"saleOutCheck"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"saleOutCheck"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isChecked"}}]}}]}}]} as unknown as DocumentNode<SaleOutCheckQuery, SaleOutCheckQueryVariables>;
 export const TotalSaleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"totalSale"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"totalSaleInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"FindDateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalSale"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"totalSaleInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"totalSaleInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"current"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"accCount"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"accDeliveryCost"}},{"kind":"Field","name":{"kind":"Name","value":"accTotalPayment"}},{"kind":"Field","name":{"kind":"Name","value":"accWonCost"}}]}},{"kind":"Field","name":{"kind":"Name","value":"previous"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"accCount"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"accDeliveryCost"}},{"kind":"Field","name":{"kind":"Name","value":"accTotalPayment"}},{"kind":"Field","name":{"kind":"Name","value":"accWonCost"}}]}}]}}]}}]} as unknown as DocumentNode<TotalSaleQuery, TotalSaleQueryVariables>;
