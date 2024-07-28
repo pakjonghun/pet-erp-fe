@@ -31,8 +31,8 @@ const ProductSales = () => {
     skip: 0,
     from: from.toISOString(),
     to: to.toISOString(),
-    sort,
-    order,
+    // sort,
+    // order,
   });
 
   const handleSort = (sortValue: string, orderValue: OrderValue) => {

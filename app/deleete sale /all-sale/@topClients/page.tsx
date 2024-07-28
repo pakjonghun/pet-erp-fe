@@ -26,6 +26,7 @@ const TopClients = () => {
     to: to.toISOString(),
     limit: LIMIT,
     skip: 0,
+    keyword: '',
   });
 
   const rows = (data?.saleMenuClients.data as ClientSaleMenu[]) ?? [];

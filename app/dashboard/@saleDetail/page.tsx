@@ -17,8 +17,9 @@ const SaleDetail = () => {
   return (
     <Card>
       <CardHeader title={`${DASHBOARD_DETAIL_TABS[tabValue] ?? ''} 판매수 순`} />
-      <DetailTabs tabValue={tabValue} onChangeTab={onChangeTab} />
-      {tabValue ? <ProductSaleDetail /> : <ClientSaleDetail />}
+      {/* <DetailTabs tabValue={tabValue} onChangeTab={onChangeTab} /> */}
+      <ClientSaleDetail />
+      {/* {tabValue ? <ProductSaleDetail /> : <ClientSaleDetail />} */}
     </Card>
   );
 };
