@@ -10,6 +10,7 @@ import dayjs from 'dayjs';
 import { FC } from 'react';
 import { SaleOrdersNameMapper } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
+import CommonAnyTypeTable from '@/components/table/CommonAnyTypeTable';
 
 interface Props {
   isDateChecked: boolean;
@@ -76,71 +77,107 @@ const SaleOrderList: FC<Props> = ({
   const cardScrollRef = useInfinityScroll({ callback });
 
   return (
-    <Stack
-      direction="column"
-      sx={{
-        minHeight: '800px',
-        border: (theme) => `1px solid ${theme.palette.divider}`,
-        borderRadius: 1,
-        mt: 1,
-        py: 4,
-        px: 2,
-      }}
-    >
-      <Typography variant="caption" color="GrayText">{`검색결과 : ${getNumberToString(
-        data?.saleOrders.totalCount ?? 0,
-        'comma'
-      )}건`}</Typography>
-
+    <>
       <Stack
+        direction="column"
         sx={{
-          flexDirection: 'column',
-          gap: 2,
+          minHeight: '800px',
+          border: (theme) => `1px solid ${theme.palette.divider}`,
+          borderRadius: 1,
+          mt: 1,
+          py: 4,
+          px: 2,
         }}
       >
-        {rows.map((row, index) => {
-          const isLast = rows.length === index + 1;
-          const rowKey = row.join(',');
-          return (
-            <Stack
-              ref={isLast ? cardScrollRef : null}
-              sx={{
-                py: {
-                  xs: 2,
-                  sm: 4,
-                },
-                px: {
-                  xs: 1,
-                  sm: 2,
-                },
-                flexDirection: {
-                  xs: 'column',
-                  sm: 'row',
-                },
-                flexWrap: {
-                  xs: 'nowrap',
-                  sm: 'wrap',
-                },
-                border: (theme) => `1px solid ${theme.palette.divider}`,
-                borderRadius: 2,
-                gap: {
-                  xs: 0,
-                  sm: 2,
-                },
-              }}
-              key={rowKey}
-            >
-              {row.map((item) => {
-                const [key, value] = Object.entries(item)[0];
-                const label = SaleOrdersNameMapper[key as unknown as string];
-                return <LabelText key={label} label={label} text={value ?? ''} />;
-              })}
-            </Stack>
-          );
-        })}
+        <Typography variant="caption" color="GrayText">{`검색결과 : ${getNumberToString(
+          data?.saleOrders.totalCount ?? 0,
+          'comma'
+        )}건`}</Typography>
+
+        <Stack
+          sx={{
+            display: {
+              xs: 'flex',
+              md: 'none',
+            },
+            flexDirection: 'column',
+            gap: 2,
+          }}
+        >
+          {rows.map((row, index) => {
+            const isLast = rows.length === index + 1;
+            const rowKey = row.join(',');
+            return (
+              <Stack
+                ref={isLast ? cardScrollRef : null}
+                sx={{
+                  py: {
+                    xs: 2,
+                    sm: 4,
+                  },
+                  px: {
+                    xs: 1,
+                    sm: 2,
+                  },
+                  flexDirection: {
+                    xs: 'column',
+                    sm: 'row',
+                  },
+                  flexWrap: {
+                    xs: 'nowrap',
+                    sm: 'wrap',
+                  },
+                  border: (theme) => `1px solid ${theme.palette.divider}`,
+                  borderRadius: 2,
+                  gap: {
+                    xs: 0,
+                    sm: 2,
+                  },
+                }}
+                key={rowKey}
+              >
+                {row.map((item) => {
+                  const [key, value] = Object.entries(item)[0];
+                  const label = SaleOrdersNameMapper[key as unknown as string];
+                  return <LabelText key={label} label={label} text={value ?? ''} />;
+                })}
+              </Stack>
+            );
+          })}
+        </Stack>
+        <CommonAnyTypeTable
+          scrollRef={tableScrollRef}
+          headerList={[
+            'NO',
+            '주문날짜',
+            '거래처',
+            '제품명',
+            '판매수',
+            '매출',
+            '정산액',
+            '원가',
+            '택배비',
+            '주문번호',
+          ]}
+          title=""
+          rowList={rows.map((item, idx) => {
+            const cellValues = item.map((cell) => {
+              const values = Object.values(cell) as any[];
+              return values[0];
+            });
+
+            return [idx + 1, ...cellValues];
+          })}
+          sx={{
+            display: {
+              xs: 'none',
+              md: 'block',
+            },
+          }}
+        />
+        {isLoading && <CommonLoading />}
       </Stack>
-      {isLoading ?? <CommonLoading />}
-    </Stack>
+    </>
   );
 };
 

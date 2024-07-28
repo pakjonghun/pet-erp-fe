@@ -24,6 +24,9 @@ const PopupContainer = forwardRef<HTMLElement, Props>(
       <Box
         sx={{
           ...modalContainerSx,
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
           bgcolor: 'background.paper',
           boxShadow: 10,
           px: 3,
@@ -36,7 +39,7 @@ const PopupContainer = forwardRef<HTMLElement, Props>(
         <IconButton onClick={onClose} sx={{ position: 'absolute', right: 3, top: 3 }}>
           <ClearIcon />
         </IconButton>
-        <Box sx={{ height: '100%', overflow: 'auto', mt: 4 }}>{children}</Box>
+        <Box sx={{ flex: 1, overflow: 'auto', mt: 4 }}>{children}</Box>
       </Box>
     );
   }

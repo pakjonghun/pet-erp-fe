@@ -67,7 +67,16 @@ const SaleOrders: FC<Props> = ({ initDateRange }) => {
           flexWrap: 'wrap',
         }}
       >
-        <Stack direction="row" alignItems="flex-start" sx={{ width: '100%' }}>
+        <Stack
+          direction="row"
+          sx={{
+            width: '100%',
+            alignItems: {
+              xs: 'flex-start',
+              sm: 'center',
+            },
+          }}
+        >
           <FormControlLabel
             label="주문날짜"
             control={

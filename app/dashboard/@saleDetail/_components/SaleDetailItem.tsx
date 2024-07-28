@@ -28,15 +28,16 @@ const SaleDetailItem: FC<Props> = ({ isSelected, index, data, scrollRef, onClick
         py: 2,
         cursor: 'pointer',
         bgcolor: (theme) => (isSelected ? theme.palette.action.selected : ''),
+        borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
       }}
     >
-      <Grid sx={{ placeContent: 'center' }} item xs={4}>
-        <Stack direction="row" gap={1}>
+      <Grid sx={{ placeContent: 'center' }} item xs={4} sm={3}>
+        <Stack direction="row" sx={{ gap: { xs: 1, sm: 2 } }}>
           <Typography sx={{ display: 'flex', alignItems: 'center' }}>{index}</Typography>
           <Typography sx={{ display: 'flex', alignItems: 'center' }}>{data.name}</Typography>
         </Stack>
       </Grid>
-      <Grid item xs={8}>
+      <Grid item xs={8} sm={9}>
         <Typography variant="caption" color="GrayText">
           <TotalSaleText
             hasFullText
@@ -48,6 +49,34 @@ const SaleDetailItem: FC<Props> = ({ isSelected, index, data, scrollRef, onClick
             })}
           />
         </Typography>
+        <Stack
+          flexWrap="wrap"
+          gap={1}
+          direction="row"
+          sx={{
+            display: {
+              xs: 'none',
+              sm: 'flex',
+            },
+          }}
+        >
+          <Typography variant="caption" color="GrayText">
+            Top3 제품
+          </Typography>
+          {data.products.slice(0, 3).map((p, index) => {
+            return (
+              <Stack key={p.name} direction="row" gap={0.2}>
+                <Typography color="GrayText" variant="caption">
+                  {index + 1}
+                </Typography>
+                <Typography
+                  color="GrayText"
+                  variant="caption"
+                >{`${p.name}(${p.accCount}EA)`}</Typography>
+              </Stack>
+            );
+          })}
+        </Stack>
       </Grid>
     </Grid>
   );

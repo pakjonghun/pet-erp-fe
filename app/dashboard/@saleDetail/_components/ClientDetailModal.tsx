@@ -1,23 +1,14 @@
 'use client';
 
 import { FC } from 'react';
-import {
-  Box,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@mui/material';
-import { ClientSaleMenu } from '@/http/graphql/codegen/graphql';
+import { Box, Stack, Typography } from '@mui/material';
+import { ClientSaleMenu, ProductSaleInfo } from '@/http/graphql/codegen/graphql';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import { DateRange } from '@/components/calendar/dateFilter/type';
 import TotalSaleText from '../../_components/TotalSaleText';
 import { getNumberToString, getParsedSaleData, getProfit, getProfitRate } from '@/utils/sale';
 import SaleOrders from '../SaleOrders';
+import CommonAnyTypeTable from '@/components/table/CommonAnyTypeTable';
 
 interface Props {
   initDateRange: DateRange;
@@ -87,61 +78,12 @@ const ClientSaleModal: FC<Props> = ({
             />
           </Typography>
         </Stack>
-
-        <TableContainer>
-          <Typography sx={{ mb: 1, fontWeight: 600 }}>{`${name} 채널의 제품 판매수 순`}</Typography>
-          <Table
-            size="small"
-            sx={{
-              '& th, & td': {
-                border: (theme) => `1px solid ${theme.palette.divider}`,
-                py: 1,
-                px: 0.4,
-                fontSize: {
-                  xs: 12,
-                  md: 14,
-                },
-              },
-            }}
-          >
-            <TableHead>
-              {['이름', '판매수', '매출', '수이익', '순이익율'].map((head, index) => {
-                return (
-                  <TableCell sx={{ textAlign: index ? 'right' : 'left' }} key={head}>
-                    {head}
-                  </TableCell>
-                );
-              })}
-            </TableHead>
-            <TableBody>
-              {products.map((product) => {
-                const profit = getProfit({
-                  accDeliveryCost: product.accDeliveryCost,
-                  accPayCost: product.accPayCost,
-                  accWonCost: product.accWonCost,
-                });
-                return (
-                  <TableRow key={product.name}>
-                    <TableCell>{product.name}</TableCell>
-                    <TableCell sx={{ textAlign: 'right' }}>
-                      {getNumberToString(product.accCount ?? 0, 'comma')}
-                    </TableCell>
-                    <TableCell sx={{ textAlign: 'right' }}>
-                      {getNumberToString(product.accTotalPayment ?? 0, 'comma')}
-                    </TableCell>
-                    <TableCell sx={{ textAlign: 'right' }}>
-                      {getNumberToString(profit ?? 0, 'comma')}
-                    </TableCell>
-                    <TableCell sx={{ textAlign: 'right' }}>
-                      {getNumberToString(getProfitRate(profit, product.accPayCost ?? 0), 'percent')}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <Box>
+        <CommonAnyTypeTable
+          title={`${name} 채널의 제품 판매수 순`}
+          headerList={['이름', '판매수', '매출', '수이익', '순이익율']}
+          rowList={products.map((p) => createTableRow(p))}
+        />
+        <Box sx={{ pr: 3 }}>
           <SaleOrders initDateRange={initDateRange} />
         </Box>
       </Stack>
@@ -150,3 +92,21 @@ const ClientSaleModal: FC<Props> = ({
 };
 
 export default ClientSaleModal;
+
+function createTableRow(product: ProductSaleInfo) {
+  const profit = getProfit({
+    accDeliveryCost: product.accDeliveryCost,
+    accPayCost: product.accPayCost,
+    accWonCost: product.accWonCost,
+  });
+
+  const result = [
+    product.name,
+    getNumberToString(product.accCount ?? 0, 'comma'),
+    getNumberToString(product.accTotalPayment ?? 0, 'comma'),
+    getNumberToString(profit ?? 0, 'comma'),
+    getNumberToString(getProfitRate(profit, product.accPayCost ?? 0), 'percent'),
+  ];
+
+  return result;
+}

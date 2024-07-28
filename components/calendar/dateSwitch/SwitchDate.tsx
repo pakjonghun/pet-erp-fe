@@ -53,7 +53,22 @@ const SwitchDate: FC<Props> = ({
   const dateValue = getDateValueByStandard(searchStandard, range.from);
 
   return (
-    <Stack direction="column" alignItems="flex-start" mr={3} gap={1} sx={{ ...sx }}>
+    <Stack
+      mr={3}
+      gap={1}
+      sx={{
+        alignItems: {
+          xs: 'flex-start',
+          sm: 'center',
+        },
+        flexDirection: {
+          xs: 'column',
+          sm: 'row',
+        },
+
+        ...sx,
+      }}
+    >
       <CommonDateFilter
         anchor={{
           open: !!filterAnchor,
@@ -65,6 +80,7 @@ const SwitchDate: FC<Props> = ({
           setRange,
         }}
       />
+
       <Stack
         sx={{ cursor: 'pointer' }}
         onClick={(e) => setFilterAnchor(e.currentTarget)}

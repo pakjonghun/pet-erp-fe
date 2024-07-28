@@ -2,12 +2,11 @@ import { FC, useEffect, useState } from 'react';
 import { DateRange } from '@/components/calendar/dateFilter/type';
 import { LIMIT } from '@/constants';
 import { useSaleMenuClients } from '@/http/graphql/hooks/client/useSaleMenuClients';
-import { Stack } from '@mui/material';
-import SaleDetailItem from './_components/SaleDetailItem';
-import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { ClientSaleMenu } from '@/http/graphql/codegen/graphql';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import ClientSaleModal from './_components/ClientDetailModal';
+import ClientCardContent from './ClientCardContent';
+import ClientTableContent from './ClientTableContent';
 
 interface Props {
   dateRange: DateRange;
@@ -72,21 +71,22 @@ const ClientDetailContent: FC<Props> = ({
   const isLoading = networkStatus <= 3;
 
   return (
-    <Stack direction="column" gap={1}>
-      {rows.map((data, index) => {
-        const isLast = index + 1 === rows.length;
-        return (
-          <SaleDetailItem
-            isSelected={selectedClient?._id === data._id}
-            onClickItem={onClickItem}
-            scrollRef={isLast ? cardScrollRef : undefined}
-            key={data._id}
-            index={index + 1}
-            data={data}
-          />
-        );
-      })}
-      {isLoading && <CommonLoading />}
+    <>
+      <ClientCardContent
+        rows={rows}
+        selectedClient={selectedClient}
+        isLoading={isLoading}
+        onClickItem={onClickItem}
+        cardScrollRef={cardScrollRef}
+      />
+      <ClientTableContent
+        rows={rows}
+        selectedClient={selectedClient}
+        isLoading={isLoading}
+        onClickItem={onClickItem}
+        tableScrollRef={tableScrollRef}
+      />
+
       {!!selectedClient && (
         <ClientSaleModal
           initDateRange={{ from, to }}
@@ -97,7 +97,7 @@ const ClientDetailContent: FC<Props> = ({
           selectedClient={selectedClient}
         />
       )}
-    </Stack>
+    </>
   );
 };
 
