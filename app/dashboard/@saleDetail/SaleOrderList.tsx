@@ -11,7 +11,6 @@ import dayjs from 'dayjs';
 import { SaleOrdersNameMapper } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import CommonAnyTypeTable from '@/components/table/CommonAnyTypeTable';
-
 import { useDownloadSaleOrders } from '@/http/rest/hooks/file/useDownloadExcelFile';
 import { snackMessage } from '@/store/snackMessage';
 import ActionButton from '@/components/ui/button/ActionButton';
@@ -127,7 +126,7 @@ const SaleOrderList: FC<Props> = ({
           px: 2,
         }}
       >
-        <Box sx={{ width: 'fit-content' }}>
+        <Box sx={{ width: 'fit-content', mb: 1, ml: 'auto', mr: 3 }}>
           <ActionButton
             icon={isDownloading ? <CommonLoading /> : <FileDownloadIcon />}
             text="검색한 주문 다운로드"
@@ -138,7 +137,6 @@ const SaleOrderList: FC<Props> = ({
           data?.saleOrders.totalCount ?? 0,
           'comma'
         )}건`}</Typography>
-
         <Stack
           sx={{
             display: {

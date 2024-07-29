@@ -35,9 +35,10 @@ const CommonAnyTypeTable: FC<Props> = ({
 }) => {
   const isEmpty = !isLoading && rowList.length == 0;
   return (
-    <TableContainer sx={{ pr: 3, ...sx }}>
+    <TableContainer sx={{ pr: 3, maxHeight: 1000, overflow: 'auto', ...sx }}>
       <Typography sx={{ mb: 1, fontWeight: 600 }}>{title}</Typography>
       <Table
+        stickyHeader
         size="small"
         sx={{
           '& th, & td': {

@@ -6,6 +6,8 @@ import { saleRange } from '@/store/saleStore';
 import { DateRange } from '@/components/calendar/dateFilter/type';
 import { getToday } from '@/components/calendar/dateFilter/utils';
 import SubTitle from '@/components/ui/typograph/SubTitle';
+import SaleOrders from './@saleDetail/SaleOrders';
+import dayjs from 'dayjs';
 
 interface Props {
   totalSale: ReactNode;
@@ -42,8 +44,19 @@ const DashboardLayout: FC<Props> = ({ totalSale, saleDetail }) => {
           </Grid>
         </Grid>
         <Grid sx={{ mt: 2 }} container spacing={2}>
-          <Grid item xs={12}>
+          <Grid item xs={12} xl={6}>
             {saleDetail}
+          </Grid>
+
+          <Grid item xs={12} xl={6}>
+            <Box sx={{ p: 2, bgcolor: 'white', borderRadius: 1, boxShadow: 2 }}>
+              <SaleOrders
+                size="large"
+                initProductName=""
+                initMallId=""
+                initDateRange={{ from: dayjs().subtract(5, 'day'), to: dayjs() }}
+              />
+            </Box>
           </Grid>
         </Grid>
       </Box>

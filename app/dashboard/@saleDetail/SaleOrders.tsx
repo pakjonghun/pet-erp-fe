@@ -8,6 +8,7 @@ import { SearchStandard } from '@/components/calendar/dateSwitch/types';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { Search } from '@mui/icons-material';
 import {
+  Box,
   Button,
   Checkbox,
   FormControlLabel,
@@ -23,9 +24,10 @@ interface Props {
   initDateRange: DateRange;
   initProductName: string;
   initMallId: string;
+  size?: 'small' | 'large';
 }
 
-const SaleOrders: FC<Props> = ({ initMallId, initProductName, initDateRange }) => {
+const SaleOrders: FC<Props> = ({ size = 'small', initMallId, initProductName, initDateRange }) => {
   const [productName, setProductName] = useState(initProductName);
   const delayedProductName = useTextDebounce(productName);
 
@@ -53,7 +55,14 @@ const SaleOrders: FC<Props> = ({ initMallId, initProductName, initDateRange }) =
 
   return (
     <>
-      <Typography sx={{ fontWeight: 600, mb: 1 }}>{`${name} 주문내역`}</Typography>
+      <Typography
+        sx={{
+          fontWeight: size === 'large' ? 400 : 600,
+          mb: 1,
+          fontSize: size == 'large' ? 24 : 16,
+        }}
+      >{`${name} 주문내역`}</Typography>
+
       <Stack
         sx={{
           px: 2,
@@ -79,7 +88,11 @@ const SaleOrders: FC<Props> = ({ initMallId, initProductName, initDateRange }) =
           }}
         >
           <FormControlLabel
-            label="주문날짜"
+            label={
+              <Typography variant="subtitle1" sx={{ whiteSpace: 'nowrap' }}>
+                주문날짜
+              </Typography>
+            }
             control={
               <Checkbox
                 checked={isDateChecked}
