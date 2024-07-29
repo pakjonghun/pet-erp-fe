@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, CardContent, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import TotalSaleCaption from './TotalSaleCaption';
 import ClientDetailContent from './ClientDetailContent';
 import { SearchStandard } from '@/components/calendar/dateSwitch/types';

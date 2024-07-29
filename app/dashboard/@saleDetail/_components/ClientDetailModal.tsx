@@ -72,7 +72,7 @@ const ClientSaleModal: FC<Props> = ({
               saleInfo={getParsedSaleData({
                 accCount: accCount ?? 0,
                 accProfit: profit,
-                accProfitRate: getProfitRate(profit, accPayCost ?? 0),
+                accProfitRate: getProfitRate(profit, accTotalPayment ?? 0),
                 accTotalPayment: accTotalPayment ?? 0,
               })}
             />
