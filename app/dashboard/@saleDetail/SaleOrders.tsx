@@ -16,19 +16,20 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-
 import SaleOrderList from './SaleOrderList';
 import { SaleOrderSortList } from './constants';
 
 interface Props {
   initDateRange: DateRange;
+  initProductName: string;
+  initMallId: string;
 }
 
-const SaleOrders: FC<Props> = ({ initDateRange }) => {
-  const [productName, setProductName] = useState('');
+const SaleOrders: FC<Props> = ({ initMallId, initProductName, initDateRange }) => {
+  const [productName, setProductName] = useState(initProductName);
   const delayedProductName = useTextDebounce(productName);
 
-  const [mallId, setMallId] = useState('');
+  const [mallId, setMallId] = useState(initMallId);
   const delayedMallId = useTextDebounce(mallId);
 
   const [orderNumber, setOrderNumber] = useState('');

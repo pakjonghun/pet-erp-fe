@@ -29,6 +29,7 @@ const DashboardLayout: FC<Props> = ({ totalSale, saleDetail }) => {
         display: 'flex',
         flexDirection: 'column',
         height: 'calc(100vh - 64px)',
+        gap: 3,
         bgcolor: (theme) => theme.palette.primary.light,
       }}
     >

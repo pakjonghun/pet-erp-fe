@@ -88,7 +88,7 @@ const ClientSaleModal: FC<Props> = ({
           })}
         />
         <Box sx={{ pr: 3 }}>
-          <SaleOrders initDateRange={initDateRange} />
+          <SaleOrders initProductName="" initMallId={name} initDateRange={initDateRange} />
         </Box>
       </Stack>
     </BaseModal>
