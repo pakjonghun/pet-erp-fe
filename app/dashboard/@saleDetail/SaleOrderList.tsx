@@ -1,16 +1,21 @@
+import { FC } from 'react';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { DateRange } from '@/components/calendar/dateFilter/type';
-import CommonLoading from '@/components/ui/loading/CommonLoading';
 import LabelText from '@/components/ui/typograph/LabelText';
 import { LIMIT } from '@/constants';
 import { OutSaleOrdersItem } from '@/http/graphql/codegen/graphql';
 import { useSaleOrders } from '@/http/graphql/hooks/sale/useSaleOrders';
 import { getNumberToString } from '@/utils/sale';
-import { Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import dayjs from 'dayjs';
-import { FC } from 'react';
 import { SaleOrdersNameMapper } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import CommonAnyTypeTable from '@/components/table/CommonAnyTypeTable';
+
+import { useDownloadSaleOrders } from '@/http/rest/hooks/file/useDownloadExcelFile';
+import { snackMessage } from '@/store/snackMessage';
+import ActionButton from '@/components/ui/button/ActionButton';
+import CommonLoading from '@/components/ui/loading/CommonLoading';
 
 interface Props {
   isDateChecked: boolean;
@@ -44,6 +49,39 @@ const SaleOrderList: FC<Props> = ({
     sort,
     order,
   });
+
+  const { mutate: download, isPending: isDownloading } = useDownloadSaleOrders();
+
+  const handleDownload = () => {
+    download(
+      {
+        limit: 9999999999999,
+        skip: 0,
+        from: isDateChecked ? dateRange.from.toISOString() : undefined,
+        to: isDateChecked ? dateRange.to.toISOString() : undefined,
+        mallId,
+        productName,
+        orderNumber,
+        sort,
+        order,
+      },
+      {
+        onSuccess: () => {
+          snackMessage({
+            message: '주문 다운로드가 완료되었습니다.',
+            severity: 'success',
+          });
+        },
+        onError: (err) => {
+          const message = err.message;
+          snackMessage({
+            message: message ?? '주문 파일 다운로드가 실패했습니다.',
+            severity: 'error',
+          });
+        },
+      }
+    );
+  };
 
   const isLoading = networkStatus <= 3;
   const rows = data?.saleOrders.data?.map((saleOrder) => createRowData(saleOrder)) ?? [];
@@ -89,6 +127,13 @@ const SaleOrderList: FC<Props> = ({
           px: 2,
         }}
       >
+        <Box sx={{ width: 'fit-content' }}>
+          <ActionButton
+            icon={isDownloading ? <CommonLoading /> : <FileDownloadIcon />}
+            text="검색한 주문 다운로드"
+            onClick={handleDownload}
+          />
+        </Box>
         <Typography variant="caption" color="GrayText">{`검색결과 : ${getNumberToString(
           data?.saleOrders.totalCount ?? 0,
           'comma'
