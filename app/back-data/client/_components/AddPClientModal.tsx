@@ -60,6 +60,7 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
       inActive: true,
       deliveryFreeProductCodeList: [],
       deliveryNotFreeProductCodeList: [],
+      isSabangService: false,
     },
   });
   const { data: storageData, networkStatus } = useStorages({
@@ -177,6 +178,16 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
         </Stack>
 
         <FormGroup sx={modalSizeProps}>
+          <Controller
+            control={control}
+            name="isSabangService"
+            render={({ field }) => (
+              <FormControlLabel
+                label={field.value ? '사방넷 지원' : '사방넷 지원'}
+                control={<Switch {...field} />}
+              />
+            )}
+          />
           <Controller
             control={control}
             name="code"

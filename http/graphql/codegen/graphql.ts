@@ -43,6 +43,7 @@ export type Client = {
   deliveryNotFreeProductCodeList?: Maybe<Array<Scalars['String']['output']>>;
   feeRate?: Maybe<Scalars['Float']['output']>;
   inActive?: Maybe<Scalars['Boolean']['output']>;
+  isSabangService: Scalars['Boolean']['output'];
   manager?: Maybe<Scalars['String']['output']>;
   managerTel?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
@@ -78,6 +79,7 @@ export type ClientSaleMenu = {
   deliveryNotFreeProductCodeList?: Maybe<Array<Scalars['String']['output']>>;
   feeRate?: Maybe<Scalars['Float']['output']>;
   inActive?: Maybe<Scalars['Boolean']['output']>;
+  isSabangService: Scalars['Boolean']['output'];
   manager?: Maybe<Scalars['String']['output']>;
   managerTel?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
@@ -128,6 +130,7 @@ export type CreateClientInput = {
   deliveryNotFreeProductCodeList?: InputMaybe<Array<Scalars['String']['input']>>;
   feeRate?: InputMaybe<Scalars['Float']['input']>;
   inActive?: InputMaybe<Scalars['Boolean']['input']>;
+  isSabangService: Scalars['Boolean']['input'];
   manager?: InputMaybe<Scalars['String']['input']>;
   managerTel?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
@@ -625,6 +628,7 @@ export type OutClient = {
   deliveryNotFreeProductCodeList?: Maybe<Array<ProductCodeName>>;
   feeRate?: Maybe<Scalars['Float']['output']>;
   inActive?: Maybe<Scalars['Boolean']['output']>;
+  isSabangService: Scalars['Boolean']['output'];
   manager?: Maybe<Scalars['String']['output']>;
   managerTel?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
@@ -1227,6 +1231,7 @@ export type UpdateClientInput = {
   deliveryNotFreeProductCodeList?: InputMaybe<Array<Scalars['String']['input']>>;
   feeRate?: InputMaybe<Scalars['Float']['input']>;
   inActive?: InputMaybe<Scalars['Boolean']['input']>;
+  isSabangService?: InputMaybe<Scalars['Boolean']['input']>;
   manager?: InputMaybe<Scalars['String']['input']>;
   managerTel?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
