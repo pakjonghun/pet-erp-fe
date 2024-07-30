@@ -4,7 +4,7 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { SaleInfo } from '@/http/graphql/codegen/graphql';
 import { EMPTY } from '@/constants';
-import { SaleInfoPropsNumber } from '@/app/dashboard/types';
+import { SaleInfoPropsNumber, SaleOrderProps } from '@/app/dashboard/types';
 
 export const getNumberToString = (number: number, numberType: NumberType) => {
   switch (numberType) {
@@ -55,5 +55,21 @@ export const getParsedSaleData = ({
     accCount: getNumberToString(accCount!, 'comma'),
     accProfit: getNumberToString(accProfit!, 'comma'),
     accProfitRate: getNumberToString(accProfitRate!, 'percent'),
+  };
+};
+
+export const getParsedOrderSaleData = ({
+  accTotalPayment = 0,
+  accCount = 0,
+  accDeliveryCost = 0,
+  accWonCost = 0,
+  accPayCost = 0,
+}: SaleOrderProps) => {
+  return {
+    accTotalPayment: getNumberToString(accTotalPayment!, 'comma'),
+    accCount: getNumberToString(accCount!, 'comma'),
+    accWonCost: getNumberToString(accWonCost!, 'comma'),
+    accDeliveryCost: getNumberToString(accDeliveryCost!, 'comma'),
+    accPayCost: getNumberToString(accPayCost!, 'comma'),
   };
 };

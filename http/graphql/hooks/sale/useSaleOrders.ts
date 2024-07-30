@@ -17,6 +17,13 @@ const saleOrders = graphql(`
         totalPayment
         wonCost
       }
+      total {
+        accCount
+        accTotalPayment
+        accWonCost
+        accPayCost
+        accDeliveryCost
+      }
     }
   }
 `);

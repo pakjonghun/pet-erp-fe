@@ -5,7 +5,7 @@ import LabelText from '@/components/ui/typograph/LabelText';
 import { LIMIT } from '@/constants';
 import { OutSaleOrdersItem } from '@/http/graphql/codegen/graphql';
 import { useSaleOrders } from '@/http/graphql/hooks/sale/useSaleOrders';
-import { getNumberToString } from '@/utils/sale';
+import { getNumberToString, getParsedOrderSaleData } from '@/utils/sale';
 import { Box, Stack, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import { SaleOrdersNameMapper } from './constants';
@@ -84,6 +84,7 @@ const SaleOrderList: FC<Props> = ({
 
   const isLoading = networkStatus <= 3;
   const rows = data?.saleOrders.data?.map((saleOrder) => createRowData(saleOrder)) ?? [];
+  const saleOrdersTotal = data?.saleOrders.total && getParsedOrderSaleData(data?.saleOrders.total);
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
@@ -188,6 +189,11 @@ const SaleOrderList: FC<Props> = ({
             );
           })}
         </Stack>
+        {saleOrdersTotal && (
+          <Typography variant="caption" color="GrayText">
+            {`총합계 : 매출 ${saleOrdersTotal.accTotalPayment}, 판매수 : ${saleOrdersTotal.accCount}, 정산액 : ${saleOrdersTotal.accPayCost}, 원가 : ${saleOrdersTotal.accWonCost}, 택배비 : ${saleOrdersTotal.accDeliveryCost}`}
+          </Typography>
+        )}
         <CommonAnyTypeTable
           scrollRef={tableScrollRef}
           headerList={[

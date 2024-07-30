@@ -18,3 +18,11 @@ export interface SaleInfoPropsNumber {
   accProfit?: number | null;
   accProfitRate?: number | null;
 }
+
+export interface SaleOrderProps {
+  accTotalPayment?: number | null;
+  accCount?: number | null;
+  accWonCost?: number | null;
+  accDeliveryCost?: number | null;
+  accPayCost?: number | null;
+}

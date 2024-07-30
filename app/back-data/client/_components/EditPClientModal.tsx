@@ -112,7 +112,7 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
       inActive: !!selectedClient.inActive,
       deliveryFreeProductCodeList: selectedClient.deliveryFreeProductCodeList ?? [],
       deliveryNotFreeProductCodeList: selectedClient.deliveryNotFreeProductCodeList ?? [],
-      isSabangService: selectedClient.isSabangService,
+      isSabangService: !!selectedClient.isSabangService,
     },
   });
 
@@ -133,7 +133,7 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
       storageName: targetStorage?.name,
       deliveryFreeProductCodeList: selectedClient.deliveryFreeProductCodeList ?? [],
       deliveryNotFreeProductCodeList: selectedClient.deliveryNotFreeProductCodeList ?? [],
-      isSabangService: selectedClient.isSabangService,
+      isSabangService: !!selectedClient.isSabangService,
     });
   }, [selectedClient, networkStatus]);
 
