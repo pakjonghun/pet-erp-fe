@@ -153,6 +153,7 @@ export const client = new ApolloClient({
         managerTel
         inActive
         storageId
+        isSabangService
         deliveryFreeProductCodeList {
           name
           code

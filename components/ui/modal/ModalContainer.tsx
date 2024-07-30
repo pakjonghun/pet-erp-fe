@@ -26,7 +26,6 @@ const PopupContainer = forwardRef<HTMLElement, Props>(
           ...modalContainerSx,
           display: 'flex',
           flexDirection: 'column',
-          height: '100%',
           bgcolor: 'background.paper',
           boxShadow: 10,
           px: 3,

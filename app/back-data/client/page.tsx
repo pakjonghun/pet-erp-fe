@@ -195,6 +195,7 @@ const BackDataPage = () => {
       ) : (
         ''
       ),
+      client.isSabangService ? '지원' : '미지원',
     ];
   };
 
