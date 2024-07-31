@@ -46,7 +46,7 @@ const ClientSaleDetail = () => {
             </Typography>
           </Box>
 
-          <Box sx={{ px: 1, pb: 3, minHeight: '500px' }}>
+          <Box sx={{ px: 1, pb: 3, minHeight: 1200 }}>
             <ClientDetailContent
               setTotalDataCount={setTotalDataCount}
               dateRange={dateRange}

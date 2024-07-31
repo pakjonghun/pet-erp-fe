@@ -83,6 +83,7 @@ const SaleOrderList: FC<Props> = ({
   };
 
   const isLoading = networkStatus <= 3;
+  console.log('networkStatus : ', networkStatus);
   const rows = data?.saleOrders.data?.map((saleOrder) => createRowData(saleOrder)) ?? [];
   const saleOrdersTotal = data?.saleOrders.total && getParsedOrderSaleData(data?.saleOrders.total);
 
@@ -91,7 +92,7 @@ const SaleOrderList: FC<Props> = ({
       if (isLoading) return;
 
       const totalCount = data?.saleOrders?.totalCount;
-      if (totalCount != null && totalCount > rows.length) {
+      if (totalCount != null && totalCount > rows.length && !isLoading) {
         fetchMore({
           variables: {
             saleOrdersInput: {

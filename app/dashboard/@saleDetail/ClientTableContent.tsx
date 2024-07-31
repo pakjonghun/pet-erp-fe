@@ -51,10 +51,12 @@ export default ClientTableContent;
 
 function createTableRow(item: ClientSaleMenu, no: number) {
   const profit = getProfit({
-    accCount: item.accWonCost,
+    accWonCost: item.accWonCost,
     accDeliveryCost: item.accDeliveryCost,
     accPayCost: item.accPayCost,
   });
+
+  console.log('profit : ', profit);
 
   return [
     no,
@@ -62,7 +64,7 @@ function createTableRow(item: ClientSaleMenu, no: number) {
     getNumberToString(item.accTotalPayment ?? 0, 'comma'),
     getNumberToString(item.accCount ?? 0, 'comma'),
     getNumberToString(profit ?? 0, 'comma'),
-    getNumberToString(getProfitRate(profit ?? 0, item.accPayCost ?? 0), 'percent'),
+    getNumberToString(getProfitRate(profit ?? 0, item.accTotalPayment ?? 0), 'percent'),
     <Stack
       sx={{
         alignContent: 'flex-start',
