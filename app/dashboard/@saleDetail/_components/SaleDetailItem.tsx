@@ -44,7 +44,7 @@ const SaleDetailItem: FC<Props> = ({ isSelected, index, data, scrollRef, onClick
             saleInfo={getParsedSaleData({
               accCount: data.accCount ?? 0,
               accProfit: profit,
-              accProfitRate: getProfitRate(profit, data.accPayCost ?? 0),
+              accProfitRate: getProfitRate(profit, data.accTotalPayment ?? 0),
               accTotalPayment: data.accTotalPayment ?? 0,
             })}
           />
