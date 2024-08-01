@@ -10,6 +10,13 @@ const saleMenuClients = graphql(`
         _id
         name
         code
+        businessName
+        businessNumber
+        clientType
+        feeRate
+        isSabangService
+        payDate
+        inActive
         accPayCost
         accWonCost
         accCount

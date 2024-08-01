@@ -8,7 +8,6 @@ import { SearchStandard } from '@/components/calendar/dateSwitch/types';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { Search } from '@mui/icons-material';
 import {
-  Box,
   Button,
   Checkbox,
   FormControlLabel,

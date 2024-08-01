@@ -83,7 +83,6 @@ const SaleOrderList: FC<Props> = ({
   };
 
   const isLoading = networkStatus <= 3;
-  console.log('networkStatus : ', networkStatus);
   const rows = data?.saleOrders.data?.map((saleOrder) => createRowData(saleOrder)) ?? [];
   const saleOrdersTotal = data?.saleOrders.total && getParsedOrderSaleData(data?.saleOrders.total);
 
@@ -113,14 +112,14 @@ const SaleOrderList: FC<Props> = ({
   };
 
   const tableScrollRef = useInfinityScroll({ callback });
-  const cardScrollRef = useInfinityScroll({ callback });
+  // const cardScrollRef = useInfinityScroll({ callback });
 
   return (
     <>
       <Stack
         direction="column"
         sx={{
-          minHeight: '800px',
+          minHeight: '500px',
           border: (theme) => `1px solid ${theme.palette.divider}`,
           borderRadius: 1,
           mt: 1,
@@ -139,6 +138,11 @@ const SaleOrderList: FC<Props> = ({
           data?.saleOrders.totalCount ?? 0,
           'comma'
         )}건`}</Typography>
+        {saleOrdersTotal && (
+          <Typography variant="caption" color="GrayText" sx={{ mb: 1 }}>
+            {`총합계 : 매출 ${saleOrdersTotal.accTotalPayment}, 판매수 : ${saleOrdersTotal.accCount}, 정산액 : ${saleOrdersTotal.accPayCost}, 원가 : ${saleOrdersTotal.accWonCost}, 택배비 : ${saleOrdersTotal.accDeliveryCost}`}
+          </Typography>
+        )}
         <Stack
           sx={{
             display: {
@@ -154,7 +158,7 @@ const SaleOrderList: FC<Props> = ({
             const rowKey = row.join(',');
             return (
               <Stack
-                ref={isLast ? cardScrollRef : null}
+                // ref={isLast ? cardScrollRef : null}
                 sx={{
                   py: {
                     xs: 2,
@@ -190,11 +194,7 @@ const SaleOrderList: FC<Props> = ({
             );
           })}
         </Stack>
-        {saleOrdersTotal && (
-          <Typography variant="caption" color="GrayText">
-            {`총합계 : 매출 ${saleOrdersTotal.accTotalPayment}, 판매수 : ${saleOrdersTotal.accCount}, 정산액 : ${saleOrdersTotal.accPayCost}, 원가 : ${saleOrdersTotal.accWonCost}, 택배비 : ${saleOrdersTotal.accDeliveryCost}`}
-          </Typography>
-        )}
+
         <CommonAnyTypeTable
           scrollRef={tableScrollRef}
           headerList={[
@@ -225,7 +225,7 @@ const SaleOrderList: FC<Props> = ({
             },
           }}
         />
-        {isLoading && <CommonLoading />}
+        {/* {isLoading && <CommonLoading />} */}
       </Stack>
     </>
   );

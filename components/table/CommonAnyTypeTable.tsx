@@ -21,6 +21,7 @@ interface Props {
   onClickItem?: (item: any) => void;
   idIndex?: number;
   sx?: SxProps;
+  hover?: boolean;
 }
 
 const CommonAnyTypeTable: FC<Props> = ({
@@ -31,6 +32,7 @@ const CommonAnyTypeTable: FC<Props> = ({
   isLoading,
   onClickItem,
   idIndex = 0,
+  hover = true,
   sx,
 }) => {
   const isEmpty = !isLoading && rowList.length == 0;
@@ -67,7 +69,7 @@ const CommonAnyTypeTable: FC<Props> = ({
             const key = cells.join(', ');
             return (
               <TableRow
-                hover
+                hover={hover}
                 onClick={!!onClickItem ? () => onClickItem(cells[idIndex]) : () => {}}
                 key={key}
                 ref={isLast ? scrollRef : null}

@@ -1,7 +1,7 @@
 'use client';
 
 import { FC } from 'react';
-import { Box, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import BaseModal from '../../../../../components/ui/modal/BaseModal';
 import { ProductSaleMenu } from '@/http/graphql/codegen/graphql';
 import LabelText from '@/components/ui/typograph/LabelText';

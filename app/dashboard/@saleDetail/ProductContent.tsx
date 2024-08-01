@@ -5,9 +5,10 @@ import { useSaleMenuClients } from '@/http/graphql/hooks/client/useSaleMenuClien
 import { ClientSaleMenu } from '@/http/graphql/codegen/graphql';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import ClientSaleModal from './_components/ClientDetailModal';
-import ClientCardContent from './ClientCardContent';
 import ClientTableContent from './ClientTableContent';
-import { Box } from '@mui/material';
+import ProductCardContent from './ProductCardContent';
+import ProductTableContent from './ProductTableContent';
+import ProductDetailModal from './_components/ProductDetailModal';
 
 interface Props {
   dateRange: DateRange;
@@ -15,11 +16,7 @@ interface Props {
   setTotalDataCount: (value: number) => void;
 }
 
-const ClientDetailContent: FC<Props> = ({
-  setTotalDataCount,
-  dateRange: { from, to },
-  keyword,
-}) => {
+const ProductContent: FC<Props> = ({ setTotalDataCount, dateRange: { from, to }, keyword }) => {
   const { data, fetchMore, networkStatus } = useSaleMenuClients({
     keyword,
     from: from.toISOString(),
@@ -73,40 +70,23 @@ const ClientDetailContent: FC<Props> = ({
 
   return (
     <>
-      <Box
-        sx={{
-          display: {
-            xs: 'block',
-            md: 'none',
-          },
-        }}
-      >
-        <ClientCardContent
-          rows={rows}
-          selectedClient={selectedClient}
-          isLoading={isLoading}
-          onClickItem={onClickItem}
-          cardScrollRef={cardScrollRef}
-        />
-      </Box>
-      <Box
-        sx={{
-          display: {
-            xs: 'none',
-            md: 'block',
-          },
-        }}
-      >
-        <ClientTableContent
-          rows={rows}
-          selectedClient={selectedClient}
-          isLoading={isLoading}
-          onClickItem={onClickItem}
-          tableScrollRef={tableScrollRef}
-        />
-      </Box>
+      <ProductCardContent
+        rows={rows}
+        selectedProduct={selectedClient}
+        isLoading={isLoading}
+        onClickItem={onClickItem}
+        cardScrollRef={cardScrollRef}
+      />
+      <ProductTableContent
+        rows={rows}
+        selectedClient={selectedClient}
+        isLoading={isLoading}
+        onClickItem={onClickItem}
+        tableScrollRef={tableScrollRef}
+      />
+
       {!!selectedClient && (
-        <ClientSaleModal
+        <ProductDetailModal
           initDateRange={{ from, to }}
           onClose={() => {
             setSelectedClient(null);
@@ -119,4 +99,4 @@ const ClientDetailContent: FC<Props> = ({
   );
 };
 
-export default ClientDetailContent;
+export default ProductContent;

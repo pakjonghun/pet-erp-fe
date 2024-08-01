@@ -1,31 +1,40 @@
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { Stack } from '@mui/material';
-import SaleDetailItem from './_components/SaleDetailItem';
 import { Dispatch, FC, SetStateAction } from 'react';
-import { ClientSaleMenu } from '@/http/graphql/codegen/graphql';
+import { ProductSaleMenu } from '@/http/graphql/codegen/graphql';
+import ProductSaleDetailItem from './_components/ProductSaleDetailItem';
 
 interface Props {
-  rows: ClientSaleMenu[];
-  selectedClient: ClientSaleMenu | null;
+  rows: ProductSaleMenu[];
+  selectedProduct: ProductSaleMenu | null;
   isLoading: boolean;
-  onClickItem: (item: ClientSaleMenu) => void;
+  onClickItem: (item: ProductSaleMenu) => void;
   cardScrollRef: Dispatch<SetStateAction<null | HTMLElement>>;
 }
 
-const ClientCardContent: FC<Props> = ({
+const ProductCardContent: FC<Props> = ({
   rows,
-  selectedClient,
+  selectedProduct,
   isLoading,
   onClickItem,
   cardScrollRef,
 }) => {
   return (
-    <Stack direction="column" gap={1}>
+    <Stack
+      direction="column"
+      gap={1}
+      sx={{
+        display: {
+          xs: 'flex',
+          md: 'none',
+        },
+      }}
+    >
       {rows.map((data, index) => {
         const isLast = index + 1 === rows.length;
         return (
-          <SaleDetailItem
-            isSelected={selectedClient?._id === data._id}
+          <ProductSaleDetailItem
+            isSelected={selectedProduct?._id === data._id}
             onClickItem={onClickItem}
             scrollRef={isLast ? cardScrollRef : undefined}
             key={data._id}
@@ -39,4 +48,4 @@ const ClientCardContent: FC<Props> = ({
   );
 };
 
-export default ClientCardContent;
+export default ProductCardContent;

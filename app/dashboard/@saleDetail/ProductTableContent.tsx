@@ -1,28 +1,21 @@
 import { Chip, Stack } from '@mui/material';
 import { Dispatch, FC, SetStateAction } from 'react';
-import { ClientSaleMenu } from '@/http/graphql/codegen/graphql';
+import { ProductSaleMenu } from '@/http/graphql/codegen/graphql';
 import CommonAnyTypeTable from '@/components/table/CommonAnyTypeTable';
 import { getNumberToString, getProfit, getProfitRate } from '@/utils/sale';
 
 interface Props {
-  rows: ClientSaleMenu[];
-  selectedClient: ClientSaleMenu | null;
+  rows: ProductSaleMenu[];
   isLoading: boolean;
-  onClickItem: (item: ClientSaleMenu) => void;
+  onClickItem: (item: ProductSaleMenu) => void;
   tableScrollRef: Dispatch<SetStateAction<null | HTMLElement>>;
 }
 
-const ClientTableContent: FC<Props> = ({
-  rows,
-  selectedClient,
-  isLoading,
-  onClickItem,
-  tableScrollRef,
-}) => {
+const ProductTableContent: FC<Props> = ({ rows, isLoading, onClickItem, tableScrollRef }) => {
   const headerList = ['NO', '거래처', '매출', '판매수', '순이익', '순익율', 'TOP3 제품'];
 
-  const handleClickItem = (clientName: string) => {
-    const target = rows.find((item) => item.name === clientName);
+  const handleClickItem = (name: string) => {
+    const target = rows.find((item) => item.name === name);
     if (!target) return;
 
     onClickItem(target);
@@ -41,9 +34,9 @@ const ClientTableContent: FC<Props> = ({
   );
 };
 
-export default ClientTableContent;
+export default ProductTableContent;
 
-function createTableRow(item: ClientSaleMenu, no: number) {
+function createTableRow(item: ProductSaleMenu, no: number) {
   const profit = getProfit({
     accWonCost: item.accWonCost,
     accDeliveryCost: item.accDeliveryCost,
@@ -71,7 +64,7 @@ function createTableRow(item: ClientSaleMenu, no: number) {
       }}
       key={`${no}_${item.name}`}
     >
-      {item.products.slice(0, 3).map((p, i) => {
+      {item.clients.slice(0, 3).map((p, i) => {
         return (
           <Chip
             size="small"

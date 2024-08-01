@@ -2,47 +2,46 @@
 
 import { FC } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
-import { ClientSaleMenu, ProductSaleInfo } from '@/http/graphql/codegen/graphql';
+import { ClientInfoMenu, ProductSaleMenu } from '@/http/graphql/codegen/graphql';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import { DateRange } from '@/components/calendar/dateFilter/type';
 import TotalSaleText from '../../_components/TotalSaleText';
-import {
-  getFixedTwo,
-  getNumberToString,
-  getParsedSaleData,
-  getProfit,
-  getProfitRate,
-} from '@/utils/sale';
+import { getNumberToString, getParsedSaleData, getProfit, getProfitRate } from '@/utils/sale';
 import SaleOrders from '../SaleOrders';
 import CommonAnyTypeTable from '@/components/table/CommonAnyTypeTable';
 import { EMPTY } from '@/constants';
-import { ClientTypeToHangle } from '@/app/back-data/client/constants';
+import { getKCWFormat } from '@/utils/common';
 
 interface Props {
   initDateRange: DateRange;
-  selectedClient: ClientSaleMenu;
+  selectedProduct: ProductSaleMenu;
   open: boolean;
   onClose: () => void;
 }
 
-const ClientSaleModal: FC<Props> = ({
+const ProductDetailModal: FC<Props> = ({
   initDateRange,
-  selectedClient: {
-    clientType,
-    code,
-    businessName,
-    businessNumber,
-    feeRate,
-    isSabangService,
-    payDate,
-    inActive,
-    name,
-    products,
+  selectedProduct: {
     accCount,
     accDeliveryCost,
     accPayCost,
     accTotalPayment,
     accWonCost,
+    barCode,
+    clients,
+    code,
+    leadTime,
+    name,
+    recentCreateDate,
+    salePrice,
+    stock,
+    wonPrice,
+    prevAccCount,
+    prevAccDeliveryCost,
+    prevAccPayCost,
+    prevAccTotalPayment,
+    prevAccWonCost,
+    isFreeDeliveryFee,
   },
   open,
   onClose,
@@ -94,27 +93,33 @@ const ClientSaleModal: FC<Props> = ({
             />
           </Typography>
         </Stack>
-
         <CommonAnyTypeTable
           sx={{ mb: 2 }}
-          title="거래처 정보"
+          title="제품 정보"
           hover={false}
-          headerList={['사방넷 연동여부', '수수료율', '코드', '분류', '상호', '사업자번호']}
+          headerList={[
+            '코드',
+            '착불여부',
+            '원가',
+            '판매가',
+            '리드타임',
+            '재고',
+            // '최근 생산완료예정',
+          ]}
           rowList={[
             [
-              isSabangService ? '지원' : '미지원',
-              feeRate == null ? EMPTY : getFixedTwo(feeRate * 100) + '%',
               code,
-              ClientTypeToHangle[clientType],
-
-              businessName,
-              businessNumber,
+              isFreeDeliveryFee ? '무료배송' : '유료배송',
+              wonPrice == null ? EMPTY : getKCWFormat(wonPrice),
+              salePrice == null ? EMPTY : getKCWFormat(salePrice),
+              leadTime ? `${leadTime}일` : EMPTY,
+              salePrice == null ? EMPTY : getNumberToString(stock ?? 0, 'comma'),
+              // recentCreateDate,
             ],
           ]}
         />
-
         <CommonAnyTypeTable
-          title={`${name} 채널의 제품별 판매수 순`}
+          title={`${name} 제품의 채널별 판매수 순`}
           headerList={[
             'NO',
             '이름',
@@ -126,38 +131,38 @@ const ClientSaleModal: FC<Props> = ({
             '수익',
             '순이익율',
           ]}
-          rowList={products.map((p, i) => {
+          rowList={clients.map((p, i) => {
             const no = i + 1;
             const dataList = createTableRow(p);
             return [no, ...dataList];
           })}
         />
         <Box sx={{ pr: 3 }}>
-          <SaleOrders initProductName="" initMallId={name} initDateRange={initDateRange} />
+          <SaleOrders initProductName={name} initMallId="" initDateRange={initDateRange} />
         </Box>
       </Stack>
     </BaseModal>
   );
 };
 
-export default ClientSaleModal;
+export default ProductDetailModal;
 
-function createTableRow(product: ProductSaleInfo) {
+function createTableRow(client: ClientInfoMenu) {
   const profit = getProfit({
-    accDeliveryCost: product.accDeliveryCost,
-    accPayCost: product.accPayCost,
-    accWonCost: product.accWonCost,
+    accDeliveryCost: client.accDeliveryCost,
+    accPayCost: client.accPayCost,
+    accWonCost: client.accWonCost,
   });
 
   const result = [
-    product.name,
-    getNumberToString(product.accCount ?? 0, 'comma'),
-    getNumberToString(product.accTotalPayment ?? 0, 'comma'),
-    getNumberToString(product.accPayCost ?? 0, 'comma'),
-    getNumberToString(product.accWonCost ?? 0, 'comma'),
-    getNumberToString(product.accDeliveryCost ?? 0, 'comma'),
+    client.name,
+    getNumberToString(client.accCount ?? 0, 'comma'),
+    getNumberToString(client.accTotalPayment ?? 0, 'comma'),
+    getNumberToString(client.accPayCost ?? 0, 'comma'),
+    getNumberToString(client.accWonCost ?? 0, 'comma'),
+    getNumberToString(client.accDeliveryCost ?? 0, 'comma'),
     getNumberToString(profit ?? 0, 'comma'),
-    getNumberToString(getProfitRate(profit, product.accPayCost ?? 0), 'percent'),
+    getNumberToString(getProfitRate(profit, client.accTotalPayment ?? 0), 'percent'),
   ];
 
   return result;
