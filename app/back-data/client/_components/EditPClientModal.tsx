@@ -194,7 +194,7 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
           gap={3}
           sx={{ mb: 3 }}
         >
-          <Typography noWrap>거래처 정보를 편집합니다..</Typography>
+          <Typography noWrap>거래처 정보를 편집합니다.</Typography>
           <Controller
             control={control}
             name="inActive"
