@@ -30,6 +30,7 @@ const ClientTableContent: FC<Props> = ({
 
   return (
     <CommonAnyTypeTable
+      pointer
       idIndex={1}
       onClickItem={handleClickItem}
       isLoading={isLoading}

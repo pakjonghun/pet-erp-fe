@@ -23,6 +23,7 @@ interface Props {
   idIndex?: number;
   sx?: SxProps;
   hover?: boolean;
+  pointer?: boolean;
 }
 
 const CommonAnyTypeTable: FC<Props> = ({
@@ -34,6 +35,7 @@ const CommonAnyTypeTable: FC<Props> = ({
   onClickItem,
   idIndex = 0,
   hover = true,
+  pointer = false,
   sx,
 }) => {
   const isEmpty = !isLoading && rowList.length == 0;
@@ -81,6 +83,7 @@ const CommonAnyTypeTable: FC<Props> = ({
                 key={key}
                 ref={isLast ? scrollRef : null}
                 sx={{
+                  cursor: pointer ? 'pointer' : 'auto',
                   bgcolor: (theme) => {
                     if (hasError) {
                       return alpha(theme.palette.error.light, 0.2);

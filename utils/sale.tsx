@@ -23,7 +23,8 @@ export const getNumberToString = (number: number, numberType: NumberType) => {
 export const getProfitRate = (profit: number, totalPayment: number) => {
   if (profit < 0 && totalPayment < 0) return Infinity;
 
-  if (totalPayment == 0) return -100;
+  if (totalPayment == 0 && profit != 0) return -100;
+  if (totalPayment == 0) return 0;
   return getFixedTwo((profit / totalPayment) * 100);
 };
 

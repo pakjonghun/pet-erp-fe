@@ -23,6 +23,7 @@ const ProductTableContent: FC<Props> = ({ rows, isLoading, onClickItem, tableScr
 
   return (
     <CommonAnyTypeTable
+      pointer
       idIndex={1}
       onClickItem={handleClickItem}
       isLoading={isLoading}
