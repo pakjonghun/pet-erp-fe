@@ -14,18 +14,17 @@ export const getNumberToString = (number: number, numberType: NumberType) => {
       return getNumberWithComma(number);
     case 'percent':
       if (number == Infinity) return '알수없음';
-      // if(Number.isFinite(number))return
       return `${number}%`;
     default:
       return EMPTY;
   }
 };
 
-export const getProfitRate = (profit: number, payCost: number) => {
-  if (profit < 0 && payCost < 0) return Infinity;
+export const getProfitRate = (profit: number, totalPayment: number) => {
+  if (profit < 0 && totalPayment < 0) return Infinity;
 
-  if (!payCost) return Infinity;
-  return getFixedTwo((profit / payCost) * 100);
+  if (totalPayment == 0) return -100;
+  return getFixedTwo((profit / totalPayment) * 100);
 };
 
 export const getFixedTwo = (number: number) => {

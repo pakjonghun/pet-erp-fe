@@ -34,7 +34,7 @@ const ProductCardContent: FC<Props> = ({
         const isLast = index + 1 === rows.length;
         return (
           <ProductSaleDetailItem
-            isSelected={selectedProduct?._id === data._id}
+            isSelected={selectedProduct?.code === data.code}
             onClickItem={onClickItem}
             scrollRef={isLast ? cardScrollRef : undefined}
             key={data._id}
