@@ -13,6 +13,8 @@ export const getNumberToString = (number: number, numberType: NumberType) => {
     case 'comma':
       return getNumberWithComma(number);
     case 'percent':
+      if (number == Infinity) return '알수없음';
+      // if(Number.isFinite(number))return
       return `${number}%`;
     default:
       return EMPTY;
@@ -20,7 +22,9 @@ export const getNumberToString = (number: number, numberType: NumberType) => {
 };
 
 export const getProfitRate = (profit: number, payCost: number) => {
-  if (!payCost) return 0;
+  if (profit < 0 && payCost < 0) return Infinity;
+
+  if (!payCost) return Infinity;
   return getFixedTwo((profit / payCost) * 100);
 };
 

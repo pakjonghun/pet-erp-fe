@@ -36,7 +36,6 @@ const DashboardLayout: FC<Props> = ({ totalSale, saleDetail }) => {
       }}
     >
       <SubHeader title="대시보드" sx={{ boxShadow: 0 }} />
-      {/* <SubTitle title="대시보드" /> */}
       <Box sx={{ p: 3, overflow: 'auto' }}>
         <div id="dashboardDetail"></div>
         <Grid container spacing={2}>
@@ -55,7 +54,7 @@ const DashboardLayout: FC<Props> = ({ totalSale, saleDetail }) => {
                 size="large"
                 initProductName=""
                 initMallId=""
-                initDateRange={{ from: dayjs().subtract(5, 'day'), to: dayjs() }}
+                initDateRange={{ from: dayjs().startOf('day'), to: dayjs().endOf('day') }}
               />
             </Box>
           </Grid>

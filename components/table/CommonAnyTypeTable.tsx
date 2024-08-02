@@ -1,5 +1,6 @@
 import { Dispatch, FC, ReactNode, SetStateAction } from 'react';
 import {
+  alpha,
   SxProps,
   Table,
   TableBody,
@@ -67,12 +68,18 @@ const CommonAnyTypeTable: FC<Props> = ({
           {rowList.map((cells, idx) => {
             const isLast = idx + 1 === rowList.length;
             const key = cells.join(', ');
+
+            const hasError = cells.some((item) => item == '알수없음');
             return (
               <TableRow
                 hover={hover}
                 onClick={!!onClickItem ? () => onClickItem(cells[idIndex]) : () => {}}
                 key={key}
                 ref={isLast ? scrollRef : null}
+                sx={{
+                  bgcolor: (theme) =>
+                    hasError ? alpha(theme.palette.error.light, 0.2) : 'inherit',
+                }}
               >
                 {cells.map((cell, index) => {
                   return (
