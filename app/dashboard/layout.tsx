@@ -5,9 +5,9 @@ import { Box, Grid } from '@mui/material';
 import { saleRange } from '@/store/saleStore';
 import { DateRange } from '@/components/calendar/dateFilter/type';
 import { getToday } from '@/components/calendar/dateFilter/utils';
-import SubTitle from '@/components/ui/typograph/SubTitle';
 import SaleOrders from './@saleDetail/SaleOrders';
 import dayjs from 'dayjs';
+import SubHeader from '@/components/layout/header/SubHeader';
 
 interface Props {
   totalSale: ReactNode;
@@ -35,7 +35,8 @@ const DashboardLayout: FC<Props> = ({ totalSale, saleDetail }) => {
         bgcolor: (theme) => theme.palette.primary.light,
       }}
     >
-      <SubTitle title="대시보드" />
+      <SubHeader title="대시보드" sx={{ boxShadow: 0 }} />
+      {/* <SubTitle title="대시보드" /> */}
       <Box sx={{ p: 3, overflow: 'auto' }}>
         <div id="dashboardDetail"></div>
         <Grid container spacing={2}>

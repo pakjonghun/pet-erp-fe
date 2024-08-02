@@ -1,16 +1,7 @@
 'use client';
 
 import { FC, ReactNode, useEffect, useState } from 'react';
-import {
-  AppBar,
-  Badge,
-  Stack,
-  SxProps,
-  Typography,
-  keyframes,
-  makeStyles,
-  styled,
-} from '@mui/material';
+import { AppBar, Stack, SxProps, Typography, keyframes, styled } from '@mui/material';
 import { Button } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useLoadSabangData } from '@/http/graphql/hooks/sale/useSabang';
@@ -19,7 +10,6 @@ import { client } from '@/http/graphql/client';
 import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 import { UserRole } from '@/http/graphql/codegen/graphql';
 import { useSaleOut } from '@/http/graphql/hooks/sale/useSaleOut';
-import { useSaleOutCheck } from '@/http/graphql/hooks/sale/useSaleoutCheck';
 import CheckAlarm from './CheckAlarm';
 
 interface Props {
