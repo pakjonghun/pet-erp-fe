@@ -112,6 +112,7 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
       inActive: !!selectedClient.inActive,
       deliveryFreeProductCodeList: selectedClient.deliveryFreeProductCodeList ?? [],
       deliveryNotFreeProductCodeList: selectedClient.deliveryNotFreeProductCodeList ?? [],
+      isSabangService: !!selectedClient.isSabangService,
     },
   });
 
@@ -132,6 +133,7 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
       storageName: targetStorage?.name,
       deliveryFreeProductCodeList: selectedClient.deliveryFreeProductCodeList ?? [],
       deliveryNotFreeProductCodeList: selectedClient.deliveryNotFreeProductCodeList ?? [],
+      isSabangService: !!selectedClient.isSabangService,
     });
   }, [selectedClient, networkStatus]);
 
@@ -192,7 +194,7 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
           gap={3}
           sx={{ mb: 3 }}
         >
-          <Typography noWrap>거래처 정보를 편집합니다..</Typography>
+          <Typography noWrap>거래처 정보를 편집합니다.</Typography>
           <Controller
             control={control}
             name="inActive"
@@ -211,6 +213,18 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
             }}
           />
         </Stack>
+
+        <Controller
+          control={control}
+          name="isSabangService"
+          render={({ field }) => (
+            <FormControlLabel
+              sx={{ width: 'fit-content', mb: 2 }}
+              label={field.value ? '사방넷 지원' : '사방넷 미지원'}
+              control={<Switch checked={field.value} {...field} />}
+            />
+          )}
+        />
 
         <FormGroup sx={modalSizeProps}>
           <Controller

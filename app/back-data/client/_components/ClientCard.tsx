@@ -94,6 +94,11 @@ const ClientCard: FC<Props> = ({ client, scrollRef, onClickOption, onClickRow })
             <LabelText label="연락처" text={client.managerTel ?? EMPTY} />
           </Box>
         </Stack>
+        <Stack direction="row" justifyContent="space-between" gap={2}>
+          <Box sx={{ flex: 1 }}>
+            <LabelText label="사방넷 지원" text={client.isSabangService ? '지원' : '미지원'} />
+          </Box>
+        </Stack>
       </Box>
     </Paper>
   );

@@ -38,8 +38,6 @@ const ProductOption: FC<Props> = ({ selectedOptions, index, control, remove, err
     [isProductLoading]
   );
 
-  console.log('cachedProductList : ', cachedProductList.length);
-
   const productCallback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
       if (isProductLoading) return;

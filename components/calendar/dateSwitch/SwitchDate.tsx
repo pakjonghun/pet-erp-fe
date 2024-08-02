@@ -1,6 +1,5 @@
 'use client';
 
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { FC, useState } from 'react';
 import {
   Box,
@@ -17,25 +16,33 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { SearchStandard, Direction } from './types';
 import { searchStandardList } from './constants';
-import { getDateValueByStandard, getNextDayjsObj } from './utils';
+import { getDateValueByStandard, getNextDayjsObj, getStandardDayjsObj } from './utils';
 import CommonDateFilter from '../dateFilter/CommonDateFilter';
 import { DateRange } from '../dateFilter/type';
 import { getStringRange } from '../dateFilter/utils';
 
 interface Props {
-  range: DateRange;
-  setRange: (value: DateRange) => void;
+  dateRange: DateRange;
+  setDateRange: (value: DateRange) => void;
   searchStandard: SearchStandard;
   setSearchStandard: (value: SearchStandard) => void;
   sx?: SxProps;
 }
 
-const SwitchDate: FC<Props> = ({ range, searchStandard, setRange, setSearchStandard, sx }) => {
+const SwitchDate: FC<Props> = ({
+  dateRange: range,
+  searchStandard,
+  setDateRange: setRange,
+  setSearchStandard,
+  sx,
+}) => {
   const [filterAnchor, setFilterAnchor] = useState<null | HTMLElement>(null);
 
   const handleChangeStandard = (event: SelectChangeEvent<SearchStandard>) => {
     const value = event.target.value as SearchStandard;
     setSearchStandard(value);
+    const nextDateObj = getStandardDayjsObj(value, range.from);
+    setRange(nextDateObj);
   };
 
   const handleClickDateArrow = (direction: Direction) => {
@@ -46,7 +53,26 @@ const SwitchDate: FC<Props> = ({ range, searchStandard, setRange, setSearchStand
   const dateValue = getDateValueByStandard(searchStandard, range.from);
 
   return (
-    <Stack direction="column" alignItems="flex-start" mr={3} gap={1} sx={{ ...sx }}>
+    <Stack
+      mr={3}
+      sx={{
+        gap: {
+          xs: 1,
+          sm: 3,
+          md: 4,
+        },
+        alignItems: {
+          xs: 'flex-start',
+          sm: 'center',
+        },
+        flexDirection: {
+          xs: 'column',
+          sm: 'row',
+        },
+
+        ...sx,
+      }}
+    >
       <CommonDateFilter
         anchor={{
           open: !!filterAnchor,
@@ -58,18 +84,25 @@ const SwitchDate: FC<Props> = ({ range, searchStandard, setRange, setSearchStand
           setRange,
         }}
       />
-      <Stack direction="row" gap={1} justifyContent="flex-end" alignItems="center">
-        <Typography>{getStringRange(range)}</Typography>
-        <IconButton onClick={(e) => setFilterAnchor(e.currentTarget)}>
-          <FilterAltIcon />
-        </IconButton>
+
+      <Stack
+        sx={{ cursor: 'pointer' }}
+        onClick={(e) => setFilterAnchor(e.currentTarget)}
+        direction="row"
+        gap={1}
+        justifyContent="flex-end"
+        alignItems="center"
+      >
+        <Typography sx={{ fontSize: 14 }}>{getStringRange(range)}</Typography>
       </Stack>
 
       <Stack justifyContent="flex-end" alignItems="center" direction="row" gap={1}>
         <IconButton onClick={() => handleClickDateArrow('left')}>
-          <ArrowBackIosIcon sx={{ width: 16, height: 16 }} />
+          <ArrowBackIosIcon sx={{ width: 12, height: 12 }} />
         </IconButton>
-        <Typography fontWeight={500}>{dateValue}</Typography>
+        <Typography fontWeight={500} sx={{ fontSize: 14 }}>
+          {dateValue}
+        </Typography>
         <Box>
           <FormControl
             sx={{
@@ -83,9 +116,13 @@ const SwitchDate: FC<Props> = ({ range, searchStandard, setRange, setSearchStand
               id="demo-simple-select"
               value={searchStandard}
               onChange={handleChangeStandard}
+              sx={{
+                fontSize: 12,
+                padding: 0,
+              }}
             >
               {searchStandardList.map((standard) => (
-                <MenuItem key={standard} value={standard}>
+                <MenuItem sx={{ fontSize: 14 }} key={standard} value={standard}>
                   {standard}
                 </MenuItem>
               ))}
@@ -93,7 +130,7 @@ const SwitchDate: FC<Props> = ({ range, searchStandard, setRange, setSearchStand
           </FormControl>
         </Box>
         <IconButton onClick={() => handleClickDateArrow('right')}>
-          <ArrowForwardIosIcon sx={{ width: 16, height: 16 }} />
+          <ArrowForwardIosIcon sx={{ width: 12, height: 12 }} />
         </IconButton>
       </Stack>
     </Stack>

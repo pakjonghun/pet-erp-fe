@@ -60,6 +60,7 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
       inActive: true,
       deliveryFreeProductCodeList: [],
       deliveryNotFreeProductCodeList: [],
+      isSabangService: false,
     },
   });
   const { data: storageData, networkStatus } = useStorages({
@@ -169,7 +170,9 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
                 <FormControlLabel
                   sx={{ width: 'fit-content' }}
                   control={<Switch defaultChecked {...field} />}
-                  label={field.value ? '거래중' : '거래종료'}
+                  label={
+                    <Typography variant="body2">{field.value ? '거래중' : '거래종료'}</Typography>
+                  }
                 />
               );
             }}
@@ -177,6 +180,17 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
         </Stack>
 
         <FormGroup sx={modalSizeProps}>
+          <Controller
+            control={control}
+            name="isSabangService"
+            render={({ field }) => (
+              <FormControlLabel
+                sx={{ width: 'fit-content' }}
+                label={field.value ? '사방넷 지원' : '사방넷 미지원'}
+                control={<Switch {...field} />}
+              />
+            )}
+          />
           <Controller
             control={control}
             name="code"

@@ -10,6 +10,13 @@ const saleMenuClients = graphql(`
         _id
         name
         code
+        businessName
+        businessNumber
+        clientType
+        feeRate
+        isSabangService
+        payDate
+        inActive
         accPayCost
         accWonCost
         accCount
@@ -23,16 +30,22 @@ const saleMenuClients = graphql(`
         products {
           name
           accCount
+          accPayCost
+          accWonCost
+          accDeliveryCost
+          accTotalPayment
         }
       }
     }
   }
 `);
 
-export const useSaleMenuClients = (saleMenuClientsInput: FindDateScrollInput) => {
+export const useSaleMenuClients = (saleMenuClientsInput: FindDateScrollInput, skip?: boolean) => {
   return useQuery(saleMenuClients, {
     variables: {
       saleMenuClientsInput,
     },
+    skip,
+    notifyOnNetworkStatusChange: true,
   });
 };

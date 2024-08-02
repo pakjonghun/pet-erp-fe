@@ -1,6 +1,7 @@
 import z from 'zod';
 
 export const createClientSchema = z.object({
+  isSabangService: z.boolean({ required_error: '사방넷 지원여부를 입력하세요.' }),
   code: z
     .string({ required_error: '거래처 코드를 입력해주세요. required' })
     .min(1, { message: '거래처 코드를 입력해주세요. min1' }),

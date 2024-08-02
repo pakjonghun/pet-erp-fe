@@ -1,4 +1,3 @@
-import { Sale } from './codegen/graphql';
 import { BASE_URL } from '@/http/constants';
 import { ApolloClient, InMemoryCache, createHttpLink, gql } from '@apollo/client';
 import { createFragmentRegistry } from '@apollo/client/cache';
@@ -154,6 +153,7 @@ export const client = new ApolloClient({
         managerTel
         inActive
         storageId
+        isSabangService
         deliveryFreeProductCodeList {
           name
           code
@@ -179,17 +179,6 @@ export const client = new ApolloClient({
         storageId
       }
 
-      fragment ClientInfo on ClientInfo {
-        _id {
-          productCode
-          mallId
-        }
-        averagePayCost
-        accPayCost
-        accCount
-        accProfit
-      }
-
       fragment SaleInfo on SaleInfo {
         accPayCost
         accCount
@@ -199,20 +188,6 @@ export const client = new ApolloClient({
       }
     `),
     typePolicies: {
-      SaleInfos: {
-        keyFields: () => {
-          return [
-            '_id',
-            'name',
-            'accPayCost',
-            'accCount',
-            'prevAccPayCost',
-            'prevAccCount',
-            'accDeliveryCost',
-            'accTotalPayment',
-          ];
-        },
-      },
       Query: {
         fields: {
           logs: {
@@ -221,14 +196,6 @@ export const client = new ApolloClient({
           },
           stockLogs: {
             keyArgs: ['findStockLogs', ['keyword', 'from', 'to', 'productCode']],
-            merge,
-          },
-          dashboardProducts: {
-            keyArgs: ['dashboardProductsInput', ['from', 'to', 'idenifier']],
-            merge,
-          },
-          dashboardClients: {
-            keyArgs: ['dashboardClientsInput', ['from', 'to', 'idenifier']],
             merge,
           },
           topClients: {
@@ -288,11 +255,18 @@ export const client = new ApolloClient({
             merge,
           },
           saleMenuClients: {
-            keyArgs: ['saleMenuClientsInput', ['from', 'to']],
+            keyArgs: ['saleMenuClientsInput', ['keyword', 'from', 'to']],
             merge,
           },
           options: {
             keyArgs: ['optionsInput', ['keyword']],
+            merge,
+          },
+          saleOrders: {
+            keyArgs: [
+              'saleOrdersInput',
+              ['productName', 'mallId', 'from', 'to', 'orderNumber', 'sort', 'order'],
+            ],
             merge,
           },
         },

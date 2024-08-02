@@ -34,7 +34,7 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { ClientHeaderList, ClientTypeToHangle } from './constants';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { Client, OutClient, Storage, UserRole } from '@/http/graphql/codegen/graphql';
+import { OutClient, Storage, UserRole } from '@/http/graphql/codegen/graphql';
 import { client } from '@/http/graphql/client';
 import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 import RemoveClientModal from './_components/RemoveClientModal';
@@ -64,6 +64,7 @@ const BackDataPage = () => {
   });
 
   const rows = (data?.clients.data as OutClient[]) ?? [];
+  console.log('rows : ', rows.length);
   const isLoading = networkStatus == 3 || networkStatus == 1;
 
   const callback: IntersectionObserverCallback = (entries) => {
@@ -195,6 +196,7 @@ const BackDataPage = () => {
       ) : (
         ''
       ),
+      client.isSabangService ? '지원' : '미지원',
     ];
   };
 

@@ -4,7 +4,7 @@ import React, { FC, MouseEvent, useState } from 'react';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { Client, OutClient, Storage } from '@/http/graphql/codegen/graphql';
+import { OutClient, Storage } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import { SelectOption } from '../../types';
 import { ClientTypeToHangle } from '../constants';
@@ -80,6 +80,7 @@ const ClientBodyRow: FC<Props> = ({ isSelected, client, scrollRef, onClickOption
       ) : (
         ''
       ),
+      client.isSabangService ? '지원' : '미지원',
     ];
   };
 

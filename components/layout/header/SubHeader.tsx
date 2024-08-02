@@ -1,16 +1,7 @@
 'use client';
 
 import { FC, ReactNode, useEffect, useState } from 'react';
-import {
-  AppBar,
-  Badge,
-  Stack,
-  SxProps,
-  Typography,
-  keyframes,
-  makeStyles,
-  styled,
-} from '@mui/material';
+import { AppBar, Stack, SxProps, Typography, keyframes, styled } from '@mui/material';
 import { Button } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useLoadSabangData } from '@/http/graphql/hooks/sale/useSabang';
@@ -19,7 +10,6 @@ import { client } from '@/http/graphql/client';
 import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 import { UserRole } from '@/http/graphql/codegen/graphql';
 import { useSaleOut } from '@/http/graphql/hooks/sale/useSaleOut';
-import { useSaleOutCheck } from '@/http/graphql/hooks/sale/useSaleoutCheck';
 import CheckAlarm from './CheckAlarm';
 
 interface Props {
@@ -64,17 +54,20 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
         setTimeout(() => {
           client.refetchQueries({
             updateCache(cache) {
-              cache.evict({ fieldName: 'wholeSales' });
-              cache.evict({ fieldName: 'dashboardProduct' });
-              cache.evict({ fieldName: 'dashboardProducts' });
-              cache.evict({ fieldName: 'dashboardClients' });
-              cache.evict({ fieldName: 'dashboardClient' });
+              // cache.evict({ fieldName: 'wholeSales' });
+              // cache.evict({ fieldName: 'dashboardProduct' });
+              // cache.evict({ fieldName: 'dashboardProducts' });
+              // cache.evict({ fieldName: 'dashboardClients' });
+              // cache.evict({ fieldName: 'dashboardClient' });
               cache.evict({ fieldName: 'stocks' });
               cache.evict({ fieldName: 'stocksState' });
               cache.evict({ fieldName: 'productCountStocks' });
               cache.evict({ fieldName: 'productSales' });
               cache.evict({ fieldName: 'productSale' });
               cache.evict({ fieldName: 'topClients' });
+              cache.evict({ fieldName: 'totalSale' });
+              cache.evict({ fieldName: 'saleMenuClients' });
+              cache.evict({ fieldName: 'saleOrders' });
             },
           });
           const errorMessage = res.loadSabangData

@@ -13,6 +13,7 @@ export const ClientHeaderList = [
   '출고창고',
   '택배비 무료제품',
   '택배비 유료제품',
+  '사방넷 지원여부',
 ];
 
 export const ClientTypeToHangle = {

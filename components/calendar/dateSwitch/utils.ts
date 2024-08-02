@@ -1,4 +1,4 @@
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { Direction, SearchStandard } from './types';
 import { getDateRange } from '../dateFilter/utils';
 
@@ -45,4 +45,14 @@ export function getNextDayjsObj(standard: SearchStandard, dayjsObj: Dayjs, direc
     default:
       throw new Error('날짜 계산에 올바른 기준값을 입력해주세요.');
   }
+}
+
+export function getStandardDayjsObj(standard: SearchStandard, dayjsObj: Dayjs) {
+  const hangleToStandardMapper: Record<string, dayjs.UnitType> = {
+    년도: 'year',
+    월: 'month',
+    일: 'day',
+  };
+
+  return getDateRange(dayjsObj, hangleToStandardMapper[standard]);
 }

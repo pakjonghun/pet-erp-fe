@@ -41,6 +41,10 @@ const ClientDetailPopover: FC<Props> = ({
     <BasePopover onClose={onClose} position={position} open={open} anchorEl={anchorEl}>
       <ModalTitle text="거래처 세부내용" />
       <Stack>
+        <LabelText
+          label="사방넷 지원여부"
+          text={selectedClient.isSabangService ? '지원' : '미지원'}
+        />
         <LabelText label="코드" text={selectedClient.code} />
         <LabelText label="이름" text={selectedClient.name} />
         <LabelText label="분류" text={selectedClient.clientType ?? EMPTY} />
