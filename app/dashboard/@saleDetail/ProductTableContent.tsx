@@ -12,7 +12,7 @@ interface Props {
 }
 
 const ProductTableContent: FC<Props> = ({ rows, isLoading, onClickItem, tableScrollRef }) => {
-  const headerList = ['NO', '거래처', '매출', '판매수', '순이익', '순익율', 'TOP3 제품'];
+  const headerList = ['NO', '제품', '매출', '판매수', '순이익', '순익율', 'TOP3 제품'];
 
   const handleClickItem = (name: string) => {
     const target = rows.find((item) => item.name === name);
