@@ -225,6 +225,7 @@ const SaleOrderList: FC<Props> = ({
               xs: 'none',
               md: 'block',
             },
+            minHeight: 800,
           }}
         />
         <Box sx={{ display: 'flex', justifyContent: 'center', height: 10 }}>
