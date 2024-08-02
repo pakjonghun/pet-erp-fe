@@ -25,7 +25,7 @@ const TotalSaleText: FC<Props> = ({
       {hasFullText && <span>{`매출 ${accTotalPayment}`} </span>}
       <span>{`판매수 ${accCount}`} </span>
       <span>{`순이익 ${accProfit}`} </span>
-      <span>{`순이익율 ${accProfitRate}`} </span>
+      <span>{`순익율 ${accProfitRate}`} </span>
     </Stack>
   );
 };

@@ -124,7 +124,7 @@ const ClientSaleModal: FC<Props> = ({
             '원가',
             '택배비',
             '수익',
-            '순이익율',
+            '순익율',
           ]}
           rowList={products.map((p, i) => {
             const no = i + 1;
