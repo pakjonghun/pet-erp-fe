@@ -2,14 +2,7 @@ import { FC } from 'react';
 import Typography from '@mui/material/Typography';
 import { Box, SxProps, TableCell } from '@mui/material';
 import { NumberType } from '@/types';
-import {
-  getArrow,
-  getColor,
-  getFixedTwo,
-  getNumberToString,
-} from '@/utils/sale';
-import { useReactiveVar } from '@apollo/client';
-import { showPrevData } from '@/store/saleStore';
+import { getArrow, getColor, getFixedTwo, getNumberToString } from '@/utils/sale';
 
 interface Props {
   current: number;

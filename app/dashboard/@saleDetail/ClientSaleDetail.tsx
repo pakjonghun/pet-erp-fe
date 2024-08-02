@@ -5,14 +5,21 @@ import ClientDetailContent from './ClientDetailContent';
 import { SearchStandard } from '@/components/calendar/dateSwitch/types';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import SearchField from './_components/SearchField';
-import { getToday } from '@/components/calendar/dateFilter/utils';
 import { getNumberToString } from '@/utils/sale';
+import { clientSaleRange } from '@/store/saleStore';
+import { useReactiveVar } from '@apollo/client';
+import { DateRange } from '@/components/calendar/dateFilter/type';
 
 const ClientSaleDetail = () => {
   const [keyword, setKeyword] = useState('');
   const delayedKeyword = useTextDebounce(keyword);
 
-  const [dateRange, setDateRange] = useState(getToday());
+  const setDateRange = (value: DateRange) => clientSaleRange(value);
+  const dateRange = useReactiveVar(clientSaleRange);
+
+  // ProductSaleRange
+
+  // const [dateRange, setDateRange] = useState(getToday());
   const [searchStandard, setSearchStandard] = useState<SearchStandard>('일');
 
   const [totalDataCount, setTotalDataCount] = useState(0);
