@@ -49,7 +49,7 @@ const DashboardLayout: FC<Props> = ({ totalSale, saleDetail }) => {
           </Grid>
 
           <Grid item xs={12} xl={6}>
-            <Box sx={{ p: 2, bgcolor: 'white', borderRadius: 1, boxShadow: 2 }}>
+            <Box sx={{ p: 2, bgcolor: 'white', borderRadius: 1, boxShadow: 2, minHeight: '60vh' }}>
               <SaleOrders
                 size="large"
                 initProductName=""

@@ -1,4 +1,3 @@
-import { SaleInfo } from '@/http/graphql/codegen/graphql';
 import dayjs from 'dayjs';
 
 export const getFirstPath = (pathname: string) => {
@@ -44,6 +43,7 @@ export const merge = (existing = baseMergeData, incoming: any, { args }: any) =>
   const existingData = existing?.data as any[];
   const incomingData = (incoming?.data as any[]) ?? baseMergeData;
   const merged = existingData ? existingData.slice(0) : [];
+
   const skip = findSkip(args);
   if (skip == null) {
     return existing;
@@ -53,7 +53,12 @@ export const merge = (existing = baseMergeData, incoming: any, { args }: any) =>
     merged[skip + i] = incomingData[i];
   }
 
-  const result = { totalCount: incoming?.totalCount, data: merged };
+  const total = (incoming as any).total;
+  const result = {
+    totalCount: incoming?.totalCount,
+    data: merged,
+    total,
+  };
 
   return result;
 };

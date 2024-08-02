@@ -1,3 +1,5 @@
+'use client';
+
 import { FC } from 'react';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { DateRange } from '@/components/calendar/dateFilter/type';
@@ -112,7 +114,7 @@ const SaleOrderList: FC<Props> = ({
   };
 
   const tableScrollRef = useInfinityScroll({ callback });
-  // const cardScrollRef = useInfinityScroll({ callback });
+  const cardScrollRef = useInfinityScroll({ callback });
 
   return (
     <>
@@ -139,7 +141,7 @@ const SaleOrderList: FC<Props> = ({
           'comma'
         )}건`}</Typography>
         {saleOrdersTotal && (
-          <Typography variant="caption" color="GrayText" sx={{ mb: 1 }}>
+          <Typography variant="caption" color="GrayText">
             {`총합계 : 매출 ${saleOrdersTotal.accTotalPayment}, 판매수 : ${saleOrdersTotal.accCount}, 정산액 : ${saleOrdersTotal.accPayCost}, 원가 : ${saleOrdersTotal.accWonCost}, 택배비 : ${saleOrdersTotal.accDeliveryCost}`}
           </Typography>
         )}
@@ -158,7 +160,7 @@ const SaleOrderList: FC<Props> = ({
             const rowKey = row.join(',');
             return (
               <Stack
-                // ref={isLast ? cardScrollRef : null}
+                ref={isLast ? cardScrollRef : null}
                 sx={{
                   py: {
                     xs: 2,
@@ -225,7 +227,9 @@ const SaleOrderList: FC<Props> = ({
             },
           }}
         />
-        {/* {isLoading && <CommonLoading />} */}
+        <Box sx={{ display: 'flex', justifyContent: 'center', height: 10 }}>
+          {isLoading && <CommonLoading />}
+        </Box>
       </Stack>
     </>
   );

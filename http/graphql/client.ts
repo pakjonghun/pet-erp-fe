@@ -188,20 +188,6 @@ export const client = new ApolloClient({
       }
     `),
     typePolicies: {
-      SaleInfos: {
-        keyFields: () => {
-          return [
-            '_id',
-            'name',
-            'accPayCost',
-            'accCount',
-            'prevAccPayCost',
-            'prevAccCount',
-            'accDeliveryCost',
-            'accTotalPayment',
-          ];
-        },
-      },
       Query: {
         fields: {
           logs: {

@@ -209,7 +209,10 @@ const SaleOrders: FC<Props> = ({ size = 'small', initMallId, initProductName, in
               <Button
                 onClick={() => onClickSort(value)}
                 sx={{
-                  px: 0.2,
+                  px: {
+                    xs: 0.2,
+                    md: 1,
+                  },
                   height: 'fit-content',
                 }}
                 endIcon={getSortIcon(nextOrder)}

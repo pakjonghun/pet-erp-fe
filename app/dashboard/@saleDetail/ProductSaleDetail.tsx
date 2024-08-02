@@ -37,16 +37,16 @@ const ProductSaleDetail = () => {
       <Box sx={{ px: 2, mt: 1 }}>
         <Box sx={{ px: 1, py: 3, border: (theme) => `1px solid ${theme.palette.divider}` }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', py: 0, pl: 1 }}>
-            <Typography variant="caption">{`검색된 데이터 수 ${getNumberToString(
+            <Typography variant="caption" color="GrayText">{`검색결과 : ${getNumberToString(
               totalDataCount,
               'comma'
-            )}`}</Typography>
+            )}건`}</Typography>
             <Typography variant="caption">
               <TotalSaleCaption dateRange={dateRange} />
             </Typography>
           </Box>
 
-          <Box sx={{ px: 1, pb: 3, minHeight: 1200 }}>
+          <Box sx={{ px: 1, pb: 3 }}>
             <ProductDetailContent
               setTotalDataCount={setTotalDataCount}
               dateRange={dateRange}

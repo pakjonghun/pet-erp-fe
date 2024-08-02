@@ -68,7 +68,7 @@ const ProductDetailModal: FC<Props> = ({
       }}
     >
       <Typography variant="h6" component="h6" sx={{ fontWeight: 600 }}>
-        {`${name} 거래처 상세정보`}
+        {`${name} 제품 상세정보`}
       </Typography>
 
       <Stack direction="column" gap={3}>
