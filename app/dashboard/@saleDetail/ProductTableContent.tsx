@@ -3,6 +3,7 @@ import { Dispatch, FC, SetStateAction } from 'react';
 import { ProductSaleMenu } from '@/http/graphql/codegen/graphql';
 import CommonAnyTypeTable from '@/components/table/CommonAnyTypeTable';
 import { getNumberToString, getProfit, getProfitRate } from '@/utils/sale';
+import ExpandChip from './_components/ExpandChip';
 
 interface Props {
   rows: ProductSaleMenu[];
@@ -51,30 +52,6 @@ function createTableRow(item: ProductSaleMenu, no: number) {
     getNumberToString(item.accCount ?? 0, 'comma'),
     getNumberToString(profit ?? 0, 'comma'),
     getNumberToString(getProfitRate(profit ?? 0, item.accTotalPayment ?? 0), 'percent'),
-    <Stack
-      sx={{
-        alignContent: 'flex-start',
-        // justifyContent: 'center',
-        flexDirection: {
-          xs: 'column',
-          // lg: 'row',
-        },
-        flexWrap: 'wrap',
-        gap: 0.3,
-        width: 'fit-content',
-      }}
-      key={`${no}_${item.name}`}
-    >
-      {item.clients.map((p, i) => {
-        return (
-          <Chip
-            size="small"
-            sx={{ borderRadius: 1, width: 'fit-content' }}
-            key={Object.values(p).join(', ')}
-            label={`${i + 1} ${p.name}(${p.accCount})`}
-          />
-        );
-      })}
-    </Stack>,
+    <ExpandChip list={item.clients} key={item._id} />,
   ];
 }

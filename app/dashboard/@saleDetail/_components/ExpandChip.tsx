@@ -5,7 +5,7 @@ import { FC, useState } from 'react';
 
 const initLen = 3;
 interface Item {
-  name: string;
+  name?: Maybe<String>;
   accCount?: Maybe<Number> | null;
 }
 
@@ -40,7 +40,6 @@ const ExpandChip: FC<Props> = ({ list }) => {
             key={item.map((k) => k.name).join(', ')}
           >
             {item.map((jtem) => {
-              const realName = jtem.name.split('_')[1];
               return (
                 <Chip
                   size="small"
@@ -55,7 +54,7 @@ const ExpandChip: FC<Props> = ({ list }) => {
                   label=<Typography
                     sx={{ width: '100%', textAlign: 'left' }}
                     variant="caption"
-                  >{`${count++} ${realName ?? jtem.name}(${jtem.accCount})`}</Typography>
+                  >{`${count++} ${jtem.name}(${jtem.accCount})`}</Typography>
                 />
               );
             })}

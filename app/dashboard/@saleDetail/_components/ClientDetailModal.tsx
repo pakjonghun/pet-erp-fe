@@ -131,7 +131,7 @@ const ClientSaleModal: FC<Props> = ({
           sx={{ mb: 2 }}
           title="최근 1달 매출"
           hover={false}
-          headerList={['판매수', '매출', '정산액', '원가', '택배비', '수익', '수익율']}
+          headerList={['판매수', '매출', '정산액', '원가', '택배비', '순익', '순익율']}
           rowList={[
             [
               getNumberToString(monthSales?.accCount ?? 0, 'comma'),

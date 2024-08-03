@@ -16,12 +16,7 @@ const ClientSaleDetail = () => {
 
   const setDateRange = (value: DateRange) => clientSaleRange(value);
   const dateRange = useReactiveVar(clientSaleRange);
-
-  // ProductSaleRange
-
-  // const [dateRange, setDateRange] = useState(getToday());
   const [searchStandard, setSearchStandard] = useState<SearchStandard>('일');
-
   const [totalDataCount, setTotalDataCount] = useState(0);
   return (
     <>

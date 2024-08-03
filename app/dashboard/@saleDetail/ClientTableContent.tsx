@@ -35,14 +35,21 @@ const ClientTableContent: FC<Props> = ({
       getNumberToString(item.accCount ?? 0, 'comma'),
       getNumberToString(profit ?? 0, 'comma'),
       getNumberToString(getProfitRate(profit ?? 0, item.accTotalPayment ?? 0), 'percent'),
-      <ExpandChip key={item._id} list={item.products} />,
+      <ExpandChip
+        key={item._id}
+        list={item.products.map((p) => {
+          const name = p?.name?.split('_')?.[1] ?? '';
+          return {
+            ...p,
+            name,
+          };
+        })}
+      />,
     ];
   }
 
   const handleClickItem = (clientName: string) => {
-    console.log(111222);
     const target = rows.find((item) => item.name === clientName);
-    console.log('target : ', target);
     if (!target) return;
 
     onClickItem(target);
