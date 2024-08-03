@@ -54,7 +54,7 @@ const ExpandChip: FC<Props> = ({ list }) => {
                   label=<Typography
                     sx={{ width: '100%', textAlign: 'left' }}
                     variant="caption"
-                  >{`${count++} ${jtem.name}(${jtem.accCount})`}</Typography>
+                  >{`${count++}. ${jtem.name}(${jtem.accCount}개)`}</Typography>
                 />
               );
             })}
