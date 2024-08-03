@@ -1,8 +1,8 @@
-import { Chip, Stack } from '@mui/material';
-import { Dispatch, FC, SetStateAction } from 'react';
+import { Dispatch, FC, SetStateAction, useRef, useState } from 'react';
 import { ClientSaleMenu } from '@/http/graphql/codegen/graphql';
 import CommonAnyTypeTable from '@/components/table/CommonAnyTypeTable';
 import { getNumberToString, getProfit, getProfitRate } from '@/utils/sale';
+import ExpandChip from './_components/ExpandChip';
 
 interface Props {
   rows: ClientSaleMenu[];
@@ -21,8 +21,28 @@ const ClientTableContent: FC<Props> = ({
 }) => {
   const headerList = ['NO', '거래처', '매출', '판매수', '순이익', '순익율', '제품 판매수순'];
 
+  function createTableRow(item: ClientSaleMenu, no: number) {
+    const profit = getProfit({
+      accWonCost: item.accWonCost,
+      accDeliveryCost: item.accDeliveryCost,
+      accPayCost: item.accPayCost,
+    });
+
+    return [
+      no,
+      item.name,
+      getNumberToString(item.accTotalPayment ?? 0, 'comma'),
+      getNumberToString(item.accCount ?? 0, 'comma'),
+      getNumberToString(profit ?? 0, 'comma'),
+      getNumberToString(getProfitRate(profit ?? 0, item.accTotalPayment ?? 0), 'percent'),
+      <ExpandChip key={item._id} list={item.products} />,
+    ];
+  }
+
   const handleClickItem = (clientName: string) => {
+    console.log(111222);
     const target = rows.find((item) => item.name === clientName);
+    console.log('target : ', target);
     if (!target) return;
 
     onClickItem(target);
@@ -43,45 +63,3 @@ const ClientTableContent: FC<Props> = ({
 };
 
 export default ClientTableContent;
-
-function createTableRow(item: ClientSaleMenu, no: number) {
-  const profit = getProfit({
-    accWonCost: item.accWonCost,
-    accDeliveryCost: item.accDeliveryCost,
-    accPayCost: item.accPayCost,
-  });
-
-  return [
-    no,
-    item.name,
-    getNumberToString(item.accTotalPayment ?? 0, 'comma'),
-    getNumberToString(item.accCount ?? 0, 'comma'),
-    getNumberToString(profit ?? 0, 'comma'),
-    getNumberToString(getProfitRate(profit ?? 0, item.accTotalPayment ?? 0), 'percent'),
-    <Stack
-      sx={{
-        alignContent: 'flex-start',
-        // justifyContent: 'center',
-        flexDirection: {
-          xs: 'column',
-          // lg: 'row',
-        },
-        flexWrap: 'wrap',
-        gap: 0.3,
-        width: 'fit-content',
-      }}
-      key={`${no}_${item.name}`}
-    >
-      {item.products.map((p, i) => {
-        return (
-          <Chip
-            size="small"
-            sx={{ borderRadius: 1, width: 'fit-content' }}
-            key={Object.values(p).join(', ')}
-            label={`${i + 1} ${p.name}(${p.accCount})`}
-          />
-        );
-      })}
-    </Stack>,
-  ];
-}

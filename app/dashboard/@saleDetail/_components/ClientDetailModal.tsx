@@ -33,6 +33,7 @@ const ClientSaleModal: FC<Props> = ({
     businessName,
     businessNumber,
     feeRate,
+    monthSales,
     isSabangService,
     payDate,
     inActive,
@@ -99,16 +100,64 @@ const ClientSaleModal: FC<Props> = ({
           sx={{ mb: 2 }}
           title="거래처 정보"
           hover={false}
-          headerList={['사방넷 연동여부', '수수료율', '코드', '분류', '상호', '사업자번호']}
+          headerList={[
+            '사방넷 연동여부',
+            '수수료율',
+            '1달 평균 수수료율',
+            '코드',
+            '분류',
+            '상호',
+            '사업자번호',
+          ]}
           rowList={[
             [
               isSabangService ? '지원' : '미지원',
               feeRate == null ? EMPTY : getFixedTwo(feeRate * 100) + '%',
+              monthSales == null
+                ? EMPTY
+                : getFixedTwo(
+                    (1 - (monthSales.accPayCost ?? 0) / (monthSales?.accTotalPayment ?? 1)) * 100
+                  ) + '%',
               code,
               ClientTypeToHangle[clientType],
 
               businessName,
               businessNumber,
+            ],
+          ]}
+        />
+
+        <CommonAnyTypeTable
+          sx={{ mb: 2 }}
+          title="최근 1달 매출"
+          hover={false}
+          headerList={['판매수', '매출', '정산액', '원가', '택배비', '수익', '수익율']}
+          rowList={[
+            [
+              getNumberToString(monthSales?.accCount ?? 0, 'comma'),
+              getNumberToString(monthSales?.accTotalPayment ?? 0, 'comma'),
+              getNumberToString(monthSales?.accPayCost ?? 0, 'comma'),
+              getNumberToString(monthSales?.accWonCost ?? 0, 'comma'),
+              getNumberToString(monthSales?.accDeliveryCost ?? 0, 'comma'),
+              getNumberToString(
+                getProfit({
+                  accPayCost: monthSales?.accPayCost ?? 0,
+                  accWonCost: monthSales?.accWonCost ?? 0,
+                  accDeliveryCost: monthSales?.accDeliveryCost,
+                }),
+                'comma'
+              ),
+              getNumberToString(
+                getProfitRate(
+                  getProfit({
+                    accPayCost: monthSales?.accPayCost ?? 0,
+                    accWonCost: monthSales?.accWonCost ?? 0,
+                    accDeliveryCost: monthSales?.accDeliveryCost,
+                  }),
+                  monthSales?.accTotalPayment ?? 0
+                ),
+                'comma'
+              ),
             ],
           ]}
         />

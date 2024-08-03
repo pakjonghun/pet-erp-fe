@@ -73,13 +73,11 @@ const CommonAnyTypeTable: FC<Props> = ({
 
             const hasError = cells.some((item) => item == '알수없음');
             const profitRateIndex = headerList.findIndex((item) => item == '순익율');
-            console.log('profitRateIndex : ', profitRateIndex);
             const shouldCheck =
               profitRateIndex != -1 && (cells[profitRateIndex] as string)?.includes('-');
             return (
               <TableRow
                 hover={hover}
-                onClick={!!onClickItem ? () => onClickItem(cells[idIndex]) : () => {}}
                 key={key}
                 ref={isLast ? scrollRef : null}
                 sx={{
@@ -98,8 +96,14 @@ const CommonAnyTypeTable: FC<Props> = ({
                 }}
               >
                 {cells.map((cell, index) => {
+                  const isLast = index === cells.length - 1;
                   return (
                     <TableCell
+                      onClick={() => {
+                        console.log('111 : ', 111);
+                        if (isLast) return;
+                        !!onClickItem && onClickItem(cells[idIndex]);
+                      }}
                       sx={{ width: index == 1 ? '20%' : 'auto' }}
                       align={'center'}
                       key={`${key}_column)_${index}`}
