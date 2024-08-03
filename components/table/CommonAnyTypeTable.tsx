@@ -75,6 +75,12 @@ const CommonAnyTypeTable: FC<Props> = ({
             const profitRateIndex = headerList.findIndex((item) => item == '순익율');
             const shouldCheck =
               profitRateIndex != -1 && (cells[profitRateIndex] as string)?.includes('-');
+
+            const profitRateNumber =
+              profitRateIndex != -1 && (cells[profitRateIndex] as string).match(/\d+/)?.[0];
+
+            const isBelowTween = Number(profitRateNumber) < 20;
+
             return (
               <TableRow
                 hover={hover}
@@ -88,6 +94,10 @@ const CommonAnyTypeTable: FC<Props> = ({
                     }
 
                     if (shouldCheck) {
+                      return alpha(theme.palette.warning.light, 0.2);
+                    }
+
+                    if (isBelowTween) {
                       return alpha(theme.palette.warning.light, 0.2);
                     }
 
