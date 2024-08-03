@@ -20,6 +20,7 @@ const ProductSaleDetail = () => {
   const [searchStandard, setSearchStandard] = useState<SearchStandard>('일');
 
   const [totalDataCount, setTotalDataCount] = useState(0);
+  const [monthTotalDataCount, setMonthTotalDataCount] = useState(0);
 
   const date = getFormatDate(dateRange.from);
   const month = `${getFormatDate(dateRange.from.startOf('month'))}~${getFormatDate(
@@ -81,7 +82,7 @@ const ProductSaleDetail = () => {
               </Stack>
               <Box sx={{ display: 'flex', flexDirection: 'column', py: 0, pl: 1 }}>
                 <Typography variant="caption" color="GrayText">{`검색결과 : ${getNumberToString(
-                  totalDataCount,
+                  monthTotalDataCount,
                   'comma'
                 )}건`}</Typography>
                 <Typography variant="caption">
@@ -91,7 +92,7 @@ const ProductSaleDetail = () => {
 
               <Box sx={{ px: 1, pb: 3 }}>
                 <ProductDetailContent
-                  setTotalDataCount={setTotalDataCount}
+                  setTotalDataCount={setMonthTotalDataCount}
                   dateRange={monthDateRange}
                   keyword={delayedKeyword}
                 />

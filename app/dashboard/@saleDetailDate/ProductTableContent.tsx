@@ -1,4 +1,3 @@
-import { Chip, Stack } from '@mui/material';
 import { Dispatch, FC, SetStateAction } from 'react';
 import { ProductSaleMenu } from '@/http/graphql/codegen/graphql';
 import CommonAnyTypeTable from '@/components/table/CommonAnyTypeTable';
@@ -13,7 +12,7 @@ interface Props {
 }
 
 const ProductTableContent: FC<Props> = ({ rows, isLoading, onClickItem, tableScrollRef }) => {
-  const headerList = ['NO', '제품', '매출', '판매수', '순이익', '순익율', '거래처 판매수순'];
+  const headerList = ['NO', '제품', '매출', '판매수', '순이익', '순익율'];
 
   const handleClickItem = (name: string) => {
     const target = rows.find((item) => item.name === name);
@@ -52,6 +51,5 @@ function createTableRow(item: ProductSaleMenu, no: number) {
     getNumberToString(item.accCount ?? 0, 'comma'),
     getNumberToString(profit ?? 0, 'comma'),
     getNumberToString(getProfitRate(profit ?? 0, item.accTotalPayment ?? 0), 'percent'),
-    <ExpandChip list={item.clients} key={item._id} />,
   ];
 }

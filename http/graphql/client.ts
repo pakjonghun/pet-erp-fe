@@ -1,6 +1,6 @@
 import { BASE_URL } from '@/http/constants';
 import { ApolloClient, InMemoryCache, createHttpLink, gql } from '@apollo/client';
-import { createFragmentRegistry } from '@apollo/client/cache';
+import { createFragmentRegistry, defaultDataIdFromObject } from '@apollo/client/cache';
 import { merge } from '@/utils/common';
 
 const link = createHttpLink({
@@ -11,7 +11,11 @@ const link = createHttpLink({
 export const client = new ApolloClient({
   cache: new InMemoryCache({
     dataIdFromObject(responseObject) {
-      return Object.values(responseObject).join('_');
+      if (responseObject.totalCount != null) {
+        return defaultDataIdFromObject(responseObject);
+      } else {
+        return Object.values(responseObject).join('-');
+      }
     },
     fragments: createFragmentRegistry(gql`
       fragment DeliveryCostFragment on DeliveryCost {

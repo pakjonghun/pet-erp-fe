@@ -19,6 +19,7 @@ const ClientSaleDetail = () => {
   const dateRange = useReactiveVar(saleDateRange);
   const [searchStandard, setSearchStandard] = useState<SearchStandard>('일');
   const [totalDataCount, setTotalDataCount] = useState(0);
+  const [monthTotalDataCount, setMonthTotalDataCount] = useState(0);
   const date = getFormatDate(dateRange.from);
   const month = `${getFormatDate(dateRange.from.startOf('month'))}~${getFormatDate(
     dateRange.from.endOf('month')
@@ -80,7 +81,7 @@ const ClientSaleDetail = () => {
               </Stack>
               <Box sx={{ display: 'flex', flexDirection: 'column', py: 0, pl: 1 }}>
                 <Typography variant="caption" color="GrayText">{`검색결과 : ${getNumberToString(
-                  totalDataCount,
+                  monthTotalDataCount,
                   'comma'
                 )}건`}</Typography>
                 <Typography variant="caption">
@@ -90,7 +91,7 @@ const ClientSaleDetail = () => {
 
               <Box sx={{ px: 1, pb: 3 }}>
                 <ClientDetailContent
-                  setTotalDataCount={setTotalDataCount}
+                  setTotalDataCount={setMonthTotalDataCount}
                   dateRange={monthDateRange}
                   keyword={delayedKeyword}
                 />
