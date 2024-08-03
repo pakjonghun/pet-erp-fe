@@ -6,7 +6,7 @@ import useTextDebounce from '@/hooks/useTextDebounce';
 import SearchField from './_components/SearchField';
 import { getNumberToString } from '@/utils/sale';
 import ProductDetailContent from './ProductDetailContent';
-import { clientSaleRange } from '@/store/saleStore';
+import { saleDetailRange } from '@/store/saleStore';
 import { DateRange } from '@/components/calendar/dateFilter/type';
 import { useReactiveVar } from '@apollo/client';
 
@@ -14,8 +14,8 @@ const ProductSaleDetail = () => {
   const [keyword, setKeyword] = useState('');
   const delayedKeyword = useTextDebounce(keyword);
 
-  const setDateRange = (value: DateRange) => clientSaleRange(value);
-  const dateRange = useReactiveVar(clientSaleRange);
+  const setDateRange = (value: DateRange) => saleDetailRange(value);
+  const dateRange = useReactiveVar(saleDetailRange);
   const [searchStandard, setSearchStandard] = useState<SearchStandard>('일');
 
   const [totalDataCount, setTotalDataCount] = useState(0);

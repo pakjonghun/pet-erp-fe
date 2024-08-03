@@ -7,5 +7,5 @@ export const saleRange = makeVar<DateRange>(getToday());
 export const showPrevData = makeVar(false);
 export const showPrevSaleData = makeVar(false);
 
-export const clientSaleRange = makeVar<DateRange>(getToday());
-export const ProductSaleRange = makeVar<DateRange>(getToday());
+export const saleDetailRange = makeVar<DateRange>(getToday());
+export const saleDateRange = makeVar<DateRange>(getToday());

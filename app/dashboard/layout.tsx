@@ -12,9 +12,10 @@ import SubHeader from '@/components/layout/header/SubHeader';
 interface Props {
   totalSale: ReactNode;
   saleDetail: ReactNode;
+  saleDetailDate: ReactNode;
 }
 
-const DashboardLayout: FC<Props> = ({ totalSale, saleDetail }) => {
+const DashboardLayout: FC<Props> = ({ totalSale, saleDetail, saleDetailDate }) => {
   const setRange = (value: DateRange) => saleRange(value);
 
   const handleResetDateRange = () => {
@@ -44,6 +45,9 @@ const DashboardLayout: FC<Props> = ({ totalSale, saleDetail }) => {
           </Grid>
         </Grid>
         <Grid sx={{ mt: 2 }} container spacing={2}>
+          <Grid item xs={12}>
+            {saleDetailDate}
+          </Grid>
           <Grid item xs={12} xl={6}>
             {saleDetail}
           </Grid>
