@@ -45,9 +45,9 @@ const DashboardLayout: FC<Props> = ({ totalSale, saleDetail, saleDetailDate }) =
           </Grid>
         </Grid>
         <Grid sx={{ mt: 2 }} container spacing={2}>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             {saleDetailDate}
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} xl={6}>
             {saleDetail}
           </Grid>
