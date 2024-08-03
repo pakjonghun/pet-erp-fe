@@ -12,7 +12,7 @@ interface Props {
 }
 
 const ProductTableContent: FC<Props> = ({ rows, isLoading, onClickItem, tableScrollRef }) => {
-  const headerList = ['NO', '제품', '매출', '판매수', '순이익', '순익율', 'TOP3 제품'];
+  const headerList = ['NO', '제품', '매출', '판매수', '순이익', '순익율', '거래처 판매수순'];
 
   const handleClickItem = (name: string) => {
     const target = rows.find((item) => item.name === name);
@@ -65,13 +65,13 @@ function createTableRow(item: ProductSaleMenu, no: number) {
       }}
       key={`${no}_${item.name}`}
     >
-      {item.clients.slice(0, 3).map((p, i) => {
+      {item.clients.map((p, i) => {
         return (
           <Chip
             size="small"
             sx={{ borderRadius: 1, width: 'fit-content' }}
             key={Object.values(p).join(', ')}
-            label={`${i + 1} ${p.name}(${p.accCount}EA)`}
+            label={`${i + 1} ${p.name}(${p.accCount})`}
           />
         );
       })}

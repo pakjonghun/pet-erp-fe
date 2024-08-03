@@ -19,7 +19,7 @@ const ClientTableContent: FC<Props> = ({
   onClickItem,
   tableScrollRef,
 }) => {
-  const headerList = ['NO', '거래처', '매출', '판매수', '순이익', '순익율', 'TOP3 제품'];
+  const headerList = ['NO', '거래처', '매출', '판매수', '순이익', '순익율', '제품 판매수순'];
 
   const handleClickItem = (clientName: string) => {
     const target = rows.find((item) => item.name === clientName);
@@ -72,13 +72,13 @@ function createTableRow(item: ClientSaleMenu, no: number) {
       }}
       key={`${no}_${item.name}`}
     >
-      {item.products.slice(0, 3).map((p, i) => {
+      {item.products.map((p, i) => {
         return (
           <Chip
             size="small"
             sx={{ borderRadius: 1, width: 'fit-content' }}
             key={Object.values(p).join(', ')}
-            label={`${i + 1} ${p.name}(${p.accCount}EA)`}
+            label={`${i + 1} ${p.name}(${p.accCount})`}
           />
         );
       })}

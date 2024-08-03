@@ -7,7 +7,7 @@ import LabelText from '@/components/ui/typograph/LabelText';
 import { LIMIT } from '@/constants';
 import { OutSaleOrdersItem } from '@/http/graphql/codegen/graphql';
 import { useSaleOrders } from '@/http/graphql/hooks/sale/useSaleOrders';
-import { getNumberToString, getParsedOrderSaleData } from '@/utils/sale';
+import { getNumberToString, getParsedOrderSaleData, getProfit, getProfitRate } from '@/utils/sale';
 import { Box, Stack, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import { SaleOrdersNameMapper } from './constants';
@@ -209,6 +209,8 @@ const SaleOrderList: FC<Props> = ({
             '정산액',
             '원가',
             '택배비',
+            '순익',
+            '순익율',
             '주문번호',
           ]}
           title=""
@@ -249,6 +251,12 @@ function createRowData({
   deliveryCost,
   orderNumber,
 }: OutSaleOrdersItem) {
+  const profit = getProfit({
+    accPayCost: payCost,
+    accWonCost: wonCost,
+    accDeliveryCost: deliveryCost,
+  });
+
   const list = [
     { saleAt: dayjs(saleAt).format('YYYY-MM-DD') },
     { mallId },
@@ -261,6 +269,12 @@ function createRowData({
     { wonCost: getNumberToString(wonCost ?? 0, 'comma') },
     {
       deliveryCost: getNumberToString(deliveryCost ?? 0, 'comma'),
+    },
+    {
+      profit: getNumberToString(profit, 'comma'),
+    },
+    {
+      profit: getNumberToString(getProfitRate(profit, totalPayment), 'percent'),
     },
     {
       orderNumber: orderNumber,
