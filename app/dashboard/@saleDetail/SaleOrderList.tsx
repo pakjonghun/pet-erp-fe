@@ -274,7 +274,7 @@ function createRowData({
       profit: getNumberToString(profit, 'comma'),
     },
     {
-      profit: getNumberToString(getProfitRate(profit, totalPayment), 'percent'),
+      profit: getNumberToString(getProfitRate(profit, totalPayment ?? 0), 'percent'),
     },
     {
       orderNumber: orderNumber,
