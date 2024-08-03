@@ -1,3 +1,4 @@
+import { getNumberToString, getProfit, getProfitRate } from '@/utils/sale';
 import { Add, Remove } from '@mui/icons-material';
 import { Chip, IconButton, Stack, Typography } from '@mui/material';
 import { Maybe } from 'graphql/jsutils/Maybe';
@@ -7,6 +8,10 @@ const initLen = 3;
 interface Item {
   name?: Maybe<String>;
   accCount?: Maybe<Number> | null;
+  accDeliveryCost?: Maybe<Number> | null;
+  accTotalPayment?: Maybe<Number> | null;
+  accWonCost?: Maybe<Number> | null;
+  accPayCost?: Maybe<Number> | null;
 }
 
 interface Props {
@@ -40,21 +45,49 @@ const ExpandChip: FC<Props> = ({ list }) => {
             key={item.map((k) => k.name).join(', ')}
           >
             {item.map((jtem) => {
+              const totalPaymentNumber = (jtem.accTotalPayment ?? 0) as number;
+              const totalPayment = getNumberToString(totalPaymentNumber, 'comma');
+              const profit = getProfit({
+                accPayCost: (jtem.accPayCost ?? 0) as number,
+                accWonCost: (jtem.accWonCost ?? 0) as number,
+                accDeliveryCost: (jtem.accDeliveryCost ?? 0) as number,
+              });
+              const profitRate = getProfitRate(profit, totalPaymentNumber);
+
               return (
                 <Chip
                   size="small"
                   sx={{
+                    height: 'auto',
+                    '& .MuiChip-label': {
+                      display: 'block',
+                      whiteSpace: 'normal',
+                    },
                     width: `${100 / rowLen}%`,
                     borderRadius: 1,
                     display: 'flex',
                     justifyContent: 'flex-start',
-                    paddingLeft: 2,
+                    paddingLeft: 0.1,
                   }}
                   key={Object.values(jtem).join(', ')}
-                  label=<Typography
-                    sx={{ width: '100%', textAlign: 'left' }}
-                    variant="caption"
-                  >{`${count++}. ${jtem.name}(${jtem.accCount}개)`}</Typography>
+                  label=<Stack
+                    direction="column"
+                    sx={{ width: '100%', textAlign: 'left', height: 'max-content', py: 0.4 }}
+                  >
+                    <Typography variant="caption">
+                      {`${count++}. ${jtem.name}(${getNumberToString(
+                        (jtem?.accCount ?? 0) as number,
+                        'comma'
+                      )}개)`}
+                    </Typography>
+                    <Typography
+                      sx={{ pl: 1.7 }}
+                      variant="caption"
+                    >{`매출 ${totalPayment}원, 수익율 ${getNumberToString(
+                      Math.floor(profitRate),
+                      'percent'
+                    )}`}</Typography>
+                  </Stack>
                 />
               );
             })}
