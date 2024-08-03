@@ -156,7 +156,7 @@ const ClientSaleModal: FC<Props> = ({
                   }),
                   monthSales?.accTotalPayment ?? 0
                 ),
-                'comma'
+                'percent'
               ),
             ],
           ]}
