@@ -268,7 +268,7 @@ function createRowData({
     { payCost: getNumberToString(payCost ?? 0, 'comma') },
     { wonCost: getNumberToString(wonCost ?? 0, 'comma') },
     {
-      deliveryCost: getNumberToString(deliveryCost ?? 0, 'comma'),
+      deliveryCost: getNumberToString(Math.floor(deliveryCost ?? 0), 'comma'),
     },
     {
       profit: getNumberToString(profit, 'comma'),

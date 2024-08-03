@@ -138,7 +138,7 @@ const ClientSaleModal: FC<Props> = ({
               getNumberToString(monthSales?.accTotalPayment ?? 0, 'comma'),
               getNumberToString(monthSales?.accPayCost ?? 0, 'comma'),
               getNumberToString(monthSales?.accWonCost ?? 0, 'comma'),
-              getNumberToString(monthSales?.accDeliveryCost ?? 0, 'comma'),
+              getNumberToString(Math.floor(monthSales?.accDeliveryCost ?? 0), 'comma'),
               getNumberToString(
                 getProfit({
                   accPayCost: monthSales?.accPayCost ?? 0,
@@ -204,7 +204,7 @@ function createTableRow(product: ProductSaleInfo) {
     getNumberToString(product.accTotalPayment ?? 0, 'comma'),
     getNumberToString(product.accPayCost ?? 0, 'comma'),
     getNumberToString(product.accWonCost ?? 0, 'comma'),
-    getNumberToString(product.accDeliveryCost ?? 0, 'comma'),
+    getNumberToString(Math.floor(product.accDeliveryCost ?? 0), 'comma'),
     getNumberToString(profit ?? 0, 'comma'),
     getNumberToString(getProfitRate(profit, product.accPayCost ?? 0), 'percent'),
   ];

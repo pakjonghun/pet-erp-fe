@@ -45,7 +45,7 @@ export const getArrow = (compareNumber: number) => {
 };
 
 export const getProfit = (sale: SaleInfo) => {
-  return (sale?.accPayCost ?? 0) - (sale?.accWonCost ?? 0) - (sale?.accDeliveryCost ?? 0);
+  return (sale?.accPayCost ?? 0) - (sale?.accWonCost ?? 0) - Math.floor(sale?.accDeliveryCost ?? 0);
 };
 
 export const getParsedSaleData = ({

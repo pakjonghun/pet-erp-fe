@@ -160,7 +160,7 @@ function createTableRow(client: ClientInfoMenu) {
     getNumberToString(client.accTotalPayment ?? 0, 'comma'),
     getNumberToString(client.accPayCost ?? 0, 'comma'),
     getNumberToString(client.accWonCost ?? 0, 'comma'),
-    getNumberToString(client.accDeliveryCost ?? 0, 'comma'),
+    getNumberToString(Math.floor(client.accDeliveryCost ?? 0), 'comma'),
     getNumberToString(profit ?? 0, 'comma'),
     getNumberToString(getProfitRate(profit, client.accTotalPayment ?? 0), 'percent'),
   ];
