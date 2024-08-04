@@ -1,7 +1,7 @@
+import FeaturedVideoOutlinedIcon from '@mui/icons-material/FeaturedVideoOutlined';
 import GridViewIcon from '@mui/icons-material/GridView';
 import TextSnippetOutlinedIcon from '@mui/icons-material/TextSnippetOutlined';
 import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 
 export const NAV_WIDTH = 240;
 export const NavMenus = {
@@ -16,5 +16,9 @@ export const NavMenus = {
   stock: {
     label: '재고',
     icon: <Inventory2OutlinedIcon />,
+  },
+  ad: {
+    label: '광고',
+    icon: <FeaturedVideoOutlinedIcon />,
   },
 };
