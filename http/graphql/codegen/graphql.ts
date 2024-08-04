@@ -20,6 +20,39 @@ export type Scalars = {
   Void: { input: any; output: any; }
 };
 
+export enum AdType {
+  ChannelAppProduct = 'CHANNEL_APP_PRODUCT',
+  ChannelProductRate = 'CHANNEL_PRODUCT_RATE',
+  ChannelSpecialProduct = 'CHANNEL_SPECIAL_PRODUCT',
+  CompanyRate = 'COMPANY_RATE'
+}
+
+export type AdsInput = {
+  from: Scalars['Date']['input'];
+  keyword: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
+  skip: Scalars['Int']['input'];
+  to: Scalars['Date']['input'];
+  type?: InputMaybe<AdType>;
+};
+
+export type AdsOutPutItem = {
+  __typename?: 'AdsOutPutItem';
+  _id: Scalars['ID']['output'];
+  clientCode?: Maybe<ProductCodeName>;
+  from: Scalars['Date']['output'];
+  price: Scalars['Int']['output'];
+  productCodeList?: Maybe<Array<ProductCodeName>>;
+  to: Scalars['Date']['output'];
+  type: AdType;
+};
+
+export type AdsOutput = {
+  __typename?: 'AdsOutput';
+  data: Array<AdsOutPutItem>;
+  totalCount: Scalars['Int']['output'];
+};
+
 export type CategoriesInput = {
   keyword: Scalars['String']['input'];
   limit: Scalars['Int']['input'];
@@ -114,6 +147,15 @@ export type ClientsOutput = {
 export type CompleteOrderInput = {
   _id: Scalars['String']['input'];
   storageName: Scalars['String']['input'];
+};
+
+export type CreateAdInput = {
+  clientCode?: InputMaybe<Scalars['String']['input']>;
+  from: Scalars['Date']['input'];
+  price: Scalars['Int']['input'];
+  productCodeList?: InputMaybe<Array<Scalars['String']['input']>>;
+  to: Scalars['Date']['input'];
+  type: AdType;
 };
 
 export type CreateCategoryInput = {
@@ -332,6 +374,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   addStock?: Maybe<Array<Stock>>;
   completeOrder: ProductOrder;
+  createAd: AdsOutPutItem;
   createCategory: ProductCategory;
   createClient: OutClient;
   createFactory: Factory;
@@ -347,6 +390,7 @@ export type Mutation = {
   loadSabangData?: Maybe<Array<Sale>>;
   outSaleData?: Maybe<SaleOutOutput>;
   outStock?: Maybe<Array<Stock>>;
+  removeAd: AdsOutPutItem;
   removeCategory: ProductCategory;
   removeClient: Client;
   removeFactory: Factory;
@@ -359,6 +403,7 @@ export type Mutation = {
   removeUser: User;
   removeWholeSale?: Maybe<WholeSaleItem>;
   setDeliveryCost: DeliveryCost;
+  updateAd: AdsOutPutItem;
   updateCategory: ProductCategory;
   updateClient: OutClient;
   updateFactory: Factory;
@@ -381,6 +426,11 @@ export type MutationAddStockArgs = {
 
 export type MutationCompleteOrderArgs = {
   completeOrderInput: CompleteOrderInput;
+};
+
+
+export type MutationCreateAdArgs = {
+  createAdInput: CreateAdInput;
 };
 
 
@@ -449,6 +499,11 @@ export type MutationOutStockArgs = {
 };
 
 
+export type MutationRemoveAdArgs = {
+  _id: Scalars['String']['input'];
+};
+
+
 export type MutationRemoveCategoryArgs = {
   _id: Scalars['String']['input'];
 };
@@ -506,6 +561,11 @@ export type MutationRemoveWholeSaleArgs = {
 
 export type MutationSetDeliveryCostArgs = {
   setDeliveryCostInput: SetDeliveryCostInput;
+};
+
+
+export type MutationUpdateAdArgs = {
+  updateAdInput: UpdateAdInput;
 };
 
 
@@ -822,6 +882,7 @@ export type ProductsOutput = {
 
 export type Query = {
   __typename?: 'Query';
+  ads: AdsOutput;
   categories: CategoriesOutput;
   client: OutClient;
   clients: ClientsOutput;
@@ -854,6 +915,11 @@ export type Query = {
   user: User;
   users: Array<User>;
   wholeSales: WholeSaleOutput;
+};
+
+
+export type QueryAdsArgs = {
+  adsInput: AdsInput;
 };
 
 
@@ -1229,6 +1295,16 @@ export type TotalSaleInfo = {
   previous?: Maybe<SaleInfo>;
 };
 
+export type UpdateAdInput = {
+  _id: Scalars['String']['input'];
+  clientCode?: InputMaybe<Scalars['String']['input']>;
+  from?: InputMaybe<Scalars['Date']['input']>;
+  price?: InputMaybe<Scalars['Int']['input']>;
+  productCodeList?: InputMaybe<Array<Scalars['String']['input']>>;
+  to?: InputMaybe<Scalars['Date']['input']>;
+  type?: InputMaybe<AdType>;
+};
+
 export type UpdateCategoryInput = {
   _id: Scalars['String']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
@@ -1447,6 +1523,34 @@ export type OutClientFragmentFragment = { __typename?: 'OutClient', _id: string,
 export type ClientFragmentFragment = { __typename?: 'OutClient', _id: string, code: string, name: string, feeRate?: number | null, clientType: ClientType, businessName?: string | null, businessNumber?: string | null, payDate?: number | null, manager?: string | null, managerTel?: string | null, inActive?: boolean | null, storageId?: string | null } & { ' $fragmentName'?: 'ClientFragmentFragment' };
 
 export type SaleInfoFragment = { __typename?: 'SaleInfo', accPayCost?: number | null, accCount?: number | null, name?: string | null, accDeliveryCost?: number | null, accTotalPayment?: number | null } & { ' $fragmentName'?: 'SaleInfoFragment' };
+
+export type AdsQueryVariables = Exact<{
+  adsInput: AdsInput;
+}>;
+
+
+export type AdsQuery = { __typename?: 'Query', ads: { __typename?: 'AdsOutput', totalCount: number, data: Array<{ __typename?: 'AdsOutPutItem', price: number, type: AdType, from: any, to: any, productCodeList?: Array<{ __typename?: 'ProductCodeName', name: string, code: string }> | null, clientCode?: { __typename?: 'ProductCodeName', name: string, code: string } | null }> } };
+
+export type CreateAdMutationVariables = Exact<{
+  createAdInput: CreateAdInput;
+}>;
+
+
+export type CreateAdMutation = { __typename?: 'Mutation', createAd: { __typename?: 'AdsOutPutItem', price: number, type: AdType, from: any, to: any, productCodeList?: Array<{ __typename?: 'ProductCodeName', name: string, code: string }> | null, clientCode?: { __typename?: 'ProductCodeName', name: string, code: string } | null } };
+
+export type RemoveAdMutationVariables = Exact<{
+  _id: Scalars['String']['input'];
+}>;
+
+
+export type RemoveAdMutation = { __typename?: 'Mutation', removeAd: { __typename?: 'AdsOutPutItem', price: number, type: AdType, from: any, to: any, productCodeList?: Array<{ __typename?: 'ProductCodeName', name: string, code: string }> | null, clientCode?: { __typename?: 'ProductCodeName', name: string, code: string } | null } };
+
+export type UpdateAdMutationVariables = Exact<{
+  updateAdInput: UpdateAdInput;
+}>;
+
+
+export type UpdateAdMutation = { __typename?: 'Mutation', updateAd: { __typename?: 'AdsOutPutItem', type: AdType, from: any, to: any, price: number, productCodeList?: Array<{ __typename?: 'ProductCodeName', name: string, code: string }> | null, clientCode?: { __typename?: 'ProductCodeName', name: string, code: string } | null } };
 
 export type ClientsQueryVariables = Exact<{
   clientsInput: ClientsInput;
@@ -2024,6 +2128,10 @@ export const ProductFragmentFragmentDoc = {"kind":"Document","definitions":[{"ki
 export const OutClientFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OutClientFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"OutClient"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"feeRate"}},{"kind":"Field","name":{"kind":"Name","value":"clientType"}},{"kind":"Field","name":{"kind":"Name","value":"businessName"}},{"kind":"Field","name":{"kind":"Name","value":"businessNumber"}},{"kind":"Field","name":{"kind":"Name","value":"payDate"}},{"kind":"Field","name":{"kind":"Name","value":"manager"}},{"kind":"Field","name":{"kind":"Name","value":"managerTel"}},{"kind":"Field","name":{"kind":"Name","value":"inActive"}},{"kind":"Field","name":{"kind":"Name","value":"storageId"}},{"kind":"Field","name":{"kind":"Name","value":"isSabangService"}},{"kind":"Field","name":{"kind":"Name","value":"deliveryFreeProductCodeList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}},{"kind":"Field","name":{"kind":"Name","value":"deliveryNotFreeProductCodeList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}}]}}]} as unknown as DocumentNode<OutClientFragmentFragment, unknown>;
 export const ClientFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ClientFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"OutClient"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"feeRate"}},{"kind":"Field","name":{"kind":"Name","value":"clientType"}},{"kind":"Field","name":{"kind":"Name","value":"businessName"}},{"kind":"Field","name":{"kind":"Name","value":"businessNumber"}},{"kind":"Field","name":{"kind":"Name","value":"payDate"}},{"kind":"Field","name":{"kind":"Name","value":"manager"}},{"kind":"Field","name":{"kind":"Name","value":"managerTel"}},{"kind":"Field","name":{"kind":"Name","value":"inActive"}},{"kind":"Field","name":{"kind":"Name","value":"storageId"}}]}}]} as unknown as DocumentNode<ClientFragmentFragment, unknown>;
 export const SaleInfoFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SaleInfo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SaleInfo"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accPayCost"}},{"kind":"Field","name":{"kind":"Name","value":"accCount"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"accDeliveryCost"}},{"kind":"Field","name":{"kind":"Name","value":"accTotalPayment"}}]}}]} as unknown as DocumentNode<SaleInfoFragment, unknown>;
+export const AdsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ads"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"adsInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AdsInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ads"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"adsInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"adsInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"productCodeList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}},{"kind":"Field","name":{"kind":"Name","value":"clientCode"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"from"}},{"kind":"Field","name":{"kind":"Name","value":"to"}}]}}]}}]}}]} as unknown as DocumentNode<AdsQuery, AdsQueryVariables>;
+export const CreateAdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createAd"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"createAdInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateAdInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createAd"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"createAdInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"createAdInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"productCodeList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}},{"kind":"Field","name":{"kind":"Name","value":"clientCode"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"from"}},{"kind":"Field","name":{"kind":"Name","value":"to"}}]}}]}}]} as unknown as DocumentNode<CreateAdMutation, CreateAdMutationVariables>;
+export const RemoveAdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"removeAd"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeAd"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"_id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"productCodeList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}},{"kind":"Field","name":{"kind":"Name","value":"clientCode"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"from"}},{"kind":"Field","name":{"kind":"Name","value":"to"}}]}}]}}]} as unknown as DocumentNode<RemoveAdMutation, RemoveAdMutationVariables>;
+export const UpdateAdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateAd"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"updateAdInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateAdInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateAd"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"updateAdInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"updateAdInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"productCodeList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}},{"kind":"Field","name":{"kind":"Name","value":"clientCode"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"from"}},{"kind":"Field","name":{"kind":"Name","value":"to"}},{"kind":"Field","name":{"kind":"Name","value":"price"}}]}}]}}]} as unknown as DocumentNode<UpdateAdMutation, UpdateAdMutationVariables>;
 export const ClientsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"clients"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"clientsInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ClientsInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"clients"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"clientsInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"clientsInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"OutClientFragment"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OutClientFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"OutClient"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"feeRate"}},{"kind":"Field","name":{"kind":"Name","value":"clientType"}},{"kind":"Field","name":{"kind":"Name","value":"businessName"}},{"kind":"Field","name":{"kind":"Name","value":"businessNumber"}},{"kind":"Field","name":{"kind":"Name","value":"payDate"}},{"kind":"Field","name":{"kind":"Name","value":"manager"}},{"kind":"Field","name":{"kind":"Name","value":"managerTel"}},{"kind":"Field","name":{"kind":"Name","value":"inActive"}},{"kind":"Field","name":{"kind":"Name","value":"storageId"}},{"kind":"Field","name":{"kind":"Name","value":"isSabangService"}},{"kind":"Field","name":{"kind":"Name","value":"deliveryFreeProductCodeList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}},{"kind":"Field","name":{"kind":"Name","value":"deliveryNotFreeProductCodeList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}}]}}]} as unknown as DocumentNode<ClientsQuery, ClientsQueryVariables>;
 export const CreateClientDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createClient"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"createClientInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateClientInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createClient"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"createClientInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"createClientInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"OutClientFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OutClientFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"OutClient"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"feeRate"}},{"kind":"Field","name":{"kind":"Name","value":"clientType"}},{"kind":"Field","name":{"kind":"Name","value":"businessName"}},{"kind":"Field","name":{"kind":"Name","value":"businessNumber"}},{"kind":"Field","name":{"kind":"Name","value":"payDate"}},{"kind":"Field","name":{"kind":"Name","value":"manager"}},{"kind":"Field","name":{"kind":"Name","value":"managerTel"}},{"kind":"Field","name":{"kind":"Name","value":"inActive"}},{"kind":"Field","name":{"kind":"Name","value":"storageId"}},{"kind":"Field","name":{"kind":"Name","value":"isSabangService"}},{"kind":"Field","name":{"kind":"Name","value":"deliveryFreeProductCodeList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}},{"kind":"Field","name":{"kind":"Name","value":"deliveryNotFreeProductCodeList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}}]}}]} as unknown as DocumentNode<CreateClientMutation, CreateClientMutationVariables>;
 export const RemoveClientDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"removeClient"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeClient"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"_id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<RemoveClientMutation, RemoveClientMutationVariables>;

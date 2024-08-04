@@ -16,7 +16,7 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { snackMessage } from '@/store/snackMessage';
 import { PRODUCT_PREFIX } from '@/constants';
 import { modalSizeProps } from '@/components/commonStyles';
-import { CreateOptionForm, createOptionSchema } from '../_validations/createSubsidiaryValidation';
+import { CreateOptionForm, createOptionSchema } from '../_validations/adsInput';
 import { client } from '@/http/graphql/client';
 import { useCreateOption } from '@/http/graphql/hooks/option/useCreateOption';
 import { initProductOption } from '../constants';

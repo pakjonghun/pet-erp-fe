@@ -17,7 +17,7 @@ import { snackMessage } from '@/store/snackMessage';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { PRODUCT_PREFIX } from '@/constants';
 import { modalSizeProps } from '@/components/commonStyles';
-import { CreateOptionForm, createOptionSchema } from '../_validations/createSubsidiaryValidation';
+import { CreateOptionForm, createOptionSchema } from '../_validations/adsInput';
 import { OutputOption } from '@/http/graphql/codegen/graphql';
 import { useUpdateOption } from '@/http/graphql/hooks/option/useUpdateOption';
 import { initProductOption } from '../constants';
