@@ -110,7 +110,6 @@ const CommonAnyTypeTable: FC<Props> = ({
                   return (
                     <TableCell
                       onClick={() => {
-                        console.log('111 : ', 111);
                         if (isLast) return;
                         !!onClickItem && onClickItem(cells[idIndex]);
                       }}

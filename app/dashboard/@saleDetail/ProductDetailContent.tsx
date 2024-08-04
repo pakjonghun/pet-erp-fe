@@ -13,12 +13,16 @@ interface Props {
   dateRange: DateRange;
   keyword: string;
   setTotalDataCount: (value: number) => void;
+  sort: string;
+  order: number;
 }
 
 const ProductDetailContent: FC<Props> = ({
   setTotalDataCount,
   dateRange: { from, to },
   keyword,
+  sort,
+  order,
 }) => {
   const { data, fetchMore, networkStatus } = useProductSales({
     keyword,
@@ -26,6 +30,8 @@ const ProductDetailContent: FC<Props> = ({
     to: to.toISOString(),
     limit: LIMIT,
     skip: 0,
+    sort,
+    order,
   });
 
   useEffect(() => {
@@ -51,6 +57,8 @@ const ProductDetailContent: FC<Props> = ({
               limit: LIMIT,
               from: from.toISOString(),
               to: to.toISOString(),
+              sort,
+              order,
             },
           },
         });

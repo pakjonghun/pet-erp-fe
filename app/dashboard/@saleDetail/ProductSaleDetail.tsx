@@ -9,6 +9,9 @@ import ProductDetailContent from './ProductDetailContent';
 import { saleDetailRange } from '@/store/saleStore';
 import { DateRange } from '@/components/calendar/dateFilter/type';
 import { useReactiveVar } from '@apollo/client';
+import { Button, Stack } from '@mui/material';
+import { SaleProductSortList } from '../@saleDetail/constants';
+import { getSortIcon } from '../@saleDetail/SaleOrders';
 
 const ProductSaleDetail = () => {
   const [keyword, setKeyword] = useState('');
@@ -19,6 +22,19 @@ const ProductSaleDetail = () => {
   const [searchStandard, setSearchStandard] = useState<SearchStandard>('일');
 
   const [totalDataCount, setTotalDataCount] = useState(0);
+
+  const [sort, setSort] = useState('accCount');
+  const [order, setOrder] = useState(-1);
+
+  const onClickSort = (sortTarget: string) => {
+    if (sort == sortTarget) {
+      setOrder((prev) => (prev == 1 ? -1 : 1));
+    } else {
+      setSort(sortTarget);
+      setOrder(1);
+    }
+  };
+
   return (
     <>
       <Box sx={{ px: 2 }}>
@@ -35,6 +51,45 @@ const ProductSaleDetail = () => {
               setSearchStandard,
             }}
           />
+          <Stack
+            direction="row"
+            alignItems="center"
+            sx={{
+              gap: 1,
+              justifyContent: {
+                xs: 'space-between',
+                sm: 'flex-start',
+              },
+              flexWrap: 'wrap',
+            }}
+          >
+            {SaleProductSortList.map(({ name, value }) => {
+              const isSorting = sort == value;
+              let nextOrder = 0;
+              if (isSorting) {
+                nextOrder = order == 1 ? -1 : 1;
+              }
+
+              return (
+                <Button
+                  onClick={() => onClickSort(value)}
+                  sx={{
+                    px: {
+                      xs: 0.2,
+                      md: 1,
+                    },
+                    height: 'fit-content',
+                  }}
+                  endIcon={getSortIcon(nextOrder)}
+                  size="small"
+                  variant="outlined"
+                  key={value}
+                >
+                  {name}
+                </Button>
+              );
+            })}
+          </Stack>
         </Box>
       </Box>
       <Box sx={{ px: 2, mt: 1 }}>
@@ -54,6 +109,8 @@ const ProductSaleDetail = () => {
               setTotalDataCount={setTotalDataCount}
               dateRange={dateRange}
               keyword={delayedKeyword}
+              sort={sort}
+              order={order}
             />
           </Box>
         </Box>

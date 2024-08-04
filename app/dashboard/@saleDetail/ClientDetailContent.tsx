@@ -10,6 +10,8 @@ import ClientTableContent from './ClientTableContent';
 import { Box } from '@mui/material';
 
 interface Props {
+  sort: string;
+  order: number;
   dateRange: DateRange;
   keyword: string;
   setTotalDataCount: (value: number) => void;
@@ -19,6 +21,8 @@ const ClientDetailContent: FC<Props> = ({
   setTotalDataCount,
   dateRange: { from, to },
   keyword,
+  order,
+  sort,
 }) => {
   const { data, fetchMore, networkStatus } = useSaleMenuClients({
     keyword,
@@ -26,6 +30,8 @@ const ClientDetailContent: FC<Props> = ({
     to: to.toISOString(),
     limit: LIMIT,
     skip: 0,
+    order,
+    sort,
   });
 
   useEffect(() => {
@@ -46,6 +52,8 @@ const ClientDetailContent: FC<Props> = ({
         fetchMore({
           variables: {
             saleMenuClientsInput: {
+              order,
+              sort,
               keyword,
               skip: rows.length,
               limit: LIMIT,

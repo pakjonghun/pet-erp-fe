@@ -185,7 +185,7 @@ const ProductStockPage = () => {
                   width: '100%',
                   pr: 2,
                 }}
-                label="제품 이름이나 코드를 입력하세요."
+                label="제품 이름이나 ㅋㅋ코드를 입력하세요."
                 size="small"
               />
             </FormControl>

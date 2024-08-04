@@ -7,7 +7,7 @@ import useInfinityScroll from '@/hooks/useInfinityScroll';
 import ClientSaleModal from './_components/ClientDetailModal';
 import ClientCardContent from './ClientCardContent';
 import ClientTableContent from './ClientTableContent';
-import { Box } from '@mui/material';
+import { Box, Button, Stack } from '@mui/material';
 
 interface Props {
   dateRange: DateRange;

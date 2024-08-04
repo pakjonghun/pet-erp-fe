@@ -243,7 +243,7 @@ const SaleOrders: FC<Props> = ({ size = 'small', initMallId, initProductName, in
 
 export default SaleOrders;
 
-function getSortIcon(order: number) {
+export function getSortIcon(order: number) {
   const sortMapper = {
     ['-1' as string]: <ArrowUpwardIcon sx={{ width: 14, height: 14 }} />,
     '0': <ReorderIcon sx={{ width: 14, height: 14 }} />,

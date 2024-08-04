@@ -18,3 +18,24 @@ export const SaleOrderSortList = [
   { value: 'saleAt', name: '주문날짜' },
   { value: 'productName', name: '제품이름' },
 ];
+
+export const SaleProductNameMapper = {
+  ['name']: '제품',
+  ['accTotalPayment']: '매출',
+  ['accCount']: '판매수',
+};
+
+export const SaleProductSortList = [
+  {
+    name: '이름',
+    value: 'name',
+  },
+  {
+    name: '매출',
+    value: 'accTotalPayment',
+  },
+  {
+    name: '판매수',
+    value: 'accCount',
+  },
+];

@@ -64,7 +64,6 @@ const BackDataPage = () => {
   });
 
   const rows = (data?.clients.data as OutClient[]) ?? [];
-  console.log('rows : ', rows.length);
   const isLoading = networkStatus == 3 || networkStatus == 1;
 
   const callback: IntersectionObserverCallback = (entries) => {
