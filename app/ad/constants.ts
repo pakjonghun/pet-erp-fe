@@ -1,30 +1,3 @@
-export const BackDataTabs = {
-  'back-data/product-category': {
-    label: '제품분류',
-  },
-  'back-data/product': {
-    label: '제품',
-  },
-  'back-data/client': {
-    label: '거래처',
-  },
-  'back-data/subsidiary-category': {
-    label: '부자재분류',
-  },
-  'back-data/subsidiary': {
-    label: '부자재',
-  },
-  'back-data/storage': {
-    label: '창고',
-  },
-  'back-data/factory': {
-    label: '공장',
-  },
-  'back-data/option': {
-    label: '옵션',
-  },
-};
-
 export const ContextOptions = ['edit', 'delete'] as const;
 export const ProductHeaderList = [
   '코드',
@@ -37,7 +10,7 @@ export const ProductHeaderList = [
   '',
 ];
 
-export const OptionHeaderList = ['아이디', '이름', '적용 할 수 있는 제품 목록'];
+export const headerList = ['시작날짜', '종료날짜', '광고종류', '거래처', '제품목록'];
 
 export const initProductOption = {
   count: 1,

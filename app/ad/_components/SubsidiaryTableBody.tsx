@@ -3,7 +3,7 @@ import { OutputOption } from '@/http/graphql/codegen/graphql';
 import EmptyRow from '@/components/table/EmptyRow';
 import { SelectOption } from '../types';
 import LoadingRow from '@/components/table/LoadingRow';
-import { OptionHeaderList } from '../constants';
+import { headerList } from '../constants';
 import SubsidiaryBodyRow from './SubsidiaryBodyRow';
 import { CommonListProps } from '@/types';
 import { CommonTableBody } from '@/components/commonStyles';
@@ -33,7 +33,7 @@ const SubsidiaryTableBody: FC<Props> = ({
 
   return (
     <CommonTableBody>
-      <EmptyRow colSpan={OptionHeaderList.length} isEmpty={isEmpty} />
+      <EmptyRow colSpan={headerList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
         const isSelected = item.id === selectedSubsidiary?.id;
         const isLast = index === data.length - 1;
@@ -52,7 +52,7 @@ const SubsidiaryTableBody: FC<Props> = ({
           />
         );
       })}
-      <LoadingRow isLoading={isLoading} colSpan={OptionHeaderList.length} />
+      <LoadingRow isLoading={isLoading} colSpan={headerList.length} />
     </CommonTableBody>
   );
 };

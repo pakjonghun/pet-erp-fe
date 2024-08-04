@@ -6,50 +6,15 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { getOriginPath } from '@/utils/common';
 import SubHeader from '@/components/layout/header/SubHeader';
-import { BackDataTabs } from './constants';
 
 interface Props {
   children: ReactNode;
 }
 
 const BackDataLayout: FC<Props> = ({ children }) => {
-  const pathname = usePathname();
-  const tabs = Object.keys(BackDataTabs) as (keyof typeof BackDataTabs)[];
-  const currentTabIndex = tabs.findIndex((item) => {
-    return item === getOriginPath(pathname);
-  });
-
   return (
     <>
-      <SubHeader title="광고" sx={{ boxShadow: 0 }}>
-        {/* <Tabs
-          variant="scrollable"
-          value={currentTabIndex == -1 ? 0 : currentTabIndex}
-          indicatorColor="primary"
-        >
-          {tabs.map((tab) => {
-            const tabItem = BackDataTabs[tab];
-            return (
-              <Tab
-                sx={{
-                  transition: 'all .3s',
-                  fontSize: 16,
-                  '&:hover': {
-                    bgcolor: (theme) => theme.palette.action.selected,
-                  },
-                  '&.Mui-selected': {
-                    fontWeight: 800,
-                  },
-                }}
-                href={`/${tab}`}
-                component={Link}
-                label={tabItem.label}
-                key={tab}
-              />
-            );
-          })}
-        </Tabs> */}
-      </SubHeader>
+      <SubHeader title="광고" sx={{ boxShadow: 0 }} />
       {children}
     </>
   );
