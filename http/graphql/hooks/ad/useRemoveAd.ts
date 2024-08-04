@@ -27,5 +27,3 @@ export const useRemoveAd = (removeAdInput: string) => {
     },
   });
 };
-
-//

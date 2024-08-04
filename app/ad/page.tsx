@@ -23,28 +23,34 @@ import CreateOptionModal from './_components/AddOptionModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT } from '@/constants';
 import ActionButton from '@/components/ui/button/ActionButton';
-import { OptionHeaderList } from './constants';
+import { headerList } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import OptionCards from './_components/OptionCards';
 import SubsidiaryTableBody from './_components/SubsidiaryTableBody';
 import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 import { SelectOption } from './types';
-import { OutputOption, UserRole } from '@/http/graphql/codegen/graphql';
+import { AdType, OutputOption, UserRole } from '@/http/graphql/codegen/graphql';
 import RemoveSubsidiaryModal from './_components/RemoveSubsidiaryModal';
 import EditSubsidiaryModal from './_components/EditOptionModal';
 import Cell from '@/components/table/Cell';
 import EmptyRow from '@/components/table/EmptyRow';
 import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 import { useOptions } from '@/http/graphql/hooks/option/useOptions';
+import dayjs from 'dayjs';
 
 const BackDataPage = () => {
+  const [from, setFrom] = useState(dayjs());
+  const [to, setTo] = useState(dayjs());
+  const [type, setType] = useState<null | AdType>(null);
+  const [sort, setSort] = useState('updatedAt');
+  const [order, setOrder] = useState(-1);
+  const [keyword, setKeyword] = useState('');
+  const delayKeyword = useTextDebounce(keyword);
+
   const { data: userData } = useGetMyInfo();
   const myRole = userData?.myInfo.role ?? [];
   const canDelete = myRole.includes(UserRole.BackDelete);
   const canEdit = myRole.includes(UserRole.BackEdit);
-
-  const [keyword, setKeyword] = useState('');
-  const delayKeyword = useTextDebounce(keyword);
 
   const { data, networkStatus, fetchMore } = useOptions({
     keyword: delayKeyword,
@@ -166,7 +172,7 @@ const BackDataPage = () => {
           <CommonTable stickyHeader>
             <TableHead>
               <CommonHeaderRow>
-                {OptionHeaderList.map((item, index) => (
+                {headerList.map((item, index) => (
                   <HeadCell key={`${index}_${item}`} text={item} />
                 ))}
               </CommonHeaderRow>
@@ -204,7 +210,7 @@ const BackDataPage = () => {
           <CommonTable stickyHeader>
             <TableHead>
               <CommonHeaderRow>
-                {OptionHeaderList.map((item, index) => (
+                {headerList.map((item, index) => (
                   <HeadCell key={`${index}_${item}`} text={item} />
                 ))}
               </CommonHeaderRow>
