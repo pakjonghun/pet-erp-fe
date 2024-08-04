@@ -9,7 +9,6 @@ import { CreateCategoryForm, createCategorySchema } from '../_validations/create
 import { ProductCategory } from '@/http/graphql/codegen/graphql';
 import { useUpdateProductCategory } from '@/http/graphql/hooks/product-category/useEditProductCategory';
 import { modalSizeProps } from '@/components/commonStyles';
-import { client } from '@/http/graphql/client';
 
 interface Props {
   open: boolean;

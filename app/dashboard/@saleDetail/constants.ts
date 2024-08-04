@@ -23,6 +23,8 @@ export const SaleProductNameMapper = {
   ['name']: '제품',
   ['accTotalPayment']: '매출',
   ['accCount']: '판매수',
+  ['accProfit']: '순익',
+  ['accProfitRate']: '순익율',
 };
 
 export const SaleProductSortList = [
@@ -37,5 +39,13 @@ export const SaleProductSortList = [
   {
     name: '판매수',
     value: 'accCount',
+  },
+  {
+    name: '순익',
+    value: 'accProfit',
+  },
+  {
+    name: '순익율',
+    value: 'accProfitRate',
   },
 ];
