@@ -9,6 +9,7 @@ import { CreateCategoryForm, createCategorySchema } from '../_validations/create
 import { ProductCategory } from '@/http/graphql/codegen/graphql';
 import { useUpdateProductCategory } from '@/http/graphql/hooks/product-category/useEditProductCategory';
 import { modalSizeProps } from '@/components/commonStyles';
+import { client } from '@/http/graphql/client';
 
 interface Props {
   open: boolean;
@@ -47,6 +48,13 @@ const EditCategoryModal: FC<Props> = ({ open, item, onClose }) => {
       },
       onCompleted: () => {
         snackMessage({ message: '제품분류 편집이 완료되었습니다.', severity: 'success' });
+
+        // client.refetchQueries({
+        //   updateCache(cache) {
+        //     cache.evict({ fieldName: 'categories' });
+        //   },
+        // });
+
         handleClose();
       },
       onError: (err) => {

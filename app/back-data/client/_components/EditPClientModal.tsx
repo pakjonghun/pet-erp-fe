@@ -159,11 +159,12 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
 
         setSelectedClient(res.updateClient as OutClient);
 
-        client.refetchQueries({
-          updateCache(cache) {
-            cache.evict({ fieldName: 'dashboardClients' });
-          },
-        });
+        // client.refetchQueries({
+        //   updateCache(cache) {
+        //     // cache.evict({ fieldName: 'dashboardClients' });
+        //     cache.evict({ fieldName: 'clients' });
+        //   },
+        // });
         handleClose();
       },
       onError: (err) => {

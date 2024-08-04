@@ -10,13 +10,13 @@ const link = createHttpLink({
 
 export const client = new ApolloClient({
   cache: new InMemoryCache({
-    dataIdFromObject(responseObject) {
-      if (responseObject.totalCount != null) {
-        return defaultDataIdFromObject(responseObject);
-      } else {
-        return Object.values(responseObject).join('-');
-      }
-    },
+    // dataIdFromObject(responseObject) {
+    //   if (responseObject.totalCount != null) {
+    //     return defaultDataIdFromObject(responseObject);
+    //   } else {
+    //     return Object.values(responseObject).join('-');
+    //   }
+    // },
     fragments: createFragmentRegistry(gql`
       fragment DeliveryCostFragment on DeliveryCost {
         deliveryCost
@@ -203,10 +203,6 @@ export const client = new ApolloClient({
           },
           stockLogs: {
             keyArgs: ['findStockLogs', ['keyword', 'from', 'to', 'productCode']],
-            merge,
-          },
-          topClients: {
-            keyArgs: ['topClientInput', ['from', 'to']],
             merge,
           },
           subsidiaries: {

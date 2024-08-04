@@ -662,7 +662,7 @@ export type OutSaleOrderItemTotal = {
 export type OutSaleOrdersItem = {
   __typename?: 'OutSaleOrdersItem';
   count?: Maybe<Scalars['Int']['output']>;
-  deliveryCost?: Maybe<Scalars['Int']['output']>;
+  deliveryCost?: Maybe<Scalars['Float']['output']>;
   mallId?: Maybe<Scalars['String']['output']>;
   orderNumber?: Maybe<Scalars['String']['output']>;
   payCost?: Maybe<Scalars['Int']['output']>;
@@ -1005,7 +1005,7 @@ export type Sale = {
   consignee?: Maybe<Scalars['String']['output']>;
   count?: Maybe<Scalars['Int']['output']>;
   deliveryBoxCount?: Maybe<Scalars['Int']['output']>;
-  deliveryCost?: Maybe<Scalars['Int']['output']>;
+  deliveryCost?: Maybe<Scalars['Float']['output']>;
   deliveryName?: Maybe<Scalars['String']['output']>;
   invoiceNumber?: Maybe<Scalars['String']['output']>;
   isDone?: Maybe<Scalars['Boolean']['output']>;

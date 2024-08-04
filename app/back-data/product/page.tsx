@@ -214,14 +214,15 @@ const ProductPage = () => {
 
         client.refetchQueries({
           updateCache(cache) {
-            cache.evict({ fieldName: 'wholeSales' });
-            cache.evict({ fieldName: 'dashboardClients' });
-            cache.evict({ fieldName: 'stocks' });
+            // cache.evict({ fieldName: 'wholeSales' });
+            // cache.evict({ fieldName: 'dashboardClients' });
+            // cache.evict({ fieldName: 'stocks' });
             cache.evict({ fieldName: 'stocksState' });
             cache.evict({ fieldName: 'productCountStocks' });
             cache.evict({ fieldName: 'productSales' });
             cache.evict({ fieldName: 'productSale' });
-            cache.evict({ fieldName: 'topClients' });
+            cache.evict({ fieldName: 'products' });
+            // cache.evict({ fieldName: 'topClients' });
           },
         });
       },
