@@ -7,7 +7,6 @@ import { Autocomplete, Box, IconButton, Paper, Stack, TextField, styled } from '
 import { Control, Controller, FieldErrors } from 'react-hook-form';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { useProducts } from '@/http/graphql/hooks/product/useProducts';
-import { CreateOptionForm } from '../_validations/adsInput';
 import { OutOptionProduct } from '@/http/graphql/codegen/graphql';
 
 interface Props {
@@ -15,10 +14,10 @@ interface Props {
   index: number;
   control: Control<any>;
   remove: (index: number) => void;
-  error?: FieldErrors<CreateOptionForm>;
+  // error?: FieldErrors<CreateOptionForm>;
 }
 
-const ProductOption: FC<Props> = ({ selectedOptions, index, control, remove, error }) => {
+const ProductOption: FC<Props> = ({ selectedOptions, index, control, remove }) => {
   const [productKeyword, setProductKeyword] = useState('');
   const delayedProductKeyword = useTextDebounce(productKeyword);
 
@@ -126,14 +125,7 @@ const ProductOption: FC<Props> = ({ selectedOptions, index, control, remove, err
         control={control}
         name={`productOptionList.${index}.count`}
         render={({ field }) => {
-          return (
-            <NumberInput
-              field={field}
-              label="제품 개수"
-              error={!!error?.productOptionList?.[index]?.count?.message}
-              helperText={error?.productOptionList?.[index]?.count?.message ?? ''}
-            />
-          );
+          return <NumberInput field={field} label="제품 개수" error={true} helperText={''} />;
         }}
       />
 
