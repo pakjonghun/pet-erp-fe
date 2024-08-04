@@ -7,7 +7,7 @@ import { Autocomplete, Box, IconButton, Paper, Stack, TextField, styled } from '
 import { Control, Controller, FieldErrors } from 'react-hook-form';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { useProducts } from '@/http/graphql/hooks/product/useProducts';
-import { CreateOptionForm } from '../_validations/createSubsidiaryValidation';
+import { CreateOptionForm } from '../_validations/adsInput';
 import { OutOptionProduct } from '@/http/graphql/codegen/graphql';
 
 interface Props {
