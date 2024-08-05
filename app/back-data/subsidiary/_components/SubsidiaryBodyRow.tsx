@@ -52,7 +52,7 @@ const SubsidiaryBodyRow: FC<Props> = ({
       subsidiary.code,
       subsidiary.wonPrice == null ? EMPTY : getKCWFormat(subsidiary.wonPrice),
       subsidiary.leadTime ? `${subsidiary.leadTime}일` : EMPTY,
-      <Stack key={Math.random()} direction="column" gap={1}>
+      <Stack key={Math.random()} direction="row" flexWrap="wrap" gap={0.4}>
         {(subsidiary.productList ?? []).map((subsidiary) => {
           return <Chip key={subsidiary._id} label={subsidiary.name} />;
         })}
@@ -84,16 +84,6 @@ const SubsidiaryBodyRow: FC<Props> = ({
           {item}
         </Cell>
       ))}
-
-      {/* <Cell sx={{ minWidth: 50 }}>
-        <IconButton
-          onClick={(event) => {
-            setMenuAnchor(event.currentTarget);
-          }}
-        >
-          <MoreHorizIcon />
-        </IconButton>
-      </Cell> */}
     </TableRow>
   );
 };

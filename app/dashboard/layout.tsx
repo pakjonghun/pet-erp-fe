@@ -8,6 +8,7 @@ import { getToday } from '@/components/calendar/dateFilter/utils';
 import SaleOrders from './@saleDetail/SaleOrders';
 import dayjs from 'dayjs';
 import SubHeader from '@/components/layout/header/SubHeader';
+import ResizableContainer from '@/components/resize/ResizableContainer';
 
 interface Props {
   totalSale: ReactNode;
@@ -45,24 +46,29 @@ const DashboardLayout: FC<Props> = ({ totalSale, saleDetail, saleDetailDate }) =
           </Grid>
         </Grid>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', mt: 2, gap: 2 }}>
-          <Box sx={{ width: '100%' }}>{saleDetail}</Box>
-          <Box
-            sx={{
-              width: '100%',
-              p: 2,
-              bgcolor: 'white',
-              borderRadius: 1,
-              boxShadow: 2,
-              minHeight: '60vh',
-            }}
-          >
-            <SaleOrders
-              size="large"
-              initProductName=""
-              initMallId=""
-              initDateRange={{ from: dayjs().startOf('day'), to: dayjs().endOf('day') }}
-            />
-          </Box>
+          <ResizableContainer initialHeight={1400} initialWidth={'100%'}>
+            <Box sx={{ overflow: 'hide', width: '100%', height: '100%' }}>{saleDetail}</Box>
+          </ResizableContainer>
+          <ResizableContainer initialHeight={1400} initialWidth={'100%'}>
+            <Box
+              sx={{
+                height: '100%',
+                width: '100%',
+                p: 2,
+                bgcolor: 'white',
+                borderRadius: 1,
+                boxShadow: 2,
+                overflow: 'hide',
+              }}
+            >
+              <SaleOrders
+                size="large"
+                initProductName=""
+                initMallId=""
+                initDateRange={{ from: dayjs().startOf('day'), to: dayjs().endOf('day') }}
+              />
+            </Box>
+          </ResizableContainer>
         </Box>
       </Box>
     </Box>

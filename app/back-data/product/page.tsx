@@ -47,6 +47,7 @@ import { CommonHeaderRow, CommonTable, CommonTableBody } from '@/components/comm
 import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 import { useUpdateProduct } from '@/http/graphql/hooks/product/useUpdateProduct';
+import ResizableContainer from '@/components/resize/ResizableContainer';
 
 const ProductPage = () => {
   const { data: userData } = useGetMyInfo();
@@ -238,96 +239,98 @@ const ProductPage = () => {
 
   return (
     <>
-      <TablePage sx={{ flex: 1 }}>
-        {openCreateProduct && (
-          <CreateProductModal
-            open={openCreateProduct}
-            onClose={() => setOpenCreateProduct(false)}
-          />
-        )}
-        <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
-          <TableTitle title="제품 백데이터" />
-          <Stack direction="row" alignItems="center" gap={2}>
-            <UploadButton
-              fileKey={fileKey}
-              loading={isPending}
-              onChange={handleUploadExcelFile}
-              text="제품 업로드"
+      <ResizableContainer>
+        <TablePage sx={{ flex: 1, height: '100%' }}>
+          {openCreateProduct && (
+            <CreateProductModal
+              open={openCreateProduct}
+              onClose={() => setOpenCreateProduct(false)}
             />
-            <ActionButton
-              icon={isDownloading ? <CommonLoading /> : <FileDownloadIcon />}
-              text="제품 다운로드"
-              onClick={handleDownload}
-            />
+          )}
+          <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+            <TableTitle title="제품 백데이터" />
+            <Stack direction="row" alignItems="center" gap={2}>
+              <UploadButton
+                fileKey={fileKey}
+                loading={isPending}
+                onChange={handleUploadExcelFile}
+                text="제품 업로드"
+              />
+              <ActionButton
+                icon={isDownloading ? <CommonLoading /> : <FileDownloadIcon />}
+                text="제품 다운로드"
+                onClick={handleDownload}
+              />
 
-            <ActionButton
-              icon={<PlusOneOutlined />}
-              text="제품 등록"
-              onClick={() => setOpenCreateProduct(true)}
-            />
+              <ActionButton
+                icon={<PlusOneOutlined />}
+                text="제품 등록"
+                onClick={() => setOpenCreateProduct(true)}
+              />
+            </Stack>
           </Stack>
-        </Stack>
-        <FormGroup sx={{ ml: 2 }}>
-          <FormControl>
-            <TextField
-              onChange={(event) => setKeyword(event.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Search />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{ width: 270, my: 2 }}
-              label="검색할 제품 이름을 입력하세요."
-              size="small"
-            />
-          </FormControl>
-        </FormGroup>
-        <Typography sx={{ p: 3 }}>
-          {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
-        </Typography>
-        <ProductionCards
-          sx={{
-            display: {
-              xs: 'block',
-              md: 'none',
-            },
-          }}
-          isLoading={isLoading}
-          data={rows}
-          isEmpty={isEmpty}
-          scrollRef={cardScrollRef}
-        />
-        <ScrollTableContainer
-          sx={{
-            display: {
-              xs: 'none',
-              md: 'block',
-            },
-            height: '40vh',
-            px: 2,
-          }}
-        >
-          <CommonTable stickyHeader>
-            <TableHead>
-              <CommonHeaderRow>
-                {ProductHeaderList.map((item, index) => (
-                  <HeadCell key={`${index}_${item}`} text={item} />
-                ))}
-              </CommonHeaderRow>
-            </TableHead>
-            <ProductionTableBody
-              setSelectedProduct={setSelectedProduct}
-              selectedProduct={selectedProduct}
-              isLoading={isLoading}
-              data={rows}
-              isEmpty={isEmpty}
-              scrollRef={tableScrollRef}
-            />
-          </CommonTable>
-        </ScrollTableContainer>
-      </TablePage>
+          <FormGroup sx={{ ml: 2 }}>
+            <FormControl>
+              <TextField
+                onChange={(event) => setKeyword(event.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Search />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{ width: 270, my: 2 }}
+                label="검색할 제품 이름을 입력하세요."
+                size="small"
+              />
+            </FormControl>
+          </FormGroup>
+          <Typography sx={{ p: 3 }}>
+            {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
+          </Typography>
+          <ProductionCards
+            sx={{
+              display: {
+                xs: 'block',
+                md: 'none',
+              },
+            }}
+            isLoading={isLoading}
+            data={rows}
+            isEmpty={isEmpty}
+            scrollRef={cardScrollRef}
+          />
+          <ScrollTableContainer
+            sx={{
+              display: {
+                xs: 'none',
+                md: 'block',
+              },
+              height: 'calc(100% - 216px)',
+              px: 2,
+            }}
+          >
+            <CommonTable stickyHeader>
+              <TableHead>
+                <CommonHeaderRow>
+                  {ProductHeaderList.map((item, index) => (
+                    <HeadCell key={`${index}_${item}`} text={item} />
+                  ))}
+                </CommonHeaderRow>
+              </TableHead>
+              <ProductionTableBody
+                setSelectedProduct={setSelectedProduct}
+                selectedProduct={selectedProduct}
+                isLoading={isLoading}
+                data={rows}
+                isEmpty={isEmpty}
+                scrollRef={tableScrollRef}
+              />
+            </CommonTable>
+          </ScrollTableContainer>
+        </TablePage>
+      </ResizableContainer>
       <TablePage
         sx={{
           flex: 1,

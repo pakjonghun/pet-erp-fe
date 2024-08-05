@@ -48,32 +48,6 @@ const SubsidiaryTableBody: FC<Props> = ({
 
   return (
     <CommonTableBody>
-      {/* {selectedSubsidiary && (
-        <RemoveSubsidiaryModal
-          open={optionType === 'delete'}
-          onClose={() => handleClickOption(null, null)}
-          selectedSubsidiary={selectedSubsidiary}
-        />
-      )}
-
-      {selectedSubsidiary && (
-        <EditSubsidiaryModal
-          open={optionType === 'edit'}
-          onClose={() => handleClickOption(null, null)}
-          selectedSubsidiary={selectedSubsidiary}
-        />
-      )}
-      {selectedSubsidiary && (
-        <ProductDetailPopover
-          onClose={handleClosePopover}
-          position={popoverPosition}
-          open={!!popoverAnchor}
-          anchorEl={popoverAnchor}
-          onClickDelete={handleClickDelete}
-          onClickEdit={handleClickEdit}
-          selectedSubsidiary={selectedSubsidiary}
-        />
-      )} */}
       <EmptyRow colSpan={SubsidiaryHeaderList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
         const isSelected = item._id === selectedSubsidiary?._id;

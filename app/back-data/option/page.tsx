@@ -36,6 +36,7 @@ import Cell from '@/components/table/Cell';
 import EmptyRow from '@/components/table/EmptyRow';
 import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 import { useOptions } from '@/http/graphql/hooks/option/useOptions';
+import ResizableContainer from '@/components/resize/ResizableContainer';
 
 const BackDataPage = () => {
   const { data: userData } = useGetMyInfo();
@@ -108,80 +109,82 @@ const BackDataPage = () => {
 
   return (
     <>
-      <TablePage sx={{ flex: 1 }}>
-        {openCreateOption && (
-          <CreateOptionModal open={openCreateOption} onClose={() => setOpenCreateOption(false)} />
-        )}
-        <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
-          <TableTitle title="옵션 백데이터" />
-          <Stack direction="row" alignItems="center" gap={2}>
-            <ActionButton
-              icon={<PlusOneOutlined />}
-              text="옵션 입력"
-              onClick={() => setOpenCreateOption(true)}
-            />
+      <ResizableContainer>
+        <TablePage sx={{ flex: 1, height: '100%' }}>
+          {openCreateOption && (
+            <CreateOptionModal open={openCreateOption} onClose={() => setOpenCreateOption(false)} />
+          )}
+          <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+            <TableTitle title="옵션 백데이터" />
+            <Stack direction="row" alignItems="center" gap={2}>
+              <ActionButton
+                icon={<PlusOneOutlined />}
+                text="옵션 입력"
+                onClick={() => setOpenCreateOption(true)}
+              />
+            </Stack>
           </Stack>
-        </Stack>
-        <FormGroup sx={{ ml: 2 }}>
-          <FormControl>
-            <TextField
-              onChange={(event) => setKeyword(event.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Search />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{ maxWidth: 340, my: 2 }}
-              label="검색할 옵션 이름이나 아이디를 입력하세요."
-              size="small"
-            />
-          </FormControl>
-        </FormGroup>
-        <Typography sx={{ p: 3 }}>
-          {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
-        </Typography>
-        <OptionCards
-          sx={{
-            display: {
-              xs: 'block',
-              md: 'none',
-            },
-          }}
-          isLoading={isLoading}
-          data={rows}
-          isEmpty={isEmpty}
-          scrollRef={cardScrollRef}
-        />
-        <ScrollTableContainer
-          sx={{
-            display: {
-              xs: 'none',
-              md: 'block',
-            },
-            height: '40vh',
-          }}
-        >
-          <CommonTable stickyHeader>
-            <TableHead>
-              <CommonHeaderRow>
-                {OptionHeaderList.map((item, index) => (
-                  <HeadCell key={`${index}_${item}`} text={item} />
-                ))}
-              </CommonHeaderRow>
-            </TableHead>
-            <SubsidiaryTableBody
-              selectedSubsidiary={selectedOption}
-              setSelectedSubsidiary={setSelectedOption}
-              isLoading={isLoading}
-              data={rows}
-              isEmpty={isEmpty}
-              scrollRef={tableScrollRef}
-            />
-          </CommonTable>
-        </ScrollTableContainer>
-      </TablePage>
+          <FormGroup sx={{ ml: 2 }}>
+            <FormControl>
+              <TextField
+                onChange={(event) => setKeyword(event.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Search />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{ maxWidth: 340, my: 2 }}
+                label="검색할 옵션 이름이나 아이디를 입력하세요."
+                size="small"
+              />
+            </FormControl>
+          </FormGroup>
+          <Typography sx={{ p: 3 }}>
+            {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
+          </Typography>
+          <OptionCards
+            sx={{
+              display: {
+                xs: 'block',
+                md: 'none',
+              },
+            }}
+            isLoading={isLoading}
+            data={rows}
+            isEmpty={isEmpty}
+            scrollRef={cardScrollRef}
+          />
+          <ScrollTableContainer
+            sx={{
+              display: {
+                xs: 'none',
+                md: 'block',
+              },
+              height: 'calc(100% - 216px)',
+            }}
+          >
+            <CommonTable stickyHeader>
+              <TableHead>
+                <CommonHeaderRow>
+                  {OptionHeaderList.map((item, index) => (
+                    <HeadCell key={`${index}_${item}`} text={item} />
+                  ))}
+                </CommonHeaderRow>
+              </TableHead>
+              <SubsidiaryTableBody
+                selectedSubsidiary={selectedOption}
+                setSelectedSubsidiary={setSelectedOption}
+                isLoading={isLoading}
+                data={rows}
+                isEmpty={isEmpty}
+                scrollRef={tableScrollRef}
+              />
+            </CommonTable>
+          </ScrollTableContainer>
+        </TablePage>
+      </ResizableContainer>
       <TablePage
         sx={{
           flex: 1,

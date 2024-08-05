@@ -44,6 +44,7 @@ import Cell from '@/components/table/Cell';
 import EmptyRow from '@/components/table/EmptyRow';
 import { getKCWFormat } from '@/utils/common';
 import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
+import ResizableContainer from '@/components/resize/ResizableContainer';
 
 const BackDataPage = () => {
   const { data: userData } = useGetMyInfo();
@@ -162,7 +163,7 @@ const BackDataPage = () => {
       subsidiary.code,
       subsidiary.wonPrice == null ? EMPTY : getKCWFormat(subsidiary.wonPrice),
       subsidiary.leadTime ? `${subsidiary.leadTime}일` : EMPTY,
-      <Stack key={Math.random()} direction="column" gap={1}>
+      <Stack key={Math.random()} direction="row" gap={0.4}>
         {(subsidiary.productList ?? []).map((subsidiary) => {
           return <Chip key={subsidiary._id} label={subsidiary.name} />;
         })}
@@ -174,95 +175,97 @@ const BackDataPage = () => {
 
   return (
     <>
-      <TablePage sx={{ flex: 1 }}>
-        {openCreateProduct && (
-          <CreateSubsidiaryModal
-            open={openCreateProduct}
-            onClose={() => setOpenCreateProduct(false)}
-          />
-        )}
-        <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
-          <TableTitle title="부자재 백데이터" />
-          <Stack direction="row" alignItems="center" gap={2}>
-            <UploadButton
-              fileKey={fileKey}
-              loading={isPending}
-              onChange={handleUploadExcelFile}
-              text="부자재 업로드"
+      <ResizableContainer>
+        <TablePage sx={{ flex: 1, height: '100%' }}>
+          {openCreateProduct && (
+            <CreateSubsidiaryModal
+              open={openCreateProduct}
+              onClose={() => setOpenCreateProduct(false)}
             />
-            <ActionButton
-              icon={isDownloading ? <CommonLoading /> : <FileDownloadIcon />}
-              text="부자재 다운로드"
-              onClick={handleDownload}
-            />
+          )}
+          <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+            <TableTitle title="부자재 백데이터" />
+            <Stack direction="row" alignItems="center" gap={2}>
+              <UploadButton
+                fileKey={fileKey}
+                loading={isPending}
+                onChange={handleUploadExcelFile}
+                text="부자재 업로드"
+              />
+              <ActionButton
+                icon={isDownloading ? <CommonLoading /> : <FileDownloadIcon />}
+                text="부자재 다운로드"
+                onClick={handleDownload}
+              />
 
-            <ActionButton
-              icon={<PlusOneOutlined />}
-              text="부자재 입력"
-              onClick={() => setOpenCreateProduct(true)}
-            />
+              <ActionButton
+                icon={<PlusOneOutlined />}
+                text="부자재 입력"
+                onClick={() => setOpenCreateProduct(true)}
+              />
+            </Stack>
           </Stack>
-        </Stack>
-        <FormGroup sx={{ ml: 2 }}>
-          <FormControl>
-            <TextField
-              onChange={(event) => setKeyword(event.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Search />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{ width: 270, my: 2 }}
-              label="검색할 부자재 이름을 입력하세요."
-              size="small"
-            />
-          </FormControl>
-        </FormGroup>
-        <Typography sx={{ p: 3 }}>
-          {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
-        </Typography>
-        <SubsidiaryCards
-          sx={{
-            display: {
-              xs: 'block',
-              md: 'none',
-            },
-          }}
-          isLoading={isLoading}
-          data={rows}
-          isEmpty={isEmpty}
-          scrollRef={cardScrollRef}
-        />
-        <ScrollTableContainer
-          sx={{
-            display: {
-              xs: 'none',
-              md: 'block',
-            },
-            height: '40vh',
-          }}
-        >
-          <CommonTable stickyHeader>
-            <TableHead>
-              <CommonHeaderRow>
-                {SubsidiaryHeaderList.map((item, index) => (
-                  <HeadCell key={`${index}_${item}`} text={item} />
-                ))}
-              </CommonHeaderRow>
-            </TableHead>
-            <SubsidiaryTableBody
-              selectedSubsidiary={selectedSubsidiary}
-              setSelectedSubsidiary={setSelectedSubsidiary}
-              isLoading={isLoading}
-              data={rows}
-              isEmpty={isEmpty}
-              scrollRef={tableScrollRef}
-            />
-          </CommonTable>
-        </ScrollTableContainer>
-      </TablePage>
+          <FormGroup sx={{ ml: 2 }}>
+            <FormControl>
+              <TextField
+                onChange={(event) => setKeyword(event.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Search />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{ width: 270, my: 2 }}
+                label="검색할 부자재 이름을 입력하세요."
+                size="small"
+              />
+            </FormControl>
+          </FormGroup>
+          <Typography sx={{ p: 3 }}>
+            {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
+          </Typography>
+          <SubsidiaryCards
+            sx={{
+              display: {
+                xs: 'block',
+                md: 'none',
+              },
+            }}
+            isLoading={isLoading}
+            data={rows}
+            isEmpty={isEmpty}
+            scrollRef={cardScrollRef}
+          />
+          <ScrollTableContainer
+            sx={{
+              display: {
+                xs: 'none',
+                md: 'block',
+              },
+              height: 'calc(100% - 216px)',
+            }}
+          >
+            <CommonTable stickyHeader>
+              <TableHead>
+                <CommonHeaderRow>
+                  {SubsidiaryHeaderList.map((item, index) => (
+                    <HeadCell key={`${index}_${item}`} text={item} />
+                  ))}
+                </CommonHeaderRow>
+              </TableHead>
+              <SubsidiaryTableBody
+                selectedSubsidiary={selectedSubsidiary}
+                setSelectedSubsidiary={setSelectedSubsidiary}
+                isLoading={isLoading}
+                data={rows}
+                isEmpty={isEmpty}
+                scrollRef={tableScrollRef}
+              />
+            </CommonTable>
+          </ScrollTableContainer>
+        </TablePage>
+      </ResizableContainer>
       <TablePage
         sx={{
           flex: 1,

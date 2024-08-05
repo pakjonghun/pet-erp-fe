@@ -45,6 +45,7 @@ import { getFixedTwo } from '@/utils/sale';
 import EmptyRow from '@/components/table/EmptyRow';
 import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
+import ResizableContainer from '@/components/resize/ResizableContainer';
 
 const BackDataPage = () => {
   const { data: userData } = useGetMyInfo();
@@ -203,93 +204,95 @@ const BackDataPage = () => {
 
   return (
     <>
-      <TablePage sx={{ flex: 1 }}>
-        {openCreateClient && (
-          <CreateClientModal open={openCreateClient} onClose={() => setOpenCreateClient(false)} />
-        )}
-        <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
-          <TableTitle title="거래처 백데이터" />
-          <Stack direction="row" alignItems="center" gap={2}>
-            <UploadButton
-              fileKey={fileKey}
-              loading={isPending}
-              onChange={handleUploadExcelFile}
-              text="거래처 업로드"
-            />
-            <ActionButton
-              icon={isDownloading ? <CommonLoading /> : <FileDownloadIcon />}
-              text="거래처 다운로드"
-              onClick={handleDownload}
-            />
+      <ResizableContainer>
+        <TablePage sx={{ flex: 1, height: '100%' }}>
+          {openCreateClient && (
+            <CreateClientModal open={openCreateClient} onClose={() => setOpenCreateClient(false)} />
+          )}
+          <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+            <TableTitle title="거래처 백데이터" />
+            <Stack direction="row" alignItems="center" gap={2}>
+              <UploadButton
+                fileKey={fileKey}
+                loading={isPending}
+                onChange={handleUploadExcelFile}
+                text="거래처 업로드"
+              />
+              <ActionButton
+                icon={isDownloading ? <CommonLoading /> : <FileDownloadIcon />}
+                text="거래처 다운로드"
+                onClick={handleDownload}
+              />
 
-            <ActionButton
-              icon={<PlusOneOutlined />}
-              text="거래처 입력"
-              onClick={() => setOpenCreateClient(true)}
-            />
+              <ActionButton
+                icon={<PlusOneOutlined />}
+                text="거래처 입력"
+                onClick={() => setOpenCreateClient(true)}
+              />
+            </Stack>
           </Stack>
-        </Stack>
-        <FormGroup sx={{ ml: 2 }}>
-          <FormControl>
-            <TextField
-              onChange={(event) => setKeyword(event.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Search />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{ width: 270, my: 2 }}
-              label="검색할 거래처 이름을 입력하세요."
-              size="small"
-            />
-          </FormControl>
-        </FormGroup>
-        <Typography sx={{ p: 3 }}>
-          {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
-        </Typography>
-        <ClientCards
-          sx={{
-            display: {
-              xs: 'block',
-              md: 'none',
-            },
-          }}
-          data={rows}
-          isEmpty={isEmpty}
-          isLoading={isLoading}
-          scrollRef={cardScrollRef}
-        />
-        <ScrollTableContainer
-          sx={{
-            display: {
-              xs: 'none',
-              md: 'block',
-            },
-            height: '40vh',
-            px: 2,
-          }}
-        >
-          <CommonTable stickyHeader>
-            <TableHead>
-              <CommonHeaderRow>
-                {ClientHeaderList.map((item, index) => (
-                  <HeadCell key={`${item}_${index}`} text={item} />
-                ))}
-              </CommonHeaderRow>
-            </TableHead>
-            <ClientTableBody
-              setSelectedClient={setSelectedClient}
-              selectedClient={selectedClient}
-              data={rows}
-              isEmpty={isEmpty}
-              isLoading={isLoading}
-              scrollRef={tableScrollRef}
-            />
-          </CommonTable>
-        </ScrollTableContainer>
-      </TablePage>
+          <FormGroup sx={{ ml: 2 }}>
+            <FormControl>
+              <TextField
+                onChange={(event) => setKeyword(event.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Search />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{ width: 270, my: 2 }}
+                label="검색할 거래처 이름을 입력하세요."
+                size="small"
+              />
+            </FormControl>
+          </FormGroup>
+          <Typography sx={{ p: 3 }}>
+            {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
+          </Typography>
+          <ClientCards
+            sx={{
+              display: {
+                xs: 'block',
+                md: 'none',
+              },
+            }}
+            data={rows}
+            isEmpty={isEmpty}
+            isLoading={isLoading}
+            scrollRef={cardScrollRef}
+          />
+          <ScrollTableContainer
+            sx={{
+              display: {
+                xs: 'none',
+                md: 'block',
+              },
+              height: 'calc(100% - 216px)',
+              px: 2,
+            }}
+          >
+            <CommonTable stickyHeader>
+              <TableHead>
+                <CommonHeaderRow>
+                  {ClientHeaderList.map((item, index) => (
+                    <HeadCell key={`${item}_${index}`} text={item} />
+                  ))}
+                </CommonHeaderRow>
+              </TableHead>
+              <ClientTableBody
+                setSelectedClient={setSelectedClient}
+                selectedClient={selectedClient}
+                data={rows}
+                isEmpty={isEmpty}
+                isLoading={isLoading}
+                scrollRef={tableScrollRef}
+              />
+            </CommonTable>
+          </ScrollTableContainer>
+        </TablePage>
+      </ResizableContainer>
       <TablePage
         sx={{
           flex: 1,
