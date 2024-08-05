@@ -44,25 +44,26 @@ const DashboardLayout: FC<Props> = ({ totalSale, saleDetail, saleDetailDate }) =
             {totalSale}
           </Grid>
         </Grid>
-        <Grid sx={{ mt: 2 }} container spacing={2}>
-          {/* <Grid item xs={12}>
-            {saleDetailDate}
-          </Grid> */}
-          <Grid item xs={12} xl={6}>
-            {saleDetail}
-          </Grid>
-
-          <Grid item xs={12} xl={6}>
-            <Box sx={{ p: 2, bgcolor: 'white', borderRadius: 1, boxShadow: 2, minHeight: '60vh' }}>
-              <SaleOrders
-                size="large"
-                initProductName=""
-                initMallId=""
-                initDateRange={{ from: dayjs().startOf('day'), to: dayjs().endOf('day') }}
-              />
-            </Box>
-          </Grid>
-        </Grid>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', mt: 2, gap: 2 }}>
+          <Box sx={{ width: '100%' }}>{saleDetail}</Box>
+          <Box
+            sx={{
+              width: '100%',
+              p: 2,
+              bgcolor: 'white',
+              borderRadius: 1,
+              boxShadow: 2,
+              minHeight: '60vh',
+            }}
+          >
+            <SaleOrders
+              size="large"
+              initProductName=""
+              initMallId=""
+              initDateRange={{ from: dayjs().startOf('day'), to: dayjs().endOf('day') }}
+            />
+          </Box>
+        </Box>
       </Box>
     </Box>
   );
