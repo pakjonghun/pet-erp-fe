@@ -38,6 +38,7 @@ import Cell from '@/components/table/Cell';
 import EmptyRow from '@/components/table/EmptyRow';
 import dayjs from 'dayjs';
 import CompleteModal from '../_components/CompleteModal';
+import ResizableContainer from '@/components/resize/ResizableContainer';
 
 const OrderPage = () => {
   const { role } = useReactiveVar(authState);
@@ -165,82 +166,84 @@ const OrderPage = () => {
         />
       )}
 
-      <TablePage sx={{ flex: 1 }}>
-        {openCreateClient && (
-          <AddOrderModal open={openCreateClient} onClose={() => setOpenCreateClient(false)} />
-        )}
-        <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
-          <TableTitle title="발주" />
-          {canCreate && (
-            <Stack direction="row" alignItems="center" gap={2}>
-              <ActionButton
-                icon={<PlusOneOutlined />}
-                text="발주 등록"
-                onClick={() => setOpenCreateClient(true)}
-              />
-            </Stack>
+      <ResizableContainer>
+        <TablePage sx={{ flex: 1, height: '100%' }}>
+          {openCreateClient && (
+            <AddOrderModal open={openCreateClient} onClose={() => setOpenCreateClient(false)} />
           )}
-        </Stack>
-        <FormGroup sx={{ ml: 2 }}>
-          <FormControl>
-            <TextField
-              onChange={(event) => setKeyword(event.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Search />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{ width: 270, my: 2 }}
-              label="검색할 공장 이름을 입력하세요."
-              size="small"
-            />
-          </FormControl>
-        </FormGroup>
-        <Typography sx={{ p: 3 }}>
-          {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
-        </Typography>
-        <ClientCards
-          sx={{
-            display: {
-              xs: 'block',
-              md: 'none',
-            },
-          }}
-          data={rows as ProductOrder[]}
-          isEmpty={isEmpty}
-          isLoading={isLoading}
-          scrollRef={cardScrollRef}
-        />
-        <ScrollTableContainer
-          sx={{
-            display: {
-              xs: 'none',
-              md: 'block',
-            },
-            height: '30vh',
-          }}
-        >
-          <CommonTable stickyHeader>
-            <TableHead>
-              <CommonHeaderRow>
-                {OrderHeaderList.map((item, index) => (
-                  <HeadCell key={`${item}_${index}`} text={item} />
-                ))}
-              </CommonHeaderRow>
-            </TableHead>
-            <OrderTableBody
-              selectedOrder={selectedOrder}
-              setSelectedOrder={setSelectedOrder}
-              data={rows as ProductOrder[]}
-              isEmpty={isEmpty}
-              isLoading={isLoading}
-              scrollRef={tableScrollRef}
-            />
-          </CommonTable>
-        </ScrollTableContainer>
-      </TablePage>
+          <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+            <TableTitle title="발주" />
+            {canCreate && (
+              <Stack direction="row" alignItems="center" gap={2}>
+                <ActionButton
+                  icon={<PlusOneOutlined />}
+                  text="발주 등록"
+                  onClick={() => setOpenCreateClient(true)}
+                />
+              </Stack>
+            )}
+          </Stack>
+          <FormGroup sx={{ ml: 2 }}>
+            <FormControl>
+              <TextField
+                onChange={(event) => setKeyword(event.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Search />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{ width: 270, my: 2 }}
+                label="검색할 공장 이름을 입력하세요."
+                size="small"
+              />
+            </FormControl>
+          </FormGroup>
+          <Typography sx={{ p: 3 }}>
+            {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
+          </Typography>
+          <ClientCards
+            sx={{
+              display: {
+                xs: 'block',
+                md: 'none',
+              },
+            }}
+            data={rows as ProductOrder[]}
+            isEmpty={isEmpty}
+            isLoading={isLoading}
+            scrollRef={cardScrollRef}
+          />
+          <ScrollTableContainer
+            sx={{
+              display: {
+                xs: 'none',
+                md: 'block',
+              },
+              height: 'calc(100% - 216px)',
+            }}
+          >
+            <CommonTable stickyHeader>
+              <TableHead>
+                <CommonHeaderRow>
+                  {OrderHeaderList.map((item, index) => (
+                    <HeadCell key={`${item}_${index}`} text={item} />
+                  ))}
+                </CommonHeaderRow>
+              </TableHead>
+              <OrderTableBody
+                selectedOrder={selectedOrder}
+                setSelectedOrder={setSelectedOrder}
+                data={rows as ProductOrder[]}
+                isEmpty={isEmpty}
+                isLoading={isLoading}
+                scrollRef={tableScrollRef}
+              />
+            </CommonTable>
+          </ScrollTableContainer>
+        </TablePage>
+      </ResizableContainer>
       <TablePage
         sx={{
           flex: 1,

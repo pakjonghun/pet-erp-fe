@@ -15,7 +15,7 @@ const SaleDetail = () => {
   };
 
   return (
-    <Card sx={{ minHeight: '60vh' }}>
+    <Card sx={{ minHeight: '100%' }}>
       <CardHeader title={`${DASHBOARD_DETAIL_TABS[tabValue] ?? ''} 판매수 순`} />
       <DetailTabs tabValue={tabValue} onChangeTab={onChangeTab} />
       <Box sx={{ py: 1 }} />

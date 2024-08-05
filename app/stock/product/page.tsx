@@ -35,6 +35,7 @@ import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 import CollapseRow from './_components/CollapseRow';
 import EmptyRow from '@/components/table/EmptyRow';
 import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
+import ResizableContainer from '@/components/resize/ResizableContainer';
 
 const ProductStockPage = () => {
   const { data: userData } = useGetMyInfo();
@@ -108,156 +109,157 @@ const ProductStockPage = () => {
 
   return (
     <>
-      <TablePage sx={{ flex: 1 }}>
-        {openAddStock && (
-          <AddProductStockModal
-            productStock={null}
-            open={openAddStock}
-            onClose={() => {
-              setOpenAddStock(false);
-              // setProductStock(null);
-            }}
-          />
-        )}
-        {openOutStock && (
-          <OutProductStockModal
-            productStock={null}
-            open={openOutStock}
-            onClose={() => {
-              setOpenOutStock(false);
-              // setProductStock(null);
-            }}
-          />
-        )}
-
-        <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
-          <TableTitle title="제품 재고관리" />
-          <Stack direction="row" alignItems="center" gap={2}>
-            {canIn && (
-              <ActionButton
-                icon={<AddCircleOutlineIcon />}
-                text="입고"
-                onClick={() => setOpenAddStock(true)}
-              />
-            )}
-            {canOut && (
-              <ActionButton
-                icon={<RemoveCircleOutlineIcon />}
-                text="출고"
-                onClick={() => setOpenOutStock(true)}
-              />
-            )}
-          </Stack>
-        </Stack>
-        <FormGroup sx={{ ml: 2 }}>
-          <Stack
-            sx={{
-              flexDirection: {
-                xs: 'column',
-                md: 'row',
-              },
-              alignItems: {
-                xs: 'flex-start',
-                md: 'center',
-              },
-            }}
-            gap={2}
-          >
-            <FormControl
-              sx={{
-                width: {
-                  md: 300,
-                  xs: '100%',
-                },
+      <ResizableContainer>
+        <TablePage sx={{ flex: 1, height: '100%' }}>
+          {openAddStock && (
+            <AddProductStockModal
+              productStock={null}
+              open={openAddStock}
+              onClose={() => {
+                setOpenAddStock(false);
+                // setProductStock(null);
               }}
-            >
-              <TextField
-                onChange={(event) => setKeyword(event.target.value)}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <Search />
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  my: 2,
-                  width: '100%',
-                  pr: 2,
-                }}
-                label="제품 이름이나 ㅋㅋ코드를 입력하세요."
-                size="small"
-              />
-            </FormControl>
-            <FormControl
-              sx={{
-                pr: {
-                  md: 0,
-                  xs: 2,
-                },
-                width: {
-                  md: 160,
-                  xs: '100%',
-                },
-              }}
-            >
-              <BaseSelect
-                defaultValue={storageOption}
-                label="창고 선택"
-                onChangeValue={(event) => {
-                  setStorageOption(event.target.value);
-                }}
-                optionItems={storageOptions}
-                value={storageOption}
-              />
-            </FormControl>
-          </Stack>
-        </FormGroup>
-        <Typography sx={{ p: 3 }}>
-          {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
-        </Typography>
-        <ProductStockCards
-          sx={{
-            display: {
-              xs: 'block',
-              md: 'none',
-            },
-          }}
-          data={rows}
-          isEmpty={isEmpty}
-          isLoading={isLoading}
-          scrollRef={cardScrollRef}
-        />
-        <ScrollTableContainer
-          sx={{
-            display: {
-              xs: 'none',
-              md: 'block',
-            },
-            height: '30vh',
-          }}
-        >
-          <CommonTable stickyHeader>
-            <TableHead>
-              <CommonHeaderRow>
-                {ProductStockHeaderList.map((item, index) => (
-                  <HeadCell key={`${item}_${index}`} text={item} />
-                ))}
-              </CommonHeaderRow>
-            </TableHead>
-            <ProductStockTableBody
-              productStock={productStock}
-              setProductStock={setProductStock}
-              openAddStock={() => setOpenAddStock(true)}
-              openOutStock={() => setOpenOutStock(true)}
-              data={rows}
-              isEmpty={isEmpty}
-              isLoading={isLoading}
-              scrollRef={tableScrollRef}
             />
-          </CommonTable>
-        </ScrollTableContainer>
-      </TablePage>
+          )}
+          {openOutStock && (
+            <OutProductStockModal
+              productStock={null}
+              open={openOutStock}
+              onClose={() => {
+                setOpenOutStock(false);
+                // setProductStock(null);
+              }}
+            />
+          )}
+
+          <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+            <TableTitle title="제품 재고관리" />
+            <Stack direction="row" alignItems="center" gap={2}>
+              {canIn && (
+                <ActionButton
+                  icon={<AddCircleOutlineIcon />}
+                  text="입고"
+                  onClick={() => setOpenAddStock(true)}
+                />
+              )}
+              {canOut && (
+                <ActionButton
+                  icon={<RemoveCircleOutlineIcon />}
+                  text="출고"
+                  onClick={() => setOpenOutStock(true)}
+                />
+              )}
+            </Stack>
+          </Stack>
+          <FormGroup sx={{ ml: 2 }}>
+            <Stack
+              sx={{
+                flexDirection: {
+                  xs: 'column',
+                  md: 'row',
+                },
+                alignItems: {
+                  xs: 'flex-start',
+                  md: 'center',
+                },
+              }}
+              gap={2}
+            >
+              <FormControl
+                sx={{
+                  width: {
+                    md: 300,
+                    xs: '100%',
+                  },
+                }}
+              >
+                <TextField
+                  onChange={(event) => setKeyword(event.target.value)}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Search />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    my: 2,
+                    width: '100%',
+                  }}
+                  label="제품 이름이나 코드를 입력하세요."
+                  size="small"
+                />
+              </FormControl>
+              <FormControl
+                sx={{
+                  pr: {
+                    md: 0,
+                    xs: 2,
+                  },
+                  width: {
+                    md: 160,
+                    xs: '100%',
+                  },
+                }}
+              >
+                <BaseSelect
+                  defaultValue={storageOption}
+                  label="창고 선택"
+                  onChangeValue={(event) => {
+                    setStorageOption(event.target.value);
+                  }}
+                  optionItems={storageOptions}
+                  value={storageOption}
+                />
+              </FormControl>
+            </Stack>
+          </FormGroup>
+          <Typography sx={{ p: 3 }}>
+            {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
+          </Typography>
+          <ProductStockCards
+            sx={{
+              display: {
+                xs: 'block',
+                md: 'none',
+              },
+            }}
+            data={rows}
+            isEmpty={isEmpty}
+            isLoading={isLoading}
+            scrollRef={cardScrollRef}
+          />
+          <ScrollTableContainer
+            sx={{
+              display: {
+                xs: 'none',
+                md: 'block',
+              },
+              height: 'calc(100% - 216px)',
+            }}
+          >
+            <CommonTable stickyHeader>
+              <TableHead>
+                <CommonHeaderRow>
+                  {ProductStockHeaderList.map((item, index) => (
+                    <HeadCell key={`${item}_${index}`} text={item} />
+                  ))}
+                </CommonHeaderRow>
+              </TableHead>
+              <ProductStockTableBody
+                productStock={productStock}
+                setProductStock={setProductStock}
+                openAddStock={() => setOpenAddStock(true)}
+                openOutStock={() => setOpenOutStock(true)}
+                data={rows}
+                isEmpty={isEmpty}
+                isLoading={isLoading}
+                scrollRef={tableScrollRef}
+              />
+            </CommonTable>
+          </ScrollTableContainer>
+        </TablePage>
+      </ResizableContainer>
       <TablePage
         sx={{
           flex: 1,

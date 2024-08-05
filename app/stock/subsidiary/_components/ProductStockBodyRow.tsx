@@ -55,7 +55,7 @@ const ProductStockBodyRow: FC<Props> = ({
       stock.stockCount,
       stock.wonPrice ? getKCWFormat(stock.wonPrice) : EMPTY,
       stock.leadTime == null ? EMPTY : `${stock.leadTime}일`,
-      <Stack key={Math.random()} direction="column" gap={1} alignItems="flex-start">
+      <Stack key={Math.random()} direction="row" gap={0.4} flexWrap="wrap">
         {(stock?.productList ?? []).map((product, index) => {
           return <Chip key={`${product}_${index}`} label={product ?? ''} />;
         })}
