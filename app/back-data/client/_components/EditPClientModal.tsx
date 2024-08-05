@@ -5,6 +5,7 @@ import {
   AutocompleteRenderInputParams,
   Box,
   Button,
+  Checkbox,
   FormControl,
   FormControlLabel,
   FormGroup,
@@ -26,7 +27,6 @@ import { clientTypes } from '../constants';
 import { useUpdateClient } from '@/http/graphql/hooks/client/useEditClient';
 import NumberInput from '@/components/ui/input/NumberInput';
 import { CLIENT_PREFIX, LIMIT } from '@/constants';
-import { client } from '@/http/graphql/client';
 import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 import SearchAutoComplete from '@/components/ui/select/SearchAutoComplete';
 import useTextDebounce from '@/hooks/useTextDebounce';
@@ -41,6 +41,9 @@ interface Props {
 }
 
 const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelectedClient }) => {
+  const [allFreeSelected, setAllFreeSelected] = useState(false);
+  const [allNotFreeSelected, setAllNotFreeSelected] = useState(false);
+
   const [editClient, { loading }] = useUpdateClient();
 
   const { data: storages, networkStatus } = useStorages({
@@ -65,7 +68,7 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
     fetchMore: productFetchMore,
   } = useProducts({
     keyword: delayedProductKeyword,
-    limit: LIMIT,
+    limit: 999999,
     skip: 0,
   });
   const productRows = products?.products.data ?? [];
@@ -116,6 +119,19 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
     },
   });
 
+  const freeList = watch('deliveryFreeProductCodeList');
+
+  useEffect(() => {
+    if (!cachedOptions) return;
+    setAllFreeSelected(freeList?.length === cachedOptions.length);
+  }, [freeList, cachedOptions]);
+
+  const notFreeList = watch('deliveryNotFreeProductCodeList');
+  useEffect(() => {
+    if (!cachedOptions) return;
+    setAllNotFreeSelected(notFreeList?.length === cachedOptions.length);
+  }, [notFreeList, cachedOptions]);
+
   useEffect(() => {
     if (networkStatus <= 3) return;
 
@@ -159,12 +175,6 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
 
         setSelectedClient(res.updateClient as OutClient);
 
-        // client.refetchQueries({
-        //   updateCache(cache) {
-        //     // cache.evict({ fieldName: 'dashboardClients' });
-        //     cache.evict({ fieldName: 'clients' });
-        //   },
-        // });
         handleClose();
       },
       onError: (err) => {
@@ -418,55 +428,71 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
             name="deliveryFreeProductCodeList"
             render={({ field }) => {
               return (
-                <Autocomplete
-                  multiple
-                  getOptionDisabled={(option) =>
-                    !!watch('deliveryNotFreeProductCodeList')?.some(
-                      (item) => item.code === option.code
-                    )
-                  }
-                  isOptionEqualToValue={(item1, item2) => item1.code == item2.code}
-                  options={cachedOptions}
-                  loading={isProductLoading}
-                  getOptionLabel={(item) => `${item.name}(${item.code})`}
-                  fullWidth
-                  disableCloseOnSelect
-                  defaultValue={[]}
-                  inputValue={productKeyword}
-                  onInputChange={(_, newValue) => setProductKeyword(newValue)}
-                  noOptionsText="검색 결과가 없습니다."
-                  loadingText="로딩중입니다."
-                  onChange={(_, value) => field.onChange(value)}
-                  value={field.value ?? []}
-                  renderOption={(props, item, state) => {
-                    const { key, ...rest } = props as any;
-                    const isLast = state.index === cachedOptions.length - 1;
-                    return (
-                      <Box
-                        component="li"
-                        ref={isLast ? productScrollRef : null}
-                        key={item}
-                        {...rest}
-                      >
-                        {`${item.name}(${item.code})`}
-                      </Box>
-                    );
-                  }}
-                  renderInput={(params: AutocompleteRenderInputParams) => {
-                    return (
-                      <FormControl fullWidth>
-                        <TextField
-                          {...params}
-                          name={field.name}
-                          label="배송비 무료 제품선택"
-                          error={!!errors.deliveryFreeProductCodeList?.message}
-                          helperText={errors.deliveryFreeProductCodeList?.message ?? ''}
-                          size="small"
-                        />
-                      </FormControl>
-                    );
-                  }}
-                />
+                <Stack direction="row" gap={0.2} alignItems="flex-start">
+                  <FormControlLabel
+                    label={<Typography variant="caption">All</Typography>}
+                    control={
+                      <Checkbox
+                        size="small"
+                        checked={allFreeSelected}
+                        onChange={(_, checked) => {
+                          const options = checked ? cachedOptions : [];
+                          field.onChange(options);
+                          setAllFreeSelected(checked);
+                        }}
+                      />
+                    }
+                  />
+                  <Autocomplete
+                    multiple
+                    getOptionDisabled={(option) =>
+                      !!watch('deliveryNotFreeProductCodeList')?.some(
+                        (item) => item.code === option.code
+                      )
+                    }
+                    value={field.value ?? []}
+                    isOptionEqualToValue={(item1, item2) => item1.code == item2.code}
+                    options={cachedOptions}
+                    loading={isProductLoading}
+                    getOptionLabel={(item) => `${item.name}(${item.code})`}
+                    fullWidth
+                    disableCloseOnSelect
+                    defaultValue={[]}
+                    inputValue={productKeyword}
+                    onInputChange={(_, newValue) => setProductKeyword(newValue)}
+                    noOptionsText="검색 결과가 없습니다."
+                    loadingText="로딩중입니다."
+                    onChange={(_, value) => field.onChange(value)}
+                    renderOption={(props, item, state) => {
+                      const { key, ...rest } = props as any;
+                      const isLast = state.index === cachedOptions.length - 1;
+                      return (
+                        <Box
+                          component="li"
+                          ref={isLast ? productScrollRef : null}
+                          key={item}
+                          {...rest}
+                        >
+                          {`${item.name}(${item.code})`}
+                        </Box>
+                      );
+                    }}
+                    renderInput={(params: AutocompleteRenderInputParams) => {
+                      return (
+                        <FormControl fullWidth>
+                          <TextField
+                            {...params}
+                            name={field.name}
+                            label="배송비 무료 제품선택"
+                            error={!!errors.deliveryFreeProductCodeList?.message}
+                            helperText={errors.deliveryFreeProductCodeList?.message ?? ''}
+                            size="small"
+                          />
+                        </FormControl>
+                      );
+                    }}
+                  />
+                </Stack>
               );
             }}
           />
@@ -475,54 +501,70 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
             name="deliveryNotFreeProductCodeList"
             render={({ field }) => {
               return (
-                <Autocomplete
-                  multiple
-                  getOptionDisabled={(option) =>
-                    !!watch('deliveryFreeProductCodeList')?.some(
-                      (item) => item.code === option.code
-                    )
-                  }
-                  options={cachedOptions}
-                  loading={isProductLoading}
-                  getOptionLabel={(item) => `${item.name}(${item.code})`}
-                  fullWidth
-                  disableCloseOnSelect
-                  defaultValue={[]}
-                  inputValue={productKeyword}
-                  onInputChange={(_, newValue) => setProductKeyword(newValue)}
-                  noOptionsText="검색 결과가 없습니다."
-                  loadingText="로딩중입니다."
-                  onChange={(_, value) => field.onChange(value)}
-                  value={field.value ?? []}
-                  renderOption={(props, item, state) => {
-                    const { key, ...rest } = props as any;
-                    const isLast = state.index === cachedOptions.length - 1;
-                    return (
-                      <Box
-                        component="li"
-                        ref={isLast ? productScrollRef : null}
-                        key={item}
-                        {...rest}
-                      >
-                        {`${item.name}(${item.code})`}
-                      </Box>
-                    );
-                  }}
-                  renderInput={(params: AutocompleteRenderInputParams) => {
-                    return (
-                      <FormControl fullWidth>
-                        <TextField
-                          {...params}
-                          name={field.name}
-                          label="배송비 유료 제품선택"
-                          error={!!errors.deliveryNotFreeProductCodeList?.message}
-                          helperText={errors.deliveryNotFreeProductCodeList?.message ?? ''}
-                          size="small"
-                        />
-                      </FormControl>
-                    );
-                  }}
-                />
+                <Stack direction="row" gap={0.2} alignItems="flex-start">
+                  <FormControlLabel
+                    label={<Typography variant="caption">All</Typography>}
+                    control={
+                      <Checkbox
+                        size="small"
+                        checked={allNotFreeSelected}
+                        onChange={(_, checked) => {
+                          const options = checked ? cachedOptions : [];
+                          field.onChange(options);
+                          setAllNotFreeSelected(checked);
+                        }}
+                      />
+                    }
+                  />
+                  <Autocomplete
+                    multiple
+                    getOptionDisabled={(option) =>
+                      !!watch('deliveryFreeProductCodeList')?.some(
+                        (item) => item.code === option.code
+                      )
+                    }
+                    options={cachedOptions}
+                    loading={isProductLoading}
+                    getOptionLabel={(item) => `${item.name}(${item.code})`}
+                    fullWidth
+                    disableCloseOnSelect
+                    defaultValue={[]}
+                    inputValue={productKeyword}
+                    onInputChange={(_, newValue) => setProductKeyword(newValue)}
+                    noOptionsText="검색 결과가 없습니다."
+                    loadingText="로딩중입니다."
+                    onChange={(_, value) => field.onChange(value)}
+                    value={field.value ?? []}
+                    renderOption={(props, item, state) => {
+                      const { key, ...rest } = props as any;
+                      const isLast = state.index === cachedOptions.length - 1;
+                      return (
+                        <Box
+                          component="li"
+                          ref={isLast ? productScrollRef : null}
+                          key={item}
+                          {...rest}
+                        >
+                          {`${item.name}(${item.code})`}
+                        </Box>
+                      );
+                    }}
+                    renderInput={(params: AutocompleteRenderInputParams) => {
+                      return (
+                        <FormControl fullWidth>
+                          <TextField
+                            {...params}
+                            name={field.name}
+                            label="배송비 유료 제품선택"
+                            error={!!errors.deliveryNotFreeProductCodeList?.message}
+                            helperText={errors.deliveryNotFreeProductCodeList?.message ?? ''}
+                            size="small"
+                          />
+                        </FormControl>
+                      );
+                    }}
+                  />
+                </Stack>
               );
             }}
           />

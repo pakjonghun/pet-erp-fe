@@ -1,5 +1,5 @@
 import Cell from '@/components/table/Cell';
-import { Chip, Menu, Stack, TableRow } from '@mui/material';
+import { Chip, Menu, Stack, TableRow, Typography } from '@mui/material';
 import React, { FC, MouseEvent, useState } from 'react';
 import { EMPTY, SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
@@ -51,6 +51,8 @@ const ClientBodyRow: FC<Props> = ({ isSelected, client, scrollRef, onClickOption
   );
 
   const createRow = (client: OutClient) => {
+    const max = 2;
+
     return [
       client.name,
       client.businessName ?? EMPTY,
@@ -63,19 +65,49 @@ const ClientBodyRow: FC<Props> = ({ isSelected, client, scrollRef, onClickOption
       client.inActive ? '거래중' : '거래종료',
       targetStorage?.name ?? EMPTY,
       client.deliveryFreeProductCodeList ? (
-        <Stack direction="column" gap={1}>
-          {client.deliveryFreeProductCodeList.map((item) => (
-            <Chip key={Math.random().toString()} label={item.name || EMPTY} />
+        <Stack
+          justifyContent="center"
+          direction="column"
+          flexWrap="wrap"
+          gap={0.4}
+          sx={{ minWidth: '170px' }}
+        >
+          {client.deliveryFreeProductCodeList.slice(0, max).map((item) => (
+            <Chip
+              sx={{ width: 'fit-content', m: 0 }}
+              key={Math.random().toString()}
+              label={item.name || EMPTY}
+            />
           ))}
+          <Typography variant="caption" sx={{ pl: 1 }}>
+            {client.deliveryFreeProductCodeList.length > max
+              ? `+ ${client.deliveryFreeProductCodeList.length - max}개 제품`
+              : ''}
+          </Typography>
         </Stack>
       ) : (
         ''
       ),
       client.deliveryNotFreeProductCodeList ? (
-        <Stack direction="column" gap={1}>
-          {client.deliveryNotFreeProductCodeList.map((item) => (
-            <Chip key={Math.random().toString()} label={item.name || EMPTY} />
+        <Stack
+          justifyContent="center"
+          direction="column"
+          flexWrap="wrap"
+          gap={0.4}
+          sx={{ minWidth: '170px' }}
+        >
+          {client.deliveryNotFreeProductCodeList.slice(0, max).map((item) => (
+            <Chip
+              sx={{ width: 'fit-content', m: 0 }}
+              key={Math.random().toString()}
+              label={item.name || EMPTY}
+            />
           ))}
+          <Typography variant="caption" sx={{ pl: 1 }}>
+            {client.deliveryNotFreeProductCodeList.length > max
+              ? `+ ${client.deliveryNotFreeProductCodeList.length - max}개 제품`
+              : ''}
+          </Typography>
         </Stack>
       ) : (
         ''
@@ -100,11 +132,7 @@ const ClientBodyRow: FC<Props> = ({ isSelected, client, scrollRef, onClickOption
         ))}
       </Menu>
       {parsedClient.map((item, index) => (
-        <Cell
-          key={`${client._id}_${index}`}
-          onClick={(event) => onClickRow(event, client)}
-          // sx={{ minWidth: 200 }}
-        >
+        <Cell key={`${client._id}_${index}`} onClick={(event) => onClickRow(event, client)}>
           {item}
         </Cell>
       ))}
