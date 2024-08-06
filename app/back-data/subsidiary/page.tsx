@@ -272,6 +272,7 @@ const BackDataPage = () => {
                 <CommonHeaderRow>
                   {SubsidiaryHeaderList.map(({ label, id, sortable }, index) => (
                     <HeadCell
+                      order={sort == id ? order : undefined}
                       sortable={sortable}
                       onSort={() => handleSort(id)}
                       key={`${index}_${label}`}

@@ -292,6 +292,7 @@ const BackDataPage = () => {
                 <CommonHeaderRow>
                   {ClientHeaderList.map(({ id, label, sortable }, index) => (
                     <HeadCell
+                      order={sort == id ? order : undefined}
                       onSort={() => handleSort(id)}
                       sortable={sortable}
                       key={`${id}_${index}`}
