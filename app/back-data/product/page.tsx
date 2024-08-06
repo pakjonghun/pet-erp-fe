@@ -35,7 +35,7 @@ import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFil
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { ProductHeaderList } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { Product, UserRole } from '@/http/graphql/codegen/graphql';
+import { Order, Product, UserRole } from '@/http/graphql/codegen/graphql';
 import { client } from '@/http/graphql/client';
 import Cell from '@/components/table/Cell';
 import { getKCWFormat } from '@/utils/common';
@@ -54,6 +54,8 @@ const ProductPage = () => {
   const myRole = userData?.myInfo.role ?? [];
   const canDelete = myRole.includes(UserRole.BackDelete);
   const canEdit = myRole.includes(UserRole.BackEdit);
+  const [sort, setSort] = useState('createdAt');
+  const [order, setOrder] = useState(Order.Desc);
 
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
   const [keyword, setKeyword] = useState('');
@@ -64,6 +66,8 @@ const ProductPage = () => {
     keyword: delayKeyword,
     skip: 0,
     limit: LIMIT,
+    sort,
+    order,
   });
   const rows = (data?.products.data as Product[]) ?? [];
   const isLoading = networkStatus == 3 || networkStatus == 1;
@@ -80,6 +84,8 @@ const ProductPage = () => {
               keyword,
               skip: rows.length,
               limit: LIMIT,
+              sort,
+              order,
             },
           },
         });
@@ -129,6 +135,15 @@ const ProductPage = () => {
   };
 
   const { mutate: download, isPending: isDownloading } = useDownloadExcelFile();
+
+  const handleSort = (newSort: string) => {
+    if (sort == newSort) {
+      setOrder((prev) => (prev === Order.Asc ? Order.Desc : Order.Asc));
+    } else {
+      setSort(newSort);
+      setOrder(Order.Asc);
+    }
+  };
 
   const handleDownload = () => {
     download('product', {
@@ -261,7 +276,6 @@ const ProductPage = () => {
                 text="제품 다운로드"
                 onClick={handleDownload}
               />
-
               <ActionButton
                 icon={<PlusOneOutlined />}
                 text="제품 등록"
@@ -280,8 +294,12 @@ const ProductPage = () => {
                     </InputAdornment>
                   ),
                 }}
-                sx={{ width: 270, my: 2 }}
-                label="검색할 제품 이름을 입력하세요."
+                sx={{
+                  width: 270,
+                  pr: 3,
+                  my: 2,
+                }}
+                label="이름이나 코드를 입력"
                 size="small"
               />
             </FormControl>
@@ -314,8 +332,14 @@ const ProductPage = () => {
             <CommonTable stickyHeader>
               <TableHead>
                 <CommonHeaderRow>
-                  {ProductHeaderList.map((item, index) => (
-                    <HeadCell key={`${index}_${item}`} text={item} />
+                  {ProductHeaderList.map(({ id, label, sortable }, index) => (
+                    <HeadCell
+                      onSort={() => handleSort(id)}
+                      sortable={sortable}
+                      order={id == sort ? order : undefined}
+                      key={`${id}_${index}`}
+                      text={label}
+                    />
                   ))}
                 </CommonHeaderRow>
               </TableHead>
@@ -347,8 +371,8 @@ const ProductPage = () => {
           <CommonTable stickyHeader>
             <TableHead>
               <CommonHeaderRow>
-                {ProductHeaderList.map((item, index) => (
-                  <HeadCell key={`${index}_${item}`} text={item} />
+                {ProductHeaderList.map(({ label }, index) => (
+                  <HeadCell key={`${index}_${label}`} text={label} />
                 ))}
               </CommonHeaderRow>
             </TableHead>

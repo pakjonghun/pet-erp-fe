@@ -100,7 +100,9 @@ export type ClientsInput = {
   clientType?: InputMaybe<Array<ClientType>>;
   keyword: Scalars['String']['input'];
   limit: Scalars['Int']['input'];
+  order?: InputMaybe<Order>;
   skip: Scalars['Int']['input'];
+  sort?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ClientsOutput = {
@@ -587,7 +589,9 @@ export type OptionProductInput = {
 export type OptionsInput = {
   keyword: Scalars['String']['input'];
   limit: Scalars['Int']['input'];
+  order?: InputMaybe<Order>;
   skip: Scalars['Int']['input'];
+  sort?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type OptionsOutput = {
@@ -805,7 +809,9 @@ export type ProductSaleMenuOutput = {
 export type ProductsInput = {
   keyword: Scalars['String']['input'];
   limit: Scalars['Int']['input'];
+  order?: InputMaybe<Order>;
   skip: Scalars['Int']['input'];
+  sort?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ProductsOutput = {
@@ -1141,7 +1147,9 @@ export type StoragesOutput = {
 export type SubsidiariesInput = {
   keyword: Scalars['String']['input'];
   limit: Scalars['Int']['input'];
+  order?: InputMaybe<Order>;
   skip: Scalars['Int']['input'];
+  sort?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type SubsidiariesOutput = {

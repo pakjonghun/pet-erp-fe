@@ -31,16 +31,6 @@ const SubsidiaryTableBody: FC<Props> = ({
     setOptionType(option);
   };
 
-  const handleClickEdit = () => {
-    handleClosePopover();
-    handleClickOption('edit', selectedSubsidiary);
-  };
-
-  const handleClickDelete = () => {
-    handleClosePopover();
-    handleClickOption('delete', selectedSubsidiary);
-  };
-
   const handleClosePopover = () => {
     setPopoverAnchor(null);
     setSelectedSubsidiary(null);

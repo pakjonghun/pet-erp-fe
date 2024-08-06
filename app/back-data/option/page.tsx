@@ -29,7 +29,7 @@ import OptionCards from './_components/OptionCards';
 import SubsidiaryTableBody from './_components/SubsidiaryTableBody';
 import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 import { SelectOption } from '../types';
-import { OutputOption, UserRole } from '@/http/graphql/codegen/graphql';
+import { Order, OutputOption, UserRole } from '@/http/graphql/codegen/graphql';
 import RemoveSubsidiaryModal from './_components/RemoveSubsidiaryModal';
 import EditSubsidiaryModal from './_components/EditOptionModal';
 import Cell from '@/components/table/Cell';
@@ -39,7 +39,19 @@ import { useOptions } from '@/http/graphql/hooks/option/useOptions';
 import ResizableContainer from '@/components/resize/ResizableContainer';
 
 const BackDataPage = () => {
+  const [sort, setSort] = useState('createdAt');
+  const [order, setOrder] = useState<Order>(Order.Desc);
   const { data: userData } = useGetMyInfo();
+
+  const handleSort = (newSort: string) => {
+    if (sort == newSort) {
+      setOrder((prev) => (prev == Order.Desc ? Order.Asc : Order.Desc));
+    } else {
+      setSort(newSort);
+      setOrder(Order.Asc);
+    }
+  };
+
   const myRole = userData?.myInfo.role ?? [];
   const canDelete = myRole.includes(UserRole.BackDelete);
   const canEdit = myRole.includes(UserRole.BackEdit);
@@ -51,6 +63,8 @@ const BackDataPage = () => {
     keyword: delayKeyword,
     skip: 0,
     limit: LIMIT,
+    sort,
+    order,
   });
   const rows = (data?.options.data as OutputOption[]) ?? [];
   const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
@@ -67,6 +81,8 @@ const BackDataPage = () => {
               keyword,
               skip: rows.length,
               limit: LIMIT,
+              sort,
+              order,
             },
           },
         });
@@ -168,8 +184,13 @@ const BackDataPage = () => {
             <CommonTable stickyHeader>
               <TableHead>
                 <CommonHeaderRow>
-                  {OptionHeaderList.map((item, index) => (
-                    <HeadCell key={`${index}_${item}`} text={item} />
+                  {OptionHeaderList.map(({ label, sortable, id }, index) => (
+                    <HeadCell
+                      sortable={sortable}
+                      onSort={() => handleSort(id)}
+                      key={`${index}_${id}`}
+                      text={label}
+                    />
                   ))}
                 </CommonHeaderRow>
               </TableHead>
@@ -207,8 +228,8 @@ const BackDataPage = () => {
           <CommonTable stickyHeader>
             <TableHead>
               <CommonHeaderRow>
-                {OptionHeaderList.map((item, index) => (
-                  <HeadCell key={`${index}_${item}`} text={item} />
+                {OptionHeaderList.map(({ label }, index) => (
+                  <HeadCell key={`${index}_${label}`} text={label} />
                 ))}
               </CommonHeaderRow>
             </TableHead>

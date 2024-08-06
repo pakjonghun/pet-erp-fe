@@ -34,7 +34,7 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import { ClientHeaderList, ClientTypeToHangle } from './constants';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
-import { OutClient, Storage, UserRole } from '@/http/graphql/codegen/graphql';
+import { Order, OutClient, Storage, UserRole } from '@/http/graphql/codegen/graphql';
 import { client } from '@/http/graphql/client';
 import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 import RemoveClientModal from './_components/RemoveClientModal';
@@ -49,6 +49,8 @@ import ResizableContainer from '@/components/resize/ResizableContainer';
 
 const BackDataPage = () => {
   const { data: userData } = useGetMyInfo();
+  const [sort, setSort] = useState('createdAt');
+  const [order, setOrder] = useState(Order.Desc);
   const myRole = userData?.myInfo.role ?? [];
   const canDelete = myRole.includes(UserRole.BackDelete);
   const canEdit = myRole.includes(UserRole.BackEdit);
@@ -62,6 +64,8 @@ const BackDataPage = () => {
     keyword: delayKeyword,
     skip: 0,
     limit: LIMIT,
+    sort,
+    order,
   });
 
   const rows = (data?.clients.data as OutClient[]) ?? [];
@@ -79,6 +83,8 @@ const BackDataPage = () => {
               keyword,
               skip: rows.length,
               limit: LIMIT,
+              sort,
+              order,
             },
           },
         });
@@ -166,6 +172,15 @@ const BackDataPage = () => {
     (item) => item._id === selectedClient?.storageId
   );
 
+  const handleSort = (newSort: string) => {
+    if (sort == newSort) {
+      setOrder((prev) => (prev == Order.Desc ? Order.Asc : Order.Desc));
+    } else {
+      setSort(newSort);
+      setOrder(Order.Asc);
+    }
+  };
+
   const createRow = (client: OutClient) => {
     return [
       client.name,
@@ -223,7 +238,6 @@ const BackDataPage = () => {
                 text="거래처 다운로드"
                 onClick={handleDownload}
               />
-
               <ActionButton
                 icon={<PlusOneOutlined />}
                 text="거래처 입력"
@@ -276,8 +290,13 @@ const BackDataPage = () => {
             <CommonTable stickyHeader>
               <TableHead>
                 <CommonHeaderRow>
-                  {ClientHeaderList.map((item, index) => (
-                    <HeadCell key={`${item}_${index}`} text={item} />
+                  {ClientHeaderList.map(({ id, label, sortable }, index) => (
+                    <HeadCell
+                      onSort={() => handleSort(id)}
+                      sortable={sortable}
+                      key={`${id}_${index}`}
+                      text={label}
+                    />
                   ))}
                 </CommonHeaderRow>
               </TableHead>
@@ -313,8 +332,8 @@ const BackDataPage = () => {
           <CommonTable stickyHeader>
             <TableHead>
               <CommonHeaderRow>
-                {ClientHeaderList.map((item, index) => (
-                  <HeadCell key={`${item}_${index}`} text={item} />
+                {ClientHeaderList.map(({ label }, index) => (
+                  <HeadCell key={`${label}_${index}`} text={label} />
                 ))}
               </CommonHeaderRow>
             </TableHead>

@@ -37,7 +37,7 @@ import SubsidiaryTableBody from './_components/SubsidiaryTableBody';
 import { client } from '@/http/graphql/client';
 import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 import { SelectOption } from '../types';
-import { Subsidiary, UserRole } from '@/http/graphql/codegen/graphql';
+import { Order, Subsidiary, UserRole } from '@/http/graphql/codegen/graphql';
 import RemoveSubsidiaryModal from './_components/RemoveSubsidiaryModal';
 import EditSubsidiaryModal from './_components/EditSubsidiaryModal';
 import Cell from '@/components/table/Cell';
@@ -51,16 +51,28 @@ const BackDataPage = () => {
   const myRole = userData?.myInfo.role ?? [];
   const canDelete = myRole.includes(UserRole.BackDelete);
   const canEdit = myRole.includes(UserRole.BackEdit);
+  const [order, setOrder] = useState<Order>(Order.Desc);
+  const [sort, setSort] = useState('createdAt');
+
+  const handleSort = (newSort: string) => {
+    if (newSort == sort) {
+      setOrder((prev) => (prev == Order.Desc ? Order.Asc : Order.Desc));
+    } else {
+      setOrder(Order.Asc);
+      setSort(newSort);
+    }
+  };
 
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
   const [fileKey, setFileKey] = useState(new Date());
-
   const { data, networkStatus, fetchMore, refetch } = useSubsidiaries({
     keyword: delayKeyword,
     skip: 0,
     limit: LIMIT,
+    sort,
+    order,
   });
   const rows = data?.subsidiaries.data ?? [];
   const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
@@ -77,6 +89,8 @@ const BackDataPage = () => {
               keyword,
               skip: rows.length,
               limit: LIMIT,
+              sort,
+              order,
             },
           },
         });
@@ -216,8 +230,15 @@ const BackDataPage = () => {
                     </InputAdornment>
                   ),
                 }}
-                sx={{ width: 270, my: 2 }}
-                label="검색할 부자재 이름을 입력하세요."
+                sx={{
+                  width: {
+                    xs: '100%',
+                    sm: 270,
+                  },
+                  pr: 3,
+                  my: 2,
+                }}
+                label="이름이나 코드 입력"
                 size="small"
               />
             </FormControl>
@@ -249,8 +270,13 @@ const BackDataPage = () => {
             <CommonTable stickyHeader>
               <TableHead>
                 <CommonHeaderRow>
-                  {SubsidiaryHeaderList.map((item, index) => (
-                    <HeadCell key={`${index}_${item}`} text={item} />
+                  {SubsidiaryHeaderList.map(({ label, id, sortable }, index) => (
+                    <HeadCell
+                      sortable={sortable}
+                      onSort={() => handleSort(id)}
+                      key={`${index}_${label}`}
+                      text={label}
+                    />
                   ))}
                 </CommonHeaderRow>
               </TableHead>
@@ -288,8 +314,8 @@ const BackDataPage = () => {
           <CommonTable stickyHeader>
             <TableHead>
               <CommonHeaderRow>
-                {SubsidiaryHeaderList.map((item, index) => (
-                  <HeadCell key={`${index}_${item}`} text={item} />
+                {SubsidiaryHeaderList.map(({ label }, index) => (
+                  <HeadCell key={`${index}_${label}`} text={label} />
                 ))}
               </CommonHeaderRow>
             </TableHead>

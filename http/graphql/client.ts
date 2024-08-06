@@ -206,15 +206,15 @@ export const client = new ApolloClient({
             merge,
           },
           subsidiaries: {
-            keyArgs: ['clientsInput', ['keyword']],
+            keyArgs: ['subsidiariesInput', ['keyword', 'sort', 'order']],
             merge,
           },
           clients: {
-            keyArgs: ['clientsInput', ['keyword']],
+            keyArgs: ['clientsInput', ['keyword', 'sort', 'order']],
             merge,
           },
           products: {
-            keyArgs: ['productsInput', ['keyword']],
+            keyArgs: ['productsInput', ['keyword', 'sort', 'order']],
             merge,
           },
           categories: {
@@ -262,7 +262,7 @@ export const client = new ApolloClient({
             merge,
           },
           options: {
-            keyArgs: ['optionsInput', ['keyword']],
+            keyArgs: ['optionsInput', ['keyword', 'sort', 'order']],
             merge,
           },
           saleOrders: {

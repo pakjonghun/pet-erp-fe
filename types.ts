@@ -14,3 +14,9 @@ export type SortController = {
   sort: string;
   handleSort: (sort: string, order: OrderValue) => void;
 };
+
+export type HeaderItem = {
+  id: string;
+  sortable: boolean;
+  label: string;
+};

@@ -1,19 +1,20 @@
 import { ClientType } from '@/http/graphql/codegen/graphql';
+import { HeaderItem } from '@/types';
 
-export const ClientHeaderList = [
-  '쇼핑몰명',
-  '상호',
-  '코드',
-  '수수료율',
-  '분류',
-  '결제일(매월)',
-  '담당자 이름',
-  '연락처',
-  '거래여부',
-  '출고창고',
-  '택배비 무료제품',
-  '택배비 유료제품',
-  '사방넷 지원여부',
+export const ClientHeaderList: HeaderItem[] = [
+  { id: 'name', sortable: true, label: '쇼핑몰명' },
+  { id: 'businessName', sortable: true, label: '상호' },
+  { id: 'code', sortable: true, label: '코드' },
+  { id: 'feeRate', sortable: true, label: '수수료율' },
+  { id: 'category', sortable: false, label: '분류' },
+  { id: 'payDate', sortable: true, label: '결제일(매월)' },
+  { id: 'manager', sortable: true, label: '담당자 이름' },
+  { id: 'managerTel', sortable: true, label: '연락처' },
+  { id: 'inActive', sortable: true, label: '거래여부' },
+  { id: 'storage', sortable: false, label: '출고창고' },
+  { id: 'freeDelivery', sortable: false, label: '택배비 무료제품' },
+  { id: 'notFreeDelivery', sortable: false, label: '택배비 유료제품' },
+  { id: 'isSabangService', sortable: true, label: '사방넷 지원여부' },
 ];
 
 export const ClientTypeToHangle = {
