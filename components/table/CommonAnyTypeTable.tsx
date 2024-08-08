@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import LoadingRow from './LoadingRow';
 import EmptyRow from './EmptyRow';
+import { MIN_MARGIN } from '@/constants';
 
 interface Props {
   title: string;
@@ -79,7 +80,7 @@ const CommonAnyTypeTable: FC<Props> = ({
             const profitRateNumber =
               profitRateIndex != -1 && (cells[profitRateIndex] as string).match(/\d+/)?.[0];
 
-            const isBelowTween = Number(profitRateNumber) < 20;
+            const isBelowTween = Number(profitRateNumber) < MIN_MARGIN;
 
             return (
               <TableRow

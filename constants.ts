@@ -16,3 +16,4 @@ export type SelectedOptionItem = {
 
 export const PRODUCT_PREFIX = 'P';
 export const CLIENT_PREFIX = 'C';
+export const MIN_MARGIN = 20;

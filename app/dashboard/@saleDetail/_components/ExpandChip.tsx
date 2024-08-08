@@ -1,3 +1,4 @@
+import { MIN_MARGIN } from '@/constants';
 import { getNumberToString, getProfit, getProfitRate } from '@/utils/sale';
 import { Add, Remove } from '@mui/icons-material';
 import { Chip, IconButton, Stack, Typography } from '@mui/material';
@@ -68,6 +69,7 @@ const ExpandChip: FC<Props> = ({ list }) => {
                     display: 'flex',
                     justifyContent: 'flex-start',
                     paddingLeft: 0.1,
+                    bgcolor: (theme) => (profit < MIN_MARGIN ? theme.palette.warning.light : ''),
                   }}
                   key={Object.values(jtem).join(', ')}
                   label=<Stack
