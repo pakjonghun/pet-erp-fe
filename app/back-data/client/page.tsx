@@ -270,7 +270,7 @@ const BackDataPage = () => {
               <Typography variant="caption">용달배차 : 택배비 무료</Typography>
               <Typography variant="caption">위탁배송(건당 결제) : 택배비 유료</Typography>
               <Typography variant="caption">위탁배송(7만원이상시) : 택배비 유료</Typography>
-              <Typography variant="caption">제품별 정책이 상이한건</Typography>
+              <Typography variant="caption">제품별 정책이 다른건 : 기입안함</Typography>
             </Stack>
           </Stack>
 
