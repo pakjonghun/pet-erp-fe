@@ -122,6 +122,7 @@ const BackDataPage = () => {
           });
           client.refetchQueries({
             updateCache(cache) {
+              cache.evict({ fieldName: 'subsidiaryCategories' });
               cache.evict({ fieldName: 'subsidiaryStocks' });
               cache.evict({ fieldName: 'subsidiaryStocksState' });
               cache.evict({ fieldName: 'subsidiaryCountStocks' });

@@ -7,29 +7,23 @@ import TableTitle from '@/components/ui/typograph/TableTitle';
 import {
   Button,
   Chip,
-  FormControl,
-  FormGroup,
-  InputAdornment,
   Stack,
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
   Typography,
 } from '@mui/material';
-import { PlusOneOutlined, Search } from '@mui/icons-material';
+
 import { useState } from 'react';
-import CreateOptionModal from './_components/AddOptionModal';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT } from '@/constants';
-import ActionButton from '@/components/ui/button/ActionButton';
 import { headerList } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import OptionCards from './_components/OptionCards';
 import SubsidiaryTableBody from './_components/SubsidiaryTableBody';
 import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 import { SelectOption } from './types';
-import { AdType, OutputOption, UserRole } from '@/http/graphql/codegen/graphql';
+import { AdsInput, AdType, OutputOption, UserRole } from '@/http/graphql/codegen/graphql';
 import RemoveSubsidiaryModal from './_components/RemoveSubsidiaryModal';
 import EditSubsidiaryModal from './_components/EditOptionModal';
 import Cell from '@/components/table/Cell';
@@ -37,6 +31,8 @@ import EmptyRow from '@/components/table/EmptyRow';
 import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 import { useOptions } from '@/http/graphql/hooks/option/useOptions';
 import dayjs from 'dayjs';
+import ActionSection from './ActionSection';
+import SearchSection from './SearchSection';
 
 const BackDataPage = () => {
   const [from, setFrom] = useState(dayjs());
@@ -46,6 +42,22 @@ const BackDataPage = () => {
   const [order, setOrder] = useState(-1);
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
+
+  const searchQuery: AdsInput = {
+    from,
+    keyword,
+    limit: LIMIT,
+    skip: 0,
+    to,
+    type,
+  };
+
+  const setSearchQuery = ({ from, keyword, to, type }: AdsInput) => {
+    setFrom(from);
+    setTo(to);
+    setKeyword(keyword);
+    setType(type ?? null);
+  };
 
   const { data: userData } = useGetMyInfo();
   const myRole = userData?.myInfo.role ?? [];
@@ -81,8 +93,6 @@ const BackDataPage = () => {
   const tableScrollRef = useInfinityScroll({ callback });
   const cardScrollRef = useInfinityScroll({ callback });
 
-  const [openCreateOption, setOpenCreateOption] = useState(false);
-
   const [selectedOption, setSelectedOption] = useState<null | OutputOption>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
   const handleClickEdit = () => {
@@ -115,36 +125,11 @@ const BackDataPage = () => {
   return (
     <>
       <TablePage sx={{ flex: 1 }}>
-        {openCreateOption && (
-          <CreateOptionModal open={openCreateOption} onClose={() => setOpenCreateOption(false)} />
-        )}
         <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
-          <TableTitle title="광고 리스트" />
-          <Stack direction="row" alignItems="center" gap={2}>
-            <ActionButton
-              icon={<PlusOneOutlined />}
-              text="광고 입력"
-              onClick={() => setOpenCreateOption(true)}
-            />
-          </Stack>
+          <TableTitle title="광고 조회" />
+          <ActionSection />
         </Stack>
-        <FormGroup sx={{ ml: 2 }}>
-          <FormControl>
-            <TextField
-              onChange={(event) => setKeyword(event.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Search />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{ maxWidth: 340, my: 2 }}
-              label="검색할 제품이나 채널을 입력하세요."
-              size="small"
-            />
-          </FormControl>
-        </FormGroup>
+        <SearchSection setSearchQuery={setSearchQuery} searchQuery={searchQuery} />
         <Typography sx={{ p: 3 }}>
           {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
         </Typography>

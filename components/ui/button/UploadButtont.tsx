@@ -23,7 +23,7 @@ const UploadButton: React.FC<Props> = ({ text, loading, fileKey, onChange }) => 
           },
         }}
         component="label"
-        variant="contained"
+        variant="outlined"
         tabIndex={-1}
         startIcon={loading ? <CommonLoading /> : <PublishIcon />}
       >
