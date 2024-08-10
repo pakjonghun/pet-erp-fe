@@ -1,5 +1,6 @@
 'use client';
 
+import CreateOptionModal from './_components/AddOptionModal';
 import HeadCell from '@/components/table/HeadCell';
 import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 import TablePage from '@/components/table/TablePage';
@@ -33,6 +34,7 @@ import { useOptions } from '@/http/graphql/hooks/option/useOptions';
 import dayjs from 'dayjs';
 import ActionSection from './ActionSection';
 import SearchSection from './SearchSection';
+import useHandleQuery from '@/hooks/useHandleQuery';
 
 const BackDataPage = () => {
   const [from, setFrom] = useState(dayjs());
@@ -42,6 +44,7 @@ const BackDataPage = () => {
   const [order, setOrder] = useState(-1);
   const [keyword, setKeyword] = useState('');
   const delayKeyword = useTextDebounce(keyword);
+  const q = useHandleQuery();
 
   const searchQuery: AdsInput = {
     from,
@@ -124,10 +127,11 @@ const BackDataPage = () => {
 
   return (
     <>
-      <TablePage sx={{ flex: 1 }}>
+      <TablePage sx={{ flex: 1, position: 'relative' }}>
+        <CreateOptionModal q={q} />
         <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
           <TableTitle title="광고 조회" />
-          <ActionSection />
+          <ActionSection q={q} />
         </Stack>
         <SearchSection setSearchQuery={setSearchQuery} searchQuery={searchQuery} />
         <Typography sx={{ p: 3 }}>
@@ -173,81 +177,87 @@ const BackDataPage = () => {
           </CommonTable>
         </ScrollTableContainer>
       </TablePage>
-      <TablePage
-        sx={{
-          flex: 1,
-          display: {
-            xs: 'none',
-            md: 'block',
-          },
-          px: 2,
-        }}
-      >
-        <TableTitle title="선택된 옵션 데이터" />
-        <TableContainer
+      {q.getQuery('createAd') != '1' && (
+        <TablePage
           sx={{
+            flex: 1,
             display: {
               xs: 'none',
               md: 'block',
             },
+            px: 2,
           }}
         >
-          <CommonTable stickyHeader>
-            <TableHead>
-              <CommonHeaderRow>
-                {headerList.map((item, index) => (
-                  <HeadCell key={`${index}_${item}`} text={item} />
-                ))}
-              </CommonHeaderRow>
-            </TableHead>
-            {!!selectedOption ? (
-              <TableRow hover ref={null}>
-                {parsedRowData.map((item, index) => (
-                  <Cell key={`${selectedOption._id}_${index}`} sx={{ minWidth: 200 }}>
-                    {item}
-                  </Cell>
-                ))}
-              </TableRow>
-            ) : (
-              <EmptyRow colSpan={7} isEmpty={!selectedOption} message="선택된 데이터가 없습니다." />
-            )}
-          </CommonTable>
-        </TableContainer>
-        {!!selectedOption && (
-          <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
-            {canDelete && (
-              <Button color="error" variant="outlined" onClick={handleClickDelete}>
-                삭제
-              </Button>
-            )}
-            {canEdit && (
-              <Button variant="contained" onClick={handleClickEdit}>
-                편집
-              </Button>
-            )}
-          </Stack>
-        )}
-
-        {selectedOption && (
-          <RemoveSubsidiaryModal
-            open={optionType === 'delete'}
-            onClose={() => {
-              setOptionType(null);
-              setSelectedOption(null);
+          <TableTitle title="선택된 옵션 데이터" />
+          <TableContainer
+            sx={{
+              display: {
+                xs: 'none',
+                md: 'block',
+              },
             }}
-            selectedOption={selectedOption}
-          />
-        )}
+          >
+            <CommonTable stickyHeader>
+              <TableHead>
+                <CommonHeaderRow>
+                  {headerList.map((item, index) => (
+                    <HeadCell key={`${index}_${item}`} text={item} />
+                  ))}
+                </CommonHeaderRow>
+              </TableHead>
+              {!!selectedOption ? (
+                <TableRow hover ref={null}>
+                  {parsedRowData.map((item, index) => (
+                    <Cell key={`${selectedOption._id}_${index}`} sx={{ minWidth: 200 }}>
+                      {item}
+                    </Cell>
+                  ))}
+                </TableRow>
+              ) : (
+                <EmptyRow
+                  colSpan={7}
+                  isEmpty={!selectedOption}
+                  message="선택된 데이터가 없습니다."
+                />
+              )}
+            </CommonTable>
+          </TableContainer>
+          {!!selectedOption && (
+            <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
+              {canDelete && (
+                <Button color="error" variant="outlined" onClick={handleClickDelete}>
+                  삭제
+                </Button>
+              )}
+              {canEdit && (
+                <Button variant="contained" onClick={handleClickEdit}>
+                  편집
+                </Button>
+              )}
+            </Stack>
+          )}
 
-        {selectedOption && (
-          <EditSubsidiaryModal
-            setSelectedSubsidiary={setSelectedOption}
-            open={optionType === 'edit'}
-            onClose={() => setOptionType(null)}
-            selectedSubsidiary={selectedOption}
-          />
-        )}
-      </TablePage>
+          {selectedOption && (
+            <RemoveSubsidiaryModal
+              open={optionType === 'delete'}
+              onClose={() => {
+                setOptionType(null);
+                setSelectedOption(null);
+              }}
+              selectedOption={selectedOption}
+            />
+          )}
+
+          {selectedOption && (
+            <EditSubsidiaryModal
+              setSelectedSubsidiary={setSelectedOption}
+              open={optionType === 'edit'}
+              onClose={() => setOptionType(null)}
+              selectedSubsidiary={selectedOption}
+            />
+          )}
+        </TablePage>
+      )}
     </>
   );
 };

@@ -2,11 +2,15 @@ import PlusOneIcon from '@mui/icons-material/PlusOne';
 import { FC } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
+  Box,
   Button,
   FormControl,
   FormGroup,
+  IconButton,
   InputAdornment,
   Stack,
+  Tab,
+  Tabs,
   TextField,
   Typography,
 } from '@mui/material';
@@ -18,16 +22,60 @@ import { PRODUCT_PREFIX } from '@/constants';
 import { modalSizeProps } from '@/components/commonStyles';
 import { client } from '@/http/graphql/client';
 import { useCreateOption } from '@/http/graphql/hooks/option/useCreateOption';
-import { initProductOption } from '../constants';
+import { CreateAdTabs, initProductOption } from '../constants';
 import ProductOption from './ProductOption';
 import { OptionProductInput } from '@/http/graphql/codegen/graphql';
+import { useSearchParams } from 'next/navigation';
+import { HandleQuery } from '@/hooks/useHandleQuery';
+import { ClearIcon } from '@mui/x-date-pickers';
+import TableTitle from '@/components/ui/typograph/TableTitle';
 
 interface Props {
-  open: boolean;
-  onClose: () => void;
+  q: HandleQuery;
 }
 
-const AddOptionModal: FC<Props> = ({ open, onClose }) => {
+const AddOptionModal: FC<Props> = ({ q }) => {
+  const isOpen = q.getQuery('createAd') == '1';
+  const tabs = Object.keys(CreateAdTabs) as (keyof typeof CreateAdTabs)[];
+
+  if (!isOpen) return <></>;
+
+  return (
+    <Box sx={{ position: 'absolute', inset: 0, bgcolor: 'white', zIndex: 1000 }}>
+      <TableTitle sx={{ ml: 2 }} title="광고 등록" />
+      <IconButton onClick={q.resetQuery} sx={{ position: 'absolute', right: 3, top: 3 }}>
+        <ClearIcon />
+      </IconButton>
+      <Tabs
+        sx={{ borderBottom: (theme) => `1px solid ${theme.palette.grey[300]}` }}
+        variant="scrollable"
+        value={q.getQuery('tab')}
+        indicatorColor="primary"
+      >
+        {tabs.map((tab) => {
+          const tabItem = CreateAdTabs[tab];
+          return (
+            <Tab
+              sx={{
+                transition: 'all .3s',
+                fontSize: 16,
+                '&:hover': {
+                  bgcolor: (theme) => theme.palette.action.selected,
+                },
+                '&.Mui-selected': {
+                  fontWeight: 800,
+                },
+              }}
+              onClick={() => q.appendQuery('tab', tab)}
+              label={tabItem}
+              key={tab}
+              value={tab}
+            />
+          );
+        })}
+      </Tabs>
+    </Box>
+  );
   // const [createOption, { loading }] = useCreateOption();
 
   // const {

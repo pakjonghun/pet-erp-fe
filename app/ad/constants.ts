@@ -1,3 +1,5 @@
+import { AdType } from '@/http/graphql/codegen/graphql';
+
 export const ContextOptions = ['edit', 'delete'] as const;
 export const ProductHeaderList = [
   '코드',
@@ -18,4 +20,11 @@ export const initProductOption = {
     code: '',
     name: '',
   },
+};
+
+export const CreateAdTabs: Record<AdType, string> = {
+  [AdType.ChannelAppProduct]: '채널제품',
+  [AdType.ChannelSpecialProduct]: '제품채널',
+  [AdType.ChannelProductRate]: '채널공통광고',
+  [AdType.CompanyRate]: '회사공통',
 };

@@ -4,16 +4,18 @@ import ActionButton from '@/components/ui/button/ActionButton';
 import { Stack } from '@mui/material';
 import UploadButton from '@/components/ui/button/UploadButtont';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, FC, useState } from 'react';
 import { useUploadExcelFile } from '@/http/rest/hooks/file/useUploadExcelFile';
 import { snackMessage } from '@/store/snackMessage';
 import { client } from '@/http/graphql/client';
 import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFile';
-import CreateOptionModal from './_components/AddOptionModal';
+import { HandleQuery } from '@/hooks/useHandleQuery';
 
-const ActionSection = () => {
-  const [openCreateOption, setOpenCreateOption] = useState(false);
+interface Props {
+  q: HandleQuery;
+}
 
+const ActionSection: FC<Props> = ({ q }) => {
   const [fileKey, setFileKey] = useState(new Date());
   const { mutate: uploadFile, isPending } = useUploadExcelFile();
   const handleUploadExcelFile = (event: ChangeEvent<HTMLInputElement>) => {
@@ -72,16 +74,12 @@ const ActionSection = () => {
       },
     });
   };
-
   return (
     <Stack direction="row" alignItems="center" gap={2}>
-      {openCreateOption && (
-        <CreateOptionModal open={openCreateOption} onClose={() => setOpenCreateOption(false)} />
-      )}
       <ActionButton
         icon={<PlusOneOutlined />}
         text="광고 입력"
-        onClick={() => setOpenCreateOption(true)}
+        onClick={() => q.setQuery([{ key: 'createAd', value: '1' }])}
       />
       <UploadButton
         fileKey={fileKey}

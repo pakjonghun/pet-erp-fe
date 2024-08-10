@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Button, FormControl, Stack, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { SetDeliveryForm, setDeliveryCostSchema } from './_validations/setDeliveryCostValidation';
 import { useSetDeliveryCost } from '@/http/graphql/hooks/delivery/useSetDeliveryCost';
