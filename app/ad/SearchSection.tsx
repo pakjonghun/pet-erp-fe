@@ -4,15 +4,18 @@ import {
   FormControlLabel,
   FormGroup,
   InputAdornment,
+  Stack,
   TextField,
   Typography,
 } from '@mui/material';
 import { Search } from '@mui/icons-material';
-import { AdsInput } from '@/http/graphql/codegen/graphql';
+import { AdsInput, AdType } from '@/http/graphql/codegen/graphql';
 import { FC, useState } from 'react';
 import SwitchDate from '@/components/calendar/dateSwitch/SwitchDate';
 import { DateRange } from '@/components/calendar/dateFilter/type';
 import { SearchStandard } from '@/components/calendar/dateSwitch/types';
+import BaseSelect from '@/components/ui/select/BaseSelect';
+import { AdTypeToEng, AdTypeToHangle } from './constants';
 
 interface Props {
   searchQuery: AdsInput;
@@ -22,6 +25,9 @@ interface Props {
 const SearchSection: FC<Props> = ({ searchQuery, setSearchQuery }) => {
   const { from, keyword, to, type } = searchQuery;
 
+  const adTypes = Object.keys(AdTypeToHangle);
+  const handleAdTypes = Object.values(AdTypeToHangle);
+  AdTypeToEng;
   const [searchStandard, setSearchStandard] = useState<SearchStandard>('일');
   const [isDateChecked, setIsDateChecked] = useState(true);
 
@@ -33,34 +39,56 @@ const SearchSection: FC<Props> = ({ searchQuery, setSearchQuery }) => {
     setSearchQuery({ ...searchQuery, keyword: text });
   };
 
+  const setType = (type: AdType) => {
+    setSearchQuery({ ...searchQuery, type });
+  };
+
   return (
-    <FormGroup sx={{ ml: 2, width: 'fit-content' }}>
-      <FormControlLabel
-        label={
-          <Typography variant="subtitle1" sx={{ whiteSpace: 'nowrap' }}>
-            광고날짜 범위
-          </Typography>
-        }
-        control={
-          <Checkbox
-            checked={isDateChecked}
-            onChange={(_, checked) => setIsDateChecked(checked)}
-            sx={{ py: 0 }}
-          />
-        }
-      />
-      <SwitchDate
+    <FormControl
+      sx={{
+        mx: 2,
+        gap: 4,
+        display: 'flex',
+        flexWrap: 'wrap',
+      }}
+    >
+      <FormGroup sx={{ flex: 1 }}>
+        <FormControlLabel
+          label={
+            <Typography variant="subtitle1" sx={{ whiteSpace: 'nowrap' }}>
+              광고날짜 범위
+            </Typography>
+          }
+          control={
+            <Checkbox
+              checked={isDateChecked}
+              onChange={(_, checked) => setIsDateChecked(checked)}
+              sx={{ py: 0 }}
+            />
+          }
+        />
+        <SwitchDate
+          sx={{
+            pointerEvents: isDateChecked ? 'auto' : 'none',
+            opacity: isDateChecked ? 1 : 0.4,
+          }}
+          dateRange={{ from, to }}
+          searchStandard={searchStandard}
+          setDateRange={setDateRange}
+          setSearchStandard={setSearchStandard}
+        />
+      </FormGroup>
+      <FormGroup
         sx={{
-          pointerEvents: isDateChecked ? 'auto' : 'none',
-          opacity: isDateChecked ? 1 : 0.4,
+          flexDirection: {
+            xs: 'column',
+            md: 'row',
+          },
+          gap: 2,
         }}
-        dateRange={{ from, to }}
-        searchStandard={searchStandard}
-        setDateRange={setDateRange}
-        setSearchStandard={setSearchStandard}
-      />
-      <FormControl sx={{ mt: 4, width: '100%' }}>
+      >
         <TextField
+          sx={{ flex: 1, minWidth: 300 }}
           onChange={(event) => setKeyword(event.target.value)}
           InputProps={{
             endAdornment: (
@@ -72,8 +100,20 @@ const SearchSection: FC<Props> = ({ searchQuery, setSearchQuery }) => {
           label="제품이나 채널입력"
           size="small"
         />
-      </FormControl>
-    </FormGroup>
+        <FormControl sx={{ minWidth: 200 }}>
+          <BaseSelect
+            defaultValue={handleAdTypes[0]}
+            label="광고 타입선택"
+            onChangeValue={(event) => {
+              const hangleType = event.target.value;
+              setType(AdTypeToEng[hangleType]);
+            }}
+            optionItems={handleAdTypes}
+            value={AdTypeToHangle[type!]}
+          />
+        </FormControl>
+      </FormGroup>
+    </FormControl>
   );
 };
 

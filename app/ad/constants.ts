@@ -22,9 +22,16 @@ export const initProductOption = {
   },
 };
 
-export const CreateAdTabs: Record<AdType, string> = {
+export const AdTypeToHangle: Record<AdType, string> = {
   [AdType.ChannelAppProduct]: '채널제품',
   [AdType.ChannelSpecialProduct]: '제품채널',
   [AdType.ChannelProductRate]: '채널공통광고',
   [AdType.CompanyRate]: '회사공통',
+};
+
+export const AdTypeToEng: Record<string, AdType> = {
+  ['채널제품' as string]: AdType.ChannelAppProduct,
+  ['제품채널' as string]: AdType.ChannelSpecialProduct,
+  ['채널공통광고' as string]: AdType.ChannelProductRate,
+  ['회사공통' as string]: AdType.CompanyRate,
 };

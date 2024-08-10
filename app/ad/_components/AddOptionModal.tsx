@@ -22,7 +22,7 @@ import { PRODUCT_PREFIX } from '@/constants';
 import { modalSizeProps } from '@/components/commonStyles';
 import { client } from '@/http/graphql/client';
 import { useCreateOption } from '@/http/graphql/hooks/option/useCreateOption';
-import { CreateAdTabs, initProductOption } from '../constants';
+import { AdTypeToHangle, initProductOption } from '../constants';
 import ProductOption from './ProductOption';
 import { OptionProductInput } from '@/http/graphql/codegen/graphql';
 import { useSearchParams } from 'next/navigation';
@@ -36,7 +36,7 @@ interface Props {
 
 const AddOptionModal: FC<Props> = ({ q }) => {
   const isOpen = q.getQuery('createAd') == '1';
-  const tabs = Object.keys(CreateAdTabs) as (keyof typeof CreateAdTabs)[];
+  const tabs = Object.keys(AdTypeToHangle) as (keyof typeof AdTypeToHangle)[];
 
   if (!isOpen) return <></>;
 
@@ -53,7 +53,7 @@ const AddOptionModal: FC<Props> = ({ q }) => {
         indicatorColor="primary"
       >
         {tabs.map((tab) => {
-          const tabItem = CreateAdTabs[tab];
+          const tabItem = AdTypeToHangle[tab];
           return (
             <Tab
               sx={{
