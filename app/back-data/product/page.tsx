@@ -111,10 +111,10 @@ const ProductPage = () => {
           });
 
           refetch();
-          client.refetchQueries({ include: ['categories'] });
           client.refetchQueries({
             updateCache(cache) {
               cache.evict({ fieldName: 'productSales' });
+              cache.evict({ fieldName: 'categories' });
               cache.evict({ fieldName: 'stocks' });
               cache.evict({ fieldName: 'categories' });
             },

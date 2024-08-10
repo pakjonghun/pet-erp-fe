@@ -262,9 +262,18 @@ const BackDataPage = () => {
               />
             </FormControl>
           </FormGroup>
-          <Typography sx={{ p: 3 }}>
-            {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
-          </Typography>
+          <Stack direction="row" justifyContent="space-between" alignItems="flex-end">
+            <Typography sx={{ p: 3 }}>
+              {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
+            </Typography>
+            <Stack direction="column" sx={{ textAlign: 'right', mr: 2, mb: 2 }}>
+              <Typography variant="caption">용달배차 : 택배비 무료</Typography>
+              <Typography variant="caption">위탁배송(건당 결제) : 택배비 유료</Typography>
+              <Typography variant="caption">위탁배송(7만원이상시) : 택배비 유료</Typography>
+              <Typography variant="caption">제품별 정책이 상이한건</Typography>
+            </Stack>
+          </Stack>
+
           <ClientCards
             sx={{
               display: {
