@@ -51,6 +51,8 @@ import { useStorages } from '@/http/graphql/hooks/storage/useStorages';
 import ResizableContainer from '@/components/resize/ResizableContainer';
 
 const BackDataPage = () => {
+  const MaxCount = 2;
+
   const { data: userData } = useGetMyInfo();
   const [sort, setSort] = useState('createdAt');
   const [order, setOrder] = useState(Order.Desc);
@@ -201,18 +203,22 @@ const BackDataPage = () => {
       targetStorage?.name ?? EMPTY,
       client.deliveryFreeProductCodeList ? (
         <Stack direction="column" gap={1}>
-          {client.deliveryFreeProductCodeList.map((item) => (
+          {client.deliveryFreeProductCodeList.slice(0, MaxCount).map((item) => (
             <Chip key={Math.random().toString()} label={item.name || EMPTY} />
           ))}
+          {MaxCount < client.deliveryFreeProductCodeList.length &&
+            `+${client.deliveryFreeProductCodeList.length - MaxCount}`}
         </Stack>
       ) : (
         ''
       ),
       client.deliveryNotFreeProductCodeList ? (
         <Stack direction="column" gap={1}>
-          {client.deliveryNotFreeProductCodeList.map((item) => (
+          {client.deliveryNotFreeProductCodeList.slice(0, MaxCount).map((item) => (
             <Chip key={Math.random().toString()} label={item.name || EMPTY} />
           ))}
+          {MaxCount < client.deliveryNotFreeProductCodeList.length &&
+            `+${client.deliveryNotFreeProductCodeList.length - MaxCount}`}
         </Stack>
       ) : (
         ''

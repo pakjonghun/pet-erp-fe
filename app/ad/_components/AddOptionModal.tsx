@@ -25,7 +25,7 @@ import { client } from '@/http/graphql/client';
 import { useCreateOption } from '@/http/graphql/hooks/option/useCreateOption';
 import { AdTypeToHangle, initProductOption } from '../constants';
 import ProductOption from './ProductOption';
-import { AdType, OptionProductInput, OutClient } from '@/http/graphql/codegen/graphql';
+import { AdType, OptionProductInput, OutClient, Product } from '@/http/graphql/codegen/graphql';
 import { useSearchParams } from 'next/navigation';
 import { HandleQuery } from '@/hooks/useHandleQuery';
 import { ClearIcon } from '@mui/x-date-pickers';
@@ -39,6 +39,7 @@ import { DateRange } from '@/components/calendar/dateFilter/type';
 import dayjs from 'dayjs';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
 import SelectClient from './SelectClient';
+import SelectProductList from './SelectProductList';
 
 interface Props {
   q: HandleQuery;
@@ -47,6 +48,7 @@ interface Props {
 const AddOptionModal: FC<Props> = ({ q }) => {
   const [searchStandard, setSearchStandard] = useState<SearchStandard>('일');
   const [selectedClient, setSelectedClient] = useState<null | OutClient>(null);
+  const [selectedProductList, setSelectedProductList] = useState<null | Product[]>([]);
 
   const isOpen = q.getQuery('createAd') == '1';
   const tabs = Object.keys(AdTypeToHangle) as (keyof typeof AdTypeToHangle)[];
@@ -169,6 +171,12 @@ const AddOptionModal: FC<Props> = ({ q }) => {
             control={control}
             onSelectedClient={setSelectedClient}
             selectedClient={selectedClient}
+            errorMessage={errors.clientCode?.message}
+          />
+          <SelectProductList
+            control={control}
+            onSelectedProductList={setSelectedProductList}
+            selectedProductList={selectedProductList}
             errorMessage={errors.clientCode?.message}
           />
           <Stack

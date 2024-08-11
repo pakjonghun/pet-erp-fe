@@ -73,7 +73,6 @@ const SelectClient: FC<Props> = ({ control, selectedClient, errorMessage, onSele
             loading={isLoading}
             getOptionLabel={(item) => `${item.name}`}
             fullWidth
-            disableCloseOnSelect
             defaultValue={null}
             inputValue={keyword}
             onInputChange={(_, newValue) => setKeyword(newValue)}

@@ -424,6 +424,7 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
                         (item) => item.code === option.code
                       )
                     }
+                    limitTags={3}
                     value={value}
                     options={cachedOptions}
                     loading={isProductLoading}
@@ -495,6 +496,7 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
                     value={value}
                     isOptionEqualToValue={(a, b) => a.code == b.code}
                     multiple
+                    limitTags={3}
                     options={cachedOptions}
                     loading={isProductLoading}
                     getOptionLabel={(item) => `${item.name}(${item.code})`}

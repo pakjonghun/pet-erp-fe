@@ -2,8 +2,11 @@ import { AdType } from './../../../http/graphql/codegen/graphql';
 import z from 'zod';
 
 export const createAdSchema = z.object({
-  clientCode: z.string().optional(),
-  productCodeList: z.array(z.string().min(1, { message: '제품코드를 입력해주세요.' })).optional(),
+  clientCode: z.string().optional().nullable(),
+  productCodeList: z
+    .array(z.string().min(1, { message: '제품코드를 입력해주세요.' }))
+    .optional()
+    .nullable(),
   from: z.date({ required_error: '날짜를 입력해주세요.' }),
   to: z.date({ required_error: '날짜를 입력해주세요.' }),
   price: z
