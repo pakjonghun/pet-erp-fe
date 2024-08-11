@@ -17,32 +17,39 @@ import {
 import { useState } from 'react';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT } from '@/constants';
-import { headerList } from './constants';
+import { AdTypeToHangle, headerList } from './constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import OptionCards from './_components/OptionCards';
 import SubsidiaryTableBody from './_components/SubsidiaryTableBody';
 import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 import { SelectOption } from './types';
-import { AdsInput, AdType, OutputOption, UserRole } from '@/http/graphql/codegen/graphql';
+import {
+  AdsInput,
+  AdsOutPutItem,
+  AdType,
+  OutputOption,
+  UserRole,
+} from '@/http/graphql/codegen/graphql';
 import RemoveSubsidiaryModal from './_components/RemoveSubsidiaryModal';
 import EditSubsidiaryModal from './_components/EditOptionModal';
 import Cell from '@/components/table/Cell';
 import EmptyRow from '@/components/table/EmptyRow';
 import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
-import { useOptions } from '@/http/graphql/hooks/option/useOptions';
 import dayjs from 'dayjs';
 import ActionSection from './ActionSection';
 import SearchSection from './SearchSection';
 import useHandleQuery from '@/hooks/useHandleQuery';
 import { useAds } from '@/http/graphql/hooks/ad/useAds';
+import { getNumberToString } from '@/utils/sale';
 
 const BackDataPage = () => {
-  const [from, setFrom] = useState(dayjs());
-  const [to, setTo] = useState(dayjs());
+  const [from, setFrom] = useState(() => dayjs());
+  const [to, setTo] = useState(() => dayjs());
   const [type, setType] = useState<null | AdType>(null);
   const [sort, setSort] = useState('updatedAt');
   const [order, setOrder] = useState(-1);
   const [keyword, setKeyword] = useState('');
+  const [isDateChecked, setIsDateChecked] = useState(false);
   const delayKeyword = useTextDebounce(keyword);
   const q = useHandleQuery();
 
@@ -67,8 +74,14 @@ const BackDataPage = () => {
   const canDelete = myRole.includes(UserRole.BackDelete);
   const canEdit = myRole.includes(UserRole.BackEdit);
 
-  const { data, networkStatus, fetchMore } = useAds(searchQuery);
-  const rows = (data?.ads.data as []) ?? [];
+  const { data, networkStatus, fetchMore } = useAds({
+    ...searchQuery,
+    keyword: delayKeyword,
+    from: isDateChecked ? from : undefined,
+    to: isDateChecked ? to : undefined,
+    skip: 0,
+  });
+  const rows = (data?.ads.data as AdsOutPutItem[]) ?? [];
   const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
   const isEmpty = !isLoading && rows.length === 0;
   const callback: IntersectionObserverCallback = (entries) => {
@@ -81,6 +94,9 @@ const BackDataPage = () => {
           variables: {
             adsInput: {
               ...searchQuery,
+              keyword: delayKeyword,
+              from: isDateChecked ? from : undefined,
+              to: isDateChecked ? to : undefined,
               skip: rows.length,
             },
           },
@@ -91,7 +107,7 @@ const BackDataPage = () => {
   const tableScrollRef = useInfinityScroll({ callback });
   const cardScrollRef = useInfinityScroll({ callback });
 
-  const [selectedOption, setSelectedOption] = useState<null | OutputOption>(null);
+  const [selectedOption, setSelectedOption] = useState<null | AdsOutPutItem>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
   const handleClickEdit = () => {
     setOptionType('edit');
@@ -101,18 +117,16 @@ const BackDataPage = () => {
     setOptionType('delete');
   };
 
-  const createRow = (option: OutputOption) => {
+  const createRow = (ad: AdsOutPutItem) => {
     return [
-      option.id,
-      option.name,
-      <Stack key={Math.random()} direction="row" flexWrap="wrap" gap={1}>
-        {(option.productOptionList ?? []).map((option) => {
-          return (
-            <Chip
-              key={`${option.productCode.name}_${option.productCode.code}`}
-              label={`${option.productCode.name}(${option.count}EA)`}
-            />
-          );
+      dayjs(ad.from).format('YYYY-MM-DD'),
+      dayjs(ad.to).format('YYYY-MM-DD'),
+      AdTypeToHangle[ad.type],
+      getNumberToString(ad.price, 'comma'),
+      ad.clientCode?.name ?? '',
+      <Stack key={ad._id} direction="row" flexWrap="wrap" gap={1}>
+        {(ad.productCodeList ?? []).map((p) => {
+          return <Chip key={`${p.name}_${p.code}`} label={`${p.name}(${p.code})`} />;
         })}
       </Stack>,
     ];
@@ -128,11 +142,16 @@ const BackDataPage = () => {
           <TableTitle title="광고 조회" />
           <ActionSection q={q} />
         </Stack>
-        <SearchSection setSearchQuery={setSearchQuery} searchQuery={searchQuery} />
+        <SearchSection
+          isDateChecked={isDateChecked}
+          setIsDateChecked={setIsDateChecked}
+          setSearchQuery={setSearchQuery}
+          searchQuery={searchQuery}
+        />
         <Typography sx={{ p: 3 }}>
           {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
         </Typography>
-        <OptionCards
+        {/* <OptionCards
           sx={{
             display: {
               xs: 'block',
@@ -143,7 +162,7 @@ const BackDataPage = () => {
           data={rows}
           isEmpty={isEmpty}
           scrollRef={cardScrollRef}
-        />
+        /> */}
         <ScrollTableContainer
           sx={{
             display: {

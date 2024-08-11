@@ -7,6 +7,7 @@ const ads = graphql(`
     ads(adsInput: $adsInput) {
       totalCount
       data {
+        _id
         productCodeList {
           name
           code

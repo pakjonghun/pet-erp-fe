@@ -4,15 +4,18 @@ import { Chip, Menu, Stack, TableRow } from '@mui/material';
 import { SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { OutputOption } from '@/http/graphql/codegen/graphql';
+import { AdsOutPutItem, OutputOption } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import { SelectOption } from '../types';
+import dayjs from 'dayjs';
+import { AdTypeToHangle } from '../constants';
+import { getNumberToString } from '@/utils/sale';
 
 interface Props {
   isSelected: boolean;
-  subsidiary: OutputOption;
-  onClickRow: (event: MouseEvent<HTMLTableCellElement>, option: OutputOption) => void;
-  onClickOption: (option: SelectOption | null, product: OutputOption | null) => void;
+  subsidiary: AdsOutPutItem;
+  onClickRow: (event: MouseEvent<HTMLTableCellElement>, option: AdsOutPutItem) => void;
+  onClickOption: (option: SelectOption | null, product: AdsOutPutItem | null) => void;
   scrollRef: ((elem: HTMLTableRowElement) => void) | null;
 }
 
@@ -43,18 +46,16 @@ const SubsidiaryBodyRow: FC<Props> = ({
     },
   };
 
-  const createRow = (subsidiary: OutputOption) => {
+  const createRow = (ad: AdsOutPutItem) => {
     return [
-      subsidiary.id,
-      subsidiary.name,
-      <Stack key={Math.random()} direction="row" flexWrap="wrap" gap={1}>
-        {(subsidiary.productOptionList ?? []).map((subsidiary) => {
-          return (
-            <Chip
-              key={subsidiary.productCode.name}
-              label={`(${subsidiary.productCode.name}(${subsidiary.count})EA`}
-            />
-          );
+      dayjs(ad.from).format('YYYY-MM-DD'),
+      dayjs(ad.to).format('YYYY-MM-DD'),
+      AdTypeToHangle[ad.type],
+      getNumberToString(ad.price, 'comma'),
+      ad.clientCode?.name ?? '',
+      <Stack key={ad._id} direction="row" flexWrap="wrap" gap={1}>
+        {(ad.productCodeList ?? []).map((p) => {
+          return <Chip key={`${p.name}_${p.code}`} label={`${p.name}(${p.code})`} />;
         })}
       </Stack>,
     ];

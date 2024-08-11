@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { OutputOption } from '@/http/graphql/codegen/graphql';
+import { AdsOutPutItem, OutputOption } from '@/http/graphql/codegen/graphql';
 import EmptyRow from '@/components/table/EmptyRow';
 import { SelectOption } from '../types';
 import LoadingRow from '@/components/table/LoadingRow';
@@ -8,9 +8,9 @@ import SubsidiaryBodyRow from './SubsidiaryBodyRow';
 import { CommonListProps } from '@/types';
 import { CommonTableBody } from '@/components/commonStyles';
 
-interface Props extends CommonListProps<OutputOption> {
-  selectedSubsidiary: OutputOption | null;
-  setSelectedSubsidiary: (value: OutputOption | null) => void;
+interface Props extends CommonListProps<AdsOutPutItem> {
+  selectedSubsidiary: AdsOutPutItem | null;
+  setSelectedSubsidiary: (value: AdsOutPutItem | null) => void;
 }
 
 const SubsidiaryTableBody: FC<Props> = ({
@@ -26,7 +26,7 @@ const SubsidiaryTableBody: FC<Props> = ({
 
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
 
-  const handleClickOption = (option: SelectOption | null, subsidiary: OutputOption | null) => {
+  const handleClickOption = (option: SelectOption | null, subsidiary: AdsOutPutItem | null) => {
     setSelectedSubsidiary(subsidiary);
     setOptionType(option);
   };
@@ -35,12 +35,12 @@ const SubsidiaryTableBody: FC<Props> = ({
     <CommonTableBody>
       <EmptyRow colSpan={headerList.length} isEmpty={isEmpty} />
       {data.map((item, index) => {
-        const isSelected = item.id === selectedSubsidiary?.id;
+        const isSelected = item._id === selectedSubsidiary?._id;
         const isLast = index === data.length - 1;
         return (
           <SubsidiaryBodyRow
             isSelected={isSelected}
-            onClickRow={(event, option: OutputOption) => {
+            onClickRow={(event, option: AdsOutPutItem) => {
               setPopoverPosition({ left: event.clientX, top: event.clientY });
               setPopoverAnchor(event.currentTarget);
               setSelectedSubsidiary(option);

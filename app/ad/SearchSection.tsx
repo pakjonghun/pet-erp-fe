@@ -4,7 +4,6 @@ import {
   FormControlLabel,
   FormGroup,
   InputAdornment,
-  Stack,
   TextField,
   Typography,
 } from '@mui/material';
@@ -18,17 +17,23 @@ import BaseSelect from '@/components/ui/select/BaseSelect';
 import { AdTypeToEng, AdTypeToHangle } from './constants';
 
 interface Props {
+  isDateChecked: boolean;
+  setIsDateChecked: (value: boolean) => void;
   searchQuery: AdsInput;
   setSearchQuery: (adInput: AdsInput) => void;
 }
 
-const SearchSection: FC<Props> = ({ searchQuery, setSearchQuery }) => {
+const SearchSection: FC<Props> = ({
+  isDateChecked,
+  setIsDateChecked,
+  searchQuery,
+  setSearchQuery,
+}) => {
   const { from, keyword, to, type } = searchQuery;
 
   const handleAdTypes = Object.values(AdTypeToHangle);
   AdTypeToEng;
   const [searchStandard, setSearchStandard] = useState<SearchStandard>('일');
-  const [isDateChecked, setIsDateChecked] = useState(true);
 
   const setDateRange = ({ from, to }: DateRange) => {
     setSearchQuery({ ...searchQuery, from, to });
@@ -38,8 +43,8 @@ const SearchSection: FC<Props> = ({ searchQuery, setSearchQuery }) => {
     setSearchQuery({ ...searchQuery, keyword: text });
   };
 
-  const setType = (type: AdType) => {
-    setSearchQuery({ ...searchQuery, type });
+  const setType = (type: AdType | '모든타입') => {
+    setSearchQuery({ ...searchQuery, type: type == '모든타입' ? undefined : type });
   };
 
   return (
