@@ -71,7 +71,7 @@ const SelectProductList: FC<Props> = ({
                   checked={selectAll}
                   onChange={(_, checked) => {
                     const options = checked ? rows : [];
-                    field.onChange(options.map((o) => o.code));
+                    field.onChange(options);
                     setSelectAll(checked);
                   }}
                 />
