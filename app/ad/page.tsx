@@ -1,6 +1,6 @@
 'use client';
 
-import CreateOptionModal from './_components/AddOptionModal';
+import CreateOptionModal from './_components/AddAdsModal';
 import HeadCell from '@/components/table/HeadCell';
 import ScrollTableContainer from '@/components/table/ScrollTableContainer';
 import TablePage from '@/components/table/TablePage';

@@ -19,7 +19,9 @@ export const createAdItemSchema = z.object({
   }),
 });
 
-export const createAdSchema = z.object({ ads: z.array(createAdItemSchema) });
+export const createAdSchema = z.object({
+  ads: z.array(createAdItemSchema).min(1, { message: '1개 이상의 광고를 입력하세요.' }),
+});
 
 export type CreateAdForm = z.infer<typeof createAdSchema>;
 export type NameCodeForm = z.infer<typeof nameCodeObjectSchema>;
