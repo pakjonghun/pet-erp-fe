@@ -7,6 +7,7 @@ import {
   AutocompleteRenderInputParams,
   Box,
   FormControl,
+  SxProps,
   TextField,
 } from '@mui/material';
 import React, { FC, useState } from 'react';
@@ -15,13 +16,13 @@ import { CreateAdForm } from '../_validations/createSubsidiaryValidation copy';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 
 interface Props {
+  index: number;
   control: Control<CreateAdForm>;
-  selectedClient: OutClient | null;
-  onSelectedClient: (client: OutClient | null) => void;
   errorMessage?: string;
+  sx?: SxProps;
 }
 
-const SelectClient: FC<Props> = ({ control, selectedClient, errorMessage, onSelectedClient }) => {
+const SelectClient: FC<Props> = ({ index, control, errorMessage, sx }) => {
   const [keyword, setKeyword] = useState('');
   const delayedKeyword = useTextDebounce(keyword);
 
@@ -58,30 +59,26 @@ const SelectClient: FC<Props> = ({ control, selectedClient, errorMessage, onSele
     }
   };
   const scrollRef = useInfinityScroll({ callback });
-  const isEmpty = !isLoading && rows.length === 0;
 
   return (
     <Controller
-      name="clientCode"
+      name={`ads.${index}.clientCode`}
       control={control}
       render={({ field }) => {
         return (
           <Autocomplete
-            value={selectedClient}
+            sx={sx}
+            value={field.value}
             isOptionEqualToValue={(a, b) => a.code == b.code}
             options={rows}
             loading={isLoading}
             getOptionLabel={(item) => `${item.name}`}
-            fullWidth
             defaultValue={null}
             inputValue={keyword}
             onInputChange={(_, newValue) => setKeyword(newValue)}
             noOptionsText="검색 결과가 없습니다."
             loadingText="로딩중입니다."
-            onChange={(_, value) => {
-              field.onChange(value?.code ?? null);
-              onSelectedClient(value);
-            }}
+            onChange={(_, value) => field.onChange(value)}
             filterOptions={(options) => {
               return options;
             }}
@@ -95,8 +92,6 @@ const SelectClient: FC<Props> = ({ control, selectedClient, errorMessage, onSele
               );
             }}
             renderInput={(params: AutocompleteRenderInputParams) => {
-              const v = params.inputProps.value;
-              console.log(v);
               return (
                 <FormControl fullWidth>
                   <TextField

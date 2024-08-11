@@ -10,26 +10,31 @@ import {
   FormControl,
   FormControlLabel,
   Stack,
+  SxProps,
   TextField,
   Typography,
 } from '@mui/material';
 import React, { FC, useEffect, useState } from 'react';
 import { Control, Controller } from 'react-hook-form';
-import { CreateAdForm } from '../_validations/createSubsidiaryValidation copy';
+import { CreateAdForm, NameCodeForm } from '../_validations/createSubsidiaryValidation copy';
 import { useProducts } from '@/http/graphql/hooks/product/useProducts';
 
 interface Props {
+  selectedProductList?: NameCodeForm[] | null;
+  maxLen: number;
   control: Control<CreateAdForm>;
-  selectedProductList: Product[] | null;
-  onSelectedProductList: (product: Product[] | null) => void;
   errorMessage?: string;
+  index: number;
+  sx?: SxProps;
 }
 
 const SelectProductList: FC<Props> = ({
-  control,
   selectedProductList,
+  index,
+  maxLen,
+  control,
   errorMessage,
-  onSelectedProductList,
+  sx,
 }) => {
   const [keyword, setKeyword] = useState('');
   const delayedKeyword = useTextDebounce(keyword);
@@ -50,16 +55,14 @@ const SelectProductList: FC<Props> = ({
   }, [rows, selectedProductList, setSelectAll]);
 
   const isLoading = networkStatus <= 3;
-  const isEmpty = !isLoading && rows.length === 0;
 
   return (
     <Controller
       control={control}
-      name="productCodeList"
+      name={`ads.${index}.productCodeList`}
       render={({ field }) => {
-        const value = field.value ?? [];
         return (
-          <Stack direction="row" gap={0.2} alignItems="flex-start">
+          <Stack sx={sx} direction="row" gap={0.2} alignItems="flex-start">
             <FormControlLabel
               label={<Typography variant="caption">All</Typography>}
               control={
@@ -69,17 +72,14 @@ const SelectProductList: FC<Props> = ({
                   onChange={(_, checked) => {
                     const options = checked ? rows : [];
                     field.onChange(options.map((o) => o.code));
-                    onSelectedProductList(options);
                     setSelectAll(checked);
                   }}
                 />
               }
             />
             <Autocomplete
+              size="small"
               multiple
-              getOptionDisabled={(option) =>
-                !!selectedProductList?.find((item) => item.code == option.code)
-              }
               value={selectedProductList ?? undefined}
               options={rows}
               loading={isLoading}
@@ -92,11 +92,10 @@ const SelectProductList: FC<Props> = ({
               onInputChange={(_, newValue) => setKeyword(newValue)}
               noOptionsText="검색 결과가 없습니다."
               loadingText="로딩중입니다."
-              limitTags={3}
+              limitTags={maxLen}
               filterOptions={(o) => o}
               onChange={(_, value) => {
-                onSelectedProductList(value);
-                field.onChange(value.map((i) => i.code));
+                field.onChange(value);
               }}
               renderOption={(props, item, state) => {
                 const { key, ...rest } = props as any;

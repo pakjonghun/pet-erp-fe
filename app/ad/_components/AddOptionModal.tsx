@@ -1,12 +1,13 @@
 import PlusOneIcon from '@mui/icons-material/PlusOne';
-import { FC, useState } from 'react';
-import BaseModal from '@/components/ui/modal/BaseModal';
+import CloseIcon from '@mui/icons-material/Close';
+import { FC, RefObject, useEffect, useRef, useState } from 'react';
 import {
   Autocomplete,
   Box,
   Button,
   FormControl,
   FormGroup,
+  FormLabel,
   IconButton,
   InputAdornment,
   Stack,
@@ -40,6 +41,8 @@ import dayjs from 'dayjs';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
 import SelectClient from './SelectClient';
 import SelectProductList from './SelectProductList';
+import { getDateRange } from '@/components/calendar/dateFilter/utils';
+import { getNumberToString } from '@/utils/sale';
 
 interface Props {
   q: HandleQuery;
@@ -55,6 +58,14 @@ const AddOptionModal: FC<Props> = ({ q }) => {
   const tab = q.getQuery('tab');
   const [createAd, { loading }] = useCreateAd();
 
+  const defaultAdItem = {
+    type: tab as AdType,
+    from: new Date(),
+    to: new Date(),
+    price: 0,
+    productCodeList: [],
+  };
+
   const {
     watch,
     setValue,
@@ -64,23 +75,39 @@ const AddOptionModal: FC<Props> = ({ q }) => {
   } = useForm<CreateAdForm>({
     resolver: zodResolver(createAdSchema),
     defaultValues: {
-      type: tab as AdType,
-      from: new Date(),
-      to: new Date(),
-      price: 0,
-      productCodeList: [],
+      ads: [],
     },
   });
+
+  const { append, remove, fields } = useFieldArray({ control, name: 'ads' });
+  const ads = watch('ads');
+  const totalCount = ads.length;
+  const totalPrice = ads.reduce((acc, cur) => cur.price + acc, 0);
+
+  const handleAppendAd = () => {
+    append(defaultAdItem);
+  };
+
+  const handleRemoveAd = (index: number) => {
+    remove(index);
+  };
 
   const handleClose = () => {
     q.resetQuery();
   };
 
   const onSubmit = (createAdInput: CreateAdForm) => {
+    console.log('createAdInput : ', createAdInput);
     createAd({
-      variables: { createAdInput },
+      variables: { createAdInput: { createAdsInput: [] } },
       onCompleted: () => {
         snackMessage({ message: '광고 생성이 성공하였습니다', severity: 'success' });
+
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'ads' });
+          },
+        });
         handleClose();
       },
       onError: (err) => {
@@ -92,236 +119,244 @@ const AddOptionModal: FC<Props> = ({ q }) => {
     });
   };
 
-  const setDateRange = (range: DateRange) => {
-    setValue('from', range.from.toDate());
-    setValue('to', range.to.toDate());
+  const setDateRange = (range: DateRange, index: number) => {
+    setValue(`ads.${index}.from`, range.from.toDate());
+    setValue(`ads.${index}.to`, range.to.toDate());
+  };
+
+  const dateDateRange = (index: number) => {
+    const from = watch(`ads.${index}.from`);
+    const to = watch(`ads.${index}.to`);
+    return { from: dayjs(from), to: dayjs(to) };
   };
 
   if (!isOpen) return <></>;
 
   return (
-    <Box sx={{ position: 'absolute', inset: 0, bgcolor: 'white', zIndex: 1000 }}>
-      <TableTitle sx={{ ml: 2 }} title="광고 등록" />
-      <IconButton onClick={handleClose} sx={{ position: 'absolute', right: 3, top: 3 }}>
-        <ClearIcon />
-      </IconButton>
-      <Tabs
-        sx={{ borderBottom: (theme) => `1px solid ${theme.palette.grey[300]}` }}
-        variant="scrollable"
-        value={q.getQuery('tab')}
-        indicatorColor="primary"
+    <Box
+      sx={{
+        position: 'absolute',
+        inset: 0,
+        bgcolor: (theme) => theme.palette.background.paper,
+        zIndex: 1000,
+      }}
+    >
+      <Box
+        sx={{
+          bgcolor: (theme) => theme.palette.background.paper,
+          position: 'sticky',
+          top: 0,
+          left: 0,
+          zIndex: 2000,
+          pb: 0.1,
+        }}
       >
-        {tabs.map((tab) => {
-          const tabItem = AdTypeToHangle[tab];
-          return (
-            <Tab
-              sx={{
-                transition: 'all .3s',
-                fontSize: 16,
-                '&:hover': {
-                  bgcolor: (theme) => theme.palette.action.selected,
-                },
-                '&.Mui-selected': {
-                  fontWeight: 800,
-                },
-              }}
-              onClick={() => q.appendQuery('tab', tab)}
-              label={tabItem}
-              key={tab}
-              value={tab}
-            />
-          );
-        })}
-      </Tabs>
+        <TableTitle sx={{ ml: 2 }} title="광고 등록" />
+        <IconButton onClick={handleClose} sx={{ position: 'absolute', right: 3, top: 3 }}>
+          <ClearIcon />
+        </IconButton>
+        <Tabs
+          sx={{ borderBottom: (theme) => `1px solid ${theme.palette.grey[300]}` }}
+          variant="scrollable"
+          value={q.getQuery('tab')}
+          indicatorColor="primary"
+        >
+          {tabs.map((tab) => {
+            const tabItem = AdTypeToHangle[tab];
+            return (
+              <Tab
+                sx={{
+                  transition: 'all .3s',
+                  fontSize: 16,
+                  '&:hover': {
+                    bgcolor: (theme) => theme.palette.action.selected,
+                  },
+                  '&.Mui-selected': {
+                    fontWeight: 800,
+                  },
+                }}
+                onClick={() => q.appendQuery('tab', tab)}
+                label={tabItem}
+                key={tab}
+                value={tab}
+              />
+            );
+          })}
+        </Tabs>
+        <Stack
+          sx={{
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+            flexDirection: 'row',
+            m: 2,
+            mb: 4,
+          }}
+        >
+          <Stack direction="row" gap={2}>
+            <Typography variant="caption">{`총 광고수 : ${getNumberToString(
+              totalCount,
+              'comma'
+            )}`}</Typography>
+            <Typography variant="caption">{`비용 합계:${getNumberToString(
+              totalPrice,
+              'comma'
+            )}`}</Typography>
+          </Stack>
+          <Button sx={{}} onClick={handleAppendAd} variant="outlined" endIcon={<PlusOneIcon />}>
+            광고 추가
+          </Button>
+        </Stack>
+      </Box>
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack
+          direction="column"
           gap={2}
           sx={{
-            mt: 3,
-            mx: 2,
-            flexDirection: {
-              xs: 'column',
-            },
+            m: 2,
+            p: 1,
           }}
-          justifyContent="flex-end"
         >
-          <SwitchDate
-            dateRange={{ from: dayjs(watch('from')), to: dayjs(watch('to')) }}
-            searchStandard={searchStandard}
-            setDateRange={setDateRange}
-            setSearchStandard={setSearchStandard}
-          />
-
-          <Controller
-            control={control}
-            name="price"
-            render={({ field }) => (
-              <FormControl required>
-                <NumberInput
-                  sx={{ width: '100%' }}
-                  field={field}
-                  label="광고비용"
-                  error={!!errors.price?.message}
-                  helperText={errors.price?.message ?? ''}
+          {fields.map((item, index) => {
+            return (
+              <Stack
+                key={item.id}
+                sx={{
+                  gap: {
+                    xs: 2,
+                    lg: 4,
+                  },
+                  borderBottom: {
+                    lg: 'none',
+                    xs: '1px solid lightGrey',
+                  },
+                  flexDirection: {
+                    xs: 'column',
+                    lg: 'row',
+                  },
+                  flexWrap: {
+                    lg: "'wrap'",
+                    xs: 'nowrap',
+                  },
+                  alignItems: 'flex-start',
+                  justifyContent: 'flex-start',
+                }}
+                justifyContent="space-between"
+              >
+                <Box
+                  sx={{
+                    position: 'relative',
+                    width: {
+                      xs: '100%',
+                      lg: 'auto',
+                    },
+                  }}
+                >
+                  <TextField
+                    sx={{ width: '100%' }}
+                    size="small"
+                    label="광고날짜"
+                    value={' '}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                  <SwitchDate
+                    hideSwitch
+                    sx={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%,-50%)',
+                      width: '100%',
+                      pl: 1,
+                    }}
+                    dateRange={dateDateRange(index)}
+                    searchStandard={searchStandard}
+                    setDateRange={(range) => setDateRange(range, index)}
+                    setSearchStandard={setSearchStandard}
+                  />
+                </Box>
+                <Controller
+                  control={control}
+                  name={`ads.${index}.price`}
+                  render={({ field }) => (
+                    <FormControl
+                      sx={{
+                        flex: 0.6,
+                        width: {
+                          xs: '100%',
+                          lg: 'auto',
+                        },
+                      }}
+                      required
+                    >
+                      <NumberInput
+                        sx={{ width: '100%' }}
+                        field={field}
+                        label="광고비용"
+                        error={Boolean(errors?.ads?.[index]?.price?.message)}
+                        helperText={errors?.ads?.[index]?.price?.message ?? ''}
+                      />
+                    </FormControl>
+                  )}
                 />
-              </FormControl>
-            )}
-          />
-          <SelectClient
-            control={control}
-            onSelectedClient={setSelectedClient}
-            selectedClient={selectedClient}
-            errorMessage={errors.clientCode?.message}
-          />
-          <SelectProductList
-            control={control}
-            onSelectedProductList={setSelectedProductList}
-            selectedProductList={selectedProductList}
-            errorMessage={errors.clientCode?.message}
-          />
-          <Stack
-            sx={{
-              justifyContent: 'flex-end',
-              flexDirection: 'row',
-              gap: 2,
-            }}
-          >
-            <Button type="button" variant="outlined" onClick={handleClose}>
-              취소
-            </Button>
-            <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
-              생성
-            </Button>
-          </Stack>
+                <SelectClient
+                  sx={{
+                    flex: 1,
+                    width: {
+                      xs: '100%',
+                      lg: 'auto',
+                    },
+                  }}
+                  control={control}
+                  index={index}
+                  errorMessage={errors?.ads?.[index]?.clientCode?.message ?? ''}
+                />
+                <SelectProductList
+                  index={index}
+                  sx={{
+                    flex: 2,
+                    width: {
+                      xs: '100%',
+                      lg: 'auto',
+                    },
+                  }}
+                  maxLen={1}
+                  control={control}
+                  selectedProductList={watch(`ads.${index}.productCodeList`)}
+                  errorMessage={errors?.ads?.[index]?.productCodeList?.message ?? ''}
+                />
+                <IconButton sx={{ ml: 'auto' }} onClick={() => handleRemoveAd(index)}>
+                  <CloseIcon />
+                </IconButton>
+              </Stack>
+            );
+          })}
+        </Stack>
+        <Stack
+          direction="row"
+          gap={2}
+          sx={{
+            width: '100%',
+            justifyContent: 'flex-end',
+            pr: 2,
+            py: 2,
+          }}
+        >
+          <Button type="button" variant="outlined" onClick={handleClose}>
+            취소
+          </Button>
+          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
+            생성
+          </Button>
         </Stack>
       </form>
     </Box>
   );
-
-  // const productOptionListErrorMessage = errors.productOptionList?.message;
-
-  // const onSubmit = ({ productOptionList, ...rest }: CreateOptionForm) => {
-  //   createOption({
-  //     variables: {
-  //       createOptionInput: {
-  //         ...rest,
-  //         productOptionList: productOptionList.map((o) => {
-  //           const result: OptionProductInput = {
-  //             productCode: o.productCode.code,
-  //             count: o.count,
-  //           };
-  //           return result;
-  //         }),
-  //       },
-  //     },
-  //     onCompleted: () => {
-  //       snackMessage({ message: '옵션 등록이 완료되었습니다.', severity: 'success' });
-  //       client.refetchQueries({
-  //         updateCache(cache) {
-  //           cache.evict({ fieldName: 'options' });
-  //         },
-  //       });
-
-  //       handleClose();
-  //     },
-  //     onError: (err) => {
-  //       const message = err.message;
-  //       snackMessage({ message: message ?? '옵션 등록이 실패했습니다.', severity: 'error' });
-  //     },
-  //   });
-  // };
-
-  // const handleClose = () => {
-  //   reset();
-  //   onClose();
-  // };
-
-  // const { append, remove, fields } = useFieldArray({
-  //   control,
-  //   name: 'productOptionList',
-  // });
-
-  // const handleAppendOption = () => {
-  //   clearErrors('productOptionList');
-  //   append(initProductOption);
-  // };
-
-  // const selectedOptions = watch('productOptionList');
-
-  // return (
-  //   <BaseModal open={open} onClose={handleClose}>
-  //     <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-  //       옵션 등록
-  //     </Typography>
-  //     <Typography sx={{ mb: 3 }}>새로운 옵션 을 등록합니다.</Typography>
-  //     <form onSubmit={handleSubmit(onSubmit)}>
-  //       <FormGroup sx={modalSizeProps}>
-  //         <Controller
-  //           control={control}
-  //           name="id"
-  //           render={({ field }) => (
-  //             <FormControl required>
-  //               <TextField
-  //                 {...field}
-  //                 size="small"
-  //                 required
-  //                 label="옵션 아이디"
-  //                 error={!!errors.id?.message}
-  //                 helperText={errors.id?.message ?? ''}
-  //               />
-  //             </FormControl>
-  //           )}
-  //         />
-  //         <Controller
-  //           control={control}
-  //           name="name"
-  //           render={({ field }) => (
-  //             <FormControl required>
-  //               <TextField
-  //                 size="small"
-  //                 {...field}
-  //                 required
-  //                 label="옵션 이름"
-  //                 error={!!errors.name?.message}
-  //                 helperText={errors.name?.message ?? ''}
-  //               />
-  //             </FormControl>
-  //           )}
-  //         />
-  //         <Button onClick={handleAppendOption} variant="outlined" endIcon={<PlusOneIcon />}>
-  //           옵션을 적용할 제품 추가
-  //         </Button>
-  //         {!!productOptionListErrorMessage ? (
-  //           <Typography variant="body1" color="error">
-  //             {productOptionListErrorMessage}
-  //           </Typography>
-  //         ) : (
-  //           <></>
-  //         )}
-  //         {fields.map((field, index) => {
-  //           return (
-  //             <ProductOption
-  //               selectedOptions={selectedOptions}
-  //               key={`${index}_${Math.random()}`}
-  //               control={control}
-  //               index={index}
-  //               error={errors}
-  //               remove={remove}
-  //             />
-  //           );
-  //         })}
-  //       </FormGroup>
-  //       <Stack direction="row" gap={1} sx={{ mt: 3 }} justifyContent="flex-end">
-  //         <Button type="button" variant="outlined" onClick={handleClose}>
-  //           취소
-  //         </Button>
-  //         <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
-  //           생성
-  //         </Button>
-  //       </Stack>
-  //     </form>
-  //   </BaseModal>
-  return <></>;
 };
 
 export default AddOptionModal;

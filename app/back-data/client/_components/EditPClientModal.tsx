@@ -445,6 +445,7 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
                   />
                   <Autocomplete
                     multiple
+                    size="small"
                     limitTags={3}
                     getOptionDisabled={(option) =>
                       !!watch('deliveryNotFreeProductCodeList')?.some(
@@ -519,6 +520,7 @@ const EditPClientModal: FC<Props> = ({ open, selectedClient, onClose, setSelecte
                   />
                   <Autocomplete
                     multiple
+                    size="small"
                     limitTags={3}
                     getOptionDisabled={(option) =>
                       !!watch('deliveryFreeProductCodeList')?.some(

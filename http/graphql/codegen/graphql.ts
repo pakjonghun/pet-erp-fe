@@ -51,7 +51,7 @@ export type AdsOutPutItem = {
 
 export type AdsOutput = {
   __typename?: 'AdsOutput';
-  data: Array<AdsOutPutItem>;
+  data?: Maybe<Array<AdsOutPutItem>>;
   totalCount: Scalars['Int']['output'];
 };
 
@@ -153,6 +153,10 @@ export type CompleteOrderInput = {
 };
 
 export type CreateAdInput = {
+  createAdsInput: Array<CreateAdInputItem>;
+};
+
+export type CreateAdInputItem = {
   clientCode?: InputMaybe<Scalars['String']['input']>;
   from: Scalars['Date']['input'];
   price: Scalars['Int']['input'];
@@ -377,7 +381,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   addStock?: Maybe<Array<Stock>>;
   completeOrder: ProductOrder;
-  createAd: AdsOutPutItem;
+  createAd?: Maybe<AdsOutPutItem>;
   createCategory: ProductCategory;
   createClient: OutClient;
   createFactory: Factory;
@@ -1302,12 +1306,7 @@ export type TotalSaleInfo = {
 
 export type UpdateAdInput = {
   _id: Scalars['String']['input'];
-  clientCode?: InputMaybe<Scalars['String']['input']>;
-  from?: InputMaybe<Scalars['Date']['input']>;
-  price?: InputMaybe<Scalars['Int']['input']>;
-  productCodeList?: InputMaybe<Array<Scalars['String']['input']>>;
-  to?: InputMaybe<Scalars['Date']['input']>;
-  type?: InputMaybe<AdType>;
+  createAdsInput?: InputMaybe<Array<CreateAdInputItem>>;
 };
 
 export type UpdateCategoryInput = {
@@ -1536,14 +1535,14 @@ export type AdsQueryVariables = Exact<{
 }>;
 
 
-export type AdsQuery = { __typename?: 'Query', ads: { __typename?: 'AdsOutput', totalCount: number, data: Array<{ __typename?: 'AdsOutPutItem', price: number, type: AdType, from: any, to: any, productCodeList?: Array<{ __typename?: 'ProductCodeName', name: string, code: string }> | null, clientCode?: { __typename?: 'ProductCodeName', name: string, code: string } | null }> } };
+export type AdsQuery = { __typename?: 'Query', ads: { __typename?: 'AdsOutput', totalCount: number, data?: Array<{ __typename?: 'AdsOutPutItem', price: number, type: AdType, from: any, to: any, productCodeList?: Array<{ __typename?: 'ProductCodeName', name: string, code: string }> | null, clientCode?: { __typename?: 'ProductCodeName', name: string, code: string } | null }> | null } };
 
 export type CreateAdMutationVariables = Exact<{
   createAdInput: CreateAdInput;
 }>;
 
 
-export type CreateAdMutation = { __typename?: 'Mutation', createAd: { __typename?: 'AdsOutPutItem', price: number, type: AdType, from: any, to: any, productCodeList?: Array<{ __typename?: 'ProductCodeName', name: string, code: string }> | null, clientCode?: { __typename?: 'ProductCodeName', name: string, code: string } | null } };
+export type CreateAdMutation = { __typename?: 'Mutation', createAd?: { __typename?: 'AdsOutPutItem', price: number, type: AdType, from: any, to: any, productCodeList?: Array<{ __typename?: 'ProductCodeName', name: string, code: string }> | null, clientCode?: { __typename?: 'ProductCodeName', name: string, code: string } | null } | null };
 
 export type RemoveAdMutationVariables = Exact<{
   _id: Scalars['String']['input'];

@@ -1,12 +1,14 @@
 import { AdType } from './../../../http/graphql/codegen/graphql';
 import z from 'zod';
 
-export const createAdSchema = z.object({
-  clientCode: z.string().optional().nullable(),
-  productCodeList: z
-    .array(z.string().min(1, { message: '제품코드를 입력해주세요.' }))
-    .optional()
-    .nullable(),
+const nameCodeObjectSchema = z.object({
+  code: z.string().min(1, { message: '이름을 입력하세요.' }),
+  name: z.string().min(1, { message: '코드을 입력하세요.' }),
+});
+
+export const createAdItemSchema = z.object({
+  clientCode: nameCodeObjectSchema.optional().nullable(),
+  productCodeList: z.array(nameCodeObjectSchema).optional().nullable(),
   from: z.date({ required_error: '날짜를 입력해주세요.' }),
   to: z.date({ required_error: '날짜를 입력해주세요.' }),
   price: z
@@ -17,4 +19,7 @@ export const createAdSchema = z.object({
   }),
 });
 
+export const createAdSchema = z.object({ ads: z.array(createAdItemSchema) });
+
 export type CreateAdForm = z.infer<typeof createAdSchema>;
+export type NameCodeForm = z.infer<typeof nameCodeObjectSchema>;

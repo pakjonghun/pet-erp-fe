@@ -419,6 +419,7 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
                   />
                   <Autocomplete
                     multiple
+                    size="small"
                     getOptionDisabled={(option) =>
                       !!watch('deliveryNotFreeProductCodeList')?.some(
                         (item) => item.code === option.code
@@ -493,6 +494,7 @@ const CreateClientModal: FC<Props> = ({ open, onClose }) => {
                     }
                   />
                   <Autocomplete
+                    size="small"
                     value={value}
                     isOptionEqualToValue={(a, b) => a.code == b.code}
                     multiple

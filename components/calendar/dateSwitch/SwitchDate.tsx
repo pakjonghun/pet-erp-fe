@@ -26,6 +26,7 @@ interface Props {
   setDateRange: (value: DateRange) => void;
   searchStandard: SearchStandard;
   setSearchStandard: (value: SearchStandard) => void;
+  hideSwitch?: boolean;
   sx?: SxProps;
 }
 
@@ -33,6 +34,7 @@ const SwitchDate: FC<Props> = ({
   dateRange: range,
   searchStandard,
   setDateRange: setRange,
+  hideSwitch = false,
   setSearchStandard,
   sx,
 }) => {
@@ -96,43 +98,47 @@ const SwitchDate: FC<Props> = ({
         <Typography sx={{ fontSize: 14 }}>{getStringRange(range)}</Typography>
       </Stack>
 
-      <Stack justifyContent="flex-end" alignItems="center" direction="row" gap={1}>
-        <IconButton onClick={() => handleClickDateArrow('left')}>
-          <ArrowBackIosIcon sx={{ width: 12, height: 12 }} />
-        </IconButton>
-        <Typography fontWeight={500} sx={{ fontSize: 14 }}>
-          {dateValue}
-        </Typography>
-        <Box>
-          <FormControl
-            sx={{
-              minWidth: 80,
-            }}
-          >
-            <Select
-              size="small"
-              fullWidth
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={searchStandard}
-              onChange={handleChangeStandard}
+      {!hideSwitch ? (
+        <Stack justifyContent="flex-end" alignItems="center" direction="row" gap={1}>
+          <IconButton onClick={() => handleClickDateArrow('left')}>
+            <ArrowBackIosIcon sx={{ width: 12, height: 12 }} />
+          </IconButton>
+          <Typography fontWeight={500} sx={{ fontSize: 14 }}>
+            {dateValue}
+          </Typography>
+          <Box>
+            <FormControl
               sx={{
-                fontSize: 12,
-                padding: 0,
+                minWidth: 80,
               }}
             >
-              {searchStandardList.map((standard) => (
-                <MenuItem sx={{ fontSize: 14 }} key={standard} value={standard}>
-                  {standard}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Box>
-        <IconButton onClick={() => handleClickDateArrow('right')}>
-          <ArrowForwardIosIcon sx={{ width: 12, height: 12 }} />
-        </IconButton>
-      </Stack>
+              <Select
+                size="small"
+                fullWidth
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={searchStandard}
+                onChange={handleChangeStandard}
+                sx={{
+                  fontSize: 12,
+                  padding: 0,
+                }}
+              >
+                {searchStandardList.map((standard) => (
+                  <MenuItem sx={{ fontSize: 14 }} key={standard} value={standard}>
+                    {standard}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+          <IconButton onClick={() => handleClickDateArrow('right')}>
+            <ArrowForwardIosIcon sx={{ width: 12, height: 12 }} />
+          </IconButton>
+        </Stack>
+      ) : (
+        <></>
+      )}
     </Stack>
   );
 };
