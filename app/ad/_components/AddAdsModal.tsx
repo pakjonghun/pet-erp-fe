@@ -136,6 +136,7 @@ const AddAdsModal: FC<Props> = ({ q }) => {
     return { from: dayjs(from), to: dayjs(to) };
   };
 
+  const hasError = Object.keys(errors).length > 0;
   if (!isOpen) return <></>;
 
   return (
@@ -215,7 +216,9 @@ const AddAdsModal: FC<Props> = ({ q }) => {
           </Button>
         </Stack>
       </Box>
-      <Typography color="hotpink">{adsErrorMessage ?? ''}</Typography>
+      <Typography sx={{ ml: 2 }} color="red">
+        {adsErrorMessage ?? ''}
+      </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack
           direction="column"
@@ -256,7 +259,12 @@ const AddAdsModal: FC<Props> = ({ q }) => {
           <Button type="button" variant="outlined" onClick={handleDispose}>
             취소
           </Button>
-          <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
+          <Button
+            disabled={hasError || loading}
+            type="submit"
+            endIcon={loading ? <CommonLoading /> : ''}
+            variant="contained"
+          >
             생성
           </Button>
         </Stack>

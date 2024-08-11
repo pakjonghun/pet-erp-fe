@@ -14,7 +14,6 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-
 import { useState } from 'react';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT } from '@/constants';
@@ -35,6 +34,7 @@ import dayjs from 'dayjs';
 import ActionSection from './ActionSection';
 import SearchSection from './SearchSection';
 import useHandleQuery from '@/hooks/useHandleQuery';
+import { useAds } from '@/http/graphql/hooks/ad/useAds';
 
 const BackDataPage = () => {
   const [from, setFrom] = useState(dayjs());
@@ -67,26 +67,21 @@ const BackDataPage = () => {
   const canDelete = myRole.includes(UserRole.BackDelete);
   const canEdit = myRole.includes(UserRole.BackEdit);
 
-  const { data, networkStatus, fetchMore } = useOptions({
-    keyword: delayKeyword,
-    skip: 0,
-    limit: LIMIT,
-  });
-  const rows = (data?.options.data as OutputOption[]) ?? [];
+  const { data, networkStatus, fetchMore } = useAds(searchQuery);
+  const rows = (data?.ads.data as []) ?? [];
   const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
   const isEmpty = !isLoading && rows.length === 0;
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
       if (isLoading) return;
 
-      const totalCount = data?.options.totalCount;
+      const totalCount = data?.ads.totalCount;
       if (totalCount != null && totalCount > rows.length) {
         fetchMore({
           variables: {
-            optionsInput: {
-              keyword,
+            adsInput: {
+              ...searchQuery,
               skip: rows.length,
-              limit: LIMIT,
             },
           },
         });
