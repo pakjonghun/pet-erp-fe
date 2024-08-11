@@ -1,7 +1,8 @@
 import PlusOneIcon from '@mui/icons-material/PlusOne';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import {
+  Autocomplete,
   Box,
   Button,
   FormControl,
@@ -24,26 +25,82 @@ import { client } from '@/http/graphql/client';
 import { useCreateOption } from '@/http/graphql/hooks/option/useCreateOption';
 import { AdTypeToHangle, initProductOption } from '../constants';
 import ProductOption from './ProductOption';
-import { OptionProductInput } from '@/http/graphql/codegen/graphql';
+import { AdType, OptionProductInput, OutClient } from '@/http/graphql/codegen/graphql';
 import { useSearchParams } from 'next/navigation';
 import { HandleQuery } from '@/hooks/useHandleQuery';
 import { ClearIcon } from '@mui/x-date-pickers';
 import TableTitle from '@/components/ui/typograph/TableTitle';
+import { CreateAdForm, createAdSchema } from '../_validations/createSubsidiaryValidation copy';
+import { useCreateAd } from '@/http/graphql/hooks/ad/useCreateAd';
+import NumberInput from '@/components/ui/input/NumberInput';
+import SwitchDate from '@/components/calendar/dateSwitch/SwitchDate';
+import { SearchStandard } from '@/components/calendar/dateSwitch/types';
+import { DateRange } from '@/components/calendar/dateFilter/type';
+import dayjs from 'dayjs';
+import { useClients } from '@/http/graphql/hooks/client/useClients';
+import SelectClient from './SelectClient';
 
 interface Props {
   q: HandleQuery;
 }
 
 const AddOptionModal: FC<Props> = ({ q }) => {
+  const [searchStandard, setSearchStandard] = useState<SearchStandard>('일');
+  const [selectedClient, setSelectedClient] = useState<null | OutClient>(null);
+
   const isOpen = q.getQuery('createAd') == '1';
   const tabs = Object.keys(AdTypeToHangle) as (keyof typeof AdTypeToHangle)[];
+  const tab = q.getQuery('tab');
+  const [createAd, { loading }] = useCreateAd();
+
+  const {
+    watch,
+    setValue,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateAdForm>({
+    resolver: zodResolver(createAdSchema),
+    defaultValues: {
+      type: tab as AdType,
+      from: new Date(),
+      to: new Date(),
+      price: 0,
+      productCodeList: [],
+    },
+  });
+
+  const handleClose = () => {
+    q.resetQuery();
+  };
+
+  const onSubmit = (createAdInput: CreateAdForm) => {
+    createAd({
+      variables: { createAdInput },
+      onCompleted: () => {
+        snackMessage({ message: '광고 생성이 성공하였습니다', severity: 'success' });
+        handleClose();
+      },
+      onError: (err) => {
+        snackMessage({
+          message: err.message ?? '광고 생성이 실패하였습니다.',
+          severity: 'error',
+        });
+      },
+    });
+  };
+
+  const setDateRange = (range: DateRange) => {
+    setValue('from', range.from.toDate());
+    setValue('to', range.to.toDate());
+  };
 
   if (!isOpen) return <></>;
 
   return (
     <Box sx={{ position: 'absolute', inset: 0, bgcolor: 'white', zIndex: 1000 }}>
       <TableTitle sx={{ ml: 2 }} title="광고 등록" />
-      <IconButton onClick={q.resetQuery} sx={{ position: 'absolute', right: 3, top: 3 }}>
+      <IconButton onClick={handleClose} sx={{ position: 'absolute', right: 3, top: 3 }}>
         <ClearIcon />
       </IconButton>
       <Tabs
@@ -74,25 +131,64 @@ const AddOptionModal: FC<Props> = ({ q }) => {
           );
         })}
       </Tabs>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Stack
+          gap={2}
+          sx={{
+            mt: 3,
+            mx: 2,
+            flexDirection: {
+              xs: 'column',
+            },
+          }}
+          justifyContent="flex-end"
+        >
+          <SwitchDate
+            dateRange={{ from: dayjs(watch('from')), to: dayjs(watch('to')) }}
+            searchStandard={searchStandard}
+            setDateRange={setDateRange}
+            setSearchStandard={setSearchStandard}
+          />
+
+          <Controller
+            control={control}
+            name="price"
+            render={({ field }) => (
+              <FormControl required>
+                <NumberInput
+                  sx={{ width: '100%' }}
+                  field={field}
+                  label="광고비용"
+                  error={!!errors.price?.message}
+                  helperText={errors.price?.message ?? ''}
+                />
+              </FormControl>
+            )}
+          />
+          <SelectClient
+            control={control}
+            onSelectedClient={setSelectedClient}
+            selectedClient={selectedClient}
+            errorMessage={errors.clientCode?.message}
+          />
+          <Stack
+            sx={{
+              justifyContent: 'flex-end',
+              flexDirection: 'row',
+              gap: 2,
+            }}
+          >
+            <Button type="button" variant="outlined" onClick={handleClose}>
+              취소
+            </Button>
+            <Button type="submit" endIcon={loading ? <CommonLoading /> : ''} variant="contained">
+              생성
+            </Button>
+          </Stack>
+        </Stack>
+      </form>
     </Box>
   );
-  // const [createOption, { loading }] = useCreateOption();
-
-  // const {
-  //   reset,
-  //   control,
-  //   handleSubmit,
-  //   clearErrors,
-  //   watch,
-  //   formState: { errors },
-  // } = useForm<CreateOptionForm>({
-  //   resolver: zodResolver(createOptionSchema),
-  //   defaultValues: {
-  //     id: '',
-  //     name: '',
-  //     productOptionList: [],
-  //   },
-  // });
 
   // const productOptionListErrorMessage = errors.productOptionList?.message;
 

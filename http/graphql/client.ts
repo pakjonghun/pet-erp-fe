@@ -193,6 +193,21 @@ export const client = new ApolloClient({
         accDeliveryCost
         accTotalPayment
       }
+
+      fragment AdFragment on AdsOutPutItem {
+        from
+        to
+        type
+        price
+        clientCode {
+          code
+          name
+        }
+        productCodeList {
+          code
+          name
+        }
+      }
     `),
     typePolicies: {
       Query: {
@@ -263,6 +278,10 @@ export const client = new ApolloClient({
           },
           options: {
             keyArgs: ['optionsInput', ['keyword', 'sort', 'order']],
+            merge,
+          },
+          ads: {
+            keyArgs: ['adsInput', ['keyword', 'from', 'to', 'type']],
             merge,
           },
           saleOrders: {

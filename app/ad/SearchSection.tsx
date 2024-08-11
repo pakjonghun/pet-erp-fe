@@ -25,7 +25,6 @@ interface Props {
 const SearchSection: FC<Props> = ({ searchQuery, setSearchQuery }) => {
   const { from, keyword, to, type } = searchQuery;
 
-  const adTypes = Object.keys(AdTypeToHangle);
   const handleAdTypes = Object.values(AdTypeToHangle);
   AdTypeToEng;
   const [searchStandard, setSearchStandard] = useState<SearchStandard>('일');

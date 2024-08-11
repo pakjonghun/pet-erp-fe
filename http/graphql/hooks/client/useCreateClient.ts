@@ -21,7 +21,7 @@ export const useCreateClient = () => {
               fragment: OutClientFragmentFragmentDoc,
             });
             return {
-              totalCount: existingClients + 1,
+              totalCount: existingClients.totalCount + 1,
               data: [newClientRef, ...existingClients.data],
             };
           },

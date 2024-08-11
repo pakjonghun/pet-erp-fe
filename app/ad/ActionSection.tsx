@@ -10,6 +10,7 @@ import { snackMessage } from '@/store/snackMessage';
 import { client } from '@/http/graphql/client';
 import { useDownloadExcelFile } from '@/http/rest/hooks/file/useDownloadExcelFile';
 import { HandleQuery } from '@/hooks/useHandleQuery';
+import { AdType } from '@/http/graphql/codegen/graphql';
 
 interface Props {
   q: HandleQuery;
@@ -79,7 +80,12 @@ const ActionSection: FC<Props> = ({ q }) => {
       <ActionButton
         icon={<PlusOneOutlined />}
         text="광고 입력"
-        onClick={() => q.setQuery([{ key: 'createAd', value: '1' }])}
+        onClick={() =>
+          q.setQuery([
+            { key: 'createAd', value: '1' },
+            { key: 'tab', value: AdType.ChannelAppProduct },
+          ])
+        }
       />
       <UploadButton
         fileKey={fileKey}
