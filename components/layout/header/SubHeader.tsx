@@ -1,5 +1,6 @@
 'use client';
 
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { FC, ReactNode, useEffect, useState } from 'react';
 import { AppBar, Stack, SxProps, Typography, keyframes, styled } from '@mui/material';
 import { Button } from '@mui/material';
@@ -11,6 +12,7 @@ import { useGetMyInfo } from '@/http/graphql/hooks/users/useGetMyInfo';
 import { UserRole } from '@/http/graphql/codegen/graphql';
 import { useSaleOut } from '@/http/graphql/hooks/sale/useSaleOut';
 import CheckAlarm from './CheckAlarm';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   title: string;
@@ -19,6 +21,8 @@ interface Props {
 }
 
 const SubHeader: FC<Props> = ({ title, children, sx }) => {
+  const router = useRouter();
+  const [hasHistory, setHasHistory] = useState(false);
   const { data: userData } = useGetMyInfo();
   const myRole = userData?.myInfo.role ?? [];
   const canSaleOut = myRole.includes(UserRole.StockSaleOut);
@@ -133,6 +137,10 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
     });
   };
 
+  useEffect(() => {
+    setHasHistory(window.history.length > 2);
+  }, []);
+
   return (
     <AppBar
       sx={{
@@ -146,6 +154,7 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
       <Typography variant="h4" component="h4" sx={{ fontWeight: 600, p: 3, pb: 1 }}>
         {title}
       </Typography>
+
       <Stack sx={{ width: 'fit-content', ml: 'auto' }} direction="row" alignItems="center">
         <Button
           disabled={delayLoading || delayOutLoading}
@@ -171,6 +180,15 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
           </Button>
         )}
       </Stack>
+      {hasHistory && (
+        <Button
+          onClick={router.back}
+          sx={{ ml: 2, fontSize: 16, fontWeight: 700, width: 'fit-content' }}
+          startIcon={<ArrowBackIcon />}
+        >
+          뒤로가기
+        </Button>
+      )}
       {!!children ? children : ''}
     </AppBar>
   );

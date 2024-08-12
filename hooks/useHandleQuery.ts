@@ -37,7 +37,6 @@ const useHandleQuery = () => {
 
   const appendQuery = useCallback(
     (key: string, value: string) => {
-      console.log(key, value);
       const params = new URLSearchParams(param.toString());
       params.set(key, value);
 

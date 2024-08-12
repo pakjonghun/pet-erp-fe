@@ -58,7 +58,6 @@ const AddAdsModal: FC<Props> = ({ q }) => {
   };
 
   const adsErrorMessage = errors.ads?.message;
-  console.log('adsErrorMessage : ', adsErrorMessage);
 
   const { append, remove, fields } = useFieldArray({ control, name: 'ads' });
   const ads = watch('ads');
