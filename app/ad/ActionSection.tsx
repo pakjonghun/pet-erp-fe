@@ -59,7 +59,7 @@ const ActionSection: FC<Props> = ({ q }) => {
   const { mutate: download, isPending: isDownloading } = useDownloadExcelFile();
 
   const handleDownload = () => {
-    download('subsidiary', {
+    download('ad', {
       onSuccess: () => {
         snackMessage({
           message: '광고 다운로드가 완료되었습니다.',
