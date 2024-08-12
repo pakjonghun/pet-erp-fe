@@ -58,6 +58,7 @@ const SearchSection: FC<Props> = ({
     >
       <FormGroup sx={{ flex: 1 }}>
         <FormControlLabel
+          sx={{ width: 'fit-content' }}
           label={
             <Typography variant="subtitle1" sx={{ whiteSpace: 'nowrap' }}>
               광고날짜 범위
