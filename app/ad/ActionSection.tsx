@@ -26,7 +26,7 @@ const ActionSection: FC<Props> = ({ q }) => {
     const formBody = new FormData();
     formBody.append('file', file);
     uploadFile(
-      { service: 'subsidiary', formBody },
+      { service: 'ad', formBody },
       {
         onSuccess: () => {
           snackMessage({
