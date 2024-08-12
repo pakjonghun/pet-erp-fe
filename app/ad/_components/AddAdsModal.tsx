@@ -24,7 +24,7 @@ interface Props {
 
 const AddAdsModal: FC<Props> = ({ q }) => {
   const isOpen = q.getQuery('createAd') == '1';
-  const tabs = Object.keys(AdTypeToHangle) as (keyof typeof AdTypeToHangle)[];
+  const tabs = Object.keys(AdTypeToHangle).slice(1) as (keyof typeof AdTypeToHangle)[];
   const adType = q.getQuery('tab');
 
   const [createAd, { loading }] = useCreateAd();
