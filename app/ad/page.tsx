@@ -23,13 +23,7 @@ import OptionCards from './_components/OptionCards';
 import SubsidiaryTableBody from './_components/SubsidiaryTableBody';
 import { CommonHeaderRow, CommonTable } from '@/components/commonStyles';
 import { SelectOption } from './types';
-import {
-  AdsInput,
-  AdsOutPutItem,
-  AdType,
-  OutputOption,
-  UserRole,
-} from '@/http/graphql/codegen/graphql';
+import { AdsInput, AdsOutPutItem, AdType, UserRole } from '@/http/graphql/codegen/graphql';
 import RemoveSubsidiaryModal from './_components/RemoveSubsidiaryModal';
 import EditSubsidiaryModal from './_components/EditOptionModal';
 import Cell from '@/components/table/Cell';
@@ -151,7 +145,7 @@ const BackDataPage = () => {
         <Typography sx={{ p: 3 }}>
           {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
         </Typography>
-        {/* <OptionCards
+        <OptionCards
           sx={{
             display: {
               xs: 'block',
@@ -162,7 +156,7 @@ const BackDataPage = () => {
           data={rows}
           isEmpty={isEmpty}
           scrollRef={cardScrollRef}
-        /> */}
+        />
         <ScrollTableContainer
           sx={{
             display: {

@@ -1,26 +1,25 @@
 import { FC, useState } from 'react';
-import { OutputOption } from '@/http/graphql/codegen/graphql';
+import { AdsOutPutItem } from '@/http/graphql/codegen/graphql';
 import { TABLE_MAX_HEIGHT } from '@/constants';
 import { Grid, SxProps } from '@mui/material';
 import { SelectOption } from '../types';
 import RemoveSubsidiaryModal from './RemoveSubsidiaryModal';
 import EmptyItem from '@/components/ui/listItem/EmptyItem';
 import LoadingCard from '@/components/ui/loading/LoadingCard';
-import SubsidiaryDetailPopover from './SubsidiaryDetailPopover';
 import SubsidiaryCard from './SubsidiaryCard';
 import { CommonListProps } from '@/types';
 
-interface Props extends CommonListProps<OutputOption> {
+interface Props extends CommonListProps<AdsOutPutItem> {
   sx?: SxProps;
 }
 
 const OptionCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx }) => {
   const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0 });
   const [popoverAnchor, setPopoverAnchor] = useState<null | HTMLElement>(null);
-  const [selectedOption, setSelectedOption] = useState<null | OutputOption>(null);
+  const [selectedOption, setSelectedOption] = useState<null | AdsOutPutItem>(null);
   const [optionType, setOptionType] = useState<null | SelectOption>(null);
 
-  const handleClickOption = (option: SelectOption | null, item: OutputOption | null) => {
+  const handleClickOption = (option: SelectOption | null, item: AdsOutPutItem | null) => {
     setSelectedOption(item);
     setOptionType(option);
   };
@@ -56,17 +55,6 @@ const OptionCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx }) => 
         <RemoveSubsidiaryModal
           open={optionType === 'delete'}
           onClose={() => handleClickOption(null, null)}
-          selectedOption={selectedOption}
-        />
-      )}
-      {selectedOption && (
-        <SubsidiaryDetailPopover
-          onClose={handleClosePopover}
-          position={popoverPosition}
-          open={!!popoverAnchor}
-          anchorEl={popoverAnchor}
-          onClickDelete={handleClickDelete}
-          onClickEdit={handleClickEdit}
           selectedOption={selectedOption}
         />
       )}

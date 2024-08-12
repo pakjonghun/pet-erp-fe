@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { OutputOption } from '@/http/graphql/codegen/graphql';
+import { AdsOutPutItem } from '@/http/graphql/codegen/graphql';
 import CommonLoading from '@/components/ui/loading/CommonLoading';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import { snackMessage } from '@/store/snackMessage';
@@ -9,7 +9,7 @@ import { useRemoveOption } from '@/http/graphql/hooks/option/useRemoveOption';
 
 interface Props {
   open: boolean;
-  selectedOption: OutputOption;
+  selectedOption: AdsOutPutItem;
   onClose: () => void;
 }
 
@@ -19,7 +19,7 @@ const RemoveSubsidiaryModal: FC<Props> = ({ open, selectedOption, onClose }) => 
   const handleClickRemove = () => {
     removeOption({
       variables: {
-        id: selectedOption.id,
+        id: selectedOption._id,
       },
       onCompleted: (res) => {
         snackMessage({
@@ -38,7 +38,7 @@ const RemoveSubsidiaryModal: FC<Props> = ({ open, selectedOption, onClose }) => 
       },
       onError: (err) => {
         snackMessage({
-          message: err.message ?? `${selectedOption.name}옵션 삭제가 실패했습니다.`,
+          message: '삭제가 실패했습니다.',
           severity: 'error',
         });
         onClose();
@@ -49,10 +49,10 @@ const RemoveSubsidiaryModal: FC<Props> = ({ open, selectedOption, onClose }) => 
   return (
     <BaseModal onClose={onClose} open={open}>
       <Typography variant="h6" component="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        옵션 삭제
+        광고 삭제
       </Typography>
       <Typography sx={{ color: (theme) => theme.palette.warning.dark }}>
-        삭제된 옵션은 복구가 불가능합니다.
+        삭제된 광고는 복구가 불가능합니다.
       </Typography>
       <Typography sx={{ color: (theme) => theme.palette.warning.dark }}>
         정말로 삭제하겠습니까?
