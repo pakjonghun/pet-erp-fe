@@ -93,7 +93,13 @@ const SearchSection: FC<Props> = ({
         }}
       >
         <TextField
-          sx={{ flex: 1, minWidth: 300 }}
+          sx={{
+            flex: 2,
+            minWidth: 300,
+            maxWidth: {
+              md: 500,
+            },
+          }}
           onChange={(event) => setKeyword(event.target.value)}
           InputProps={{
             endAdornment: (
@@ -105,7 +111,15 @@ const SearchSection: FC<Props> = ({
           label="제품이나 채널입력"
           size="small"
         />
-        <FormControl sx={{ minWidth: 200 }}>
+        <FormControl
+          sx={{
+            minWidth: 200,
+            flex: 1,
+            maxWidth: {
+              md: 240,
+            },
+          }}
+        >
           <BaseSelect
             defaultValue={handleAdTypes[0]}
             label="광고 타입선택"

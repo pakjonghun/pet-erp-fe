@@ -4,8 +4,7 @@ import CommonLoading from '@/components/ui/loading/CommonLoading';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import { snackMessage } from '@/store/snackMessage';
 import { Typography, Stack, Button } from '@mui/material';
-import { client } from '@/http/graphql/client';
-import { useRemoveOption } from '@/http/graphql/hooks/option/useRemoveOption';
+import { useRemoveAd } from '@/http/graphql/hooks/ad/useRemoveAd';
 
 interface Props {
   open: boolean;
@@ -14,26 +13,18 @@ interface Props {
 }
 
 const RemoveSubsidiaryModal: FC<Props> = ({ open, selectedOption, onClose }) => {
-  const [removeOption, { loading }] = useRemoveOption();
+  const [remove, { loading }] = useRemoveAd();
 
   const handleClickRemove = () => {
-    removeOption({
+    remove({
       variables: {
-        id: selectedOption._id,
+        _id: selectedOption._id,
       },
       onCompleted: (res) => {
         snackMessage({
-          message: `${res.removeOption.name}옵션이 삭제되었습니다.`,
+          message: '광고가 삭제되었습니다.',
           severity: 'success',
         });
-        client.refetchQueries({
-          updateCache(cache) {
-            cache.evict({ fieldName: 'subsidiaryStocks' });
-            cache.evict({ fieldName: 'subsidiaryStocksState' });
-            cache.evict({ fieldName: 'subsidiaryCountStocks' });
-          },
-        });
-
         onClose();
       },
       onError: (err) => {

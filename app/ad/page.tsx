@@ -35,6 +35,7 @@ import SearchSection from './SearchSection';
 import useHandleQuery from '@/hooks/useHandleQuery';
 import { useAds } from '@/http/graphql/hooks/ad/useAds';
 import { getNumberToString } from '@/utils/sale';
+import ResizableContainer from '@/components/resize/ResizableContainer';
 
 const BackDataPage = () => {
   const [from, setFrom] = useState(() => dayjs());
@@ -147,61 +148,63 @@ const BackDataPage = () => {
 
   return (
     <>
-      <TablePage sx={{ flex: 1, position: 'relative', overflow: 'auto', minHeight: '100%' }}>
-        <CreateOptionModal q={q} />
-        <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
-          <TableTitle title="광고 조회" />
-          <ActionSection q={q} />
-        </Stack>
-        <SearchSection
-          isDateChecked={isDateChecked}
-          setIsDateChecked={setIsDateChecked}
-          setSearchQuery={setSearchQuery}
-          searchQuery={searchQuery}
-        />
-        <Typography sx={{ p: 3 }}>
-          {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
-        </Typography>
-        <OptionCards
-          sx={{
-            display: {
-              xs: 'block',
-              md: 'none',
-            },
-          }}
-          isLoading={isLoading}
-          data={rows}
-          isEmpty={isEmpty}
-          scrollRef={cardScrollRef}
-        />
-        <ScrollTableContainer
-          sx={{
-            display: {
-              xs: 'none',
-              md: 'block',
-            },
-            height: '40vh',
-          }}
-        >
-          <CommonTable stickyHeader>
-            <TableHead>
-              <CommonHeaderRow>
-                {headerList.map((item, index) => (
-                  <HeadCell key={`${index}_${item}`} text={item} />
-                ))}
-              </CommonHeaderRow>
-            </TableHead>
-            <SubsidiaryTableBody
-              selectedSubsidiary={selectedOption}
-              setSelectedSubsidiary={setSelectedOption}
-              isLoading={isLoading}
-              data={rows}
-              isEmpty={isEmpty}
-              scrollRef={tableScrollRef}
-            />
-          </CommonTable>
-        </ScrollTableContainer>
-      </TablePage>
+      <ResizableContainer>
+        <TablePage sx={{ flex: 1, position: 'relative', overflow: 'auto', minHeight: '100%' }}>
+          <CreateOptionModal q={q} />
+          <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+            <TableTitle title="광고 조회" />
+            <ActionSection q={q} />
+          </Stack>
+          <SearchSection
+            isDateChecked={isDateChecked}
+            setIsDateChecked={setIsDateChecked}
+            setSearchQuery={setSearchQuery}
+            searchQuery={searchQuery}
+          />
+          <Typography sx={{ p: 3 }}>
+            {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
+          </Typography>
+          <OptionCards
+            sx={{
+              display: {
+                xs: 'block',
+                md: 'none',
+              },
+            }}
+            isLoading={isLoading}
+            data={rows}
+            isEmpty={isEmpty}
+            scrollRef={cardScrollRef}
+          />
+          <ScrollTableContainer
+            sx={{
+              display: {
+                xs: 'none',
+                md: 'block',
+              },
+              height: '40vh',
+            }}
+          >
+            <CommonTable stickyHeader>
+              <TableHead>
+                <CommonHeaderRow>
+                  {headerList.map((item, index) => (
+                    <HeadCell key={`${index}_${item}`} text={item} />
+                  ))}
+                </CommonHeaderRow>
+              </TableHead>
+              <SubsidiaryTableBody
+                selectedSubsidiary={selectedOption}
+                setSelectedSubsidiary={setSelectedOption}
+                isLoading={isLoading}
+                data={rows}
+                isEmpty={isEmpty}
+                scrollRef={tableScrollRef}
+              />
+            </CommonTable>
+          </ScrollTableContainer>
+        </TablePage>
+      </ResizableContainer>
       {q.getQuery('createAd') != '1' && (
         <TablePage
           sx={{
