@@ -45,6 +45,7 @@ const BackDataPage = () => {
   const [keyword, setKeyword] = useState('');
   const [isDateChecked, setIsDateChecked] = useState(false);
   const delayKeyword = useTextDebounce(keyword);
+  const [isShowAllProduct, setIsShowAllProduct] = useState(false);
   const q = useHandleQuery();
 
   const searchQuery: AdsInput = {
@@ -111,7 +112,11 @@ const BackDataPage = () => {
     setOptionType('delete');
   };
 
+  const MAX_COUNT = 1;
+  const maxCount = isShowAllProduct ? Infinity : MAX_COUNT;
+
   const createRow = (ad: AdsOutPutItem) => {
+    const productList = ad.productCodeList;
     return [
       dayjs(ad.from).format('YYYY-MM-DD'),
       dayjs(ad.to).format('YYYY-MM-DD'),
@@ -119,9 +124,21 @@ const BackDataPage = () => {
       getNumberToString(ad.price, 'comma'),
       ad.clientCode?.name ?? '',
       <Stack key={ad._id} direction="row" flexWrap="wrap" gap={1}>
-        {(ad.productCodeList ?? []).map((p) => {
-          return <Chip key={`${p.name}_${p.code}`} label={`${p.name}(${p.code})`} />;
-        })}
+        <>
+          {(productList?.slice(0, maxCount) ?? []).map((p) => {
+            return <Chip key={`${p.name}_${p.code}`} label={`${p.name}(${p.code})`} />;
+          })}
+
+          {productList && productList.length > MAX_COUNT ? (
+            <Button
+              size="small"
+              color="inherit"
+              onClick={() => setIsShowAllProduct((prev) => !prev)}
+            >{`${isShowAllProduct ? '-' : '+'} ${productList.length - MAX_COUNT}`}</Button>
+          ) : (
+            ''
+          )}
+        </>
       </Stack>,
     ];
   };
@@ -237,11 +254,11 @@ const BackDataPage = () => {
                   삭제
                 </Button>
               )}
-              {canEdit && (
+              {/* {canEdit && (
                 <Button variant="contained" onClick={handleClickEdit}>
                   편집
                 </Button>
-              )}
+              )} */}
             </Stack>
           )}
 
@@ -256,14 +273,14 @@ const BackDataPage = () => {
             />
           )}
 
-          {selectedOption && (
+          {/* {selectedOption && (
             <EditSubsidiaryModal
               setSelectedSubsidiary={setSelectedOption}
               open={optionType === 'edit'}
               onClose={() => setOptionType(null)}
               selectedSubsidiary={selectedOption}
             />
-          )}
+          )} */}
         </TablePage>
       )}
     </>

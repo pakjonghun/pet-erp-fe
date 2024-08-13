@@ -1,6 +1,6 @@
 import { FC, MouseEvent, useState } from 'react';
 import Cell from '@/components/table/Cell';
-import { Chip, Menu, Stack, TableRow } from '@mui/material';
+import { Button, Chip, Menu, Stack, TableRow } from '@mui/material';
 import { SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
@@ -26,6 +26,7 @@ const SubsidiaryBodyRow: FC<Props> = ({
   onClickOption,
   onClickRow,
 }) => {
+  const [isShowAllProducts, setIsShowAllProducts] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const productOptionMenus: Record<SelectOption, SelectedOptionItem> = {
     edit: {
@@ -46,7 +47,12 @@ const SubsidiaryBodyRow: FC<Props> = ({
     },
   };
 
+  const MAX_COUNT = 1;
+  const maxCount = isShowAllProducts ? Infinity : MAX_COUNT;
+
   const createRow = (ad: AdsOutPutItem) => {
+    const productList = ad.productCodeList;
+
     return [
       dayjs(ad.from).format('YYYY-MM-DD'),
       dayjs(ad.to).format('YYYY-MM-DD'),
@@ -54,9 +60,20 @@ const SubsidiaryBodyRow: FC<Props> = ({
       getNumberToString(ad.price, 'comma'),
       ad.clientCode?.name ?? '',
       <Stack key={ad._id} direction="row" flexWrap="wrap" gap={1}>
-        {(ad.productCodeList ?? []).map((p) => {
-          return <Chip key={`${p.name}_${p.code}`} label={`${p.name}(${p.code})`} />;
-        })}
+        <>
+          {(productList?.slice(0, maxCount) ?? []).map((p) => {
+            return <Chip key={`${p.name}_${p.code}`} label={`${p.name}(${p.code})`} />;
+          })}
+          {productList && productList.length > MAX_COUNT ? (
+            <Button
+              onClick={() => setIsShowAllProducts((prev) => !prev)}
+              size="small"
+              color="inherit"
+            >{`${isShowAllProducts ? '-' : '+'} ${productList.length - MAX_COUNT}`}</Button>
+          ) : (
+            ''
+          )}
+        </>
       </Stack>,
     ];
   };

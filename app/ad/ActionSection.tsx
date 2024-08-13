@@ -35,10 +35,7 @@ const ActionSection: FC<Props> = ({ q }) => {
           });
           client.refetchQueries({
             updateCache(cache) {
-              cache.evict({ fieldName: 'subsidiaryCategories' });
-              cache.evict({ fieldName: 'subsidiaryStocks' });
-              cache.evict({ fieldName: 'subsidiaryStocksState' });
-              cache.evict({ fieldName: 'subsidiaryCountStocks' });
+              cache.evict({ fieldName: 'ads' });
             },
           });
         },
