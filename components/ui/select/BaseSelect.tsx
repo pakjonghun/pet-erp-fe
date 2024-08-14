@@ -1,4 +1,4 @@
-import { InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
+import { InputLabel, Select, MenuItem, SelectChangeEvent, SxProps } from '@mui/material';
 import React, { FC } from 'react';
 
 interface Props {
@@ -7,13 +7,15 @@ interface Props {
   value: string;
   defaultValue: string;
   onChangeValue: (event: SelectChangeEvent) => void;
+  sx?: SxProps;
 }
 
-const BaseSelect: FC<Props> = ({ label, optionItems, defaultValue, onChangeValue, value }) => {
+const BaseSelect: FC<Props> = ({ label, optionItems, defaultValue, onChangeValue, value, sx }) => {
   return (
     <>
       <InputLabel id="role_change_select">{label}</InputLabel>
       <Select
+        sx={sx}
         size="small"
         defaultValue={defaultValue}
         value={value}

@@ -47,7 +47,7 @@ const SelectClient: FC<Props> = ({ index, control, errorMessage, sx }) => {
         fetchMore({
           variables: {
             clientsInput: {
-              keyword,
+              keyword: delayedKeyword,
               skip: rows.length,
               limit: LIMIT,
               sort: 'createdAt',

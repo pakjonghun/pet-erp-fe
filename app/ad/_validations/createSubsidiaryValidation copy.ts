@@ -25,3 +25,4 @@ export const createAdSchema = z.object({
 
 export type CreateAdForm = z.infer<typeof createAdSchema>;
 export type NameCodeForm = z.infer<typeof nameCodeObjectSchema>;
+export type AdItemForm = z.infer<typeof createAdItemSchema>;

@@ -32,7 +32,6 @@ const SearchSection: FC<Props> = ({
   const { from, keyword, to, type } = searchQuery;
 
   const handleAdTypes = Object.values(AdTypeToHangle);
-  AdTypeToEng;
   const [searchStandard, setSearchStandard] = useState<SearchStandard>('일');
 
   const setDateRange = ({ from, to }: DateRange) => {
