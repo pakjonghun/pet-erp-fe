@@ -274,7 +274,6 @@ const BackDataPage = () => {
       },
     });
   };
-  console.log('change keyword', searchQuery.keyword);
   return (
     <>
       <ResizableContainer>

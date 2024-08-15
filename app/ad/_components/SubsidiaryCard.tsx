@@ -21,16 +21,16 @@ interface Props {
 
 const SubsidiaryCard: FC<Props> = ({ option, scrollRef, onClickOption, onClickRow }) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-  const subsidiaryOptionMenus: Record<SelectOption, SelectedOptionItem> = {
-    edit: {
-      role: [UserRole.BackEdit],
-      callback: () => {
-        onClickOption('edit', option);
-        setMenuAnchor(null);
-      },
-      label: '편집',
-      icon: <Edit />,
-    },
+  const subsidiaryOptionMenus: Partial<Record<SelectOption, SelectedOptionItem>> = {
+    // edit: {
+    //   role: [UserRole.BackEdit],
+    //   callback: () => {
+    //     onClickOption('edit', option);
+    //     setMenuAnchor(null);
+    //   },
+    //   label: '편집',
+    //   icon: <Edit />,
+    // },
     delete: {
       role: [UserRole.BackDelete],
       callback: () => {

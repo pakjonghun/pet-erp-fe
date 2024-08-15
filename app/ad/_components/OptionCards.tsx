@@ -24,21 +24,6 @@ const OptionCards: FC<Props> = ({ data, isLoading, isEmpty, scrollRef, sx }) => 
     setOptionType(option);
   };
 
-  const handleClickEdit = () => {
-    handleClosePopover();
-    handleClickOption('edit', selectedOption);
-  };
-
-  const handleClickDelete = () => {
-    handleClosePopover();
-    handleClickOption('delete', selectedOption);
-  };
-
-  const handleClosePopover = () => {
-    setPopoverAnchor(null);
-    setSelectedOption(null);
-  };
-
   return (
     <Grid
       sx={{
