@@ -44,8 +44,13 @@ export const getArrow = (compareNumber: number) => {
   if (compareNumber < 0) return <ArrowDownwardIcon sx={{ width: 16, height: 16 }} />;
 };
 
-export const getProfit = (sale: SaleInfo) => {
-  return (sale?.accPayCost ?? 0) - (sale?.accWonCost ?? 0) - Math.floor(sale?.accDeliveryCost ?? 0);
+export const getProfit = (sale: SaleInfo, addPrice?: number) => {
+  return (
+    (sale?.accPayCost ?? 0) -
+    (sale?.accWonCost ?? 0) -
+    Math.floor(sale?.accDeliveryCost ?? 0) -
+    (addPrice ?? 0)
+  );
 };
 
 export const getParsedSaleData = ({

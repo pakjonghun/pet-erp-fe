@@ -5,6 +5,7 @@ export interface SaleInfoProps {
   accCount: string;
   accProfit: string;
   accProfitRate: string;
+  accAdPrice: string;
 }
 
 export interface DateRange {

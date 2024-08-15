@@ -4,6 +4,8 @@ import { Card, CardHeader, FormControlLabel, Skeleton, Switch } from '@mui/mater
 import dayjs from 'dayjs';
 import SaleCardContent from './SaleCardContent';
 import useGetTotalSale from '../_hooks/useGetSaleData';
+import { useAdTotals } from '@/http/graphql/hooks/ad/useAdTotals';
+import { getNumberToString } from '@/utils/sale';
 
 const TotalSale = () => {
   const today = dayjs();

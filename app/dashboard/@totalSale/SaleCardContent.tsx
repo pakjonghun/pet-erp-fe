@@ -40,19 +40,6 @@ const SaleCardContent: FC<Props> = ({ title, saleInfo }) => {
       <Typography
         sx={{
           display: {
-            xs: 'flex',
-            md: 'none',
-          },
-          alignItems: 'flex-end',
-        }}
-        color="GrayText"
-        variant="caption"
-      >
-        {content}
-      </Typography>
-      <Typography
-        sx={{
-          display: {
             xs: 'none',
             md: 'flex',
           },
