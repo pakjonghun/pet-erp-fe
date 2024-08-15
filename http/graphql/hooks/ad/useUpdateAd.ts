@@ -5,6 +5,7 @@ import { UpdateAdInput } from '../../codegen/graphql';
 const updateAd = graphql(`
   mutation updateAd($updateAdInput: UpdateAdInput!) {
     updateAd(updateAdInput: $updateAdInput) {
+      _id
       productCodeList {
         name
         code
@@ -21,10 +22,6 @@ const updateAd = graphql(`
   }
 `);
 
-export const useCreateAd = (updateAdInput: UpdateAdInput) => {
-  return useMutation(updateAd, {
-    variables: {
-      updateAdInput,
-    },
-  });
+export const useUpdateAd = () => {
+  return useMutation(updateAd);
 };

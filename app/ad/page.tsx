@@ -11,7 +11,6 @@ import {
   Box,
   Button,
   Checkbox,
-  Chip,
   FormControl,
   FormControlLabel,
   Stack,
@@ -21,7 +20,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useTextDebounce from '@/hooks/useTextDebounce';
 import { LIMIT } from '@/constants';
 import { AdTypeToEng, AdTypeToHangle, headerList } from './constants';
@@ -47,7 +46,6 @@ import ActionSection from './ActionSection';
 import SearchSection from './SearchSection';
 import useHandleQuery from '@/hooks/useHandleQuery';
 import { useAds } from '@/http/graphql/hooks/ad/useAds';
-import { getNumberToString } from '@/utils/sale';
 import ResizableContainer from '@/components/resize/ResizableContainer';
 import { Controller, useForm } from 'react-hook-form';
 import { AdItemForm, createAdItemSchema } from './_validations/createSubsidiaryValidation copy';
@@ -57,6 +55,10 @@ import NumberInput from '@/components/ui/input/NumberInput';
 import BaseSelect from '@/components/ui/select/BaseSelect';
 import { useClients } from '@/http/graphql/hooks/client/useClients';
 import { useProducts } from '@/http/graphql/hooks/product/useProducts';
+import { useUpdateAd } from '@/http/graphql/hooks/ad/useUpdateAd';
+import { snackMessage } from '@/store/snackMessage';
+import { client } from '@/http/graphql/client';
+import CommonLoading from '@/components/ui/loading/CommonLoading';
 
 const BackDataPage = () => {
   const [from, setFrom] = useState(() => dayjs());
@@ -76,28 +78,20 @@ const BackDataPage = () => {
     setValue,
     control,
     handleSubmit,
-    clearErrors,
-    reset,
     formState: { errors },
   } = useForm<AdItemForm>({
     resolver: zodResolver(createAdItemSchema),
   });
 
-  // const selectedOption = watch();
-
   const [selectedOption, setSelectedAd] = useState<null | AdsOutPutItem>(null);
 
   const setSelectedOption = (item: AdsOutPutItem | null) => {
     setSelectedAd(item);
-    console.log(
-      selectedOption?.productCodeList?.length == productRows.length,
-      selectedOption?.productCodeList?.length,
-      productRows.length
-    );
+
     setSelectAll(item?.productCodeList?.length == productRows.length);
     if (item !== null) {
-      setValue('from', item.from);
-      setValue('to', item.to);
+      setValue('from', new Date(item.from));
+      setValue('to', new Date(item.to));
       setValue('clientCode', item.clientCode);
       setValue('productCodeList', item.productCodeList);
       setValue('price', item.price);
@@ -168,37 +162,6 @@ const BackDataPage = () => {
     setOptionType('delete');
   };
 
-  const MAX_COUNT = 1;
-  const maxCount = isShowAllProduct ? Infinity : MAX_COUNT;
-
-  const createRow = (ad: AdsOutPutItem) => {
-    const productList = ad.productCodeList;
-    return [
-      dayjs(ad.from).format('YYYY-MM-DD'),
-      dayjs(ad.to).format('YYYY-MM-DD'),
-      AdTypeToHangle[ad.type],
-      getNumberToString(ad.price, 'comma'),
-      ad.clientCode?.name ?? '',
-      <Stack key={ad._id} direction="row" flexWrap="wrap" gap={1}>
-        <>
-          {(productList?.slice(0, maxCount) ?? []).map((p) => {
-            return <Chip key={`${p.name}_${p.code}`} label={`${p.name}(${p.code})`} />;
-          })}
-
-          {productList && productList.length > MAX_COUNT ? (
-            <Button
-              size="small"
-              color="inherit"
-              onClick={() => setIsShowAllProduct((prev) => !prev)}
-            >{`${isShowAllProduct ? '-' : '+'} ${productList.length - MAX_COUNT}`}</Button>
-          ) : (
-            ''
-          )}
-        </>
-      </Stack>,
-    ];
-  };
-
   const [clientKeyword, setClientKeyword] = useState('');
   const clientDelayedKeyword = useTextDebounce(clientKeyword);
   const {
@@ -250,6 +213,68 @@ const BackDataPage = () => {
 
   const isProductLoading = productNetworkStatus <= 3;
   const productRows = products?.products.data ?? [];
+  const selectedProductList = watch('productCodeList');
+
+  useEffect(() => {
+    if (!productRows) return;
+
+    const isAllSelected = productRows.length === selectedProductList?.length;
+    setSelectAll(isAllSelected);
+  }, [productRows, watch, setSelectAll, selectedProductList]);
+
+  const [updateAd, { loading }] = useUpdateAd();
+
+  const onSubmit = (updateAdInput: AdItemForm) => {
+    if (!selectedOption?._id) return;
+
+    const adType = updateAdInput.type;
+    const channelNeed =
+      adType == AdType.ChannelProductRate ||
+      adType == AdType.ChannelAppProduct ||
+      adType == AdType.ChannelSpecialProduct;
+    const productNeed =
+      adType == AdType.ChannelAppProduct || adType == AdType.ChannelSpecialProduct;
+
+    let clientCode = undefined;
+    let productCodeList = undefined;
+    if (channelNeed) {
+      clientCode = updateAdInput.clientCode?.code ?? undefined;
+    }
+
+    if (productNeed) {
+      productCodeList = updateAdInput.productCodeList?.map((p) => p.code) ?? [];
+    }
+
+    const newItem = {
+      ...updateAdInput,
+      clientCode,
+      productCodeList,
+    };
+
+    updateAd({
+      variables: {
+        updateAdInput: {
+          _id: selectedOption!._id,
+          ...newItem,
+        },
+      },
+      onCompleted: () => {
+        snackMessage({ message: '광고 업데이트가 성공하였습니다', severity: 'success' });
+
+        client.refetchQueries({
+          updateCache(cache) {
+            cache.evict({ fieldName: 'ads' });
+          },
+        });
+      },
+      onError: (err) => {
+        snackMessage({
+          message: err.message ?? '광고 생성이 실패하였습니다.',
+          severity: 'error',
+        });
+      },
+    });
+  };
 
   return (
     <>
@@ -322,252 +347,182 @@ const BackDataPage = () => {
           }}
         >
           <TableTitle title="선택된 옵션 데이터" />
-          <TableContainer
-            sx={{
-              display: {
-                xs: 'none',
-                md: 'block',
-              },
-            }}
-          >
-            <CommonTable stickyHeader>
-              <TableHead>
-                <CommonHeaderRow>
-                  {['광고날짜'].concat(headerList.slice(2)).map((item, index) => (
-                    <HeadCell key={`${index}_${item}`} text={item} />
-                  ))}
-                </CommonHeaderRow>
-              </TableHead>
-              {!!selectedOption ? (
-                <TableRow
-                  sx={{
-                    td: {
-                      p: 0,
-                    },
-                  }}
-                  hover
-                  ref={null}
-                >
-                  <Cell sx={{ p: 0 }}>
-                    <Box
-                      sx={{
-                        m: 0,
-                        position: 'relative',
-                        flex: 1,
-                        width: '100%',
-                        border: 'none',
-                      }}
-                    >
-                      <TextField
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <TableContainer
+              sx={{
+                display: {
+                  xs: 'none',
+                  md: 'block',
+                },
+              }}
+            >
+              <CommonTable stickyHeader>
+                <TableHead>
+                  <CommonHeaderRow>
+                    {['광고날짜'].concat(headerList.slice(2)).map((item, index) => (
+                      <HeadCell key={`${index}_${item}`} text={item} />
+                    ))}
+                  </CommonHeaderRow>
+                </TableHead>
+                {!!selectedOption ? (
+                  <TableRow
+                    sx={{
+                      td: {
+                        p: 0,
+                      },
+                    }}
+                    hover
+                    ref={null}
+                  >
+                    <Cell sx={{ width: 140 }}>
+                      <Box
                         sx={{
-                          width: '100%',
-                          minWidth: 100,
-                          '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                              border: 'none',
-                            },
-                          },
-                        }}
-                        size="small"
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        InputProps={{
-                          readOnly: true,
-                        }}
-                      />
-                      <SwitchDate
-                        hideSwitch
-                        sx={{
-                          position: 'absolute',
-                          top: '50%',
-                          left: '50%',
-                          transform: 'translate(-50%,-50%)',
+                          m: 0,
+                          position: 'relative',
+                          flex: 1,
                           width: '100%',
                           border: 'none',
                         }}
-                        dateRange={{ from: dayjs(watch('from')), to: dayjs(watch('to')) }}
-                        searchStandard={'일'}
-                        setDateRange={(range) => {
-                          setValue('from', range.from.toDate());
-                          setValue('to', range.to.toDate());
+                      >
+                        <TextField
+                          sx={{
+                            width: '100%',
+                            minWidth: 160,
+                            '& .MuiOutlinedInput-root': {
+                              '& fieldset': {
+                                border: 'none',
+                              },
+                            },
+                          }}
+                          size="small"
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                        />
+                        <SwitchDate
+                          hideSwitch
+                          sx={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%,-50%)',
+                            width: '100%',
+                            border: 'none',
+                          }}
+                          dateRange={{ from: dayjs(watch('from')), to: dayjs(watch('to')) }}
+                          searchStandard={'일'}
+                          setDateRange={(range) => {
+                            console.log(range, range.from.toDate(), range.to.toDate());
+                            setValue('from', range.from.toDate());
+                            setValue('to', range.to.toDate());
+                          }}
+                          setSearchStandard={() => {}}
+                        />
+                      </Box>
+                    </Cell>
+                    <Cell sx={{ width: 130 }}>
+                      <Controller
+                        name="type"
+                        control={control}
+                        render={({ field }) => {
+                          return (
+                            <FormControl sx={{ width: '100%' }}>
+                              <BaseSelect
+                                sx={{
+                                  '&.MuiOutlinedInput-root': {
+                                    '& fieldset': {
+                                      border: 'none',
+                                    },
+                                  },
+                                }}
+                                defaultValue={field.value}
+                                label=""
+                                onChangeValue={(event) => {
+                                  const hangleType = event.target.value;
+                                  field.onChange(AdTypeToEng[hangleType]);
+                                }}
+                                optionItems={handleAdTypes}
+                                value={AdTypeToHangle[field.value]}
+                              />
+                            </FormControl>
+                          );
                         }}
-                        setSearchStandard={() => {}}
                       />
-                    </Box>
-                  </Cell>
-                  <Cell>
-                    <Controller
-                      name="type"
-                      control={control}
-                      render={({ field }) => {
-                        return (
-                          <FormControl sx={{ width: '100%' }}>
-                            <BaseSelect
+                    </Cell>
+                    <Cell sx={{ width: 150 }}>
+                      <Controller
+                        control={control}
+                        name="price"
+                        render={({ field }) => (
+                          <FormControl
+                            sx={{
+                              flex: 0.6,
+                              width: {
+                                xs: '100%',
+                                lg: 'auto',
+                              },
+                            }}
+                            required
+                          >
+                            <NumberInput
                               sx={{
-                                '&.MuiOutlinedInput-root': {
+                                width: '100%',
+                                '& .MuiOutlinedInput-root': {
                                   '& fieldset': {
                                     border: 'none',
                                   },
                                 },
                               }}
-                              defaultValue={field.value}
+                              field={field}
                               label=""
-                              onChangeValue={(event) => {
-                                const hangleType = event.target.value;
-                                field.onChange(AdTypeToEng[hangleType]);
-                              }}
-                              optionItems={handleAdTypes}
-                              value={AdTypeToHangle[field.value]}
+                              error={Boolean(errors.price?.message)}
+                              helperText={errors.price?.message ?? ''}
                             />
                           </FormControl>
-                        );
-                      }}
-                    />
-                  </Cell>
-                  <Cell>
-                    <Controller
-                      control={control}
-                      name="price"
-                      render={({ field }) => (
-                        <FormControl
-                          sx={{
-                            flex: 0.6,
-                            width: {
-                              xs: '100%',
-                              lg: 'auto',
-                            },
-                          }}
-                          required
-                        >
-                          <NumberInput
-                            sx={{
-                              width: '100%',
-                              '& .MuiOutlinedInput-root': {
-                                '& fieldset': {
-                                  border: 'none',
-                                },
-                              },
-                            }}
-                            field={field}
-                            label=""
-                            error={Boolean(errors.price?.message)}
-                            helperText={errors.price?.message ?? ''}
-                          />
-                        </FormControl>
-                      )}
-                    />
-                  </Cell>
-                  <Cell>
-                    <Controller
-                      name="clientCode"
-                      control={control}
-                      render={({ field }) => {
-                        return (
-                          <Autocomplete
-                            value={field.value}
-                            isOptionEqualToValue={(a, b) => a.code == b.code}
-                            options={clientRows}
-                            loading={isClientLoading}
-                            getOptionLabel={(item) => `${item.name}`}
-                            defaultValue={null}
-                            inputValue={clientKeyword}
-                            onInputChange={(_, newValue) => setClientKeyword(newValue)}
-                            noOptionsText="검색 결과가 없습니다."
-                            loadingText="로딩중입니다."
-                            onChange={(_, value) => field.onChange(value)}
-                            filterOptions={(options) => {
-                              return options;
-                            }}
-                            renderOption={(props, item, state) => {
-                              const { key, ...rest } = props as any;
-                              const isLast = state.index === rows.length - 1;
-                              return (
-                                <Box
-                                  component="li"
-                                  ref={isLast ? scrollRef : null}
-                                  key={item}
-                                  {...rest}
-                                >
-                                  {`${item.name}(${item.code})`}
-                                </Box>
-                              );
-                            }}
-                            renderInput={(params: AutocompleteRenderInputParams) => {
-                              return (
-                                <FormControl fullWidth>
-                                  <TextField
-                                    {...params}
-                                    sx={{
-                                      '& .MuiOutlinedInput-root': {
-                                        '& fieldset': {
-                                          border: 'none',
-                                        },
-                                      },
-                                    }}
-                                    name={field.name}
-                                    label=""
-                                    error={!!errors.clientCode?.message}
-                                    helperText={errors.clientCode?.message ?? ''}
-                                    size="small"
-                                  />
-                                </FormControl>
-                              );
-                            }}
-                          />
-                        );
-                      }}
-                    />
-                  </Cell>
-                  <Cell>
-                    <Controller
-                      control={control}
-                      name="productCodeList"
-                      render={({ field }) => {
-                        return (
-                          <Stack direction="row" gap={0.2} alignItems="flex-start">
-                            <FormControlLabel
-                              label={<Typography variant="caption">All</Typography>}
-                              control={
-                                <Checkbox
-                                  size="small"
-                                  checked={selectAll}
-                                  onChange={(_, checked) => {
-                                    const options = checked ? productRows : [];
-                                    field.onChange(options);
-                                    setSelectAll(checked);
-                                  }}
-                                />
-                              }
-                            />
+                        )}
+                      />
+                    </Cell>
+                    <Cell sx={{ width: 190 }}>
+                      <Controller
+                        name="clientCode"
+                        control={control}
+                        render={({ field }) => {
+                          return (
                             <Autocomplete
-                              size="small"
-                              multiple
-                              value={field.value ?? undefined}
-                              options={productRows.map((i) => ({ name: i.name, code: i.code }))}
-                              loading={isLoading}
-                              getOptionLabel={(item) => `${item.name}(${item.code})`}
-                              fullWidth
-                              disableCloseOnSelect
+                              value={field.value}
                               isOptionEqualToValue={(a, b) => a.code == b.code}
-                              inputValue={productKeyword}
-                              onInputChange={(_, newValue) => setProductKeyword(newValue)}
+                              options={clientRows}
+                              loading={isClientLoading}
+                              getOptionLabel={(item) => `${item.name}`}
+                              defaultValue={null}
+                              inputValue={clientKeyword}
+                              onInputChange={(_, newValue) => setClientKeyword(newValue)}
                               noOptionsText="검색 결과가 없습니다."
                               loadingText="로딩중입니다."
-                              limitTags={1}
-                              filterOptions={(o) => o}
                               onChange={(_, value) => field.onChange(value)}
-                              renderOption={(props, item) => {
+                              filterOptions={(options) => {
+                                return options;
+                              }}
+                              renderOption={(props, item, state) => {
                                 const { key, ...rest } = props as any;
+                                const isLast = state.index === rows.length - 1;
                                 return (
-                                  <Box component="li" key={item.code} {...rest}>
+                                  <Box
+                                    component="li"
+                                    ref={isLast ? scrollRef : null}
+                                    key={item}
+                                    {...rest}
+                                  >
                                     {`${item.name}(${item.code})`}
                                   </Box>
                                 );
                               }}
                               renderInput={(params: AutocompleteRenderInputParams) => {
                                 return (
-                                  <FormControl sx={{ width: '100%' }}>
+                                  <FormControl fullWidth>
                                     <TextField
                                       {...params}
                                       sx={{
@@ -579,44 +534,126 @@ const BackDataPage = () => {
                                       }}
                                       name={field.name}
                                       label=""
-                                      error={!!errors.productCodeList?.message}
-                                      helperText={errors.productCodeList?.message ?? ''}
+                                      error={!!errors.clientCode?.message}
+                                      helperText={errors.clientCode?.message ?? ''}
                                       size="small"
                                     />
                                   </FormControl>
                                 );
                               }}
                             />
-                          </Stack>
-                        );
-                      }}
-                    />
-                  </Cell>
-                </TableRow>
-              ) : (
-                <EmptyRow
-                  colSpan={7}
-                  isEmpty={!selectedOption}
-                  message="선택된 데이터가 없습니다."
-                />
-              )}
-            </CommonTable>
-          </TableContainer>
-          {!!selectedOption && (
-            <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
-              {canDelete && (
-                <Button color="error" variant="outlined" onClick={handleClickDelete}>
-                  삭제
-                </Button>
-              )}
-              {canEdit && (
-                <Button variant="contained" onClick={handleClickEdit}>
-                  저장
-                </Button>
-              )}
-            </Stack>
-          )}
-
+                          );
+                        }}
+                      />
+                    </Cell>
+                    <Cell sx={{ width: 250 }}>
+                      <Controller
+                        control={control}
+                        name="productCodeList"
+                        render={({ field }) => {
+                          return (
+                            <Stack
+                              sx={{ pl: 1, width: '100%' }}
+                              direction="row"
+                              gap={0.2}
+                              alignItems="flex-start"
+                            >
+                              <FormControlLabel
+                                label={<Typography variant="caption">All</Typography>}
+                                control={
+                                  <Checkbox
+                                    size="small"
+                                    checked={selectAll}
+                                    onChange={(_, checked) => {
+                                      const options = checked ? productRows : [];
+                                      field.onChange(options);
+                                      setSelectAll(checked);
+                                    }}
+                                  />
+                                }
+                              />
+                              <Autocomplete
+                                sx={{ width: '100%' }}
+                                size="small"
+                                multiple
+                                value={field.value ?? undefined}
+                                options={productRows.map((i) => ({ name: i.name, code: i.code }))}
+                                loading={isProductLoading}
+                                getOptionLabel={(item) => `${item.name}(${item.code})`}
+                                disableCloseOnSelect
+                                isOptionEqualToValue={(a, b) => a.code == b.code}
+                                inputValue={productKeyword}
+                                onInputChange={(_, newValue) => setProductKeyword(newValue)}
+                                noOptionsText="검색 결과가 없습니다."
+                                loadingText="로딩중입니다."
+                                limitTags={1}
+                                filterOptions={(o) => o}
+                                onChange={(_, value) => field.onChange(value)}
+                                renderOption={(props, item) => {
+                                  const { key, ...rest } = props as any;
+                                  return (
+                                    <Box component="li" key={item.code} {...rest}>
+                                      {`${item.name}(${item.code})`}
+                                    </Box>
+                                  );
+                                }}
+                                renderInput={(params: AutocompleteRenderInputParams) => {
+                                  return (
+                                    <FormControl sx={{ width: '100%' }}>
+                                      <TextField
+                                        {...params}
+                                        sx={{
+                                          '& .MuiOutlinedInput-root': {
+                                            '& fieldset': {
+                                              border: 'none',
+                                            },
+                                          },
+                                        }}
+                                        name={field.name}
+                                        label=""
+                                        error={!!errors.productCodeList?.message}
+                                        helperText={errors.productCodeList?.message ?? ''}
+                                        size="small"
+                                      />
+                                    </FormControl>
+                                  );
+                                }}
+                              />
+                            </Stack>
+                          );
+                        }}
+                      />
+                    </Cell>
+                  </TableRow>
+                ) : (
+                  <EmptyRow
+                    colSpan={7}
+                    isEmpty={!selectedOption}
+                    message="선택된 데이터가 없습니다."
+                  />
+                )}
+              </CommonTable>
+            </TableContainer>
+            {!!selectedOption && (
+              <Stack direction="row" gap={1} sx={{ mt: 2 }} justifyContent="flex-end">
+                {canDelete && (
+                  <Button color="error" variant="outlined" onClick={handleClickDelete}>
+                    삭제
+                  </Button>
+                )}
+                {canEdit && (
+                  <Button
+                    endIcon={loading ? <CommonLoading /> : <></>}
+                    type="submit"
+                    variant="contained"
+                    onClick={handleClickEdit}
+                  >
+                    저장
+                  </Button>
+                )}
+              </Stack>
+            )}
+          </form>
           {selectedOption && (
             <RemoveSubsidiaryModal
               open={optionType === 'delete'}
@@ -627,15 +664,6 @@ const BackDataPage = () => {
               selectedOption={selectedOption}
             />
           )}
-
-          {/* {selectedOption && (
-            <EditSubsidiaryModal
-              setSelectedSubsidiary={setSelectedOption}
-              open={optionType === 'edit'}
-              onClose={() => setOptionType(null)}
-              selectedSubsidiary={selectedOption}
-            />
-          )} */}
         </TablePage>
       )}
     </>
