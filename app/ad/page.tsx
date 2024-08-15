@@ -461,7 +461,6 @@ const BackDataPage = () => {
                               flex: 0.6,
                               width: {
                                 xs: '100%',
-                                lg: 'auto',
                               },
                             }}
                             required
