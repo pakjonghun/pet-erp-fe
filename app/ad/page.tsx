@@ -68,7 +68,6 @@ const BackDataPage = () => {
   const [order, setOrder] = useState(-1);
   const [keyword, setKeyword] = useState('');
   const [isDateChecked, setIsDateChecked] = useState(false);
-  const delayKeyword = useTextDebounce(keyword);
   const [isShowAllProduct, setIsShowAllProduct] = useState(false);
   const handleAdTypes = Object.values(AdTypeToHangle).slice(1);
   const q = useHandleQuery();
@@ -108,10 +107,10 @@ const BackDataPage = () => {
     type,
   };
 
-  const setSearchQuery = ({ from, keyword, to, type }: AdsInput) => {
+  const setSearchQuery = ({ from, to, type, keyword }: AdsInput) => {
+    setKeyword(keyword);
     setFrom(from);
     setTo(to);
-    setKeyword(keyword);
     setType(type ?? null);
   };
 
@@ -122,7 +121,7 @@ const BackDataPage = () => {
 
   const { data, networkStatus, fetchMore } = useAds({
     ...searchQuery,
-    keyword: delayKeyword,
+    keyword,
     from: isDateChecked ? from : undefined,
     to: isDateChecked ? to : undefined,
     skip: 0,
@@ -140,7 +139,7 @@ const BackDataPage = () => {
           variables: {
             adsInput: {
               ...searchQuery,
-              keyword: delayKeyword,
+              keyword,
               from: isDateChecked ? from : undefined,
               to: isDateChecked ? to : undefined,
               skip: rows.length,
@@ -275,7 +274,7 @@ const BackDataPage = () => {
       },
     });
   };
-
+  console.log('change keyword', searchQuery.keyword);
   return (
     <>
       <ResizableContainer>
@@ -292,7 +291,7 @@ const BackDataPage = () => {
             searchQuery={searchQuery}
           />
           <Typography sx={{ p: 3 }}>
-            {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
+            {isEmpty ? '검색 결과가 없습니다' : `총 ${data?.ads.totalCount ?? ''}건 검색`}
           </Typography>
           <OptionCards
             sx={{

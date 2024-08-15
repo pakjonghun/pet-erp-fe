@@ -9,18 +9,19 @@ import {
 } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import { AdsInput, AdType } from '@/http/graphql/codegen/graphql';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import SwitchDate from '@/components/calendar/dateSwitch/SwitchDate';
 import { DateRange } from '@/components/calendar/dateFilter/type';
 import { SearchStandard } from '@/components/calendar/dateSwitch/types';
 import BaseSelect from '@/components/ui/select/BaseSelect';
 import { AdTypeToEng, AdTypeToHangle } from './constants';
+import useTextDebounce from '@/hooks/useTextDebounce';
 
 interface Props {
   isDateChecked: boolean;
-  setIsDateChecked: (value: boolean) => void;
   searchQuery: AdsInput;
   setSearchQuery: (adInput: AdsInput) => void;
+  setIsDateChecked: (value: boolean) => void;
 }
 
 const SearchSection: FC<Props> = ({
@@ -29,17 +30,23 @@ const SearchSection: FC<Props> = ({
   searchQuery,
   setSearchQuery,
 }) => {
-  const { from, keyword, to, type } = searchQuery;
+  const [keyword, setKeyword] = useState('');
+  const delayedKeyword = useTextDebounce(keyword);
+  const { from, to, type } = searchQuery;
+
+  useEffect(() => {
+    console.log(searchQuery.keyword, delayedKeyword);
+    if (searchQuery.keyword == delayedKeyword) return;
+
+    setSearchQuery({ ...searchQuery, keyword: delayedKeyword });
+    console.log('eset keyword', { ...searchQuery, keyword: delayedKeyword });
+  }, [delayedKeyword, searchQuery, setSearchQuery]);
 
   const handleAdTypes = Object.values(AdTypeToHangle);
   const [searchStandard, setSearchStandard] = useState<SearchStandard>('일');
 
   const setDateRange = ({ from, to }: DateRange) => {
     setSearchQuery({ ...searchQuery, from, to });
-  };
-
-  const setKeyword = (text: string) => {
-    setSearchQuery({ ...searchQuery, keyword: text });
   };
 
   const setType = (type: AdType | '모든타입') => {
@@ -99,6 +106,7 @@ const SearchSection: FC<Props> = ({
               md: 500,
             },
           }}
+          value={keyword}
           onChange={(event) => setKeyword(event.target.value)}
           InputProps={{
             endAdornment: (

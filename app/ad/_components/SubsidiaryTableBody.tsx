@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { AdsOutPutItem, OutputOption } from '@/http/graphql/codegen/graphql';
+import { AdsOutPutItem } from '@/http/graphql/codegen/graphql';
 import EmptyRow from '@/components/table/EmptyRow';
 import { SelectOption } from '../types';
 import LoadingRow from '@/components/table/LoadingRow';

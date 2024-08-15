@@ -1,10 +1,10 @@
 import { FC, MouseEvent, useState } from 'react';
 import Cell from '@/components/table/Cell';
-import { Button, Chip, Menu, Stack, TableRow } from '@mui/material';
+import { Chip, Menu, Stack, TableRow, Typography } from '@mui/material';
 import { SelectedOptionItem } from '@/constants';
 import { Edit } from '@mui/icons-material';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { AdsOutPutItem, OutputOption } from '@/http/graphql/codegen/graphql';
+import { AdsOutPutItem } from '@/http/graphql/codegen/graphql';
 import OptionMenu from '@/components/ui/listItem/OptionMenu';
 import { SelectOption } from '../types';
 import dayjs from 'dayjs';
@@ -62,14 +62,24 @@ const SubsidiaryBodyRow: FC<Props> = ({
       <Stack key={ad._id} direction="row" flexWrap="wrap" gap={1}>
         <>
           {(productList?.slice(0, maxCount) ?? []).map((p) => {
-            return <Chip key={`${p.name}_${p.code}`} label={`${p.name}(${p.code})`} />;
+            return <Chip size="small" key={`${p.name}_${p.code}`} label={`${p.name}(${p.code})`} />;
           })}
           {productList && productList.length > MAX_COUNT ? (
-            <Button
+            <Typography
+              variant="caption"
               onClick={() => setIsShowAllProducts((prev) => !prev)}
-              size="small"
               color="inherit"
-            >{`${isShowAllProducts ? '-' : '+'} ${productList.length - MAX_COUNT}`}</Button>
+              sx={{
+                px: 1,
+                m: 0,
+                cursor: 'pointer',
+                borderRadius: 1,
+
+                '&:hover': {
+                  background: (theme) => theme.palette.action.hover,
+                },
+              }}
+            >{`${isShowAllProducts ? '-' : '+'} ${productList.length - MAX_COUNT}`}</Typography>
           ) : (
             ''
           )}
@@ -94,11 +104,7 @@ const SubsidiaryBodyRow: FC<Props> = ({
         ))}
       </Menu>
       {parsedRowData.map((item, index) => (
-        <Cell
-          key={`${subsidiary._id}_${index}`}
-          onClick={(event) => onClickRow(event, subsidiary)}
-          // sx={{ minWidth: 200 }}
-        >
+        <Cell key={`${subsidiary._id}_${index}`} onClick={(event) => onClickRow(event, subsidiary)}>
           {item}
         </Cell>
       ))}
