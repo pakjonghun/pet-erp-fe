@@ -82,6 +82,8 @@ const BackDataPage = () => {
     resolver: zodResolver(createAdItemSchema),
   });
 
+  const hasError = Object.keys(errors).length > 0;
+
   const [selectedOption, setSelectedAd] = useState<null | AdsOutPutItem>(null);
 
   const setSelectedOption = (item: AdsOutPutItem | null) => {
@@ -640,6 +642,7 @@ const BackDataPage = () => {
                 )}
                 {canEdit && (
                   <Button
+                    disabled={hasError}
                     endIcon={loading ? <CommonLoading /> : <></>}
                     type="submit"
                     variant="contained"
