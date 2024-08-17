@@ -83,6 +83,22 @@ const BackDataPage = () => {
   });
 
   const hasError = Object.keys(errors).length > 0;
+  const adType = watch('type');
+  const channelNeed =
+    adType == AdType.ChannelProductRate ||
+    adType == AdType.ChannelAppProduct ||
+    adType == AdType.ChannelSpecialProduct;
+  const productNeed = adType == AdType.ChannelAppProduct || adType == AdType.ChannelSpecialProduct;
+
+  const getHeaderList = () => {
+    if (channelNeed && productNeed) {
+      return ['광고날짜'].concat(headerList.slice(2));
+    } else if (channelNeed) {
+      return ['광고날짜'].concat(headerList.slice(2, -1));
+    } else {
+      return ['광고날짜'].concat(headerList.slice(2, -2));
+    }
+  };
 
   const [selectedOption, setSelectedAd] = useState<null | AdsOutPutItem>(null);
 
@@ -359,7 +375,7 @@ const BackDataPage = () => {
               <CommonTable stickyHeader>
                 <TableHead>
                   <CommonHeaderRow>
-                    {['광고날짜'].concat(headerList.slice(2)).map((item, index) => (
+                    {getHeaderList().map((item, index) => (
                       <HeadCell key={`${index}_${item}`} text={item} />
                     ))}
                   </CommonHeaderRow>
@@ -484,121 +500,45 @@ const BackDataPage = () => {
                         )}
                       />
                     </Cell>
-                    <Cell sx={{ width: 190 }}>
-                      <Controller
-                        name="clientCode"
-                        control={control}
-                        render={({ field }) => {
-                          return (
-                            <Autocomplete
-                              value={field.value}
-                              isOptionEqualToValue={(a, b) => a.code == b.code}
-                              options={clientRows}
-                              loading={isClientLoading}
-                              getOptionLabel={(item) => `${item.name}`}
-                              defaultValue={null}
-                              inputValue={clientKeyword}
-                              onInputChange={(_, newValue) => setClientKeyword(newValue)}
-                              noOptionsText="검색 결과가 없습니다."
-                              loadingText="로딩중입니다."
-                              onChange={(_, value) => field.onChange(value)}
-                              filterOptions={(options) => {
-                                return options;
-                              }}
-                              renderOption={(props, item, state) => {
-                                const { key, ...rest } = props as any;
-                                const isLast = state.index === rows.length - 1;
-                                return (
-                                  <Box
-                                    component="li"
-                                    ref={isLast ? scrollRef : null}
-                                    key={item}
-                                    {...rest}
-                                  >
-                                    {`${item.name}(${item.code})`}
-                                  </Box>
-                                );
-                              }}
-                              renderInput={(params: AutocompleteRenderInputParams) => {
-                                return (
-                                  <FormControl fullWidth>
-                                    <TextField
-                                      {...params}
-                                      sx={{
-                                        '& .MuiOutlinedInput-root': {
-                                          '& fieldset': {
-                                            border: 'none',
-                                          },
-                                        },
-                                      }}
-                                      name={field.name}
-                                      label=""
-                                      error={!!errors.clientCode?.message}
-                                      helperText={errors.clientCode?.message ?? ''}
-                                      size="small"
-                                    />
-                                  </FormControl>
-                                );
-                              }}
-                            />
-                          );
-                        }}
-                      />
-                    </Cell>
-                    <Cell sx={{ width: 250 }}>
-                      <Controller
-                        control={control}
-                        name="productCodeList"
-                        render={({ field }) => {
-                          return (
-                            <Stack
-                              sx={{ pl: 1, width: '100%' }}
-                              direction="row"
-                              gap={0.2}
-                              alignItems="flex-start"
-                            >
-                              <FormControlLabel
-                                label={<Typography variant="caption">All</Typography>}
-                                control={
-                                  <Checkbox
-                                    size="small"
-                                    checked={selectAll}
-                                    onChange={(_, checked) => {
-                                      const options = checked ? productRows : [];
-                                      field.onChange(options);
-                                      setSelectAll(checked);
-                                    }}
-                                  />
-                                }
-                              />
+                    {channelNeed && (
+                      <Cell sx={{ width: 190 }}>
+                        <Controller
+                          name="clientCode"
+                          control={control}
+                          render={({ field }) => {
+                            return (
                               <Autocomplete
-                                sx={{ width: '100%' }}
-                                size="small"
-                                multiple
-                                value={field.value ?? undefined}
-                                options={productRows.map((i) => ({ name: i.name, code: i.code }))}
-                                loading={isProductLoading}
-                                getOptionLabel={(item) => `${item.name}(${item.code})`}
-                                disableCloseOnSelect
+                                value={field.value}
                                 isOptionEqualToValue={(a, b) => a.code == b.code}
-                                inputValue={productKeyword}
-                                onInputChange={(_, newValue) => setProductKeyword(newValue)}
+                                options={clientRows}
+                                loading={isClientLoading}
+                                getOptionLabel={(item) => `${item.name}`}
+                                defaultValue={null}
+                                inputValue={clientKeyword}
+                                onInputChange={(_, newValue) => setClientKeyword(newValue)}
                                 noOptionsText="검색 결과가 없습니다."
                                 loadingText="로딩중입니다."
-                                limitTags={1}
-                                filterOptions={(o) => o}
                                 onChange={(_, value) => field.onChange(value)}
-                                renderOption={(props, item) => {
+                                filterOptions={(options) => {
+                                  return options;
+                                }}
+                                renderOption={(props, item, state) => {
                                   const { key, ...rest } = props as any;
+                                  const isLast = state.index === rows.length - 1;
                                   return (
-                                    <Box component="li" key={item.code} {...rest}>
+                                    <Box
+                                      component="li"
+                                      ref={isLast ? scrollRef : null}
+                                      key={item}
+                                      {...rest}
+                                    >
                                       {`${item.name}(${item.code})`}
                                     </Box>
                                   );
                                 }}
                                 renderInput={(params: AutocompleteRenderInputParams) => {
                                   return (
-                                    <FormControl sx={{ width: '100%' }}>
+                                    <FormControl fullWidth>
                                       <TextField
                                         {...params}
                                         sx={{
@@ -610,19 +550,99 @@ const BackDataPage = () => {
                                         }}
                                         name={field.name}
                                         label=""
-                                        error={!!errors.productCodeList?.message}
-                                        helperText={errors.productCodeList?.message ?? ''}
+                                        error={!!errors.clientCode?.message}
+                                        helperText={errors.clientCode?.message ?? ''}
                                         size="small"
                                       />
                                     </FormControl>
                                   );
                                 }}
                               />
-                            </Stack>
-                          );
-                        }}
-                      />
-                    </Cell>
+                            );
+                          }}
+                        />
+                      </Cell>
+                    )}
+                    {productNeed && (
+                      <Cell sx={{ width: 250 }}>
+                        <Controller
+                          control={control}
+                          name="productCodeList"
+                          render={({ field }) => {
+                            return (
+                              <Stack
+                                sx={{ pl: 1, width: '100%' }}
+                                direction="row"
+                                gap={0.2}
+                                alignItems="flex-start"
+                              >
+                                <FormControlLabel
+                                  label={<Typography variant="caption">All</Typography>}
+                                  control={
+                                    <Checkbox
+                                      size="small"
+                                      checked={selectAll}
+                                      onChange={(_, checked) => {
+                                        const options = checked ? productRows : [];
+                                        field.onChange(options);
+                                        setSelectAll(checked);
+                                      }}
+                                    />
+                                  }
+                                />
+                                <Autocomplete
+                                  sx={{ width: '100%' }}
+                                  size="small"
+                                  multiple
+                                  value={field.value ?? undefined}
+                                  options={productRows.map((i) => ({ name: i.name, code: i.code }))}
+                                  loading={isProductLoading}
+                                  getOptionLabel={(item) => `${item.name}(${item.code})`}
+                                  disableCloseOnSelect
+                                  isOptionEqualToValue={(a, b) => a.code == b.code}
+                                  inputValue={productKeyword}
+                                  onInputChange={(_, newValue) => setProductKeyword(newValue)}
+                                  noOptionsText="검색 결과가 없습니다."
+                                  loadingText="로딩중입니다."
+                                  limitTags={1}
+                                  filterOptions={(o) => o}
+                                  onChange={(_, value) => field.onChange(value)}
+                                  renderOption={(props, item) => {
+                                    const { key, ...rest } = props as any;
+                                    return (
+                                      <Box component="li" key={item.code} {...rest}>
+                                        {`${item.name}(${item.code})`}
+                                      </Box>
+                                    );
+                                  }}
+                                  renderInput={(params: AutocompleteRenderInputParams) => {
+                                    return (
+                                      <FormControl sx={{ width: '100%' }}>
+                                        <TextField
+                                          {...params}
+                                          sx={{
+                                            '& .MuiOutlinedInput-root': {
+                                              '& fieldset': {
+                                                border: 'none',
+                                              },
+                                            },
+                                          }}
+                                          name={field.name}
+                                          label=""
+                                          error={!!errors.productCodeList?.message}
+                                          helperText={errors.productCodeList?.message ?? ''}
+                                          size="small"
+                                        />
+                                      </FormControl>
+                                    );
+                                  }}
+                                />
+                              </Stack>
+                            );
+                          }}
+                        />
+                      </Cell>
+                    )}
                   </TableRow>
                 ) : (
                   <EmptyRow
