@@ -85,6 +85,22 @@ const AddAdsModal: FC<Props> = ({ q }) => {
     const productNeed =
       adType == AdType.ChannelAppProduct || adType == AdType.ChannelSpecialProduct;
 
+    // if (channelNeed) {
+    //   const hasNoClient = createAdInput.ads.some((item) => !item.clientCode);
+    //   if (hasNoClient) {
+    //     setError('ads', { message: '채널이 입력되지 않았습니다.' });
+    //     return;
+    //   }
+    // }
+
+    // if (productNeed) {
+    //   const hasNoProduct = createAdInput.ads.some((item) => !item.productCodeList?.length);
+    //   if (hasNoProduct) {
+    //     setError('ads', { message: '제품이 입력되지 않았습니다.' });
+    //     return;
+    //   }
+    // }
+
     const createAdsInput = createAdInput.ads.map((i) => {
       let clientCode = undefined;
       let productCodeList = undefined;
