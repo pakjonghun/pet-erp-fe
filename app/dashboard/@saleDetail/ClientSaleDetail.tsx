@@ -78,6 +78,7 @@ const ClientSaleDetail = () => {
       <Box sx={{ px: 2 }}>
         <Box sx={{ p: 2, pb: 0, border: (theme) => `1px solid ${theme.palette.divider}` }}>
           <SearchField
+            hint="거래처 이름이나 코드 입력"
             keywordInput={{
               keyword,
               setKeyword,
