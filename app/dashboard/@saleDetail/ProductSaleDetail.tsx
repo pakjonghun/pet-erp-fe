@@ -55,6 +55,7 @@ const ProductSaleDetail = () => {
             direction="row"
             alignItems="center"
             sx={{
+              mb: 2,
               gap: 1,
               justifyContent: {
                 xs: 'space-between',

@@ -95,6 +95,7 @@ const ClientSaleDetail = () => {
             alignItems="center"
             sx={{
               gap: 1,
+              mb: 2,
               justifyContent: {
                 xs: 'space-between',
                 sm: 'flex-start',

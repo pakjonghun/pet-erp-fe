@@ -39,7 +39,6 @@ const DashboardLayout: FC<Props> = ({ totalSale, saleDetail, saleDetailDate }) =
     >
       <SubHeader title="대시보드" sx={{ boxShadow: 0 }} />
       <Box sx={{ p: 3, overflow: 'auto' }}>
-        <div id="dashboardDetail"></div>
         <Grid container spacing={2}>
           <Grid item xs={12} xl={6}>
             {totalSale}
