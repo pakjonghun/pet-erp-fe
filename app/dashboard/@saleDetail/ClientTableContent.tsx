@@ -37,13 +37,14 @@ const ClientTableContent: FC<Props> = ({
       getNumberToString(getProfitRate(profit ?? 0, item.accTotalPayment ?? 0), 'percent'),
       <ExpandChip
         key={item._id}
-        list={item.products.map((p) => {
-          const name = p?.name?.split('_')?.[1] ?? '';
-          return {
-            ...p,
-            name,
-          };
-        })}
+        // list={item.products.map((p) => {
+        //   const name = p?.name?.split('_')?.[1] ?? '';
+        //   return {
+        //     ...p,
+        //     name,
+        //   };
+        // })}
+        list={item.products}
       />,
     ];
   }
