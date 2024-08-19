@@ -36,7 +36,6 @@ const ProductDetailModal: FC<Props> = ({
     code,
     leadTime,
     name,
-    recentCreateDate,
     salePrice,
     stock,
     wonPrice,

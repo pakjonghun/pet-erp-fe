@@ -124,7 +124,6 @@ const ClientSaleModal: FC<Props> = ({
             }}
           >
             <TotalSaleText
-              hasFullText
               saleInfo={getParsedSaleData({
                 accCount: accCount ?? 0,
                 accProfit: profit,
