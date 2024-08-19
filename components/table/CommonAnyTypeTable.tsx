@@ -12,7 +12,8 @@ import {
 } from '@mui/material';
 import LoadingRow from './LoadingRow';
 import EmptyRow from './EmptyRow';
-import { MIN_MARGIN } from '@/constants';
+import { useReactiveVar } from '@apollo/client';
+import { minMarginRate } from '@/store/saleStore';
 
 interface Props {
   title: string;
@@ -40,6 +41,7 @@ const CommonAnyTypeTable: FC<Props> = ({
   sx,
 }) => {
   const isEmpty = !isLoading && rowList.length == 0;
+  const MIN_MARGIN = useReactiveVar(minMarginRate);
   return (
     <TableContainer sx={{ pr: 3, maxHeight: 1000, overflow: 'auto', ...sx }}>
       <Typography sx={{ mb: 1, fontWeight: 600 }}>{title}</Typography>
@@ -80,7 +82,7 @@ const CommonAnyTypeTable: FC<Props> = ({
             const profitRateNumber =
               profitRateIndex != -1 && (cells[profitRateIndex] as string).match(/\d+/)?.[0];
 
-            const isBelowTween = Number(profitRateNumber) < MIN_MARGIN;
+            const isBelowTween = Math.floor(Number(profitRateNumber)) < (MIN_MARGIN ?? 0);
 
             return (
               <TableRow

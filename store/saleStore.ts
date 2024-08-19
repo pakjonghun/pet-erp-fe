@@ -9,3 +9,5 @@ export const showPrevSaleData = makeVar(false);
 
 export const saleDetailRange = makeVar<DateRange>(getToday());
 export const saleDateRange = makeVar<DateRange>(getToday());
+
+export const minMarginRate = makeVar<number | null>(20);

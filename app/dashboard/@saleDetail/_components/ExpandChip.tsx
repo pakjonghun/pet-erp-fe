@@ -1,5 +1,7 @@
-import { MIN_MARGIN } from '@/constants';
+// import { MIN_MARGIN } from '@/constants';
+import { minMarginRate } from '@/store/saleStore';
 import { getNumberToString, getProfit, getProfitRate } from '@/utils/sale';
+import { useReactiveVar } from '@apollo/client';
 import { Add, Remove } from '@mui/icons-material';
 import { Chip, IconButton, Stack, Typography } from '@mui/material';
 import { Maybe } from 'graphql/jsutils/Maybe';
@@ -22,6 +24,7 @@ interface Props {
 const rowLen = 2;
 
 const ExpandChip: FC<Props> = ({ list }) => {
+  const MIN_MARGIN = useReactiveVar(minMarginRate);
   const [displayCount, setDisplayCount] = useState(initLen);
 
   const container = Array.from({ length: Math.ceil(list.length / 2) }, (item) => [] as Item[]);
@@ -69,7 +72,10 @@ const ExpandChip: FC<Props> = ({ list }) => {
                     display: 'flex',
                     justifyContent: 'flex-start',
                     paddingLeft: 0.1,
-                    bgcolor: (theme) => (profit < MIN_MARGIN ? theme.palette.warning.light : ''),
+                    bgcolor: (theme) =>
+                      Math.floor(profitRate) <= (MIN_MARGIN ?? 0)
+                        ? theme.palette.warning.light
+                        : '',
                   }}
                   key={Object.values(jtem).join(', ')}
                   label=<Stack
