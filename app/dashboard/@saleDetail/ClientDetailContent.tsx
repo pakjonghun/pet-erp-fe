@@ -13,6 +13,8 @@ interface Props {
   order: number;
   dateRange: DateRange;
   keyword: string;
+  detailSort: string;
+  detailOrder: number;
   setTotalDataCount: (value: number) => void;
 }
 
@@ -22,6 +24,8 @@ const ClientDetailContent: FC<Props> = ({
   keyword,
   order,
   sort,
+  detailSort,
+  detailOrder,
 }) => {
   const { data, networkStatus } = useSaleMenuClients({
     keyword,
@@ -29,6 +33,8 @@ const ClientDetailContent: FC<Props> = ({
     to: to.toISOString(),
     order,
     sort,
+    detailSort,
+    detailOrder,
   });
 
   const { data: products } = useCommonSaleByMall({
