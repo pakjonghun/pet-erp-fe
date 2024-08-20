@@ -99,6 +99,7 @@ export type ClientSaleMenuOutput = {
 export type ClientsInput = {
   clientType?: InputMaybe<Array<ClientType>>;
   keyword: Scalars['String']['input'];
+  keywordTarget?: InputMaybe<Scalars['String']['input']>;
   limit: Scalars['Int']['input'];
   order?: InputMaybe<Order>;
   skip: Scalars['Int']['input'];

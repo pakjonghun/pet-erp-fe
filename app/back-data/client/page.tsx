@@ -11,6 +11,9 @@ import {
   FormControl,
   FormGroup,
   InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
   Stack,
   TableContainer,
   TableHead,
@@ -54,6 +57,7 @@ const BackDataPage = () => {
   const myRole = userData?.myInfo.role ?? [];
   const canDelete = myRole.includes(UserRole.BackDelete);
   const canEdit = myRole.includes(UserRole.BackEdit);
+  const [keywordTarget, setKeywordTarget] = useState('name');
 
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
   const [keyword, setKeyword] = useState('');
@@ -66,6 +70,7 @@ const BackDataPage = () => {
     limit: LIMIT,
     sort,
     order,
+    keywordTarget,
   });
 
   const rows = (data?.clients.data as OutClient[]) ?? [];
@@ -85,6 +90,7 @@ const BackDataPage = () => {
               limit: LIMIT,
               sort,
               order,
+              keywordTarget,
             },
           },
         });
@@ -245,22 +251,53 @@ const BackDataPage = () => {
               />
             </Stack>
           </Stack>
-          <FormGroup sx={{ ml: 2 }}>
-            <FormControl>
-              <TextField
-                onChange={(event) => setKeyword(event.target.value)}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <Search />
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{ width: 270, my: 2 }}
-                label="검색할 거래처 이름을 입력하세요."
-                size="small"
-              />
-            </FormControl>
+          <FormGroup sx={{ mx: 2 }}>
+            <Stack
+              sx={{
+                gap: 2,
+                flexDirection: {
+                  xs: 'column',
+                  md: 'row',
+                },
+                alignItems: {
+                  md: 'center',
+                },
+              }}
+            >
+              <FormControl>
+                <TextField
+                  onChange={(event) => setKeyword(event.target.value)}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Search />
+                      </InputAdornment>
+                    ),
+                  }}
+                  label="검색 키워드"
+                  size="small"
+                />
+              </FormControl>
+              <FormControl>
+                <InputLabel>검색대상</InputLabel>
+                <Select
+                  size="small"
+                  label="검색대상"
+                  value={keywordTarget}
+                  onChange={(event) => setKeywordTarget(event.target.value as string)}
+                >
+                  {ClientHeaderList.filter((i) => {
+                    return !(i.id == 'inActive' || i.id == 'isSabangService');
+                  }).map((p) => {
+                    return (
+                      <MenuItem value={p.id} key={p.id}>
+                        {p.label}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </Stack>
           </FormGroup>
           <Stack direction="row" justifyContent="space-between" alignItems="flex-end">
             <Typography sx={{ p: 3 }}>
