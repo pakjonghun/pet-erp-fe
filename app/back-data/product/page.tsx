@@ -11,6 +11,9 @@ import {
   FormControlLabel,
   FormGroup,
   InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
   Stack,
   Switch,
   TableContainer,
@@ -56,6 +59,7 @@ const ProductPage = () => {
   const canEdit = myRole.includes(UserRole.BackEdit);
   const [sort, setSort] = useState('createdAt');
   const [order, setOrder] = useState(Order.Desc);
+  const [keywordTarget, setTargetKeyword] = useState('name');
 
   const { mutate: uploadProduct, isPending } = useUploadExcelFile();
   const [keyword, setKeyword] = useState('');
@@ -68,6 +72,7 @@ const ProductPage = () => {
     limit: LIMIT,
     sort,
     order,
+    keywordTarget,
   });
   const rows = (data?.products.data as Product[]) ?? [];
   const isLoading = networkStatus == 3 || networkStatus == 1;
@@ -86,6 +91,7 @@ const ProductPage = () => {
               limit: LIMIT,
               sort,
               order,
+              keywordTarget,
             },
           },
         });
@@ -230,15 +236,11 @@ const ProductPage = () => {
 
         client.refetchQueries({
           updateCache(cache) {
-            // cache.evict({ fieldName: 'wholeSales' });
-            // cache.evict({ fieldName: 'dashboardClients' });
-            // cache.evict({ fieldName: 'stocks' });
             cache.evict({ fieldName: 'stocksState' });
             cache.evict({ fieldName: 'productCountStocks' });
             cache.evict({ fieldName: 'productSales' });
             cache.evict({ fieldName: 'productSale' });
             cache.evict({ fieldName: 'products' });
-            // cache.evict({ fieldName: 'topClients' });
           },
         });
       },
@@ -283,26 +285,52 @@ const ProductPage = () => {
               />
             </Stack>
           </Stack>
-          <FormGroup sx={{ ml: 2 }}>
-            <FormControl>
-              <TextField
-                onChange={(event) => setKeyword(event.target.value)}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <Search />
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  width: 270,
-                  pr: 3,
-                  my: 2,
-                }}
-                label="이름이나 코드를 입력"
-                size="small"
-              />
-            </FormControl>
+          <FormGroup sx={{ mx: 2 }}>
+            <Stack
+              sx={{
+                gap: 2,
+                flexDirection: {
+                  xs: 'column',
+                  md: 'row',
+                },
+                alignItems: {
+                  md: 'center',
+                },
+              }}
+            >
+              <FormControl>
+                <TextField
+                  onChange={(event) => setKeyword(event.target.value)}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Search />
+                      </InputAdornment>
+                    ),
+                  }}
+                  label="검색 키워드"
+                  size="small"
+                />
+              </FormControl>
+              <FormControl>
+                <InputLabel>검색대상</InputLabel>
+                <Select
+                  sx={{ pr: 3 }}
+                  size="small"
+                  label="검색대상"
+                  value={keywordTarget}
+                  onChange={(event) => setTargetKeyword(event.target.value as string)}
+                >
+                  {ProductHeaderList.slice(0, ProductHeaderList.length - 1).map((p) => {
+                    return (
+                      <MenuItem value={p.id} key={p.id}>
+                        {p.label}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </Stack>
           </FormGroup>
           <Typography sx={{ p: 3 }}>
             {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}

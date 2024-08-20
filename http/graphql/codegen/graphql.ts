@@ -43,7 +43,7 @@ export type Client = {
   deliveryNotFreeProductCodeList?: Maybe<Array<Scalars['String']['output']>>;
   feeRate?: Maybe<Scalars['Float']['output']>;
   inActive?: Maybe<Scalars['Boolean']['output']>;
-  isSabangService?: Maybe<Scalars['Boolean']['output']>;
+  isSabangService: Scalars['Boolean']['output'];
   manager?: Maybe<Scalars['String']['output']>;
   managerTel?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
@@ -83,7 +83,7 @@ export type ClientSaleMenu = {
   code: Scalars['String']['output'];
   feeRate?: Maybe<Scalars['Float']['output']>;
   inActive?: Maybe<Scalars['Boolean']['output']>;
-  isSabangService?: Maybe<Scalars['Boolean']['output']>;
+  isSabangService: Scalars['Boolean']['output'];
   monthSales?: Maybe<ProductSaleInfo>;
   name: Scalars['String']['output'];
   payDate?: Maybe<Scalars['Int']['output']>;
@@ -631,7 +631,7 @@ export type OutClient = {
   deliveryNotFreeProductCodeList?: Maybe<Array<ProductCodeName>>;
   feeRate?: Maybe<Scalars['Float']['output']>;
   inActive?: Maybe<Scalars['Boolean']['output']>;
-  isSabangService?: Maybe<Scalars['Boolean']['output']>;
+  isSabangService: Scalars['Boolean']['output'];
   manager?: Maybe<Scalars['String']['output']>;
   managerTel?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
@@ -808,6 +808,7 @@ export type ProductSaleMenuOutput = {
 
 export type ProductsInput = {
   keyword: Scalars['String']['input'];
+  keywordTarget?: InputMaybe<Scalars['String']['input']>;
   limit: Scalars['Int']['input'];
   order?: InputMaybe<Order>;
   skip: Scalars['Int']['input'];
@@ -1442,7 +1443,7 @@ export type ProductFragmentFragment = { __typename?: 'Product', _id: string, cod
     & { ' $fragmentRefs'?: { 'ProductCategoryFragmentFragment': ProductCategoryFragmentFragment } }
   ) | null } & { ' $fragmentName'?: 'ProductFragmentFragment' };
 
-export type OutClientFragmentFragment = { __typename?: 'OutClient', _id: string, code: string, name: string, feeRate?: number | null, clientType: ClientType, businessName?: string | null, businessNumber?: string | null, payDate?: number | null, manager?: string | null, managerTel?: string | null, inActive?: boolean | null, storageId?: string | null, isSabangService?: boolean | null, deliveryFreeProductCodeList?: Array<{ __typename?: 'ProductCodeName', name: string, code: string }> | null, deliveryNotFreeProductCodeList?: Array<{ __typename?: 'ProductCodeName', name: string, code: string }> | null } & { ' $fragmentName'?: 'OutClientFragmentFragment' };
+export type OutClientFragmentFragment = { __typename?: 'OutClient', _id: string, code: string, name: string, feeRate?: number | null, clientType: ClientType, businessName?: string | null, businessNumber?: string | null, payDate?: number | null, manager?: string | null, managerTel?: string | null, inActive?: boolean | null, storageId?: string | null, isSabangService: boolean, deliveryFreeProductCodeList?: Array<{ __typename?: 'ProductCodeName', name: string, code: string }> | null, deliveryNotFreeProductCodeList?: Array<{ __typename?: 'ProductCodeName', name: string, code: string }> | null } & { ' $fragmentName'?: 'OutClientFragmentFragment' };
 
 export type ClientFragmentFragment = { __typename?: 'OutClient', _id: string, code: string, name: string, feeRate?: number | null, clientType: ClientType, businessName?: string | null, businessNumber?: string | null, payDate?: number | null, manager?: string | null, managerTel?: string | null, inActive?: boolean | null, storageId?: string | null } & { ' $fragmentName'?: 'ClientFragmentFragment' };
 
@@ -1490,7 +1491,7 @@ export type SaleMenuClientsQueryVariables = Exact<{
 }>;
 
 
-export type SaleMenuClientsQuery = { __typename?: 'Query', saleMenuClients: { __typename?: 'ClientSaleMenuOutput', totalCount: number, data: Array<{ __typename?: 'ClientSaleMenu', _id: string, name: string, code: string, businessName?: string | null, businessNumber?: string | null, clientType: ClientType, feeRate?: number | null, isSabangService?: boolean | null, payDate?: number | null, inActive?: boolean | null, accPayCost?: number | null, accWonCost?: number | null, accCount?: number | null, accProfit?: number | null, accProfitRate?: number | null, accDeliveryCost?: number | null, accTotalPayment?: number | null, monthSales?: { __typename?: 'ProductSaleInfo', name: string, accCount?: number | null, accPayCost?: number | null, accWonCost?: number | null, accDeliveryCost?: number | null, accTotalPayment?: number | null } | null, products: Array<{ __typename?: 'ProductSaleInfo', name: string, accCount?: number | null, accPayCost?: number | null, accWonCost?: number | null, accDeliveryCost?: number | null, accTotalPayment?: number | null }> }> } };
+export type SaleMenuClientsQuery = { __typename?: 'Query', saleMenuClients: { __typename?: 'ClientSaleMenuOutput', totalCount: number, data: Array<{ __typename?: 'ClientSaleMenu', _id: string, name: string, code: string, businessName?: string | null, businessNumber?: string | null, clientType: ClientType, feeRate?: number | null, isSabangService: boolean, payDate?: number | null, inActive?: boolean | null, accPayCost?: number | null, accWonCost?: number | null, accCount?: number | null, accProfit?: number | null, accProfitRate?: number | null, accDeliveryCost?: number | null, accTotalPayment?: number | null, monthSales?: { __typename?: 'ProductSaleInfo', name: string, accCount?: number | null, accPayCost?: number | null, accWonCost?: number | null, accDeliveryCost?: number | null, accTotalPayment?: number | null } | null, products: Array<{ __typename?: 'ProductSaleInfo', name: string, accCount?: number | null, accPayCost?: number | null, accWonCost?: number | null, accDeliveryCost?: number | null, accTotalPayment?: number | null }> }> } };
 
 export type DeliveryCostQueryVariables = Exact<{ [key: string]: never; }>;
 
