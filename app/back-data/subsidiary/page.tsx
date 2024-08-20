@@ -11,6 +11,9 @@ import {
   FormControl,
   FormGroup,
   InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
   Stack,
   TableContainer,
   TableHead,
@@ -53,6 +56,7 @@ const BackDataPage = () => {
   const canEdit = myRole.includes(UserRole.BackEdit);
   const [order, setOrder] = useState<Order>(Order.Desc);
   const [sort, setSort] = useState('createdAt');
+  const [keywordTarget, setKeywordTarget] = useState('name');
 
   const handleSort = (newSort: string) => {
     if (newSort == sort) {
@@ -73,6 +77,7 @@ const BackDataPage = () => {
     limit: LIMIT,
     sort,
     order,
+    keywordTarget,
   });
   const rows = data?.subsidiaries.data ?? [];
   const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
@@ -91,6 +96,7 @@ const BackDataPage = () => {
               limit: LIMIT,
               sort,
               order,
+              keywordTarget,
             },
           },
         });
@@ -219,29 +225,51 @@ const BackDataPage = () => {
               />
             </Stack>
           </Stack>
-          <FormGroup sx={{ ml: 2 }}>
-            <FormControl>
-              <TextField
-                onChange={(event) => setKeyword(event.target.value)}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <Search />
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  width: {
-                    xs: '100%',
-                    sm: 270,
-                  },
-                  pr: 3,
-                  my: 2,
-                }}
-                label="이름이나 코드 입력"
-                size="small"
-              />
-            </FormControl>
+          <FormGroup sx={{ mx: 2 }}>
+            <Stack
+              sx={{
+                gap: 2,
+                flexDirection: {
+                  xs: 'column',
+                  md: 'row',
+                },
+                alignItems: {
+                  md: 'center',
+                },
+              }}
+            >
+              <FormControl>
+                <TextField
+                  onChange={(event) => setKeyword(event.target.value)}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Search />
+                      </InputAdornment>
+                    ),
+                  }}
+                  label="검색 키워드"
+                  size="small"
+                />
+              </FormControl>
+              <FormControl>
+                <InputLabel>검색대상</InputLabel>
+                <Select
+                  size="small"
+                  label="검색대상"
+                  value={keywordTarget}
+                  onChange={(event) => setKeywordTarget(event.target.value as string)}
+                >
+                  {SubsidiaryHeaderList.map((p) => {
+                    return (
+                      <MenuItem value={p.id} key={p.id}>
+                        {p.label}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </Stack>
           </FormGroup>
           <Typography sx={{ p: 3 }}>
             {isEmpty ? '검색 결과가 없습니다' : `총 ${rows.length}건 검색`}
