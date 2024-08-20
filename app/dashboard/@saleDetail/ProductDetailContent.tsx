@@ -14,6 +14,8 @@ interface Props {
   setTotalDataCount: (value: number) => void;
   sort: string;
   order: number;
+  detailSort: string;
+  detailOrder: number;
 }
 
 const ProductDetailContent: FC<Props> = ({
@@ -22,6 +24,8 @@ const ProductDetailContent: FC<Props> = ({
   keyword,
   sort,
   order,
+  detailSort,
+  detailOrder,
 }) => {
   const { data, networkStatus } = useProductSales({
     keyword,
@@ -29,6 +33,8 @@ const ProductDetailContent: FC<Props> = ({
     to: to.toISOString(),
     sort,
     order,
+    detailOrder,
+    detailSort,
   });
 
   const { data: products } = useCommonSaleByProduct({

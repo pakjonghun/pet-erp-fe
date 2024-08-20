@@ -35,6 +35,18 @@ const ProductSaleDetail = () => {
     }
   };
 
+  const [detailSort, setDetailSort] = useState('accCount');
+  const [detailOrder, setDetailOrder] = useState(-1);
+
+  const onClickDetailSort = (sortTarget: string) => {
+    if (sort == sortTarget) {
+      setDetailOrder((prev) => (prev == 1 ? -1 : 1));
+    } else {
+      setDetailSort(sortTarget);
+      setDetailOrder(1);
+    }
+  };
+
   return (
     <>
       <Box sx={{ px: 2 }}>
@@ -113,6 +125,8 @@ const ProductSaleDetail = () => {
               keyword={delayedKeyword}
               sort={sort}
               order={order}
+              detailSort={detailSort}
+              detailOrder={detailOrder}
             />
           </Box>
         </Box>
