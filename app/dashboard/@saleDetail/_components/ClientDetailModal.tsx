@@ -18,7 +18,7 @@ import CommonAnyTypeTable from '@/components/table/CommonAnyTypeTable';
 import { EMPTY } from '@/constants';
 import { ClientTypeToHangle } from '@/app/back-data/client/constants';
 import { SaleToNumber } from '../type';
-import { detailHeader, detailHeaderMapper } from '../constants';
+import { detailHeader, detailHeaderMapper, detailHeaderMapperToHangle } from '../constants';
 import { createTableRowToRawData, createTableRowToString } from '../util';
 
 interface Props {
@@ -86,9 +86,9 @@ const ClientSaleModal: FC<Props> = ({
       const finalOrder = detailOrder == -1 ? 1 : -1;
 
       if (aValue > bValue) {
-        return finalOrder;
-      } else {
         return finalOrder * -1;
+      } else {
+        return finalOrder;
       }
     })
     .map((p, i) => {
@@ -203,7 +203,7 @@ const ClientSaleModal: FC<Props> = ({
 
         <CommonAnyTypeTable
           onClickSort={onClickSort}
-          sort={detailSort}
+          sort={detailHeaderMapperToHangle[detailSort]}
           order={detailOrder}
           title={`${name} 채널의 제품`}
           headerList={detailHeader}

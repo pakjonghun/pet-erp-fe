@@ -80,9 +80,9 @@ const ProductDetailModal: FC<Props> = ({
       const finalOrder = detailOrder == -1 ? 1 : -1;
 
       if (aValue > bValue) {
-        return finalOrder;
-      } else {
         return finalOrder * -1;
+      } else {
+        return finalOrder;
       }
     })
     .map((p, i) => {

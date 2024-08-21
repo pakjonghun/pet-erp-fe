@@ -245,9 +245,9 @@ export default SaleOrders;
 
 export function getSortIcon(order: number) {
   const sortMapper = {
-    ['-1' as string]: <ArrowUpwardIcon sx={{ width: 14, height: 14 }} />,
+    ['1' as string]: <ArrowUpwardIcon sx={{ width: 14, height: 14 }} />,
     '0': <ReorderIcon sx={{ width: 14, height: 14 }} />,
-    '1': <ArrowDownwardIcon sx={{ width: 14, height: 14 }} />,
+    '-1': <ArrowDownwardIcon sx={{ width: 14, height: 14 }} />,
   };
 
   return sortMapper[order.toString()];
