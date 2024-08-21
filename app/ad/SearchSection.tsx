@@ -35,11 +35,9 @@ const SearchSection: FC<Props> = ({
   const { from, to, type } = searchQuery;
 
   useEffect(() => {
-    console.log(searchQuery.keyword, delayedKeyword);
     if (searchQuery.keyword == delayedKeyword) return;
 
     setSearchQuery({ ...searchQuery, keyword: delayedKeyword });
-    console.log('eset keyword', { ...searchQuery, keyword: delayedKeyword });
   }, [delayedKeyword, searchQuery, setSearchQuery]);
 
   const handleAdTypes = Object.values(AdTypeToHangle);

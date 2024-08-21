@@ -41,7 +41,6 @@ export default useGetSaleData;
 
 function getSaleData(saleInfo?: SaleInfo, addPrice?: number) {
   const accProfit = saleInfo ? getProfit(saleInfo, addPrice) : -(addPrice ?? 0);
-  console.log(saleInfo, 'accProfit : ', accProfit);
   const accTotalPayment = saleInfo?.accTotalPayment ?? 0;
   return {
     accProfit,

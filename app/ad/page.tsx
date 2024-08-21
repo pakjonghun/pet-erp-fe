@@ -144,14 +144,14 @@ const BackDataPage = () => {
     to: isDateChecked ? to : undefined,
     skip: 0,
   });
-  const rows = (data?.ads.data as AdsOutPutItem[]) ?? [];
+  const rows = (data?.ads?.data as AdsOutPutItem[]) ?? [];
   const isLoading = networkStatus == 3 || networkStatus == 1 || networkStatus == 2;
   const isEmpty = !isLoading && rows.length === 0;
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
       if (isLoading) return;
 
-      const totalCount = data?.ads.totalCount;
+      const totalCount = data?.ads?.totalCount;
       if (totalCount != null && totalCount > rows.length) {
         fetchMore({
           variables: {
@@ -308,7 +308,7 @@ const BackDataPage = () => {
             searchQuery={searchQuery}
           />
           <Typography sx={{ p: 3 }}>
-            {isEmpty ? '검색 결과가 없습니다' : `총 ${data?.ads.totalCount ?? ''}건 검색`}
+            {isEmpty ? '검색 결과가 없습니다' : `총 ${data?.ads?.totalCount ?? ''}건 검색`}
           </Typography>
           <OptionCards
             sx={{
@@ -431,7 +431,6 @@ const BackDataPage = () => {
                           dateRange={{ from: dayjs(watch('from')), to: dayjs(watch('to')) }}
                           searchStandard={'일'}
                           setDateRange={(range) => {
-                            console.log(range, range.from.toDate(), range.to.toDate());
                             setValue('from', range.from.toDate());
                             setValue('to', range.to.toDate());
                           }}
