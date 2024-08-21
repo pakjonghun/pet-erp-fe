@@ -20,11 +20,12 @@ const TotalSaleText: FC<Props> = ({
       }}
       flexDirection="row"
       flexWrap="wrap"
-      lineHeight={0.7}
-      color="GrayText"
-      fontSize={14}
+      alignItems="center"
+      // lineHeight={0.7}
+      // color="GrayText"
+      // fontSize={14}
       justifyContent="center"
-      fontWeight={800}
+      // fontWeight={800}
     >
       {hasFullText && <span>{`매출 ${accTotalPayment}`} </span>}
       <span>{`판매수 ${accCount}`} </span>

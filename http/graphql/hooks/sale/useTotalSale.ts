@@ -5,22 +5,13 @@ import { FindDateInput } from '../../codegen/graphql';
 const totalSale = graphql(`
   query totalSale($totalSaleInput: FindDateInput!) {
     totalSale(totalSaleInput: $totalSaleInput) {
-      current {
-        accPayCost
-        accCount
-        name
-        accDeliveryCost
-        accTotalPayment
-        accWonCost
-      }
-      previous {
-        accPayCost
-        accCount
-        name
-        accDeliveryCost
-        accTotalPayment
-        accWonCost
-      }
+      accPayCost
+      accCount
+      name
+      accDeliveryCost
+      accTotalPayment
+      accWonCost
+      accAdPrice
     }
   }
 `);

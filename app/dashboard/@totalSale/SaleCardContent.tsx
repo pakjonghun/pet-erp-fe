@@ -25,8 +25,8 @@ const SaleCardContent: FC<Props> = ({ title, saleInfo }) => {
         py: 0.4,
       }}
     >
-      <Stack direction="row" alignContent="center" gap={3}>
-        <Typography color="GrayText" sx={{ display: 'flex', alignItems: 'center' }}>
+      <Stack direction="row" alignItems="center" gap={3}>
+        <Typography variant="body1" color="GrayText" sx={{ display: 'flex', alignItems: 'center' }}>
           {title}
         </Typography>
         <Typography

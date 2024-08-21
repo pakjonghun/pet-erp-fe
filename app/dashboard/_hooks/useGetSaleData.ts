@@ -4,7 +4,6 @@ import { Dayjs } from 'dayjs';
 import { getNumberToString, getProfit, getProfitRate } from '@/utils/sale';
 import { useTotalSale } from '@/http/graphql/hooks/sale/useTotalSale';
 import { SaleInfo } from '@/http/graphql/codegen/graphql';
-import { useAdTotals } from '@/http/graphql/hooks/ad/useAdTotals';
 
 interface Props {
   from: Dayjs;
@@ -17,11 +16,8 @@ const useGetSaleData = ({ from, to }: Props) => {
     to: to.toISOString(),
   });
 
-  const { data: adTotal } = useAdTotals({ from: from.toISOString(), to: to.toISOString() });
-
-  const current = todayData?.totalSale?.current as SaleInfo;
-  const accAdPrice = Math.floor(adTotal?.adsTotal?.accPrice ?? 0);
-  const { accTotalPayment, accCount, accProfit, accProfitRate } = getSaleData(current, accAdPrice);
+  const sale = todayData?.totalSale as SaleInfo;
+  const { accTotalPayment, accCount, accProfit, accProfitRate, accAdPrice } = getSaleData(sale);
 
   const parsedSaleInfo = {
     accTotalPayment: getNumberToString(accTotalPayment, 'comma'),
@@ -39,13 +35,14 @@ const useGetSaleData = ({ from, to }: Props) => {
 
 export default useGetSaleData;
 
-function getSaleData(saleInfo?: SaleInfo, addPrice?: number) {
-  const accProfit = saleInfo ? getProfit(saleInfo, addPrice) : -(addPrice ?? 0);
+function getSaleData(saleInfo?: SaleInfo) {
+  const accProfit = saleInfo ? getProfit(saleInfo) : 0;
   const accTotalPayment = saleInfo?.accTotalPayment ?? 0;
   return {
     accProfit,
     accCount: saleInfo?.accCount ?? 0,
     accTotalPayment,
     accProfitRate: getProfitRate(accProfit, accTotalPayment),
+    accAdPrice: saleInfo?.accAdPrice ?? 0,
   };
 }
