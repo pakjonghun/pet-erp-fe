@@ -1,3 +1,5 @@
+import { SaleToNumber } from './type';
+
 export const SaleOrdersNameMapper = {
   ['saleAt' as string]: '주문날짜',
   mallId: '거래처',
@@ -49,3 +51,37 @@ export const SaleProductSortList = [
     value: 'accProfitRate',
   },
 ];
+
+export const detailHeader = [
+  'NO',
+  '이름',
+  '판매수',
+  '매출',
+  '정산액',
+  '원가',
+  '택배비',
+  '수익',
+  '순익율',
+];
+
+export const detailHeaderMapper: Record<string, keyof SaleToNumber> = {
+  이름: 'name',
+  판매수: 'accCount',
+  매출: 'accTotalPayment',
+  정산액: 'accPayCost',
+  원가: 'accWonCost',
+  택배비: 'accDeliveryCost',
+  수익: 'profit',
+  순익율: 'profitRate',
+};
+
+export const detailHeaderMapperToHangle: Record<keyof SaleToNumber, string> = {
+  name: '이름',
+  accCount: '판매수',
+  accTotalPayment: '매출',
+  accPayCost: '정산액',
+  accWonCost: '원가',
+  accDeliveryCost: '택배비',
+  profit: '수익',
+  profitRate: '순익율',
+};

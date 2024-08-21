@@ -1,6 +1,11 @@
+// import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+// import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+// import TableRowsIcon from '@mui/icons-material/TableRows';
 import { Dispatch, FC, ReactNode, SetStateAction } from 'react';
 import {
   alpha,
+  IconButton,
+  Stack,
   SxProps,
   Table,
   TableBody,
@@ -14,11 +19,13 @@ import LoadingRow from './LoadingRow';
 import EmptyRow from './EmptyRow';
 import { useReactiveVar } from '@apollo/client';
 import { minMarginRate } from '@/store/saleStore';
+import { getSortIcon } from '@/app/dashboard/@saleDetail/SaleOrders';
 
 interface Props {
   title: string;
   headerList: string[];
   rowList: ReactNode[][];
+  onClickSort?: (headerName: string) => void;
   scrollRef?: Dispatch<SetStateAction<null | HTMLElement>>;
   isLoading?: boolean;
   onClickItem?: (item: any) => void;
@@ -26,6 +33,8 @@ interface Props {
   sx?: SxProps;
   hover?: boolean;
   pointer?: boolean;
+  sort?: string;
+  order?: number;
 }
 
 const CommonAnyTypeTable: FC<Props> = ({
@@ -39,6 +48,9 @@ const CommonAnyTypeTable: FC<Props> = ({
   hover = true,
   pointer = false,
   sx,
+  onClickSort,
+  sort,
+  order,
 }) => {
   const isEmpty = !isLoading && rowList.length == 0;
   const MIN_MARGIN = useReactiveVar(minMarginRate);
@@ -61,10 +73,25 @@ const CommonAnyTypeTable: FC<Props> = ({
         }}
       >
         <TableHead>
-          {headerList.map((head) => {
+          {headerList.map((head, i) => {
             return (
-              <TableCell sx={{ textAlign: 'center' }} key={head}>
-                {head}
+              <TableCell
+                onClick={() => {
+                  if (onClickSort) {
+                    onClickSort(head);
+                  }
+                }}
+                sx={{ textAlign: 'center' }}
+                key={head}
+              >
+                <Stack justifyContent="center" flexDirection="row" alignItems="center">
+                  <Typography variant="body2">{head}</Typography>
+                  {!!sort && !!order && i > 0 && (
+                    <IconButton disableRipple size="small">
+                      {getSortIcon(sort == head ? order : 0)}
+                    </IconButton>
+                  )}
+                </Stack>
               </TableCell>
             );
           })}

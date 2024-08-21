@@ -1,6 +1,6 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import { ClientSaleMenu, ProductSaleInfo } from '@/http/graphql/codegen/graphql';
 import BaseModal from '@/components/ui/modal/BaseModal';
@@ -17,6 +17,9 @@ import SaleOrders from '../SaleOrders';
 import CommonAnyTypeTable from '@/components/table/CommonAnyTypeTable';
 import { EMPTY } from '@/constants';
 import { ClientTypeToHangle } from '@/app/back-data/client/constants';
+import { SaleToNumber } from '../type';
+import { detailHeader, detailHeaderMapper } from '../constants';
+import { createTableRowToRawData, createTableRowToString } from '../util';
 
 interface Props {
   initDateRange: DateRange;
@@ -57,6 +60,42 @@ const ClientSaleModal: FC<Props> = ({
     accWonCost: accWonCost,
     accDeliveryCost: accDeliveryCost,
   });
+
+  const [detailSort, setDetailSort] = useState<keyof SaleToNumber>('accCount');
+  const [detailOrder, setDetailOrder] = useState(-1);
+
+  const onClickSort = (headerName: string) => {
+    const targetKey = detailHeaderMapper[headerName];
+    if (!targetKey) return;
+
+    if (detailSort == targetKey) {
+      setDetailOrder((prev) => (prev == 1 ? -1 : 1));
+    } else {
+      setDetailSort(targetKey);
+      setDetailOrder(-1);
+    }
+  };
+
+  const rowList = products
+    .map((item) => {
+      return createTableRowToRawData(item);
+    })
+    .toSorted((a, b) => {
+      const aValue = a[detailSort]!;
+      const bValue = b[detailSort]!;
+      const finalOrder = detailOrder == -1 ? 1 : -1;
+
+      if (aValue > bValue) {
+        return finalOrder;
+      } else {
+        return finalOrder * -1;
+      }
+    })
+    .map((p, i) => {
+      const no = i + 1;
+      const dataList = createTableRowToString(p);
+      return [no, ...dataList];
+    });
 
   return (
     <BaseModal
@@ -163,23 +202,12 @@ const ClientSaleModal: FC<Props> = ({
         />
 
         <CommonAnyTypeTable
-          title={`${name} 채널의 제품별 판매수 순`}
-          headerList={[
-            'NO',
-            '이름',
-            '판매수',
-            '매출',
-            '정산액',
-            '원가',
-            '택배비',
-            '수익',
-            '순익율',
-          ]}
-          rowList={products.map((p, i) => {
-            const no = i + 1;
-            const dataList = createTableRow(p);
-            return [no, ...dataList];
-          })}
+          onClickSort={onClickSort}
+          sort={detailSort}
+          order={detailOrder}
+          title={`${name} 채널의 제품`}
+          headerList={detailHeader}
+          rowList={rowList}
         />
         <Box sx={{ pr: 3 }}>
           <SaleOrders initProductName="" initMallId={name} initDateRange={initDateRange} />
@@ -190,24 +218,3 @@ const ClientSaleModal: FC<Props> = ({
 };
 
 export default ClientSaleModal;
-
-function createTableRow(product: ProductSaleInfo) {
-  const profit = getProfit({
-    accDeliveryCost: product.accDeliveryCost,
-    accPayCost: product.accPayCost,
-    accWonCost: product.accWonCost,
-  });
-
-  const result = [
-    product.name,
-    getNumberToString(product.accCount ?? 0, 'comma'),
-    getNumberToString(product.accTotalPayment ?? 0, 'comma'),
-    getNumberToString(product.accPayCost ?? 0, 'comma'),
-    getNumberToString(product.accWonCost ?? 0, 'comma'),
-    getNumberToString(Math.floor(product.accDeliveryCost ?? 0), 'comma'),
-    getNumberToString(profit ?? 0, 'comma'),
-    getNumberToString(getProfitRate(profit, product.accPayCost ?? 0), 'percent'),
-  ];
-
-  return result;
-}

@@ -114,6 +114,7 @@ const ProductDetailContent: FC<Props> = ({
 
       {!!selectedProduct && (
         <ProductDetailModal
+          setSelectedProduct={setSelectedProduct}
           initDateRange={{ from, to }}
           onClose={() => {
             setSelectedProduct(null);

@@ -26,7 +26,6 @@ const SearchField: FC<Props> = ({ dateInput, keywordInput: { keyword, setKeyword
     minMarginRate(value);
   };
   const minMargin = useReactiveVar(minMarginRate);
-  console.log(minMargin);
   return (
     <>
       <SwitchDate {...dateInput} />
