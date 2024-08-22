@@ -16,7 +16,7 @@ const SaleDetail = () => {
 
   return (
     <Card sx={{ minHeight: '100%' }}>
-      <CardHeader title={`${DASHBOARD_DETAIL_TABS[tabValue] ?? ''} 판매수 순`} />
+      <CardHeader title={`${DASHBOARD_DETAIL_TABS[tabValue] ?? ''} 기준`} />
       <DetailTabs tabValue={tabValue} onChangeTab={onChangeTab} />
       <Box sx={{ py: 1 }} />
       {tabValue ? <ProductSaleDetail /> : <ClientSaleDetail />}
