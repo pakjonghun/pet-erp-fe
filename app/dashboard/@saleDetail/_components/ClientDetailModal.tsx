@@ -157,7 +157,7 @@ const ClientSaleModal: FC<Props> = ({
               monthSales == null
                 ? EMPTY
                 : getFixedTwo(
-                    (1 - (monthSales.accPayCost ?? 0) / (monthSales?.accTotalPayment ?? 1)) * 100
+                    (1 - (monthSales.accPayCost ?? 0) / (monthSales?.accTotalPayment || 1)) * 100
                   ) + '%',
               code,
               ClientTypeToHangle[clientType],
