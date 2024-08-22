@@ -39,10 +39,10 @@ function getSaleData(saleInfo?: SaleInfo) {
   const accProfit = saleInfo ? getProfit(saleInfo) : 0;
   const accTotalPayment = saleInfo?.accTotalPayment ?? 0;
   return {
-    accProfit,
+    accProfit: Math.floor(accProfit),
     accCount: saleInfo?.accCount ?? 0,
     accTotalPayment,
     accProfitRate: getProfitRate(accProfit, accTotalPayment),
-    accAdPrice: saleInfo?.accAdPrice ?? 0,
+    accAdPrice: Math.floor(saleInfo?.accAdPrice ?? 0),
   };
 }

@@ -23,6 +23,11 @@ const ClientCardContent: FC<Props> = ({
     <Stack direction="column" gap={1}>
       {rows.map((data, index) => {
         const isLast = index + 1 === rows.length;
+
+        const newData = {
+          ...data,
+          products: data.products ?? [],
+        };
         return (
           <SaleDetailItem
             isSelected={selectedClient?._id === data._id}
@@ -30,7 +35,7 @@ const ClientCardContent: FC<Props> = ({
             scrollRef={isLast ? cardScrollRef : undefined}
             key={data._id}
             index={index + 1}
-            data={data}
+            data={newData}
           />
         );
       })}

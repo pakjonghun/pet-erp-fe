@@ -7,4 +7,5 @@ export type SaleToNumber = {
   accDeliveryCost: number;
   profit: number;
   profitRate: number;
+  accAdPrice: number;
 };

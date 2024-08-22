@@ -19,10 +19,20 @@ const ClientTableContent: FC<Props> = ({
   onClickItem,
   tableScrollRef,
 }) => {
-  const headerList = ['NO', '거래처', '매출', '판매수', '순이익', '순익율', '제품 판매수순'];
+  const headerList = [
+    'NO',
+    '거래처',
+    '매출',
+    '판매수',
+    '광고비',
+    '순이익',
+    '순익율',
+    '제품 판매수순',
+  ];
 
   function createTableRow(item: ClientSaleMenu, no: number) {
     const profit = getProfit({
+      accAdPrice: item.accAdPrice,
       accWonCost: item.accWonCost,
       accDeliveryCost: item.accDeliveryCost,
       accPayCost: item.accPayCost,
@@ -33,6 +43,7 @@ const ClientTableContent: FC<Props> = ({
       item.name,
       getNumberToString(item.accTotalPayment ?? 0, 'comma'),
       getNumberToString(item.accCount ?? 0, 'comma'),
+      getNumberToString(item.accAdPrice ?? 0, 'comma'),
       getNumberToString(profit ?? 0, 'comma'),
       getNumberToString(getProfitRate(profit ?? 0, item.accTotalPayment ?? 0), 'percent'),
       <ExpandChip
@@ -44,7 +55,7 @@ const ClientTableContent: FC<Props> = ({
         //     name,
         //   };
         // })}
-        list={item.products}
+        list={item.products ?? []}
       />,
     ];
   }

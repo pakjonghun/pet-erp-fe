@@ -60,6 +60,7 @@ export const detailHeader = [
   '정산액',
   '원가',
   '택배비',
+  '광고비',
   '수익',
   '순익율',
 ];
@@ -73,10 +74,12 @@ export const detailHeaderMapper: Record<string, keyof SaleToNumber> = {
   택배비: 'accDeliveryCost',
   수익: 'profit',
   순익율: 'profitRate',
+  광고비: 'accAdPrice',
 };
 
 export const detailHeaderMapperToHangle: Record<keyof SaleToNumber, string> = {
   name: '이름',
+  accAdPrice: '광고비',
   accCount: '판매수',
   accTotalPayment: '매출',
   accPayCost: '정산액',

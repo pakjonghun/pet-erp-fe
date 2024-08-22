@@ -97,6 +97,8 @@ const ClientSaleModal: FC<Props> = ({
       return [no, ...dataList];
     });
 
+  const totalAdPrice = Math.floor(products.reduce((acc, cur) => (cur.accAdPrice ?? 0) + acc, 0));
+
   return (
     <BaseModal
       open={open}
@@ -125,6 +127,7 @@ const ClientSaleModal: FC<Props> = ({
           >
             <TotalSaleText
               saleInfo={getParsedSaleData({
+                accAdPrice: totalAdPrice,
                 accCount: accCount ?? 0,
                 accProfit: profit,
                 accProfitRate: getProfitRate(profit, accTotalPayment ?? 0),

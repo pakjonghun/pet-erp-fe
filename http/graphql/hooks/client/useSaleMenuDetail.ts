@@ -5,14 +5,16 @@ import { CommonSaleByMallInput } from '../../codegen/graphql';
 const commonSaleByMall = graphql(`
   query commonSaleByMall($commonSaleByMallInput: CommonSaleByMallInput!) {
     commonSaleByMall(commonSaleByMallInput: $commonSaleByMallInput) {
-      accPayCost
-      accWonCost
-      accCount
-      accProfit
-      accProfitRate
-      accDeliveryCost
-      accTotalPayment
-      accAdPrice
+      _id
+      products {
+        accPayCost
+        accWonCost
+        accCount
+        accDeliveryCost
+        accTotalPayment
+        accAdPrice
+        name
+      }
     }
   }
 `);

@@ -58,13 +58,14 @@ export const getParsedSaleData = ({
   accCount = 0,
   accProfit = 0,
   accProfitRate = 0,
+  accAdPrice = 0,
 }: SaleInfoPropsNumber) => {
   return {
     accTotalPayment: getNumberToString(accTotalPayment!, 'comma'),
     accCount: getNumberToString(accCount!, 'comma'),
     accProfit: getNumberToString(accProfit!, 'comma'),
     accProfitRate: getNumberToString(accProfitRate!, 'percent'),
-    accAdPrice: 'string',
+    accAdPrice: getNumberToString(accAdPrice ?? 0, 'comma'),
   };
 };
 

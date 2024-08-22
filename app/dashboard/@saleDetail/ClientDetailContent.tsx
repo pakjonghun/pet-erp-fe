@@ -2,7 +2,11 @@ import { FC, useEffect, useState } from 'react';
 import { DateRange } from '@/components/calendar/dateFilter/type';
 import { LIMIT } from '@/constants';
 import { useSaleMenuClients } from '@/http/graphql/hooks/client/useSaleMenuClients';
-import { ClientSaleMenu } from '@/http/graphql/codegen/graphql';
+import {
+  ClientSaleMenu,
+  CommonSaleByMall,
+  CommonSaleByMallOutput,
+} from '@/http/graphql/codegen/graphql';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import ClientSaleModal from './_components/ClientDetailModal';
 import ClientCardContent from './ClientCardContent';
@@ -46,6 +50,12 @@ const ClientDetailContent: FC<Props> = ({
     !mallIdList?.length
   );
 
+  const productByMallId = new Map<string, CommonSaleByMall[]>(
+    (products?.commonSaleByMall ?? []).map((p) => {
+      return [p._id, p.products ?? []];
+    })
+  );
+
   useEffect(() => {
     if (data?.saleMenuClients.totalCount == null) return;
 
@@ -53,7 +63,12 @@ const ClientDetailContent: FC<Props> = ({
   }, [data?.saleMenuClients.totalCount]);
 
   const [selectedClient, setSelectedClient] = useState<null | ClientSaleMenu>(null);
-  const rows = (data?.saleMenuClients.data as ClientSaleMenu[]) ?? [];
+  const clientSaleMenu = data?.saleMenuClients.data.map((d) => {
+    const products = productByMallId.get(d.name) ?? [];
+    const accAdPrice = products.reduce((acc, cur) => (cur.accAdPrice ?? 0) + acc, 0);
+    return { ...d, accAdPrice: Math.floor(accAdPrice), products };
+  });
+  const rows = (clientSaleMenu as unknown as ClientSaleMenu[]) ?? [];
 
   const callback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {

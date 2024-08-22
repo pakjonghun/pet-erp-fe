@@ -125,14 +125,14 @@ const AddAdsModal: FC<Props> = ({ q }) => {
   };
 
   const setDateRange = (range: DateRange, index: number) => {
-    setValue(`ads.${index}.from`, range.from.startOf('day').toDate());
-    setValue(`ads.${index}.to`, range.to.startOf('day').toDate());
+    setValue(`ads.${index}.from`, range.from.toDate());
+    setValue(`ads.${index}.to`, range.to.toDate());
   };
 
   const getDateRange = (index: number) => {
     const from = watch(`ads.${index}.from`);
     const to = watch(`ads.${index}.to`);
-    return { from: dayjs(from).startOf('day'), to: dayjs(to).startOf('day') };
+    return { from: dayjs(from), to: dayjs(to) };
   };
 
   const hasError = Object.keys(errors).length > 0;

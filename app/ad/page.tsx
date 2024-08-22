@@ -429,13 +429,13 @@ const BackDataPage = () => {
                             border: 'none',
                           }}
                           dateRange={{
-                            from: dayjs(watch('from')).startOf('day'),
-                            to: dayjs(watch('to')).startOf('day'),
+                            from: dayjs(watch('from')),
+                            to: dayjs(watch('to')),
                           }}
                           searchStandard={'일'}
                           setDateRange={(range) => {
-                            setValue('from', range.from.startOf('day').toDate());
-                            setValue('to', range.to.startOf('day').toDate());
+                            setValue('from', range.from.toDate());
+                            setValue('to', range.to.toDate());
                           }}
                           setSearchStandard={() => {}}
                         />

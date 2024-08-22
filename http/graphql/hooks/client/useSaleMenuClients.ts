@@ -39,14 +39,14 @@ const saleMenuClients = graphql(`
           accTotalPayment
         }
 
-        products {
-          name
-          accCount
-          accPayCost
-          accWonCost
-          accDeliveryCost
-          accTotalPayment
-        }
+        # products {
+        #   name
+        #   accCount
+        #   accPayCost
+        #   accWonCost
+        #   accDeliveryCost
+        #   accTotalPayment
+        # }
       }
     }
   }
