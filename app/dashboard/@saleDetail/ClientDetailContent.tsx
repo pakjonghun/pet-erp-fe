@@ -8,6 +8,7 @@ import ClientSaleModal from './_components/ClientDetailModal';
 import ClientCardContent from './ClientCardContent';
 import ClientTableContent from './ClientTableContent';
 import { Box } from '@mui/material';
+import { useCommonSaleByMall } from '@/http/graphql/hooks/client/useSaleMenuDetail';
 
 interface Props {
   sort: string;
@@ -33,6 +34,17 @@ const ClientDetailContent: FC<Props> = ({
     order,
     sort,
   });
+
+  const mallIdList = data?.saleMenuClients.data.map((c) => c.name);
+
+  const { data: products, networkStatus: productListStatus } = useCommonSaleByMall(
+    {
+      from: from.toISOString(),
+      to: to.toISOString(),
+      mallIdList: mallIdList ?? [],
+    },
+    !mallIdList?.length
+  );
 
   useEffect(() => {
     if (data?.saleMenuClients.totalCount == null) return;

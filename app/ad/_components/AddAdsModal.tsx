@@ -85,22 +85,6 @@ const AddAdsModal: FC<Props> = ({ q }) => {
     const productNeed =
       adType == AdType.ChannelAppProduct || adType == AdType.ChannelSpecialProduct;
 
-    // if (channelNeed) {
-    //   const hasNoClient = createAdInput.ads.some((item) => !item.clientCode);
-    //   if (hasNoClient) {
-    //     setError('ads', { message: '채널이 입력되지 않았습니다.' });
-    //     return;
-    //   }
-    // }
-
-    // if (productNeed) {
-    //   const hasNoProduct = createAdInput.ads.some((item) => !item.productCodeList?.length);
-    //   if (hasNoProduct) {
-    //     setError('ads', { message: '제품이 입력되지 않았습니다.' });
-    //     return;
-    //   }
-    // }
-
     const createAdsInput = createAdInput.ads.map((i) => {
       let clientCode = undefined;
       let productCodeList = undefined;
@@ -141,14 +125,14 @@ const AddAdsModal: FC<Props> = ({ q }) => {
   };
 
   const setDateRange = (range: DateRange, index: number) => {
-    setValue(`ads.${index}.from`, range.from.toDate());
-    setValue(`ads.${index}.to`, range.to.toDate());
+    setValue(`ads.${index}.from`, range.from.startOf('day').toDate());
+    setValue(`ads.${index}.to`, range.to.startOf('day').toDate());
   };
 
   const getDateRange = (index: number) => {
     const from = watch(`ads.${index}.from`);
     const to = watch(`ads.${index}.to`);
-    return { from: dayjs(from), to: dayjs(to) };
+    return { from: dayjs(from).startOf('day'), to: dayjs(to).startOf('day') };
   };
 
   const hasError = Object.keys(errors).length > 0;
@@ -199,6 +183,9 @@ const AddAdsModal: FC<Props> = ({ q }) => {
                 }}
                 onClick={() => {
                   q.appendQuery('tab', tab);
+                  clearErrors();
+                  const newAds = ads.map((a) => ({ ...a, type: tab as AdType }));
+                  setValue('ads', newAds);
                 }}
                 label={tabItem}
                 key={tab}

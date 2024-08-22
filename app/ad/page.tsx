@@ -199,7 +199,7 @@ const BackDataPage = () => {
 
   const clientCallback: IntersectionObserverCallback = (entries) => {
     if (entries[0].isIntersecting) {
-      if (isLoading) return;
+      if (isClientLoading) return;
 
       const totalCount = clients?.clients.totalCount;
       if (totalCount != null && totalCount > clientRows.length) {
@@ -207,7 +207,7 @@ const BackDataPage = () => {
           variables: {
             clientsInput: {
               keyword: clientDelayedKeyword,
-              skip: rows.length,
+              skip: clientRows.length,
               limit: LIMIT,
               sort: 'createdAt',
               order: Order.Desc,
@@ -428,11 +428,14 @@ const BackDataPage = () => {
                             width: '100%',
                             border: 'none',
                           }}
-                          dateRange={{ from: dayjs(watch('from')), to: dayjs(watch('to')) }}
+                          dateRange={{
+                            from: dayjs(watch('from')).startOf('day'),
+                            to: dayjs(watch('to')).startOf('day'),
+                          }}
                           searchStandard={'일'}
                           setDateRange={(range) => {
-                            setValue('from', range.from.toDate());
-                            setValue('to', range.to.toDate());
+                            setValue('from', range.from.startOf('day').toDate());
+                            setValue('to', range.to.startOf('day').toDate());
                           }}
                           setSearchStandard={() => {}}
                         />
@@ -523,7 +526,7 @@ const BackDataPage = () => {
                                 }}
                                 renderOption={(props, item, state) => {
                                   const { key, ...rest } = props as any;
-                                  const isLast = state.index === rows.length - 1;
+                                  const isLast = state.index === clientRows.length - 1;
                                   return (
                                     <Box
                                       component="li"
