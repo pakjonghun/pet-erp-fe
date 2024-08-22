@@ -2,11 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import { DateRange } from '@/components/calendar/dateFilter/type';
 import { LIMIT } from '@/constants';
 import { useSaleMenuClients } from '@/http/graphql/hooks/client/useSaleMenuClients';
-import {
-  ClientSaleMenu,
-  CommonSaleByMall,
-  CommonSaleByMallOutput,
-} from '@/http/graphql/codegen/graphql';
+import { ClientSaleMenu, CommonSaleByMall } from '@/http/graphql/codegen/graphql';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import ClientSaleModal from './_components/ClientDetailModal';
 import ClientCardContent from './ClientCardContent';
@@ -41,7 +37,7 @@ const ClientDetailContent: FC<Props> = ({
 
   const mallIdList = data?.saleMenuClients.data.map((c) => c.name);
 
-  const { data: products, networkStatus: productListStatus } = useCommonSaleByMall(
+  const { data: products } = useCommonSaleByMall(
     {
       from: from.toISOString(),
       to: to.toISOString(),
