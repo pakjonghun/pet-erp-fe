@@ -22,14 +22,7 @@ const saleMenuClients = graphql(`
         accCount
         accProfit
         accProfitRate
-        # prevAccCount
-        # prevAccPayCost
-        # prevAccWonCost
-        # prevAccDeliveryCost
-        # prevAccTotalPayment
-        accDeliveryCost
         accTotalPayment
-
         monthSales {
           name
           accCount
@@ -38,15 +31,6 @@ const saleMenuClients = graphql(`
           accDeliveryCost
           accTotalPayment
         }
-
-        # products {
-        #   name
-        #   accCount
-        #   accPayCost
-        #   accWonCost
-        #   accDeliveryCost
-        #   accTotalPayment
-        # }
       }
     }
   }

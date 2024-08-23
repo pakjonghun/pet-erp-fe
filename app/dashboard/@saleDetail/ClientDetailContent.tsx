@@ -1,9 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { DateRange } from '@/components/calendar/dateFilter/type';
-import { LIMIT } from '@/constants';
 import { useSaleMenuClients } from '@/http/graphql/hooks/client/useSaleMenuClients';
 import { ClientSaleMenu, CommonSaleByMall } from '@/http/graphql/codegen/graphql';
-import useInfinityScroll from '@/hooks/useInfinityScroll';
 import ClientSaleModal from './_components/ClientDetailModal';
 import ClientCardContent from './ClientCardContent';
 import ClientTableContent from './ClientTableContent';
@@ -25,26 +23,18 @@ const ClientDetailContent: FC<Props> = ({
   order,
   sort,
 }) => {
-  const { data, fetchMore, networkStatus } = useSaleMenuClients({
+  const { data, networkStatus } = useSaleMenuClients({
     keyword,
     from: from.toISOString(),
     to: to.toISOString(),
-    limit: LIMIT,
-    skip: 0,
     order,
     sort,
   });
 
-  const mallIdList = data?.saleMenuClients.data.map((c) => c.name);
-
-  const { data: products } = useCommonSaleByMall(
-    {
-      from: from.toISOString(),
-      to: to.toISOString(),
-      mallIdList: mallIdList ?? [],
-    },
-    !mallIdList?.length
-  );
+  const { data: products } = useCommonSaleByMall({
+    from: from.toISOString(),
+    to: to.toISOString(),
+  });
 
   const productByMallId = new Map<string, CommonSaleByMall[]>(
     (products?.commonSaleByMall ?? []).map((p) => {
@@ -65,30 +55,6 @@ const ClientDetailContent: FC<Props> = ({
     return { ...d, accAdPrice: Math.floor(accAdPrice), products };
   });
   const rows = (clientSaleMenu as unknown as ClientSaleMenu[]) ?? [];
-
-  const callback: IntersectionObserverCallback = (entries) => {
-    if (entries[0].isIntersecting) {
-      if (isLoading) return;
-
-      const totalCount = data?.saleMenuClients?.totalCount;
-      if (totalCount != null && totalCount > rows.length) {
-        fetchMore({
-          variables: {
-            saleMenuClientsInput: {
-              order,
-              sort,
-              keyword,
-              skip: rows.length,
-              limit: LIMIT,
-              from: from.toISOString(),
-              to: to.toISOString(),
-            },
-          },
-        });
-      }
-    }
-  };
-
   const onClickItem = (data: ClientSaleMenu) => {
     const nextItem =
       selectedClient?._id === data._id //
@@ -96,9 +62,6 @@ const ClientDetailContent: FC<Props> = ({
         : data;
     setSelectedClient(nextItem);
   };
-
-  const tableScrollRef = useInfinityScroll({ callback });
-  const cardScrollRef = useInfinityScroll({ callback });
 
   const isLoading = networkStatus <= 3;
 
@@ -117,7 +80,6 @@ const ClientDetailContent: FC<Props> = ({
           selectedClient={selectedClient}
           isLoading={isLoading}
           onClickItem={onClickItem}
-          cardScrollRef={cardScrollRef}
         />
       </Box>
       <Box
@@ -133,7 +95,6 @@ const ClientDetailContent: FC<Props> = ({
           selectedClient={selectedClient}
           isLoading={isLoading}
           onClickItem={onClickItem}
-          tableScrollRef={tableScrollRef}
         />
       </Box>
       {!!selectedClient && (

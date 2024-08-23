@@ -19,15 +19,11 @@ const commonSaleByMall = graphql(`
   }
 `);
 
-export const useCommonSaleByMall = (
-  commonSaleByMallInput: CommonSaleByMallInput,
-  skip: boolean
-) => {
+export const useCommonSaleByMall = (commonSaleByMallInput: CommonSaleByMallInput) => {
   return useQuery(commonSaleByMall, {
     variables: {
       commonSaleByMallInput,
     },
     notifyOnNetworkStatusChange: true,
-    skip,
   });
 };

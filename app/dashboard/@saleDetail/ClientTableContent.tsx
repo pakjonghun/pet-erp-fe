@@ -9,7 +9,7 @@ interface Props {
   selectedClient: ClientSaleMenu | null;
   isLoading: boolean;
   onClickItem: (item: ClientSaleMenu) => void;
-  tableScrollRef: Dispatch<SetStateAction<null | HTMLElement>>;
+  tableScrollRef?: Dispatch<SetStateAction<null | HTMLElement>>;
 }
 
 const ClientTableContent: FC<Props> = ({

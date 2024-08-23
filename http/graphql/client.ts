@@ -274,7 +274,6 @@ export const client = new ApolloClient({
           },
           saleMenuClients: {
             keyArgs: ['saleMenuClientsInput', ['keyword', 'from', 'to', 'order', 'sort']],
-            merge,
           },
           options: {
             keyArgs: ['optionsInput', ['keyword', 'sort', 'order']],
