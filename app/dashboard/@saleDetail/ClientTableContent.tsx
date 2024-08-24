@@ -24,7 +24,7 @@ const ClientTableContent: FC<Props> = ({
     '거래처',
     '매출',
     '판매수',
-    '광고비',
+    // '광고비',
     '순이익',
     '순익율',
     '제품 판매수순',
@@ -43,7 +43,7 @@ const ClientTableContent: FC<Props> = ({
       item.name,
       getNumberToString(item.accTotalPayment ?? 0, 'comma'),
       getNumberToString(item.accCount ?? 0, 'comma'),
-      getNumberToString(item.accAdPrice ?? 0, 'comma'),
+      // getNumberToString(item.accAdPrice ?? 0, 'comma'),
       getNumberToString(profit ?? 0, 'comma'),
       getNumberToString(getProfitRate(profit ?? 0, item.accTotalPayment ?? 0), 'percent'),
       <ExpandChip

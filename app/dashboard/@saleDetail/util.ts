@@ -19,7 +19,7 @@ export function createTableRowToRawData(client: ClientInfoMenu | ProductSaleInfo
     accDeliveryCost: Math.floor(client.accDeliveryCost ?? 0),
     profit: profit ?? 0,
     profitRate: getProfitRate(profit, client.accTotalPayment ?? 0),
-    accAdPrice: client.accAdPrice ?? 0,
+    // accAdPrice: client.accAdPrice ?? 0,
   };
 
   return result;
@@ -33,7 +33,7 @@ export function createTableRowToString(client: SaleToNumber) {
     getNumberToString(client.accPayCost, 'comma'),
     getNumberToString(client.accWonCost, 'comma'),
     getNumberToString(client.accDeliveryCost, 'comma'),
-    getNumberToString(Math.floor(client.accAdPrice), 'comma'),
+    // getNumberToString(Math.floor(client.accAdPrice), 'comma'),
     getNumberToString(Math.floor(client.profit), 'comma'),
     getNumberToString(client.profitRate, 'percent'),
   ];

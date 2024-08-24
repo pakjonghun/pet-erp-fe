@@ -180,7 +180,7 @@ const ClientSaleModal: FC<Props> = ({
           sx={{ mb: 2 }}
           title="최근 1달 매출"
           hover={false}
-          headerList={['판매수', '매출', '정산액', '원가', '택배비', '광고비', '순익', '순익율']}
+          headerList={['판매수', '매출', '정산액', '원가', '택배비', '순익', '순익율']}
           rowList={[
             [
               getNumberToString(newMonthSale?.accCount ?? 0, 'comma'),
@@ -188,7 +188,7 @@ const ClientSaleModal: FC<Props> = ({
               getNumberToString(newMonthSale?.accPayCost ?? 0, 'comma'),
               getNumberToString(newMonthSale?.accWonCost ?? 0, 'comma'),
               getNumberToString(Math.floor(newMonthSale?.accDeliveryCost ?? 0), 'comma'),
-              getNumberToString(Math.floor(totalAdPrice ?? 0), 'comma'),
+              // getNumberToString(Math.floor(totalAdPrice ?? 0), 'comma'),
               getNumberToString(
                 getProfit({
                   accAdPrice: totalAdPrice ?? 0,
