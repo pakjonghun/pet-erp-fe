@@ -25,7 +25,7 @@ export const initProductOption = {
 export const AdTypeToHangle: Record<AdType | '모든타입', string> = {
   ['모든타입']: '모든타입',
   [AdType.ChannelAppProduct]: '채널제품',
-  [AdType.ChannelSpecialProduct]: '제품채널',
+  [AdType.ChannelSpecialProduct]: '채널특별',
   [AdType.ChannelProductRate]: '채널공통광고',
   [AdType.CompanyRate]: '회사공통',
 };
@@ -33,7 +33,7 @@ export const AdTypeToHangle: Record<AdType | '모든타입', string> = {
 export const AdTypeToEng: Record<string, AdType | '모든타입'> = {
   ['모든타입' as string]: '모든타입',
   ['채널제품' as string]: AdType.ChannelAppProduct,
-  ['제품채널' as string]: AdType.ChannelSpecialProduct,
+  ['채널특별' as string]: AdType.ChannelSpecialProduct,
   ['채널공통광고' as string]: AdType.ChannelProductRate,
   ['회사공통' as string]: AdType.CompanyRate,
 };

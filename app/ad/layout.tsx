@@ -11,7 +11,6 @@ const BackDataLayout: FC<Props> = ({ children }) => {
   return (
     <>
       <SubHeader title="광고" sx={{ boxShadow: 0 }} />
-
       {children}
     </>
   );

@@ -58,11 +58,6 @@ const SubHeader: FC<Props> = ({ title, children, sx }) => {
         setTimeout(() => {
           client.refetchQueries({
             updateCache(cache) {
-              // cache.evict({ fieldName: 'wholeSales' });
-              // cache.evict({ fieldName: 'dashboardProduct' });
-              // cache.evict({ fieldName: 'dashboardProducts' });
-              // cache.evict({ fieldName: 'dashboardClients' });
-              // cache.evict({ fieldName: 'dashboardClient' });
               cache.evict({ fieldName: 'stocks' });
               cache.evict({ fieldName: 'stocksState' });
               cache.evict({ fieldName: 'productCountStocks' });

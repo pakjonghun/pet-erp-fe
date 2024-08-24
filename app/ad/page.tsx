@@ -294,8 +294,8 @@ const BackDataPage = () => {
   };
   return (
     <>
-      <ResizableContainer>
-        <TablePage sx={{ flex: 1, position: 'relative', overflow: 'auto', minHeight: '100%' }}>
+      <ResizableContainer initialHeight="800px">
+        <TablePage sx={{ flex: 1, position: 'relative', height: '100%' }}>
           <CreateOptionModal q={q} />
           <Stack sx={{ px: 2 }} direction="row" alignItems="center" justifyContent="space-between">
             <TableTitle title="광고 조회" />
