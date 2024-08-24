@@ -328,7 +328,7 @@ const BackDataPage = () => {
                 xs: 'none',
                 md: 'block',
               },
-              height: '40vh',
+              height: '100%',
             }}
           >
             <CommonTable stickyHeader>

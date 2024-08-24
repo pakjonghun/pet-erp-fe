@@ -145,6 +145,8 @@ const AddAdsModal: FC<Props> = ({ q }) => {
         inset: 0,
         bgcolor: (theme) => theme.palette.background.paper,
         zIndex: 1000,
+        overflow: 'auto',
+        pb: 2,
       }}
     >
       <Box
