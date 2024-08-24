@@ -27,14 +27,7 @@ const productSales = graphql(`
           accDeliveryCost
           accTotalPayment
           name
-          accProfit
-          accProfitRate
         }
-        # prevAccCount
-        # prevAccPayCost
-        # prevAccWonCost
-        # prevAccDeliveryCost
-        # prevAccTotalPayment
         accDeliveryCost
         accTotalPayment
 
