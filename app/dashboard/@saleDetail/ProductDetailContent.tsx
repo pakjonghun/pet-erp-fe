@@ -3,11 +3,12 @@ import { DateRange } from '@/components/calendar/dateFilter/type';
 import { LIMIT } from '@/constants';
 import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { useProductSales } from '@/http/graphql/hooks/product/useProductSaleList';
-import { ProductSaleMenu } from '@/http/graphql/codegen/graphql';
+import { CommonSaleByProductOutput, ProductSaleMenu } from '@/http/graphql/codegen/graphql';
 import ProductCardContent from './ProductCardContent';
 import ProductTableContent from './ProductTableContent';
 import ProductDetailModal from './_components/ProductDetailModal';
 import { Box } from '@mui/material';
+import { useCommonSaleByProduct } from '@/http/graphql/hooks/client/useCommonSaleByProduct';
 
 interface Props {
   dateRange: DateRange;
@@ -24,15 +25,22 @@ const ProductDetailContent: FC<Props> = ({
   sort,
   order,
 }) => {
-  const { data, fetchMore, networkStatus } = useProductSales({
+  const { data, networkStatus } = useProductSales({
     keyword,
     from: from.toISOString(),
     to: to.toISOString(),
-    limit: LIMIT,
-    skip: 0,
     sort,
     order,
   });
+
+  const { data: products } = useCommonSaleByProduct({
+    from: from.toISOString(),
+    to: to.toISOString(),
+  });
+
+  const productByProductCode = new Map<string, CommonSaleByProductOutput>(
+    (products?.commonSaleByProduct ?? []).map((p) => [p._id, p])
+  );
 
   useEffect(() => {
     if (data?.productSales?.totalCount == null) return;
@@ -41,30 +49,16 @@ const ProductDetailContent: FC<Props> = ({
   }, [data?.productSales?.totalCount]);
 
   const [selectedProduct, setSelectedProduct] = useState<null | ProductSaleMenu>(null);
-  const rows = (data?.productSales?.data as ProductSaleMenu[]) ?? [];
+  const rows: ProductSaleMenu[] = (data?.productSales?.data ?? []).map((d) => {
+    const productCode = d.code;
+    const targetProduct = productByProductCode.get(productCode);
+    const result = {
+      ...d,
+      clients: targetProduct?.clients ?? [],
+    };
 
-  const callback: IntersectionObserverCallback = (entries) => {
-    if (entries[0].isIntersecting) {
-      if (isLoading) return;
-
-      const totalCount = data?.productSales?.totalCount;
-      if (totalCount != null && totalCount > rows.length) {
-        fetchMore({
-          variables: {
-            productSalesInput: {
-              keyword,
-              skip: rows.length,
-              limit: LIMIT,
-              from: from.toISOString(),
-              to: to.toISOString(),
-              sort,
-              order,
-            },
-          },
-        });
-      }
-    }
-  };
+    return result as ProductSaleMenu;
+  });
 
   const onClickItem = (data: ProductSaleMenu) => {
     const nextItem =
@@ -74,8 +68,6 @@ const ProductDetailContent: FC<Props> = ({
     setSelectedProduct(nextItem);
   };
 
-  const tableScrollRef = useInfinityScroll({ callback });
-  const cardScrollRef = useInfinityScroll({ callback });
   const isLoading = networkStatus <= 3;
 
   return (
@@ -93,7 +85,6 @@ const ProductDetailContent: FC<Props> = ({
           selectedProduct={selectedProduct}
           isLoading={isLoading}
           onClickItem={onClickItem}
-          cardScrollRef={cardScrollRef}
         />
       </Box>
       <Box
@@ -104,12 +95,7 @@ const ProductDetailContent: FC<Props> = ({
           },
         }}
       >
-        <ProductTableContent
-          rows={rows}
-          isLoading={isLoading}
-          onClickItem={onClickItem}
-          tableScrollRef={tableScrollRef}
-        />
+        <ProductTableContent rows={rows} isLoading={isLoading} onClickItem={onClickItem} />
       </Box>
 
       {!!selectedProduct && (

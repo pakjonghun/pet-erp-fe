@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { graphql } from '../../codegen';
-import { CommonSaleByMallInput, CommonSaleMonthAgoInput } from '../../codegen/graphql';
+import { CommonSaleMonthAgoInput } from '../../codegen/graphql';
 
 const commonSaleByMall = graphql(`
   query commonSaleMonthAgoByMall($commonSaleMonthAgoInput: CommonSaleMonthAgoInput!) {

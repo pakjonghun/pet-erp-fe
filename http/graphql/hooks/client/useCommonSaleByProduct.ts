@@ -2,11 +2,11 @@ import { useQuery } from '@apollo/client';
 import { graphql } from '../../codegen';
 import { CommonSaleByInput } from '../../codegen/graphql';
 
-const commonSaleByMall = graphql(`
-  query commonSaleByMall($commonSaleByInput: CommonSaleByInput!) {
-    commonSaleByMall(commonSaleByInput: $commonSaleByInput) {
+const commonSaleByProduct = graphql(`
+  query commonSaleByProduct($commonSaleByInput: CommonSaleByInput!) {
+    commonSaleByProduct(commonSaleByInput: $commonSaleByInput) {
       _id
-      products {
+      clients {
         accPayCost
         accWonCost
         accCount
@@ -19,8 +19,8 @@ const commonSaleByMall = graphql(`
   }
 `);
 
-export const useCommonSaleByMall = (commonSaleByInput: CommonSaleByInput) => {
-  return useQuery(commonSaleByMall, {
+export const useCommonSaleByProduct = (commonSaleByInput: CommonSaleByInput) => {
+  return useQuery(commonSaleByProduct, {
     variables: {
       commonSaleByInput,
     },

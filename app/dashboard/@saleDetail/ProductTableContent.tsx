@@ -9,7 +9,7 @@ interface Props {
   rows: ProductSaleMenu[];
   isLoading: boolean;
   onClickItem: (item: ProductSaleMenu) => void;
-  tableScrollRef: Dispatch<SetStateAction<null | HTMLElement>>;
+  tableScrollRef?: Dispatch<SetStateAction<null | HTMLElement>>;
 }
 
 const ProductTableContent: FC<Props> = ({ rows, isLoading, onClickItem, tableScrollRef }) => {
