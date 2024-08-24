@@ -1,7 +1,5 @@
 import { FC, useEffect, useState } from 'react';
 import { DateRange } from '@/components/calendar/dateFilter/type';
-import { LIMIT } from '@/constants';
-import useInfinityScroll from '@/hooks/useInfinityScroll';
 import { useProductSales } from '@/http/graphql/hooks/product/useProductSaleList';
 import { CommonSaleByProductOutput, ProductSaleMenu } from '@/http/graphql/codegen/graphql';
 import ProductCardContent from './ProductCardContent';
