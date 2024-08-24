@@ -2,7 +2,6 @@
 
 import { FC, useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
-import { ProductSaleMenu } from '@/http/graphql/codegen/graphql';
 import BaseModal from '@/components/ui/modal/BaseModal';
 import { DateRange } from '@/components/calendar/dateFilter/type';
 import TotalSaleText from '../../_components/TotalSaleText';
@@ -14,6 +13,7 @@ import { getKCWFormat } from '@/utils/common';
 import { createTableRowToRawData, createTableRowToString } from '../util';
 import { SaleToNumber } from '../type';
 import { detailHeader, detailHeaderMapper, detailHeaderMapperToHangle } from '../constants';
+import { ProductSaleMenu } from '@/http/graphql/codegen/graphql';
 
 interface Props {
   initDateRange: DateRange;
@@ -69,7 +69,7 @@ const ProductDetailModal: FC<Props> = ({
     }
   };
 
-  const rowList = clients
+  const rowList = (clients ?? [])
     .map((item) => {
       return createTableRowToRawData(item);
     })

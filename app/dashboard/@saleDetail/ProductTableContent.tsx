@@ -1,9 +1,8 @@
-import { Chip, Stack } from '@mui/material';
 import { Dispatch, FC, SetStateAction } from 'react';
-import { ProductSaleMenu } from '@/http/graphql/codegen/graphql';
 import CommonAnyTypeTable from '@/components/table/CommonAnyTypeTable';
 import { getNumberToString, getProfit, getProfitRate } from '@/utils/sale';
 import ExpandChip from './_components/ExpandChip';
+import { ProductSaleMenu } from '@/http/graphql/codegen/graphql';
 
 interface Props {
   rows: ProductSaleMenu[];
@@ -52,6 +51,6 @@ function createTableRow(item: ProductSaleMenu, no: number) {
     getNumberToString(item.accCount ?? 0, 'comma'),
     getNumberToString(profit ?? 0, 'comma'),
     getNumberToString(getProfitRate(profit ?? 0, item.accTotalPayment ?? 0), 'percent'),
-    <ExpandChip list={item.clients} key={item._id} />,
+    <ExpandChip list={item.clients ?? []} key={item._id} />,
   ];
 }

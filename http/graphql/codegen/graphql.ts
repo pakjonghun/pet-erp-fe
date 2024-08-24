@@ -391,6 +391,8 @@ export type FindDateInput = {
 };
 
 export type FindDateScrollInput = {
+  detailOrder?: InputMaybe<Scalars['Int']['input']>;
+  detailSort?: InputMaybe<Scalars['String']['input']>;
   from: Scalars['Date']['input'];
   keyword: Scalars['String']['input'];
   order?: InputMaybe<Scalars['Int']['input']>;
@@ -902,6 +904,8 @@ export type ProductSaleInfo = {
 };
 
 export type ProductSaleInput = {
+  detailOrder?: InputMaybe<Scalars['Int']['input']>;
+  detailSort?: InputMaybe<Scalars['String']['input']>;
   from: Scalars['Date']['input'];
   keyword: Scalars['String']['input'];
   order?: InputMaybe<Scalars['Int']['input']>;

@@ -1,8 +1,8 @@
-import { ProductSaleMenu } from '@/http/graphql/codegen/graphql';
 import { Grid, Stack, Typography } from '@mui/material';
 import React, { Dispatch, FC, SetStateAction, useState } from 'react';
 import TotalSaleText from '../../_components/TotalSaleText';
 import { getParsedSaleData, getProfit, getProfitRate } from '@/utils/sale';
+import { ProductSaleMenu } from '@/http/graphql/codegen/graphql';
 
 interface Props {
   scrollRef?: Dispatch<SetStateAction<null | HTMLElement>>;
@@ -63,7 +63,7 @@ const ProductSaleDetailItem: FC<Props> = ({ isSelected, index, data, scrollRef, 
           <Typography variant="caption" color="GrayText">
             Top3 거래처
           </Typography>
-          {data.clients.slice(0, 3).map((p, index) => {
+          {(data.clients ?? []).slice(0, 3).map((p, index) => {
             return (
               <Stack key={p.name} direction="row" gap={0.2}>
                 <Typography color="GrayText" variant="caption">
