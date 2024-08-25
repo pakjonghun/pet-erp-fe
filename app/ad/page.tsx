@@ -256,10 +256,14 @@ const BackDataPage = () => {
     let productCodeList = undefined;
     if (channelNeed) {
       clientCode = updateAdInput.clientCode?.code ?? undefined;
+    } else {
+      clientCode = null;
     }
 
     if (productNeed) {
       productCodeList = updateAdInput.productCodeList?.map((p) => p.code) ?? [];
+    } else {
+      productCodeList = null;
     }
 
     const newItem = {
