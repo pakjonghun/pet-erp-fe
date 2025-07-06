@@ -21,8 +21,8 @@ const LoginPage = () => {
   } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      id: 'admin',
-      password: '123123123',
+      id: '',
+      password: '',
     },
     mode: 'onChange',
   });
@@ -60,15 +60,9 @@ const LoginPage = () => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack
-          sx={{ mx: 'auto', pt: '20%', px: 3 }}
-          maxWidth="sm"
-          direction="column"
-          gap={2}
-        >
+        <Stack sx={{ mx: 'auto', pt: '20%', px: 3 }} maxWidth="sm" direction="column" gap={2}>
           <Typography variant="subtitle2">
-            미리 입력된 계정을 테스트를 위한 계정 admin 입니다. <br /> 계속
-            진행하려면 로그인을 해주세요.
+            반갑습니다. <br /> 계속 진행하려면 로그인을 해주세요.
           </Typography>
           <Controller
             name="id"
